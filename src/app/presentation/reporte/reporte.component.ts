@@ -2,14 +2,15 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { Calendar } from 'primeng/calendar';
-import { Button, ButtonIcon } from 'primeng/button';
+import { ButtonModule } from 'primeng/button';
 import { Table, TableModule } from 'primeng/table';
 import { InputText } from 'primeng/inputtext';
+import { Select } from 'primeng/select';
 
 @Component({
     selector: 'app-reporte',
     standalone: true,
-    imports: [DropdownModule, FormsModule, Calendar, Button, TableModule, InputText, ButtonIcon],
+    imports: [DropdownModule, FormsModule, Calendar, TableModule, InputText, ButtonModule, Select],
     templateUrl: './reporte.component.html',
     styleUrl: './reporte.component.scss'
 })
