@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { Calendar } from 'primeng/calendar';
@@ -18,7 +18,7 @@ import { debounceTime, Subscription } from 'rxjs';
     templateUrl: './reporte.component.html',
     styleUrl: './reporte.component.scss'
 })
-export class ReporteComponent {
+export class ReporteComponent implements OnInit {
     @ViewChild(Calendar) calendar!: Calendar;
 
     afecciones = ['Opción 1', 'Opción 2', 'Opción 3'];
@@ -46,6 +46,10 @@ export class ReporteComponent {
         this.subscription = this.layoutService.configUpdate$.pipe(debounceTime(25)).subscribe(() => {
             this.initCharts();
         });
+    }
+
+    ngOnInit(): void {
+        this.initCharts()   
     }
 
     initCharts() {
@@ -185,7 +189,6 @@ export class ReporteComponent {
                 }
             }
         };
-
     }
 
     async onRowSelect(event: any) {}
