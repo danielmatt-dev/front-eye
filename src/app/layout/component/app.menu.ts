@@ -28,6 +28,7 @@ export class AppMenu {
                 label: 'UI Components',
                 items: [
                     { label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/uikit/reportes'] },
+                    { label: 'Datos Geográficos', icon: 'pi pi-fw pi-globe', routerLink: ['/uikit/datos-geograficos'] },
                     { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
                     { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
                     { label: 'Button', icon: 'pi pi-fw pi-mobile', class: 'rotated-icon', routerLink: ['/uikit/button'] },
