@@ -16,8 +16,10 @@ import { TreeDemo } from './treedemo';
 import { MenuDemo } from './menudemo';
 import { ReporteComponent } from '../../presentation/reporte/reporte.component';
 import { DatosGeograficosComponent } from '../../presentation/datos-geograficos/datos-geograficos.component';
+import { DashboardComponent } from '../../presentation/dashboard/dashboard.component';
 
 export default [
+    { path: 'dashboard', component: DashboardComponent },
     { path: 'reportes', component: ReporteComponent },
     { path: 'datos-geograficos', component: DatosGeograficosComponent },
     { path: 'button', data: { breadcrumb: 'Button' }, component: ButtonDemo },

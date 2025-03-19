@@ -27,6 +27,7 @@ export class AppMenu {
             {
                 label: 'UI Components',
                 items: [
+                    { label: 'Dashboard Eye', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/dashboard'] },
                     { label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/uikit/reportes'] },
                     { label: 'Datos Geográficos', icon: 'pi pi-fw pi-globe', routerLink: ['/uikit/datos-geograficos'] },
                     { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
