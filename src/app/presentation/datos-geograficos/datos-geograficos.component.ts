@@ -19,8 +19,8 @@ export class DatosGeograficosComponent {
 
     categorias = [
         { label: 'Mes actual', selected: false },
-        { label: 'Últimos 2 meses', selected: false },
-        { label: 'Últimos 3 meses', selected: false },
+        { label: '2 meses', selected: false },
+        { label: '3 meses', selected: false },
         { label: 'Personalizado', selected: false }
     ];
 

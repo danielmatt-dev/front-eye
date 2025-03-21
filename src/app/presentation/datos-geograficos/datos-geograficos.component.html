@@ -1,9 +1,11 @@
 <div class="flex flex-col gap-8 mb-8">
     <div class="card p-4">
-        <div class="flex flex-wrap items-center gap-4">
+        <div class="flex flex-wrap items-center gap-4 lg:justify-between">
 
-            <!-- Chips -->
-            <div class="flex flex-col">
+            <div class="flex flex-wrap gap-4">
+
+                <!-- Chips -->
+                <div class="flex flex-col">
                 <span class="font-bold mb-2">Selecciona un periodo</span>
                 <div class="flex flex-wrap gap-2">
                     <div
@@ -11,7 +13,7 @@
                         class="px-4 py-2 rounded-full cursor-pointer transition-all"
                         [ngClass]="{
                             'bg-primary text-primary-contrast': categoria.selected,
-                            'bg-gray-100 text-color dark:bg-surface-800': !categoria.selected
+                            'bg-gray-100 text-color dark:bg-surface-700': !categoria.selected
                         }"
                         (click)="seleccionarChip(categoria)"
                         (keydown.enter)="seleccionarChip(categoria)">
@@ -20,24 +22,43 @@
                 </div>
             </div>
 
-            <!-- Rango de Fechas con ancho definido -->
-            <div class="flex flex-col gap-2">
-                <label for="dateRange2" class="font-bold">Rango de fechas</label>
-                <p-calendar
-                    id="dateRange2"
-                    showIcon="true"
-                    [(ngModel)]="fechasSeleccionadas"
-                    selectionMode="range"
-                    placeholder="Fechas"
-                    class="w-full sm:w-[25rem] md:w-[25rem] lg:w-[25rem] xl:w-[25rem]"
-                    [style]="{width:' 100%' }"
-                    [disabled]="calendarDisabled"
-                ></p-calendar>
+                <!-- Rango de Fechas con ancho definido -->
+                <div class="flex flex-col gap-2">
+                    <label for="dateRange" class="font-bold">Rango de fechas</label>
+                    <p-calendar
+                        id="dateRange"
+                        showIcon="true"
+                        [(ngModel)]="fechasSeleccionadas"
+                        selectionMode="range"
+                        placeholder="Fechas"
+                        class="w-full sm:w-[21rem] md:w-[21rem] lg:w-[21rem] xl:w-[21rem]"
+                        [style]="{width:' 100%' }"
+                        [disabled]="calendarDisabled"
+                    ></p-calendar>
+                </div>
+
+                <!-- Botón de consultar -->
+                <div class="flex flex-col self-end">
+                    <p-button label="Consultar" class="w-full md:w-auto"/>
+                </div>
+
             </div>
 
-            <!-- Botón de consultar -->
-            <div class="flex flex-col justify-end self-end">
-                <p-button label="Consultar" class="w-full md:w-auto"/>
+            <!-- Botones para exportar datos -->
+            <div class="flex flex-wrap gap-4 self-end">
+                <p-button
+                    label="Exportar a Excel"
+                    icon="pi pi-file-excel"
+                    severity="success"
+                    outlined="true"
+                ></p-button>
+
+                <p-button
+                    label="Descargar en PDF"
+                    severity="danger"
+                    outlined="true"
+                    icon="pi pi-file-pdf"
+                ></p-button>
             </div>
 
         </div>
