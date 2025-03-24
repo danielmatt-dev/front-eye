@@ -26,12 +26,17 @@
                         "tsConfig": "tsconfig.app.json",
                         "inlineStyleLanguage": "scss",
                         "assets": [
+                            "src/assets",
                             {
                                 "glob": "**/*",
-                                "input": "public"
+                                "input": "node_modules/leaflet/dist/images",
+                                "output": "media"
                             }
                         ],
                         "styles": [
+                            "node_modules/leaflet/dist/leaflet.css",
+                            "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
+                            "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
                             "src/styles.scss"
                         ],
                         "scripts": []
@@ -91,6 +96,9 @@
                             }
                         ],
                         "styles": [
+                            "node_modules/leaflet/dist/leaflet.css",
+                            "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
+                            "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
                             "src/styles.scss"
                         ],
                         "scripts": []
