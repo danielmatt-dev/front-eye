@@ -67,7 +67,7 @@
     </div>
 
     <div class="col-span-1">
-        <div class="card">
+        <div class="card h-full">
             <div class="font-semibold text-xl mb-4">Imagen</div>
             <p-fileupload
                 name="demo[]"
@@ -78,6 +78,7 @@
                 chooseLabel="Cargar"
                 uploadLabel="Subir"
                 cancelLabel="Cancelar"
+                [style]="{ height: '90%', padding: 0, margin: 0 }"
                 mode="advanced"
                 url="https://www.primefaces.org/cdn/api/upload.php">
 
@@ -85,9 +86,7 @@
                 <ng-template #empty>
                     <div class="flex items-center justify-center flex-col py-8">
                         <i class="pi pi-cloud-upload !border-2 !rounded-full !px-4 !py-4 !text-4xl !text-muted-color"></i>
-                        <p class="my-5 text-center">
-                            Arrastra y suelta los archivos para subirlos.
-                            <br/>
+                        <p class="mt-6 text-center">
                             La imagen debe ser menor a <strong>4 MB</strong>.
                         </p>
                     </div>
@@ -164,4 +163,14 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="flex flex-wrap justify-end gap-6 mt-6">
+    <p-button
+        severity="danger"
+        label="Cancelar"
+    ></p-button>
+    <p-button
+        label="Inspeccionar"
+    ></p-button>
 </div>
