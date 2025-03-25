@@ -34,6 +34,12 @@
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="genero">Género</label>
+                    <p-select
+                        id="genero"
+                    ></p-select>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-2">
                     <label for="nacimiento">Fecha de nacimiento</label>
                     <p-calendar
                         id="nacimiento"
@@ -45,12 +51,6 @@
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="edad">Edad</label>
                     <input pInputText id="edad" type="text" [readonly]="true" />
-                </div>
-                <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="genero">Género</label>
-                    <p-select
-                        id="genero"
-                    ></p-select>
                 </div>
             </div>
             <div class="flex flex-wrap gap-6">
