@@ -33,4 +33,9 @@ export class NuevaInspeccionComponent implements OnInit {
         this.messageService.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded' });
     }
 
+    choose(event: any, chooseCallback: any) {
+        chooseCallback();
+        this.files = event.files;
+    }
+
 }

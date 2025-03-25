@@ -85,10 +85,20 @@
                 <ng-template #empty>
                     <div class="flex items-center justify-center flex-col py-8">
                         <i class="pi pi-cloud-upload !border-2 !rounded-full !px-4 !py-4 !text-4xl !text-muted-color"></i>
-                        <p class="mt-6">
-                            Arrastra y suelta los archivos aquí para subirlos.
-                            <br/> La imagen debe tener un tamaño inferior a 4 MB.
+                        <p class="my-5 text-center">
+                            Arrastra y suelta los archivos para subirlos.
+                            <br/>
+                            La imagen debe ser menor a <strong>4 MB</strong>.
                         </p>
+                    </div>
+                </ng-template>
+
+                <!-- Plantilla de los botones -->
+                <ng-template #header let-files let-chooseCallback="chooseCallback" let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
+                    <div class="flex flex-wrap gap-2">
+                        <p-button (onClick)="choose($event, chooseCallback)" icon="pi pi-images" [rounded]="true" [outlined]="true"></p-button>
+                        <p-button (onClick)="uploadCallback()"  icon="pi pi-cloud-upload" [rounded]="true" [outlined]="true" severity="success" [disabled]="!files || files.length === 0"></p-button>
+                        <p-button (onClick)="clearCallback()" icon="pi pi-times" [rounded]="true" [outlined]="true" severity="danger" [disabled]="!files || files.length === 0"></p-button>
                     </div>
                 </ng-template>
 
