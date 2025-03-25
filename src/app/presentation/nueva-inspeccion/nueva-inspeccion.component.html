@@ -1,7 +1,7 @@
 <p-toast />
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="col-span-1 md:col-span-2">
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <div class="col-span-1 order-2 xl:col-span-2 xl:order-1">
         <div class="card">
             <div class="font-semibold text-xl mb-4">Datos del paciente</div>
             <div class="flex flex-wrap gap-6 mb-4">
@@ -66,7 +66,7 @@
         </div>
     </div>
 
-    <div class="col-span-1">
+    <div class="col-span-1 order-1 xl:order-2">
         <div class="card h-full">
             <div class="font-semibold text-xl mb-4">Imagen</div>
             <p-fileupload
@@ -78,13 +78,13 @@
                 chooseLabel="Cargar"
                 uploadLabel="Subir"
                 cancelLabel="Cancelar"
-                [style]="{ height: '90%', padding: 0, margin: 0 }"
+                [style]="{ height: '90%', width: '100%' }"
                 mode="advanced"
                 url="https://www.primefaces.org/cdn/api/upload.php">
 
                 <!-- Plantilla vacía -->
                 <ng-template #empty>
-                    <div class="flex items-center justify-center flex-col py-8">
+                    <div class="flex items-center justify-center h-full flex-col">
                         <i class="pi pi-cloud-upload !border-2 !rounded-full !px-4 !py-4 !text-4xl !text-muted-color"></i>
                         <p class="mt-6 text-center">
                             La imagen debe ser menor a <strong>4 MB</strong>.
@@ -113,8 +113,8 @@
     </div>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-    <div class="col-span-1 md:col-span-2">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+    <div class="col-span-1 lg:col-span-2">
         <div class="card">
             <div class="flex justify-between">
                 <div class="font-semibold text-xl mb-4">Datos de la inspección</div>
