@@ -116,14 +116,19 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
     <div class="col-span-1 md:col-span-2">
         <div class="card">
-            <div class="font-semibold text-xl mb-4">Datos de la inspección</div>
+            <div class="flex justify-between">
+                <div class="font-semibold text-xl mb-4">Datos de la inspección</div>
+                <a href="/" class="text-primary" style="text-decoration: underline;">
+                    Ver detalle
+                </a>
+            </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="doctor">Doctor</label>
                     <input pInputText id="doctor" type="text" [readonly]="true"/>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-6 mb-4">
+            <div class="flex flex-wrap gap-6 mb-6">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="ojo">Ojo</label>
                     <p-select-button
@@ -144,21 +149,31 @@
                     ></p-select>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-6 mb-4">
+            <div class="flex flex-wrap gap-6">
                 <div class="flex flex-col grow basis-0 gap-2">
-
+                    <div class="flex flex-col grow basis-0 gap-2">
+                        <div class="flex justify-end items-center gap-4 w-full">
+                            <div class="font-semibold text-xl">Resultado:</div>
+                            <p-button
+                                label="Moderado"
+                                disabled="true"
+                                severity="warn"
+                                [style]="{opacity: '3'}"
+                            ></p-button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-span-1">
-        <div class="card">
+        <div class="card h-full">
             <div class="font-semibold text-xl mb-4">Datos adicionales</div>
             <div>
                 <textarea
                     pTextarea
-                    rows="8"
-                    style="width: 100%; resize: none;"
+                    rows="10"
+                    style="width: 100%; resize: none; padding-bottom: 0; margin-bottom: 0"
                 ></textarea>
             </div>
         </div>
