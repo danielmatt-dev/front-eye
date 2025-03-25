@@ -7,11 +7,13 @@ import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Calendar } from 'primeng/calendar';
 import { Select } from 'primeng/select';
+import { SelectButton } from 'primeng/selectbutton';
+import { Textarea } from 'primeng/textarea';
 
 @Component({
     selector: 'app-nueva-inspeccion',
     standalone: true,
-    imports: [CommonModule, FileUploadModule, ToastModule, ButtonModule, InputText, Calendar, Select],
+    imports: [CommonModule, FileUploadModule, ToastModule, ButtonModule, InputText, Calendar, Select, SelectButton, Textarea],
     templateUrl: './nueva-inspeccion.component.html',
     styleUrl: './nueva-inspeccion.component.scss',
     providers: [MessageService]
@@ -20,6 +22,7 @@ export class NuevaInspeccionComponent implements OnInit {
     // Variable para almacenar los archivos seleccionados
     files: any[] = [];
     uploadedFiles: any[] = [];
+    options = ['Derecho', 'Izquierdo']
 
     constructor(private messageService: MessageService) {}
 
@@ -37,5 +40,4 @@ export class NuevaInspeccionComponent implements OnInit {
         chooseCallback();
         this.files = event.files;
     }
-
 }

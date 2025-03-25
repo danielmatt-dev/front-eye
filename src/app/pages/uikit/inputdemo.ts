@@ -90,7 +90,7 @@ import { Country } from '../service/customer.service';
                     </p-floatlabel>
 
                     <div class="font-semibold text-xl">Textarea</div>
-                    <textarea pTextarea placeholder="Your Message" [autoResize]="true" rows="3" cols="30"></textarea>
+                    <textarea pTextarea placeholder="Your Message" [autoResize]="false" rows="3" cols="30"></textarea>
 
                     <div class="font-semibold text-xl">AutoComplete</div>
                     <p-autocomplete [(ngModel)]="selectedAutoValue" [suggestions]="autoFilteredValue" optionLabel="name" placeholder="Search" dropdown multiple display="chip" (completeMethod)="filterCountry($event)" />

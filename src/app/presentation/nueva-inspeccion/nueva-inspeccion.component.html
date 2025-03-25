@@ -113,3 +113,55 @@
         </div>
     </div>
 </div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+    <div class="col-span-1 md:col-span-2">
+        <div class="card">
+            <div class="font-semibold text-xl mb-4">Datos de la inspección</div>
+            <div class="flex flex-wrap gap-6 mb-4">
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="doctor">Doctor</label>
+                    <input pInputText id="doctor" type="text" [readonly]="true"/>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-6 mb-4">
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="ojo">Ojo</label>
+                    <p-select-button
+                        id="ojo"
+                        [options]="options"
+                    />
+                </div>
+                <div class="flex flex-col grow basis-16 gap-2">
+                    <label for="enfermedad">Enfermedad</label>
+                    <p-select
+                        id="enfermedad"
+                    ></p-select>
+                </div>
+                <div class="flex flex-col grow basis-16 gap-2">
+                    <label for="modelo">Modelo</label>
+                    <p-select
+                        id="modelo"
+                    ></p-select>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-6 mb-4">
+                <div class="flex flex-col grow basis-0 gap-2">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-span-1">
+        <div class="card">
+            <div class="font-semibold text-xl mb-4">Datos adicionales</div>
+            <div>
+                <textarea
+                    pTextarea
+                    rows="8"
+                    style="width: 100%; resize: none;"
+                ></textarea>
+            </div>
+        </div>
+    </div>
+</div>
