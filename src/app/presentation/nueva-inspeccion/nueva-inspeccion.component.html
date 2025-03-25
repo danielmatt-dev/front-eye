@@ -1,0 +1,25 @@
+<p-toast />
+
+<div class="card">
+    <div class="font-semibold text-xl mb-4">Imagen</div>
+    <p-fileupload
+        name="demo[]"
+        (onUpload)="onUpload($event)"
+        [multiple]="false"
+        accept="image/*"
+        maxFileSize="4194304"
+        chooseLabel="Cargar"
+        uploadLabel="Subir"
+        cancelLabel="Cancelar"
+        mode="advanced"
+        url="https://www.primefaces.org/cdn/api/upload.php"
+    ><ng-template #empty>
+        <div>Arrastra y suelta los archivos aquí para subirlos</div>
+    </ng-template>
+        <ng-template #content>
+            <ul *ngIf="uploadedFiles.length">
+                <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+            </ul>
+        </ng-template>
+    </p-fileupload>
+</div>

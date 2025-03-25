@@ -30,6 +30,22 @@ export class AppMenu {
                     { label: 'Dashboard Eye', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/dashboard'] },
                     { label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/uikit/reportes'] },
                     { label: 'Datos Geográficos', icon: 'pi pi-fw pi-globe', routerLink: ['/uikit/datos-geograficos'] },
+                    {
+                        label: 'Administrar inspecciones',
+                        icon: 'pi pi-fw pi-eye',
+                        items: [
+                            {
+                                label: 'Nueva inspección',
+                                icon: 'pi pi-fw pi-plus-circle',
+                                routerLink: ['/uikit/nueva-inspeccion']
+                            },
+                            {
+                                label: 'Todas las inspecciones',
+                                icon: 'pi pi-list',
+                                routerLink: ['/uikit/nueva-inspeccion']
+                            }
+                        ]
+                    },
                     { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
                     { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
                     { label: 'Button', icon: 'pi pi-fw pi-mobile', class: 'rotated-icon', routerLink: ['/uikit/button'] },
