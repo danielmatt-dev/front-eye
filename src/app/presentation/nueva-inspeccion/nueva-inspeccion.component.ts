@@ -4,11 +4,14 @@ import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+import { Calendar } from 'primeng/calendar';
+import { Select } from 'primeng/select';
 
 @Component({
     selector: 'app-nueva-inspeccion',
     standalone: true,
-    imports: [CommonModule, FileUploadModule, ToastModule, ButtonModule],
+    imports: [CommonModule, FileUploadModule, ToastModule, ButtonModule, InputText, Calendar, Select],
     templateUrl: './nueva-inspeccion.component.html',
     styleUrl: './nueva-inspeccion.component.scss',
     providers: [MessageService]

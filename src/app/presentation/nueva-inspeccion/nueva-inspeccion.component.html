@@ -1,25 +1,105 @@
 <p-toast />
 
-<div class="card">
-    <div class="font-semibold text-xl mb-4">Imagen</div>
-    <p-fileupload
-        name="demo[]"
-        (onUpload)="onUpload($event)"
-        [multiple]="false"
-        accept="image/*"
-        maxFileSize="4194304"
-        chooseLabel="Cargar"
-        uploadLabel="Subir"
-        cancelLabel="Cancelar"
-        mode="advanced"
-        url="https://www.primefaces.org/cdn/api/upload.php"
-    ><ng-template #empty>
-        <div>Arrastra y suelta los archivos aquí para subirlos</div>
-    </ng-template>
-        <ng-template #content>
-            <ul *ngIf="uploadedFiles.length">
-                <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
-            </ul>
-        </ng-template>
-    </p-fileupload>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="col-span-1 md:col-span-2">
+        <div class="card">
+            <div class="font-semibold text-xl mb-4">Datos del paciente</div>
+            <div class="flex flex-wrap gap-6 mb-4">
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="nombre">Nombre</label>
+                    <input pInputText id="nombre" type="text" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="paterno">Apellido Paterno</label>
+                    <input pInputText id="paterno" type="text" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="materno">Apellido Materno</label>
+                    <input pInputText id="materno" type="text" />
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-6 mb-4">
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="correo">Correo Electrónico</label>
+                    <input pInputText id="correo" type="text" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="telefono">Teléfono</label>
+                    <input pInputText id="telefono" type="text" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="ocupacion">Ocupación</label>
+                    <input pInputText id="ocupacion" type="text" />
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-6 mb-4">
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="nacimiento">Fecha de nacimiento</label>
+                    <p-calendar
+                        id="nacimiento"
+                        showIcon="true"
+                        class="w-full"
+                        [style]="{ width: '100%' }"
+                    ></p-calendar>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="edad">Edad</label>
+                    <input pInputText id="edad" type="text" [readonly]="true" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="genero">Género</label>
+                    <p-select
+                        id="genero"
+                    ></p-select>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-6">
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="direccion">Dirección</label>
+                    <input pInputText id="direccion" type="text" />
+                </div>
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="cp">Código Postal</label>
+                    <input pInputText id="cp" type="text" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-span-1">
+        <div class="card">
+            <div class="font-semibold text-xl mb-4">Imagen</div>
+            <p-fileupload
+                name="demo[]"
+                (onUpload)="onUpload($event)"
+                [multiple]="false"
+                accept="image/*"
+                maxFileSize="4194304"
+                chooseLabel="Cargar"
+                uploadLabel="Subir"
+                cancelLabel="Cancelar"
+                mode="advanced"
+                url="https://www.primefaces.org/cdn/api/upload.php">
+
+                <!-- Plantilla vacía -->
+                <ng-template #empty>
+                    <div class="flex items-center justify-center flex-col py-8">
+                        <i class="pi pi-cloud-upload !border-2 !rounded-full !px-4 !py-4 !text-4xl !text-muted-color"></i>
+                        <p class="mt-6">
+                            Arrastra y suelta los archivos aquí para subirlos.
+                            <br/> La imagen debe tener un tamaño inferior a 4 MB.
+                        </p>
+                    </div>
+                </ng-template>
+
+                <!-- Plantilla con el contenido de los archivos -->
+                <ng-template #content>
+                    <ul *ngIf="uploadedFiles.length">
+                        <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+                    </ul>
+                </ng-template>
+
+            </p-fileupload>
+        </div>
+    </div>
 </div>
