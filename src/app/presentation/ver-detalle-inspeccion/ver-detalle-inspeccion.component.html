@@ -1,6 +1,6 @@
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Columna 1 y 2 -->
-        <div class="col-span-1">
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Datos de la inspección -->
+    <div class="col-span-1">
             <div class="card h-full">
                 <div class="font-semibold text-xl mb-4">Datos de la inspección</div>
                 <div class="grid grid-cols-3 my-6">
@@ -33,7 +33,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-span-1">
+    <!-- Probabilidad de Ocurrecia (IA) -->
+    <div class="col-span-1">
             <div class="card h-full">
                 <div class="font-semibold text-xl mb-8">Probabilidad de Ocurrecia (IA)</div>
                 <!-- Usamos grid-rows-[repeat(4,1fr)] para que las 4 filas se repartan el 100% del alto -->
@@ -89,9 +90,96 @@
                 </div>
             </div>
         </div>
-        <div class="col-span-1">
+    <!-- Imagen -->
+    <div class="col-span-1">
             <div class="card h-full">
                 <div class="font-semibold text-xl mb-4">Imagen</div>
             </div>
         </div>
+</div>
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    <div class="col-span-1">
+        <div class="card h-full">
+            <div class="font-semibold text-xl mb-4">Datos del paciente</div>
+            <div class="grid grid-cols-3 my-6">
+                <div class="col-span-1">Paciente:</div>
+                <div class="font-bold col-span-2">Jose Luis Sanchez Cervantes</div>
+            </div>
+            <div class="grid grid-cols-3 my-6">
+                <div class="col-span-1">Fecha de nacimiento:</div>
+                <div class="font-bold col-span-2">15 de marzo de 1984</div>
+            </div>
+            <div class="grid grid-cols-3 my-6">
+                <div class="col-span-1">Edad</div>
+                <div class="font-bold col-span-2">40</div>
+            </div>
+            <div class="grid grid-cols-3 my-6">
+                <div class="col-span-1">Género</div>
+                <div class="font-bold col-span-2">Masculino</div>
+            </div>
+            <div class="grid grid-cols-3 my-6">
+                <div class="col-span-1">Teléfono:</div>
+                <div class="font-bold col-span-2">558-202-2345</div>
+            </div>
+            <div class="grid grid-cols-3 mt-6">
+                <div class="col-span-1">Correo electrónico:</div>
+                <span class="font-bold col-span-2">jose.luis&#64;correo.com</span>
+            </div>
+        </div>
     </div>
+    <div class="col-span-1">
+        <div class="card h-full">
+            <div class="font-semibold text-xl mb-4">Datos adicionales</div>
+            <div class="text-justify">
+                Paciente de 41 años que presenta síntomas consistentes con la Degeneración Macular Asociada a la Edad (DMAE). Durante la evaluación inicial, se observan cambios en la visión central y posibles distorsiones visuales.<br><br>
+                Es importante revisar el historial médico del paciente para identificar factores de riesgo adicionales, como antecedentes familiares de DMAE, tabaquismo, hipertensión y colesterol alto.
+            </div>
+        </div>
+    </div>
+    <div class="col-span-1">
+        <div class="card h-full">
+            <div class="font-semibold text-xl mb-4">Inspecciones realizadas</div>
+            <p-table
+                dataKey="id"
+                [rows]="10"
+                [rowHover]="true"
+                [paginator]="true"
+                [globalFilterFields]="['']"
+                responsiveLayout="scroll"
+                (onRowSelect)="onRowSelect($event)"
+                selectionMode="single">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th scope="col" style="min-width: 6rem">ID</th>
+                        <th scope="col" style="min-width: 8rem">Fecha</th>
+                        <th scope="col" style="min-width: 8rem">Ojo</th>
+                        <th scope="col" style="min-width: 10rem">Resultado</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-inspeccion>
+                    <tr [pSelectableRow]="inspeccion">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="11">No se encontraron resultados</td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="loadingbody">
+                    <tr>
+                        <td colspan="11">Cargando datos. Por favor espere.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
