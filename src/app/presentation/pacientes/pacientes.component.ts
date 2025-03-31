@@ -6,19 +6,23 @@ import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { PrimeTemplate } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
+import { Dialog } from 'primeng/dialog';
+import { Select } from 'primeng/select';
 
 @Component({
     standalone: true,
     selector: 'app-pacientes',
-    imports: [Button, Calendar, NgForOf, NgClass, FormsModule, InputText, PrimeTemplate, TableModule],
+    imports: [Button, Calendar, NgForOf, NgClass, FormsModule, InputText, PrimeTemplate, TableModule, Dialog, Select],
     templateUrl: './pacientes.component.html',
     styleUrl: './pacientes.component.scss'
 })
 export class PacientesComponent {
+    visible = false;
+
     fechasSeleccionadas: Date[] = [];
     calendarDisabled = true;
 
-    selectedPacientes = []
+    selectedPacientes = [];
 
     categorias = [
         { label: 'Mes actual', selected: false },
@@ -26,6 +30,10 @@ export class PacientesComponent {
         { label: '3 meses', selected: false },
         { label: 'Personalizado', selected: false }
     ];
+
+    abrirModal() {
+        this.visible = true;
+    }
 
     seleccionarChip(categoriaSeleccionada: any) {
         this.categorias.forEach((c) => (c.selected = false));
@@ -36,6 +44,10 @@ export class PacientesComponent {
             this.calendarDisabled = true;
             this.fechasSeleccionadas = [];
         }
+    }
+
+    cerrarVentanaNotificacion() {
+        this.visible = false;
     }
 
     async onRowSelect(event: any) {}
@@ -55,5 +67,4 @@ export class PacientesComponent {
     onKeyUp(event: KeyboardEvent) {
         console.log('Key Up:', event.key);
     }
-
 }
