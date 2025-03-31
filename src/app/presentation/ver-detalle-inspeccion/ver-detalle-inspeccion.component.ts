@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { ProgressBar } from 'primeng/progressbar';
 import { PrimeTemplate } from 'primeng/api';
@@ -8,7 +7,7 @@ import { TableModule } from 'primeng/table';
 @Component({
     selector: 'app-ver-detalle-inspeccion',
     standalone: true,
-    imports: [InputText, Button, ProgressBar, PrimeTemplate, TableModule],
+    imports: [Button, ProgressBar, PrimeTemplate, TableModule],
     templateUrl: './ver-detalle-inspeccion.component.html',
     styleUrl: './ver-detalle-inspeccion.component.scss'
 })
