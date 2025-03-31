@@ -42,7 +42,7 @@ export class AppMenu {
                             {
                                 label: 'Todas las inspecciones',
                                 icon: 'pi pi-list',
-                                routerLink: ['/uikit/nueva-inspeccion']
+                                routerLink: ['/uikit/todas-inspecciones']
                             }
                         ]
                     },
