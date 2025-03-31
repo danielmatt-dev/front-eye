@@ -18,12 +18,16 @@ import { ReporteComponent } from '../../presentation/reporte/reporte.component';
 import { DatosGeograficosComponent } from '../../presentation/datos-geograficos/datos-geograficos.component';
 import { DashboardComponent } from '../../presentation/dashboard/dashboard.component';
 import { NuevaInspeccionComponent } from '../../presentation/nueva-inspeccion/nueva-inspeccion.component';
+import {
+    VerDetalleInspeccionComponent
+} from '../../presentation/ver-detalle-inspeccion/ver-detalle-inspeccion.component';
 
 export default [
     { path: 'dashboard', component: DashboardComponent },
     { path: 'reportes', component: ReporteComponent },
     { path: 'datos-geograficos', component: DatosGeograficosComponent },
     { path: 'nueva-inspeccion', component: NuevaInspeccionComponent },
+    { path: 'ver-detalle', component: VerDetalleInspeccionComponent },
     { path: 'button', data: { breadcrumb: 'Button' }, component: ButtonDemo },
     { path: 'charts', data: { breadcrumb: 'Charts' }, component: ChartDemo },
     { path: 'file', data: { breadcrumb: 'File' }, component: FileDemo },

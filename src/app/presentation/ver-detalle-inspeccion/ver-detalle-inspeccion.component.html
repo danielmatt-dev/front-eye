@@ -1,0 +1,97 @@
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Columna 1 y 2 -->
+        <div class="col-span-1">
+            <div class="card h-full">
+                <div class="font-semibold text-xl mb-4">Datos de la inspección</div>
+                <div class="grid grid-cols-3 my-6">
+                    <div class="col-span-1">Fecha:</div>
+                    <div class="font-bold col-span-2">25 de mayo del 2024</div>
+                </div>
+                <div class="grid grid-cols-3 my-6">
+                    <div class="col-span-1">Hora:</div>
+                    <div class="font-bold col-span-2">16:31:20</div>
+                </div>
+                <div class="grid grid-cols-3 my-6">
+                    <div class="col-span-1">Ojo:</div>
+                    <div class="font-bold col-span-2">Derecho</div>
+                </div>
+                <div class="grid grid-cols-3 my-6">
+                    <div class="col-span-1">Enfermedad:</div>
+                    <div class="font-bold col-span-2">DMAE Húmeda</div>
+                </div>
+                <div class="grid grid-cols-3 my-6">
+                    <div class="col-span-1">Doctor:</div>
+                    <div class="font-bold col-span-2">Jorge Ernesto Gonzalez Diaz</div>
+                </div>
+                <div class="flex justify-end items-center gap-4">
+                    <div class="font-semibold text-xl">Resultado:</div>
+                    <p-button
+                        label="Proliferativo"
+                        disabled="true"
+                        [style]="{opacity: '3', background: red, border: red}"
+                    ></p-button>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-1">
+            <div class="card h-full">
+                <div class="font-semibold text-xl mb-8">Probabilidad de Ocurrecia (IA)</div>
+                <!-- Usamos grid-rows-[repeat(4,1fr)] para que las 4 filas se repartan el 100% del alto -->
+                <div class="grid grid-rows-5 h-full">
+                    <div class="row-span-1 grid grid-cols-3">
+                        <div class="col-span-1">Proliferativo</div>
+                        <p-progressBar
+                            [value]="89.21"
+                            class="col-span-2"
+                            [color]="red"
+                            [showValue]="false">
+                            <ng-template pTemplate="value">
+                                {{ 0.8921 }}
+                            </ng-template>
+                        </p-progressBar>
+                    </div>
+                    <div class="row-span-1 grid grid-cols-3">
+                        <div class="col-span-1">Moderado</div>
+                        <p-progressBar
+                            [value]="44.10"
+                            class="col-span-2"
+                            [color]="amber"
+                            [showValue]="false">
+                            <ng-template pTemplate="value">
+                                {{ 0.4410 }}
+                            </ng-template>
+                        </p-progressBar>
+                    </div>
+                    <div class="row-span-1 grid grid-cols-3">
+                        <div class="col-span-1">Leve</div>
+                        <p-progressBar
+                            [value]="26.3"
+                            class="col-span-2"
+                            [color]="blue"
+                            [showValue]="false">
+                            <ng-template pTemplate="value">
+                                {{ 0.263 }}
+                            </ng-template>
+                        </p-progressBar>
+                    </div>
+                    <div class="row-span-1 grid grid-cols-3">
+                        <div class="col-span-1">Sin afección</div>
+                        <p-progressBar
+                            [value]="15"
+                            class="col-span-2"
+                            [color]="green"
+                            [showValue]="false">
+                            <ng-template pTemplate="value">
+                                {{ 0.15 }}
+                            </ng-template>
+                        </p-progressBar>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-1">
+            <div class="card h-full">
+                <div class="font-semibold text-xl mb-4">Imagen</div>
+            </div>
+        </div>
+    </div>
