@@ -47,6 +47,7 @@ export class AppMenu {
                         ]
                     },
                     { label: 'Administrar pacientes', icon: 'pi pi-fw pi-user', routerLink: ['/uikit/pacientes'] },
+                    { label: 'Administrar doctores  ', icon: 'pi pi-fw pi-user', routerLink: ['/uikit/doctores'] },
                     { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
                     { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
                     { label: 'Button', icon: 'pi pi-fw pi-mobile', class: 'rotated-icon', routerLink: ['/uikit/button'] },

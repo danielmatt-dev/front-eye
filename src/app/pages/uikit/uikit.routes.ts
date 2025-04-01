@@ -23,6 +23,7 @@ import {
 } from '../../presentation/ver-detalle-inspeccion/ver-detalle-inspeccion.component';
 import { PacientesComponent } from '../../presentation/pacientes/pacientes.component';
 import { TodasInspeccionesComponent } from '../../presentation/todas-inspecciones/todas-inspecciones.component';
+import { DoctorComponent } from '../../presentation/doctor/doctor.component';
 
 export default [
     { path: 'dashboard', component: DashboardComponent },
@@ -32,6 +33,7 @@ export default [
     { path: 'ver-detalle', component: VerDetalleInspeccionComponent },
     { path: 'todas-inspecciones', component: TodasInspeccionesComponent },
     { path: 'pacientes', component: PacientesComponent },
+    { path: 'doctores', component: DoctorComponent },
     { path: 'button', data: { breadcrumb: 'Button' }, component: ButtonDemo },
     { path: 'charts', data: { breadcrumb: 'Charts' }, component: ChartDemo },
     { path: 'file', data: { breadcrumb: 'File' }, component: FileDemo },
