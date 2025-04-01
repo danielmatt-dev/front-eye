@@ -21,6 +21,7 @@
         "@angular/router": "^19.0.0",
         "@primeng/themes": "^19.0.5",
         "chart.js": "4.4.2",
+        "leaflet.control.layers.tree": "^1.1.1",
         "leaflet.featuregroup.subgroup": "^1.0.2",
         "leaflet.markercluster": "^1.5.3",
         "primeclt": "^0.1.5",

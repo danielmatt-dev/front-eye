@@ -1,0 +1,16 @@
+/* Ajusta la clase raíz del plugin */
+.leaflet-control-layers-tree {
+    font-size: 14px; /* ejemplo, si deseas un tamaño de fuente distinto */
+}
+
+/* Ajusta la separación entre etiquetas (opciones) */
+.leaflet-control-layers-tree label {
+    display: flex;         /* para alinear checkbox y texto */
+    align-items: center;
+    margin-bottom: 6px;    /* espacio vertical entre cada opción */
+}
+
+/* Espacio adicional a la izquierda de sub-elementos */
+.leaflet-control-layers-tree .leaflet-control-layers-tree-children {
+    margin-left: 1rem;     /* sangría para hijos */
+}
