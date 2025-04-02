@@ -128,3 +128,24 @@
         </div>
     </div>
 </p-fluid>
+
+<div class="card mt-8">
+    <div class="font-semibold text-xl mb-4">Detecciones por rango de edad y afección</div>
+    <div class="flex justify-between my-6">
+        <p-select-button
+            id="ojo"
+            [options]="options"
+            [ngModel]="optionSelected"
+        />
+        <p-date-picker
+            selectionMode="range"
+            placeholder="01 Enero - 31 de Mayo de 2024"
+            showIcon="true"
+        />
+    </div>
+    <p-chart
+        type="line"
+        [data]="lineData"
+        [options]="lineOptions"
+    ></p-chart>
+</div>

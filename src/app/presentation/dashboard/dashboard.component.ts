@@ -3,19 +3,33 @@ import { debounceTime, Subscription } from 'rxjs';
 import { LayoutService } from '../../layout/service/layout.service';
 import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
+import { SelectButton } from 'primeng/selectbutton';
+import { FormsModule } from '@angular/forms';
+import { Calendar } from 'primeng/calendar';
+import { DatePicker } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [Fluid, UIChart],
+    imports: [Fluid, UIChart, SelectButton, FormsModule, Calendar, DatePicker],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
+    red = '#ff3d32';
+    amber = '#f97316';
+    blue = '#3b82f6';
+    green = '#22c55e';
+
     barData1: any;
     barOptions1: any;
     barData2: any;
     barOptions2: any;
+    lineData: any;
+    lineOptions: any;
+
+    options = ['1 Día', '1 Semana', '1 Mes', '3 Meses', 'Todo'];
+    optionSelected: string = 'Todo';
 
     subscription: Subscription;
 
@@ -120,6 +134,77 @@ export class DashboardComponent implements OnInit {
                     },
                     grid: {
                         display: false,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                }
+            }
+        };
+
+        this.lineData = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [
+                {
+                    label: 'Proliferativo',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    fill: false,
+                    backgroundColor: this.red,
+                    borderColor: this.red,
+                    tension: 0
+                },
+                {
+                    label: 'Moderado',
+                    data: [28, 48, 40, 19, 86, 27, 90],
+                    fill: false,
+                    backgroundColor: this.amber,
+                    borderColor: this.amber,
+                    tension: 0
+                },
+                {
+                    label: 'Leve',
+                    data: [10, 56, 30, 29, 31, 48, 102],
+                    fill: false,
+                    backgroundColor: this.blue,
+                    borderColor: this.blue,
+                    tension: 0
+                },
+                {
+                    label: 'Sin afección',
+                    data: [38, 48, 70, 69, 36, 77, 80],
+                    fill: false,
+                    backgroundColor: this.green,
+                    borderColor: this.green,
+                    tension: 0
+                }
+            ]
+        };
+
+        this.lineOptions = {
+            maintainAspectRatio: false,
+            aspectRatio: 0.8,
+            plugins: {
+                legend: {
+                    align: 'end',
+                    labels: {
+                        color: textColor
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
                         drawBorder: false
                     }
                 },
