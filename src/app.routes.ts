@@ -8,7 +8,7 @@ export const appRoutes: Routes = [
         path: '',
         component: AppLayout,
         children: [
-            { path: 'insights', loadChildren: () => import('./app/pages/uikit/uikit.routes') }
+            { path: 'insights', loadChildren: () => import('./app/pages/uikit/insights.routes') }
         ]
     },
     //{ path: 'landing', component: Landing },

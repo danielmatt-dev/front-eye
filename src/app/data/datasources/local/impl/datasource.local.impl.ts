@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
     providedIn: 'root'
 })
-class DatasourceLocalImpl implements DatasourceLocal {
+export class DatasourceLocalImpl implements DatasourceLocal {
 
     setToken(token: string) {
         localStorage.setItem('token', token);
