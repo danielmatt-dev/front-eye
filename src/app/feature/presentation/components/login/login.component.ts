@@ -41,11 +41,11 @@ export class LoginComponent {
         }
 
         if (userRole === 'ADMIN') {
-            await this.router.navigate(['/insights/dashboard']);
+            await this.router.navigate(['/insights/dashboard'], { replaceUrl: true });
         }
 
         if (userRole === 'DOCTOR') {
-            await this.router.navigate(['/insights/nueva-inspeccion']);
+            await this.router.navigate(['/insights/nueva-inspeccion'], { replaceUrl: true });
         }
     }
 }

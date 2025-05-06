@@ -18,7 +18,11 @@ export class DatasourceLocalImpl implements DatasourceLocal {
     }
 
     getRole(): string | null {
-        return localStorage.getItem('role')
+        return localStorage.getItem('role');
+    }
+
+    clear(): void {
+        localStorage.clear()
     }
 
 }
