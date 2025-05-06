@@ -8,16 +8,16 @@ import { Router, RouterModule } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 import { DatasourceLocalImpl } from '../../data/datasources/local/impl/datasource.local.impl';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-login',
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator, TranslatePipe],
     templateUrl: './login.component.html',
     standalone: true,
     styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-
     email: string = '';
 
     password: string = '';
@@ -30,25 +30,22 @@ export class LoginComponent {
     ) {}
 
     async redirigir() {
-
         //const userRole = this.local.getRole()
-        let userRole = 'ADMIN'
+        let userRole = 'ADMIN';
 
-        this.email = this.email.toLowerCase()
+        this.email = this.email.toLowerCase();
         if (this.email.includes('doctor')) {
-            this.local.setRole('DOCTOR')
+            this.local.setRole('DOCTOR');
         } else {
-            this.local.setRole('ADMIN')
+            this.local.setRole('ADMIN');
         }
 
         if (userRole === 'ADMIN') {
-            await this.router.navigate(['/insights/dashboard'])
+            await this.router.navigate(['/insights/dashboard']);
         }
 
         if (userRole === 'DOCTOR') {
-            await this.router.navigate(['/insights/nueva-inspeccion'])
+            await this.router.navigate(['/insights/nueva-inspeccion']);
         }
-
     }
-
 }
