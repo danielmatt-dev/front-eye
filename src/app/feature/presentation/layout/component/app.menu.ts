@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
-import { DatasourceLocalImpl } from '../../data/datasources/local/impl/datasource.local.impl';
+import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
 
 @Component({
     selector: 'app-menu',

@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
-import { DatasourceLocalImpl } from '../../data/datasources/local/impl/datasource.local.impl';
+import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

@@ -5,13 +5,13 @@ import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
 import { SelectButton } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
-import { Calendar } from 'primeng/calendar';
+import { CalendarModule } from 'primeng/calendar';
 import { DatePicker } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [Fluid, UIChart, SelectButton, FormsModule, Calendar, DatePicker],
+    imports: [Fluid, UIChart, SelectButton, FormsModule, CalendarModule, DatePicker],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss'
 })
