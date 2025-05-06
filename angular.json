@@ -31,7 +31,8 @@
                                 "glob": "**/*",
                                 "input": "node_modules/leaflet/dist/images",
                                 "output": "media"
-                            }
+                            },
+                            "src/favicon.ico"
                         ],
                         "styles": [
                             "node_modules/leaflet/dist/leaflet.css",
