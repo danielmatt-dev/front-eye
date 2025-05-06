@@ -6,4 +6,7 @@ interface DatasourceLocal {
     setRole(role: string): void;
 
     getRole(): string | null;
+
+    clear(): void
+
 }

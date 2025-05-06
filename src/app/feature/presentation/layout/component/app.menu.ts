@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-menu',
@@ -19,9 +19,12 @@ import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasou
 export class AppMenu implements OnInit {
     model: MenuItem[] = [];
 
-    constructor(private readonly local: DatasourceLocalImpl) {}
+    constructor(
+        private readonly local: DatasourceLocalImpl,
+        private readonly router: Router
+    ) {}
 
-    ngOnInit() {
+    async ngOnInit() {
 
         const userRole = this.local.getRole()
 
@@ -31,8 +34,21 @@ export class AppMenu implements OnInit {
                     items: [
                         { label: 'Dashboard', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/insights/dashboard'] },
                         { label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
-                        { label: 'Datos Geográficos', icon: 'pi pi-fw pi-globe', routerLink: ['/insights/datos-geograficos'] },
-                        { label: 'Administrar doctores  ', icon: 'pi pi-fw pi-user', routerLink: ['/insights/doctores'] },
+                        {
+                            label: 'Datos Geográficos',
+                            icon: 'pi pi-fw pi-globe',
+                            routerLink: ['/insights/datos-geograficos']
+                        },
+                        {
+                            label: 'Administrar doctores  ',
+                            icon: 'pi pi-fw pi-user',
+                            routerLink: ['/insights/doctores']
+                        },
+                        {
+                            label: 'Cerrar sesión',
+                            icon: 'pi pi-fw pi-lock',
+                            command: () => { this.logout().then() }
+                        }
                     ]
                 }
             ];
@@ -58,11 +74,26 @@ export class AppMenu implements OnInit {
                                 }
                             ]
                         },
-                        { label: 'Administrar pacientes', icon: 'pi pi-fw pi-user', routerLink: ['/insights/pacientes'] },
+                        {
+                            label: 'Administrar pacientes',
+                            icon: 'pi pi-fw pi-user',
+                            routerLink: ['/insights/pacientes']
+                        },
                         { label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
+                        {
+                            label: 'Cerrar sesión',
+                            icon: 'pi pi-fw pi-lock',
+                            command: () => { this.logout().then() }
+                        }
                     ]
                 }
             ];
         }
     }
+
+    async logout() {
+        this.local.clear()
+        await this.router.navigate(['/'])
+    }
+
 }
