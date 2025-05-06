@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { Access } from './access';
 import { Error } from './error';
-import { LoginComponent } from '../../presentation/login/login.component';
+import { LoginComponent } from '../../feature/presentation/components/login/login.component';
 
 export default [
     { path: 'access', component: Access },

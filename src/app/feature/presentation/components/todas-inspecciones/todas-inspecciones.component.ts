@@ -6,12 +6,12 @@ import { NgClass, NgForOf } from '@angular/common';
 import { PrimeTemplate } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
-import { Dialog } from 'primeng/dialog';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
     standalone: true,
     selector: 'app-todas-inspecciones',
-    imports: [Button, Calendar, InputText, NgForOf, PrimeTemplate, TableModule, NgClass, FormsModule, Dialog],
+    imports: [Button, Calendar, InputText, NgForOf, PrimeTemplate, TableModule, NgClass, FormsModule, DialogModule],
     templateUrl: './todas-inspecciones.component.html',
     styleUrl: './todas-inspecciones.component.scss'
 })

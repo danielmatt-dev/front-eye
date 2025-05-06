@@ -1,15 +1,15 @@
 import { Routes } from '@angular/router';
-import { ReporteComponent } from '../../presentation/reporte/reporte.component';
-import { DatosGeograficosComponent } from '../../presentation/datos-geograficos/datos-geograficos.component';
-import { DashboardComponent } from '../../presentation/dashboard/dashboard.component';
-import { NuevaInspeccionComponent } from '../../presentation/nueva-inspeccion/nueva-inspeccion.component';
+import { ReporteComponent } from '../../feature/presentation/components/reporte/reporte.component';
+import { DatosGeograficosComponent } from '../../feature/presentation/components/datos-geograficos/datos-geograficos.component';
+import { DashboardComponent } from '../../feature/presentation/components/dashboard/dashboard.component';
+import { NuevaInspeccionComponent } from '../../feature/presentation/components/nueva-inspeccion/nueva-inspeccion.component';
 import {
     VerDetalleInspeccionComponent
-} from '../../presentation/ver-detalle-inspeccion/ver-detalle-inspeccion.component';
-import { PacientesComponent } from '../../presentation/pacientes/pacientes.component';
-import { TodasInspeccionesComponent } from '../../presentation/todas-inspecciones/todas-inspecciones.component';
-import { DoctorComponent } from '../../presentation/doctor/doctor.component';
-import { RoleGuard } from '../../guards/role.guard';
+} from '../../feature/presentation/components/ver-detalle-inspeccion/ver-detalle-inspeccion.component';
+import { PacientesComponent } from '../../feature/presentation/components/pacientes/pacientes.component';
+import { TodasInspeccionesComponent } from '../../feature/presentation/components/todas-inspecciones/todas-inspecciones.component';
+import { DoctorComponent } from '../../feature/presentation/components/doctor/doctor.component';
+import { RoleGuard } from '../../feature/presentation/guards/role.guard';
 
 export default [
     {
