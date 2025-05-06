@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
-import { Calendar } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { Table, TableModule } from 'primeng/table';
 import { InputText } from 'primeng/inputtext';
@@ -10,23 +9,30 @@ import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
 import { LayoutService } from '../../layout/service/layout.service';
 import { debounceTime, Subscription } from 'rxjs';
+import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
+import { afecciones, inspections, resultados } from './mocks';
+import { NgIf } from '@angular/common';
+import { DatePicker } from 'primeng/datepicker';
+import { PrimeNG } from 'primeng/config';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-reporte',
     standalone: true,
-    imports: [DropdownModule, FormsModule, Calendar, TableModule, InputText, ButtonModule, Select, Fluid, UIChart],
+    imports: [DropdownModule, FormsModule, TableModule, InputText, ButtonModule, Select, Fluid, UIChart, NgIf, DatePicker],
     templateUrl: './reporte.component.html',
     styleUrl: './reporte.component.scss'
 })
 export class ReporteComponent implements OnInit {
-    @ViewChild(Calendar) calendar!: Calendar;
 
-    afecciones = ['Opción 1', 'Opción 2', 'Opción 3'];
-    afeccionSeleccionada?: string = undefined;
-    resultados = ['Opción 1', 'Opción 2', 'Opción 3'];
-    resultadoSeleccionado?: string = undefined;
+    afecciones = afecciones;
+    afeccionSeleccionada = 'Todos';
+    resultados = resultados;
+    resultadoSeleccionado = 'Todos';
 
     fechasSeleccionadas: Date[] = [];
+
+    reportes = inspections;
 
     lineData: any;
 
@@ -42,14 +48,26 @@ export class ReporteComponent implements OnInit {
 
     subscription: Subscription;
 
-    constructor(private readonly layoutService: LayoutService) {
+    showGraphics = false;
+
+    constructor(
+        private readonly layoutService: LayoutService,
+        private readonly local: DatasourceLocalImpl,
+        private primeng: PrimeNG,
+        private translateService: TranslateService
+    ) {
         this.subscription = this.layoutService.configUpdate$.pipe(debounceTime(25)).subscribe(() => {
             this.initCharts();
         });
     }
 
     ngOnInit(): void {
-        this.initCharts()
+        this.translate('es')
+
+        if (this.local.getRole() === 'DOCTOR') {
+            this.showGraphics = true
+            this.initCharts();
+        }
     }
 
     initCharts() {
@@ -189,6 +207,11 @@ export class ReporteComponent implements OnInit {
                 }
             }
         };
+    }
+
+    translate(lang: string) {
+        this.translateService.use(lang)
+        this.translateService.get('primeng').subscribe((res => this.primeng.setTranslation(res)) )
     }
 
     async onRowSelect(event: any) {}

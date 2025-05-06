@@ -22,7 +22,7 @@
             </div>
             <div class="flex flex-col gap-2 w-full">
                 <label for="dateRange2" class="font-bold">Rango de fechas</label>
-                <p-calendar
+                <p-date-picker
                     id="dateRange2"
                     showIcon="true"
                     [(ngModel)]="fechasSeleccionadas"
@@ -30,7 +30,7 @@
                     placeholder="Fechas"
                     class="w-full"
                     [style]="{ width: '100%' }"
-                ></p-calendar>
+                ></p-date-picker>
             </div>
             <div class="flex flex-col justify-end">
                 <p-button label="Consultar" class="w-full md:w-auto"/>
@@ -45,6 +45,7 @@
         #dt1
         dataKey="id"
         [rows]="50"
+        [value]="reportes"
         [loading]="false"
         [rowHover]="true"
         [paginator]="true"
@@ -107,13 +108,13 @@
 
         <ng-template pTemplate="body" let-reporte>
             <tr [pSelectableRow]="reporte">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ reporte.id }}</td>
+                <td>{{ reporte.fecha }}</td>
+                <td>{{ reporte.hora }}</td>
+                <td>{{ reporte.edad }}</td>
+                <td>{{ reporte.afeccion }}</td>
+                <td>{{ reporte.ojo }}</td>
+                <td>{{ reporte.resultado }}</td>
             </tr>
         </ng-template>
 
@@ -132,7 +133,7 @@
     </p-table>
 </div>
 
-<p-fluid class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<p-fluid *ngIf="showGraphics" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
     <div class="col-span-1">
         <div class="card">
             <div class="font-semibold text-xl mb-4">Distribución por afección</div>
