@@ -1,0 +1,16 @@
+{
+    "app": {
+        "title": "Eye Insights"
+    },
+    "login": {
+        "title": "Bienvenido a Eye Insights",
+        "subtitle": "Inicia sesión para continuar",
+        "emailLabel": "Correo electrónico",
+        "emailPlaceholder": "ejemplo@correo.com",
+        "passwordLabel": "Contraseña",
+        "passwordPlaceholder": "Ingresa tu contraseña",
+        "rememberMe": "Recordarme",
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "signIn": "Iniciar sesión"
+    }
+}
