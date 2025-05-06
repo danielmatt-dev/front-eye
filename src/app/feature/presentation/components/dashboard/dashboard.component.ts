@@ -7,6 +7,7 @@ import { SelectButton } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DatePicker } from 'primeng/datepicker';
+import { mapColors } from '../../../../core/theme/colors';
 
 @Component({
     selector: 'app-dashboard',
@@ -16,10 +17,11 @@ import { DatePicker } from 'primeng/datepicker';
     styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
-    red = '#ff3d32';
-    amber = '#f97316';
-    blue = '#3b82f6';
-    green = '#22c55e';
+
+    red = mapColors['red']
+    amber = mapColors['amber']
+    blue = mapColors['blue']
+    green = mapColors['green']
 
     barData1: any;
     barOptions1: any;

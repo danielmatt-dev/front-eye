@@ -3,6 +3,7 @@ import { Button } from 'primeng/button';
 import { ProgressBar } from 'primeng/progressbar';
 import { PrimeTemplate } from 'primeng/api';
 import { TableModule } from 'primeng/table';
+import { mapColors } from '../../../../core/theme/colors';
 
 @Component({
     selector: 'app-ver-detalle-inspeccion',
@@ -12,10 +13,11 @@ import { TableModule } from 'primeng/table';
     styleUrl: './ver-detalle-inspeccion.component.scss'
 })
 export class VerDetalleInspeccionComponent {
-    red = '#f87171';
-    amber = '#FB923C';
-    blue = '#38BDF8';
-    green = '#4ADE80';
+
+    red = mapColors['red']
+    amber = mapColors['amber']
+    blue = mapColors['blue']
+    green = mapColors['green']
 
     async onRowSelect(event: any) {}
 
