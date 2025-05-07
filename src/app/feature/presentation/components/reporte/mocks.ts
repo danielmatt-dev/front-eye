@@ -84,3 +84,71 @@ export const dataPointsMocks = [
     { lat: 18.8473, lng: -97.1023, name: 'Museo Interactivo de Orizaba' },
     { lat: 18.8461, lng: -97.1057, name: 'Archivo Histórico de Orizaba' }
 ]
+
+export const doctores = [
+    {
+        clave: 'D001',
+        nombre: 'Carlos',
+        apellidos: 'Gómez Hernández',
+        fechaNacimiento: '1980-05-12',
+        genero: 'Masculino',
+        codigoPostal: '94300',
+        direccion: 'Calle Reforma #123, Centro, Orizaba',
+        estado: 'Veracruz'
+    },
+    {
+        clave: 'D002',
+        nombre: 'María',
+        apellidos: 'Pérez Ramírez',
+        fechaNacimiento: '1975-11-08',
+        genero: 'Femenino',
+        codigoPostal: '94320',
+        direccion: 'Av. Circunvalación #456, Orizaba',
+        estado: 'Veracruz'
+    },
+    {
+        clave: 'D003',
+        nombre: 'Luis',
+        apellidos: 'Martínez López',
+        fechaNacimiento: '1990-03-21',
+        genero: 'Masculino',
+        codigoPostal: '94340',
+        direccion: 'Blvd. Colón #789, Norte, Orizaba',
+        estado: 'Veracruz'
+    },
+    {
+        clave: 'D004',
+        nombre: 'Sofía',
+        apellidos: 'García Cruz',
+        fechaNacimiento: '1985-07-30',
+        genero: 'Femenino',
+        codigoPostal: '94360',
+        direccion: 'Calle Sur 4 #321, Orizaba',
+        estado: 'Veracruz'
+    },
+    {
+        clave: 'D005',
+        nombre: 'Jorge',
+        apellidos: 'Ramírez Torres',
+        fechaNacimiento: '1978-01-15',
+        genero: 'Masculino',
+        codigoPostal: '94380',
+        direccion: 'Calle Poniente 12 #654, Orizaba',
+        estado: 'Veracruz'
+    },
+    {
+        clave: 'D006',
+        nombre: 'Ana',
+        apellidos: 'López Rivera',
+        fechaNacimiento: '1995-02-05',
+        genero: 'Femenino',
+        codigoPostal: '94400',
+        direccion: 'Calle Oriente 2 #987, Orizaba',
+        estado: 'Veracruz'
+    }
+]
+
+export const generos = [
+    'Masculino',
+    'Femenino',
+]

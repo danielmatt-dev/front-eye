@@ -13,6 +13,59 @@
         "forgotPassword": "¿Olvidaste tu contraseña?",
         "signIn": "Iniciar sesión"
     },
+    "titles": {
+        "doctors": "Doctores"
+    },
+    "labels": {
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "key": "Clave",
+        "name": "Nombre",
+        "lastname": "Apellidos",
+        "fatherLastName": "Apellido paterno",
+        "motherLastName": "Apellido materno",
+        "phone": "Teléfono",
+        "gender": "Género",
+        "birthDate": "Fecha de nacimiento",
+        "address": "Dirección",
+        "postalCode": "Código postal",
+        "state": "Estado",
+        "selectPeriod": "Selecciona un periodo",
+        "dateRange": "Rango de fechas"
+    },
+    "placeholders": {
+        "email": "ejemplo@correo.com",
+        "password": "Ingresa tu contraseña",
+        "name": "Juan",
+        "fatherLastName": "García",
+        "motherLastName": "Pérez",
+        "phone": "5551234567",
+        "gender": "Seleccione el género",
+        "birthDate": "01/01/1990",
+        "address": "Av. Principal #456, Col. Jardines",
+        "postalCode": "12345",
+        "search": "Buscar...",
+        "dateRange": "Desde - Hasta"
+    },
+    "buttons": {
+        "save": "Guardar",
+        "register": "Registrar",
+        "consult": "Consultar",
+        "cancel": "Cancelar",
+        "exportExcel": "Exportar tabla a Excel",
+        "downloadPDF": "Descargar tabla en PDF",
+        "new": "Registrar nuevo {{item}}",
+        "delete": "Eliminar {{items}} seleccionados"
+    },
+    "messages": {
+        "noDataFound": "No se encontraron doctores",
+        "loadingData": "Cargando datos. Por favor espere."
+    },
+    "doctor": {
+        "singular": "Doctor",
+        "plural": "Doctores",
+        "titleModal": "Datos del doctor"
+    },
     "primeng": {
         "startsWith": "Comienza con",
         "contains": "Contiene",

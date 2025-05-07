@@ -7,7 +7,7 @@
 
                 <!-- Chips -->
                 <div class="flex flex-col">
-                    <span class="font-bold mb-2">Selecciona un periodo</span>
+                    <div class="font-bold mb-2">{{ 'labels.selectPeriod' | translate }}</div>
                     <div class="flex flex-wrap gap-2">
                         <div
                             *ngFor="let categoria of categorias"
@@ -25,13 +25,13 @@
 
                 <!-- Rango de Fechas -->
                 <div class="flex flex-col gap-2">
-                    <label for="dateRange" class="font-bold">Rango de fechas</label>
+                    <label for="dateRange" class="font-bold">{{ 'labels.dateRange' | translate }}</label>
                     <p-calendar
                         id="dateRange"
                         showIcon="true"
                         [(ngModel)]="fechasSeleccionadas"
                         selectionMode="range"
-                        placeholder="Fechas"
+                        placeholder="{{ 'placeholders.dateRange' | translate }}"
                         class="w-full sm:w-[21rem] md:w-[18rem] lg:w-[18rem] xl:w-[18rem]"
                         [style]="{width:' 100%' }"
                         [disabled]="calendarDisabled"
@@ -40,7 +40,7 @@
 
                 <!-- Botón de consultar -->
                 <div class="flex flex-col self-end">
-                    <p-button label="Consultar" class="w-full md:w-auto"/>
+                    <p-button label="{{ 'buttons.consult' | translate }}" class="w-full md:w-auto"/>
                 </div>
 
             </div>
@@ -52,17 +52,17 @@
 <!-- Tabla de doctores -->
 <div class="card">
     <div class="flex flex-wrap sm:flex-row justify-between gap-4">
-        <div class="font-semibold text-xl">Doctores</div>
+        <div class="font-semibold text-xl">{{ 'titles.doctors' | translate }}</div>
         <!-- Contenedor para los botones alineados a la derecha -->
         <div class="flex gap-4">
             <p-button
-                label="Nuevo doctor"
+                label="{{ 'buttons.new' | translate: { item: labelDoctor } }}"
                 (onClick)="abrirModal()"
                 icon="pi pi-plus"
             ></p-button>
 
             <p-button
-                label="Eliminar doctores"
+                label="{{ 'buttons.delete' | translate: { items: labelDoctors } }}"
                 severity="danger"
                 icon="pi pi-trash">
             </p-button>
@@ -77,6 +77,7 @@
         [rowHover]="true"
         [paginator]="true"
         [globalFilterFields]="['']"
+        [value]="doctores"
         responsiveLayout="scroll"
         (onRowSelect)="onRowSelect($event)"
         selectionMode="multiple"
@@ -87,7 +88,7 @@
                 <!-- Contenedor de botones alineados a la izquierda -->
                 <div class="flex flex-col-375 sm:flex-row gap-2">
                     <p-button
-                        label="Exportar a Excel"
+                        label="{{ 'buttons.exportExcel' | translate }}"
                         icon="pi pi-file-excel"
                         severity="success"
                         outlined="true"
@@ -97,7 +98,7 @@
                     ></p-button>
 
                     <p-button
-                        label="Descargar en PDF"
+                        label="{{ 'buttons.downloadPDF' | translate }}"
                         severity="danger"
                         outlined="true"
                         icon="pi pi-file-pdf"
@@ -114,7 +115,7 @@
                         type="text"
                         #filter
                         (input)="onGlobalFilter(dt1, $event)"
-                        placeholder="Buscar ..."
+                        placeholder="{{ 'placeholders.search' | translate }}"
                         style="padding-left: 2rem;"
                         class="w-full sm:w-64 lg:w-80"
                     />
@@ -128,14 +129,14 @@
                 <th id="check" style="width: 3em">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th scope="col" style="min-width: 6rem">Clave</th>
-                <th scope="col" style="min-width: 10rem">Nombre</th>
-                <th scope="col" style="min-width: 10rem">Apellidos</th>
-                <th scope="col" style="min-width: 8rem">Fecha de nacimiento</th>
-                <th scope="col" style="min-width: 8rem">Género</th>
-                <th scope="col" style="min-width: 10rem">Código Postal</th>
-                <th scope="col" style="min-width: 12rem">Dirección</th>
-                <th scope="col" style="min-width: 10rem">Estado</th>
+                <th scope="col" style="min-width: 10rem">{{ 'labels.key' | translate }}</th>
+                <th scope="col" style="min-width: 10rem">{{ 'labels.name' | translate }}</th>
+                <th scope="col" style="min-width: 8rem">{{ 'labels.lastname' | translate }}</th>
+                <th scope="col" style="min-width: 8rem">{{ 'labels.birthDate' | translate }}</th>
+                <th scope="col" style="min-width: 10rem">{{ 'labels.gender' | translate }}</th>
+                <th scope="col" style="min-width: 12rem">{{ 'labels.postalCode' | translate }}</th>
+                <th scope="col" style="min-width: 12rem">{{ 'labels.address' | translate }}</th>
+                <th scope="col" style="min-width: 10rem">{{ 'labels.state' | translate }}</th>
             </tr>
         </ng-template>
 
@@ -164,80 +165,83 @@
 
         <ng-template pTemplate="loadingbody">
             <tr>
-                <td colspan="11">Cargando datos. Por favor espere.</td>
+                <td colspan="11">{{ 'messages.loadingData' | translate }}</td>
             </tr>
         </ng-template>
     </p-table>
 </div>
 
 <p-dialog
-    header="Datos del paciente"
+    header="{{ 'doctor.titleModal' | translate }}"
     class="font-bold"
     [modal]="true"
     [(visible)]="visible"
-    [style]="{ width: '70rem', 'min-width': '30rem', 'max-width': '70rem', 'overflow-x': 'hidden' }"
+    [style]="{ width: '70rem', 'min-width': '30rem', 'max-width': '70rem', 'overflow-x': 'hidden', 'padding': '0.5rem' }"
     (onHide)="cerrarVentanaNotificacion()">
 
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="nombre">Nombre</label>
-            <input pInputText id="nombre" type="text" />
+            <label for="nombre">{{ 'labels.name' | translate }}</label>
+            <input pInputText id="nombre" type="text" placeholder="{{ 'placeholders.name' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="paterno">Apellido Paterno</label>
-            <input pInputText id="paterno" type="text" />
+            <label for="paterno">{{ 'labels.fatherLastName' | translate }}</label>
+            <input pInputText id="paterno" type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="materno">Apellido Materno</label>
-            <input pInputText id="materno" type="text" />
+            <label for="materno">{{ 'labels.motherLastName' | translate }}</label>
+            <input pInputText id="materno" type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}" />
         </div>
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="correo">Correo Electrónico</label>
-            <input pInputText id="correo" type="text" />
+            <label for="correo">{{ 'labels.email' | translate }}</label>
+            <input pInputText id="correo" type="text" placeholder="{{ 'placeholders.email' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="telefono">Teléfono</label>
-            <input pInputText id="telefono" type="text" />
+            <label for="telefono">{{ 'labels.phone' | translate }}</label>
+            <input pInputText id="telefono" type="text" placeholder="{{ 'placeholders.phone' | translate }}" />
         </div>
 
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="genero">Género</label>
+            <label for="genero">{{ 'labels.gender' | translate }}</label>
             <p-select
                 id="genero"
+                [options]="generos"
+                placeholder="{{ 'placeholders.gender' | translate }}"
             ></p-select>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="nacimiento">Fecha de nacimiento</label>
-            <p-calendar
+            <label for="nacimiento">{{ 'labels.birthDate' | translate }}</label>
+            <p-date-picker
                 id="nacimiento"
                 showIcon="true"
                 class="w-full"
                 [style]="{ width: '100%' }"
-            ></p-calendar>
+                placeholder="{{ 'placeholders.birthDate' | translate }}"
+            ></p-date-picker>
         </div>
     </div>
     <div class="flex flex-wrap gap-6">
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="direccion">Dirección</label>
-            <input pInputText id="direccion" type="text" />
+            <label for="direccion">{{ 'labels.address' | translate }}</label>
+            <input pInputText id="direccion" type="text" placeholder="{{ 'placeholders.address' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="cp">Código Postal</label>
-            <input pInputText id="cp" type="text" />
+            <label for="cp">{{ 'labels.postalCode' | translate }}</label>
+            <input pInputText id="cp" type="text" placeholder="{{ 'placeholders.postalCode' | translate }}" />
         </div>
     </div>
     <div class="flex flex-wrap justify-end gap-6 mt-6">
         <p-button
             severity="danger"
             (onClick)="cerrarVentanaNotificacion()"
-            label="Cancelar"
+            label="{{ 'buttons.cancel' | translate }}"
         ></p-button>
         <p-button
-            label="Guardar"
+            label="{{ 'buttons.register' | translate }}"
         ></p-button>
     </div>
 
