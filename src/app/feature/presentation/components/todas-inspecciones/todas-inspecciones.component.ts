@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PrimeNG } from 'primeng/config';
-import { inspecciones, reports } from '../../../../shared/utils/mocks';
+import { inspecciones } from '../../../../shared/utils/mocks';
 
 @Component({
     standalone: true,

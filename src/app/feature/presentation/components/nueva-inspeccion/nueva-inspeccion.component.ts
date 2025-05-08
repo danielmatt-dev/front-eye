@@ -9,11 +9,14 @@ import { Calendar } from 'primeng/calendar';
 import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
 import { Textarea } from 'primeng/textarea';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { afecciones, generos } from '../../../../shared/utils/mocks';
+import { PrimeNG } from 'primeng/config';
 
 @Component({
     selector: 'app-nueva-inspeccion',
     standalone: true,
-    imports: [CommonModule, FileUploadModule, ToastModule, ButtonModule, InputText, Calendar, Select, SelectButton, Textarea],
+    imports: [CommonModule, FileUploadModule, ToastModule, ButtonModule, InputText, Calendar, Select, SelectButton, Textarea, TranslatePipe],
     templateUrl: './nueva-inspeccion.component.html',
     styleUrl: './nueva-inspeccion.component.scss',
     providers: [MessageService]
@@ -24,9 +27,19 @@ export class NuevaInspeccionComponent implements OnInit {
     uploadedFiles: any[] = [];
     options = ['Derecho', 'Izquierdo'];
 
-    constructor(private messageService: MessageService) {}
+    afecciones = afecciones
 
-    ngOnInit(): void {}
+    constructor(
+        private readonly primeng: PrimeNG,
+        private readonly translateService: TranslateService,
+        private readonly messageService: MessageService
+    ) {
+    }
+
+    ngOnInit() {
+        this.translateService.use('es');
+        this.translateService.get('primeng').subscribe((res) => this.primeng.setTranslation(res));
+    }
 
     onUpload(event: any) {
         for (const file of event.files) {
