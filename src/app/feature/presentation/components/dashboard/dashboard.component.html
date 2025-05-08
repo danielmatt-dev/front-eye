@@ -5,7 +5,7 @@
         <div class="card" style="padding: 1.5rem">
             <div class="flex justify-between items-center mb-4">
                 <div>
-                    <div class="font-medium text-xl">Detecciones</div>
+                    <div class="font-medium text-xl">{{ 'titles.detections' | translate }}</div>
                 </div>
                 <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-full"
                      style="width: 2rem; height: 2rem">
@@ -15,15 +15,15 @@
             <div class="grid grid-cols-3">
                 <div class="text-center">
                     <span class="text-2xl font-bold">17</span>
-                    <div class="text-sm text-muted-color">Semana</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.byPeriod.week' | translate }}</div>
                 </div>
                 <div class="text-center">
                     <span class="text-2xl font-bold">149</span>
-                    <div class="text-sm text-muted-color">Mes</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.byPeriod.month' | translate }}</div>
                 </div>
                 <div class="text-center">
                     <span class="text-2xl font-bold">2,058</span>
-                    <div class="text-sm text-muted-color">Totales</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.byPeriod.total' | translate }}</div>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
         <div class="card" style="padding: 1.5rem">
             <div class="flex justify-between items-center mb-4">
                 <div>
-                    <div class="font-medium text-xl">Por afección</div>
+                    <div class="font-medium text-xl">{{ 'titles.byCondition' | translate }}</div>
                 </div>
                 <div class="flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-full"
                      style="width: 2rem; height: 2rem">
@@ -44,15 +44,15 @@
             <div class="grid grid-cols-3">
                 <div class="text-center">
                     <span class="text-2xl font-bold">674</span>
-                    <div class="text-sm text-muted-color">DMAE Seca</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.conditions.dmaeDry' | translate }}</div>
                 </div>
                 <div class="text-center">
                     <span class="text-2xl font-bold">238</span>
-                    <div class="text-sm text-muted-color">DMAE Húmeda</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.conditions.dmaeWet' | translate }}</div>
                 </div>
                 <div class="text-center">
                     <span class="text-2xl font-bold">1,146</span>
-                    <div class="text-sm text-muted-color">Ret. Diabética</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.conditions.retDiabetic' | translate }}</div>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@
         <div class="card" style="padding: 1.5rem">
             <div class="flex justify-between items-center mb-4">
                 <div>
-                    <div class="font-medium text-xl">Por género</div>
+                    <div class="font-medium text-xl">{{ 'titles.byGender' | translate }}</div>
                 </div>
                 <div class="flex items-center justify-center bg-cyan-100 dark:bg-cyan-400/10 rounded-full"
                      style="width: 2rem; height: 2rem">
@@ -73,11 +73,11 @@
             <div class="flex justify-center items-end">
                 <div class="text-center px-6">
                     <span class="text-2xl font-bold">74%</span>
-                    <div class="text-sm text-muted-color">Hombres</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.gender.male' | translate }}</div>
                 </div>
                 <div class="text-center px-6">
                     <span class="text-2xl font-bold">26%</span>
-                    <div class="text-sm text-muted-color">Mujeres</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.gender.female' | translate }}</div>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
         <div class="card" style="padding: 1.5rem">
             <div class="flex justify-between items-center mb-4">
                 <div>
-                    <div class="font-medium text-xl">Rangos de edad</div>
+                    <div class="font-medium text-xl">{{ 'titles.ageRanges' | translate }}</div>
                 </div>
                 <div class="flex items-center justify-center bg-purple-100 dark:bg-purple-400/10 rounded-full"
                      style="width: 2rem; height: 2rem">
@@ -98,15 +98,15 @@
             <div class="grid grid-cols-3">
                 <div class="text-center">
                     <span class="text-2xl font-bold">19%</span>
-                    <div class="text-sm text-muted-color">Menos de 30</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.ageRanges.under30' | translate }}</div>
                 </div>
                 <div class="text-center">
                     <span class="text-2xl font-bold">37%</span>
-                    <div class="text-sm text-muted-color">De 30 a 45</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.ageRanges.from30to45' | translate }}</div>
                 </div>
                 <div class="text-center">
                     <span class="text-2xl font-bold">44%</span>
-                    <div class="text-sm text-muted-color">Más de 45</div>
+                    <div class="text-sm text-muted-color">{{ 'subtitles.ageRanges.over45' | translate }}</div>
                 </div>
             </div>
         </div>
@@ -117,20 +117,20 @@
 <p-fluid class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
     <div class="col-span-1">
         <div class="card">
-            <div class="font-semibold text-xl mb-4">Detecciones por mes</div>
+            <div class="font-semibold text-xl mb-4">{{ 'titles.detectionsByMonth' | translate }}</div>
             <p-chart type="bar" [data]="barData1" [options]="barOptions1"></p-chart>
         </div>
     </div>
     <div class="col-span-1">
         <div class="card">
-            <div class="font-semibold text-xl mb-4">Detecciones por rango de edad y afección</div>
+            <div class="font-semibold text-xl mb-4">{{ 'titles.detectionsByAgeAndCondition' | translate }}</div>
             <p-chart type="bar" [data]="barData2" [options]="barOptions2"></p-chart>
         </div>
     </div>
 </p-fluid>
 
 <div class="card mt-8">
-    <div class="font-semibold text-xl mb-4">Detecciones por rango de edad y afección</div>
+    <div class="font-semibold text-xl mb-4">{{ 'titles.detectionsByAgeAndGender' | translate }}</div>
     <div class="flex justify-between my-6">
         <p-select-button
             id="ojo"

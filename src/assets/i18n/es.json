@@ -20,6 +20,34 @@
             "byCondition": "Distribución por afección",
             "byGender": "Distribución por género",
             "byAgeRange": "Distribución por rangos de edad"
+        },
+        "detections": "Detecciones",
+        "byCondition": "Por afección",
+        "byGender": "Por género",
+        "ageRanges": "Rangos de edad",
+        "detectionsByMonth": "Detecciones por mes",
+        "detectionsByAgeAndCondition": "Detecciones por rango de edad y afección",
+        "detectionsByAgeAndGender": "Detecciones por rango de edad y género"
+    },
+    "subtitles": {
+        "byPeriod": {
+            "week": "Semana",
+            "month": "Mes",
+            "total": "Totales"
+        },
+        "conditions": {
+            "dmaeDry": "DMAE Seca",
+            "dmaeWet": "DMAE Húmeda",
+            "retDiabetic": "Ret. Diabética"
+        },
+        "gender": {
+            "male": "Hombres",
+            "female": "Mujeres"
+        },
+        "ageRanges": {
+            "under30": "Menos de 30",
+            "from30to45": "De 30 a 45",
+            "over45": "Más de 45"
         }
     },
     "labels": {
