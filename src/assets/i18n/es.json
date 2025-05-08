@@ -14,7 +14,13 @@
         "signIn": "Iniciar sesión"
     },
     "titles": {
-        "doctors": "Doctores"
+        "doctors": "Doctores",
+        "reports": "Reportes",
+        "distribution": {
+            "byCondition": "Distribución por afección",
+            "byGender": "Distribución por género",
+            "byAgeRange": "Distribución por rangos de edad"
+        }
     },
     "labels": {
         "email": "Correo electrónico",
@@ -31,7 +37,16 @@
         "postalCode": "Código postal",
         "state": "Estado",
         "selectPeriod": "Seleccione un periodo",
-        "dateRange": "Rango de fechas"
+        "dateRange": "Rango de fechas",
+        "conditions": "Afecciones",
+        "results": "Resultados",
+        "id": "ID",
+        "date": "Fecha",
+        "time": "Hora",
+        "age": "Edad",
+        "condition": "Afección",
+        "eye": "Ojo",
+        "result": "Resultado"
     },
     "placeholders": {
         "email": "ejemplo@correo.com",
@@ -60,7 +75,7 @@
         "delete": "Eliminar {{items}} seleccionados"
     },
     "messages": {
-        "noDataFound": "No se encontraron doctores",
+        "noDataFound": "No se encontraron {{items}}",
         "loadingData": "Cargando datos. Por favor espere."
     },
     "doctor": {

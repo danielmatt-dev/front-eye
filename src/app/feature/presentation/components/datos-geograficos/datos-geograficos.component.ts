@@ -7,7 +7,7 @@ import * as L from 'leaflet';
 import 'leaflet.featuregroup.subgroup';
 import 'leaflet.markercluster';
 import 'leaflet.control.layers.tree';
-import { dataPointsMocks } from '../reporte/mocks';
+import { dataPointsMocks } from '../../../../shared/utils/mocks';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

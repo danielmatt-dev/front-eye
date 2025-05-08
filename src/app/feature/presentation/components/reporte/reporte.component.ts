@@ -10,23 +10,22 @@ import { UIChart } from 'primeng/chart';
 import { LayoutService } from '../../layout/service/layout.service';
 import { debounceTime, Subscription } from 'rxjs';
 import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
-import { afecciones, inspections, resultados } from './mocks';
+import { afecciones, inspections, resultados } from '../../../../shared/utils/mocks';
 import { NgIf } from '@angular/common';
 import { DatePicker } from 'primeng/datepicker';
 import { PrimeNG } from 'primeng/config';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-reporte',
     standalone: true,
-    imports: [DropdownModule, FormsModule, TableModule, InputText, ButtonModule, Select, Fluid, UIChart, NgIf, DatePicker],
+    imports: [DropdownModule, FormsModule, TableModule, InputText, ButtonModule, Select, Fluid, UIChart, NgIf, DatePicker, TranslatePipe],
     templateUrl: './reporte.component.html',
     styleUrl: './reporte.component.scss'
 })
 export class ReporteComponent implements OnInit {
-
     afecciones = afecciones;
-    afeccionSeleccionada = 'Todos';
+    afeccionSeleccionada = 'Todas';
     resultados = resultados;
     resultadoSeleccionado = 'Todos';
 
@@ -53,8 +52,8 @@ export class ReporteComponent implements OnInit {
     constructor(
         private readonly layoutService: LayoutService,
         private readonly local: DatasourceLocalImpl,
-        private primeng: PrimeNG,
-        private translateService: TranslateService
+        private readonly primeng: PrimeNG,
+        private readonly translateService: TranslateService
     ) {
         this.subscription = this.layoutService.configUpdate$.pipe(debounceTime(25)).subscribe(() => {
             this.initCharts();
@@ -62,10 +61,10 @@ export class ReporteComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.translate('es')
+        this.translate('es');
 
         if (this.local.getRole() === 'DOCTOR') {
-            this.showGraphics = true
+            this.showGraphics = true;
             this.initCharts();
         }
     }
@@ -210,8 +209,8 @@ export class ReporteComponent implements OnInit {
     }
 
     translate(lang: string) {
-        this.translateService.use(lang)
-        this.translateService.get('primeng').subscribe((res => this.primeng.setTranslation(res)) )
+        this.translateService.use(lang);
+        this.translateService.get('primeng').subscribe((res) => this.primeng.setTranslation(res));
     }
 
     async onRowSelect(event: any) {}

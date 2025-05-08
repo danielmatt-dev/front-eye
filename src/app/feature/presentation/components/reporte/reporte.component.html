@@ -1,9 +1,8 @@
 <div class="flex flex-col gap-8 mb-8">
     <div class="card p-4">
-        <!-- <h2 class="text-2xl font-bold">Opciones de consulta</h2> -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="flex flex-col gap-2 w-full">
-                <label for="1" class="font-bold">Afecciones</label>
+                <label for="1" class="font-bold">{{ 'labels.conditions' | translate }}</label>
                 <p-select
                     id="1"
                     [(ngModel)]="afeccionSeleccionada"
@@ -12,7 +11,7 @@
                 ></p-select>
             </div>
             <div class="flex flex-col gap-2 w-full">
-                <label for="2" class="font-bold">Resultados</label>
+                <label for="2" class="font-bold">{{ 'labels.results' | translate }}</label>
                 <p-select
                     id="2"
                     [(ngModel)]="resultadoSeleccionado"
@@ -21,26 +20,26 @@
                 ></p-select>
             </div>
             <div class="flex flex-col gap-2 w-full">
-                <label for="dateRange2" class="font-bold">Rango de fechas</label>
+                <label for="dateRange2" class="font-bold">{{ 'labels.dateRange' | translate }}</label>
                 <p-date-picker
                     id="dateRange2"
                     showIcon="true"
                     [(ngModel)]="fechasSeleccionadas"
                     selectionMode="range"
-                    placeholder="Fechas"
+                    placeholder="{{ 'placeholders.dateRange' | translate }}"
                     class="w-full"
                     [style]="{ width: '100%' }"
                 ></p-date-picker>
             </div>
             <div class="flex flex-col justify-end">
-                <p-button label="Consultar" class="w-full md:w-auto"/>
+                <p-button label="{{ 'buttons.consult' | translate }}" class="w-full md:w-auto"/>
             </div>
         </div>
     </div>
 </div>
 
 <div class="card">
-    <div class="font-semibold text-xl mb-4">Reportes</div>
+    <div class="font-semibold text-xl mb-4">{{ 'titles.reports' | translate }}</div>
     <p-table
         #dt1
         dataKey="id"
@@ -59,7 +58,7 @@
                 <!-- Contenedor de botones alineados a la izquierda -->
                 <div class="flex flex-col-375 sm:flex-row gap-2">
                     <p-button
-                        label="Exportar a Excel"
+                        label="{{ 'buttons.exportExcel' | translate }}"
                         icon="pi pi-file-excel"
                         severity="success"
                         outlined="true"
@@ -69,7 +68,7 @@
                     ></p-button>
 
                     <p-button
-                        label="Descargar en PDF"
+                        label="{{ 'buttons.downloadPDF' | translate }}"
                         severity="danger"
                         outlined="true"
                         icon="pi pi-file-pdf"
@@ -86,7 +85,7 @@
                         type="text"
                         #filter
                         (input)="onGlobalFilter(dt1, $event)"
-                        placeholder="Buscar ..."
+                        placeholder="{{ 'placeholders.search' | translate }}"
                         style="padding-left: 2rem;"
                         class="w-full sm:w-64 lg:w-80"
                     />
@@ -96,13 +95,13 @@
 
         <ng-template pTemplate="header">
             <tr>
-                <th scope="col" style="min-width: 8rem">ID</th>
-                <th scope="col" style="min-width: 8rem">Fecha</th>
-                <th scope="col" style="min-width: 8rem">Hora</th>
-                <th scope="col" style="min-width: 8rem">Edad</th>
-                <th scope="col" style="min-width: 12rem">Afección</th>
-                <th scope="col" style="min-width: 12rem">Ojo</th>
-                <th scope="col" style="min-width: 12rem">Resultado</th>
+                <th scope="col" style="min-width: 8rem">{{ 'labels.id' | translate }}</th>
+                <th scope="col" style="min-width: 8rem">{{ 'labels.date' | translate }}</th>
+                <th scope="col" style="min-width: 8rem">{{ 'labels.time' | translate }}</th>
+                <th scope="col" style="min-width: 8rem">{{ 'labels.age' | translate }}</th>
+                <th scope="col" style="min-width: 12rem">{{ 'labels.condition' | translate }}</th>
+                <th scope="col" style="min-width: 12rem">{{ 'labels.eye' | translate }}</th>
+                <th scope="col" style="min-width: 12rem">{{ 'labels.result' | translate }}</th>
             </tr>
         </ng-template>
 
@@ -120,13 +119,13 @@
 
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="11">No se encontraron reportes</td>
+                <td colspan="11">{{ 'messages.noDataFound' | translate: {items: "reportes"} }}</td>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="loadingbody">
             <tr>
-                <td colspan="11">Cargando datos. Por favor espere.</td>
+                <td colspan="11">{{ 'messages.loadingData' | translate }}</td>
             </tr>
         </ng-template>
 
@@ -136,14 +135,14 @@
 <p-fluid *ngIf="showGraphics" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
     <div class="col-span-1">
         <div class="card">
-            <div class="font-semibold text-xl mb-4">Distribución por afección</div>
+            <div class="font-semibold text-xl mb-4">{{ 'titles.distribution.byCondition' | translate }}</div>
             <p-chart type="line" [data]="lineData" [options]="lineOptions"></p-chart>
         </div>
     </div>
 
     <div class="col-span-1">
         <div class="card">
-            <div class="font-semibold text-xl mb-4">Distribución por género</div>
+            <div class="font-semibold text-xl mb-4">{{ 'titles.distribution.byGender' | translate }}</div>
             <div class="flex flex-col items-center">
                 <div class="w-full h-[300px] md:h-[375px] flex justify-center">
                     <p-chart type="pie" [data]="pieData" [options]="pieOptions" class="w-full h-full"></p-chart>
@@ -154,7 +153,7 @@
 
     <div class="col-span-1">
         <div class="card">
-            <div class="font-semibold text-xl mb-4">Distribución por rangos de edad</div>
+            <div class="font-semibold text-xl mb-4">{{ 'titles.distribution.byAgeRange' | translate }}</div>
             <p-chart type="bar" [data]="barData" [options]="barOptions"></p-chart>
         </div>
     </div>

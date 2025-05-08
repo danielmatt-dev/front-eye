@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { InputText } from 'primeng/inputtext';
-import { doctores, generos } from '../reporte/mocks';
+import { doctores, generos } from '../../../../shared/utils/mocks';
 import { DatePicker } from 'primeng/datepicker';
 import { PrimeNG } from 'primeng/config';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
