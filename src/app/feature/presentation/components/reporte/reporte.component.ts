@@ -10,7 +10,7 @@ import { UIChart } from 'primeng/chart';
 import { LayoutService } from '../../layout/service/layout.service';
 import { debounceTime, Subscription } from 'rxjs';
 import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
-import { afecciones, inspections, resultados } from '../../../../shared/utils/mocks';
+import { afecciones, reports, resultados } from '../../../../shared/utils/mocks';
 import { NgIf } from '@angular/common';
 import { DatePicker } from 'primeng/datepicker';
 import { PrimeNG } from 'primeng/config';
@@ -31,7 +31,7 @@ export class ReporteComponent implements OnInit {
 
     fechasSeleccionadas: Date[] = [];
 
-    reportes = inspections;
+    reportes = reports;
 
     lineData: any;
 

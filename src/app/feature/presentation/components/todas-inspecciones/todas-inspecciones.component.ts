@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Button } from 'primeng/button';
 import { Calendar } from 'primeng/calendar';
 import { InputText } from 'primeng/inputtext';
@@ -7,17 +7,24 @@ import { PrimeTemplate } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { PrimeNG } from 'primeng/config';
+import { inspecciones, reports } from '../../../../shared/utils/mocks';
 
 @Component({
     standalone: true,
     selector: 'app-todas-inspecciones',
-    imports: [Button, Calendar, InputText, NgForOf, PrimeTemplate, TableModule, NgClass, FormsModule, DialogModule],
+    imports: [Button, Calendar, InputText, NgForOf, PrimeTemplate, TableModule, NgClass, FormsModule, DialogModule, TranslatePipe],
     templateUrl: './todas-inspecciones.component.html',
     styleUrl: './todas-inspecciones.component.scss'
 })
-export class TodasInspeccionesComponent {
+export class TodasInspeccionesComponent implements OnInit {
     fechasSeleccionadas: Date[] = [];
     calendarDisabled = true;
+    inspections = inspecciones
+
+    labelInspection = 'inspección';
+    labelInspections = 'inspecciones';
 
     selectedInspecciones = [];
 
@@ -27,6 +34,25 @@ export class TodasInspeccionesComponent {
         { label: '3 meses', selected: false },
         { label: 'Personalizado', selected: false }
     ];
+
+    constructor(
+        private readonly primeng: PrimeNG,
+        private readonly translateService: TranslateService
+    ) {
+    }
+
+    ngOnInit() {
+        this.translateService.use('es');
+        this.translateService.get('primeng').subscribe((res) => this.primeng.setTranslation(res));
+
+        this.translateService.get('inspections.singular').subscribe((res: string) => {
+            this.labelInspection = res.toLowerCase();
+        });
+
+        this.translateService.get('inspections.plural').subscribe((res: string) => {
+            this.labelInspections = res.toLowerCase();
+        });
+    }
 
     seleccionarChip(categoriaSeleccionada: any) {
         this.categorias.forEach((c) => (c.selected = false));

@@ -119,6 +119,10 @@
         "plural": "Pacientes",
         "titleModal": "Datos del doctor"
     },
+    "inspections": {
+        "singular": "Inspección",
+        "plural": "Inspecciones"
+    },
     "primeng": {
         "startsWith": "Comienza con",
         "contains": "Contiene",

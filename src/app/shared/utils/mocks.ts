@@ -9,7 +9,7 @@ export const afecciones = [
     'Retinopatía Diabética'
 ]
 
-export const inspections = [
+export const reports = [
     { id: 'c496f7', fecha: '21/05/2024', hora: '06:14', edad: 33, afeccion: 'DMAE Humeda', ojo: 'Derecho', resultado: 'Proliferativo' },
     { id: '4cd866', fecha: '04/05/2024', hora: '16:38', edad: 66, afeccion: 'DMAE Seca', ojo: 'Izquierdo', resultado: 'Proliferativo' },
     { id: '2f2770', fecha: '01/05/2024', hora: '00:35', edad: 28, afeccion: 'Ret. Diabetica', ojo: 'Derecho', resultado: 'Moderado' },
@@ -216,3 +216,50 @@ export const patients = [
     }
 ];
 
+export const inspecciones = [
+    {
+        id: 'I001',
+        fecha: '2023-08-15',
+        hora: '10:30',
+        edad: 34,
+        afeccion: 'DMAE Seca',
+        ojo: 'Izquierdo',
+        resultado: 'Normal'
+    },
+    {
+        id: 'I002',
+        fecha: '2023-08-15',
+        hora: '11:45',
+        edad: 58,
+        afeccion: 'Ret. Diabética',
+        ojo: 'Derecho',
+        resultado: 'Alteración leve'
+    },
+    {
+        id: 'I003',
+        fecha: '2023-08-16',
+        hora: '09:20',
+        edad: 42,
+        afeccion: 'DMAE Húmeda',
+        ojo: 'Izquierdo',
+        resultado: 'Alteración moderada'
+    },
+    {
+        id: 'I004',
+        fecha: '2023-08-16',
+        hora: '12:00',
+        edad: 29,
+        afeccion: 'Ret. Diabética',
+        ojo: 'Derecho',
+        resultado: 'Sin cambios'
+    },
+    {
+        id: 'I005',
+        fecha: '2023-08-17',
+        hora: '08:15',
+        edad: 67,
+        afeccion: 'DMAE Seca',
+        ojo: 'Derecho',
+        resultado: 'Alteración severa'
+    }
+];
