@@ -7,7 +7,7 @@
 
                 <!-- Chips -->
                 <div class="flex flex-col">
-                    <span class="font-bold mb-2">Selecciona un periodo</span>
+                    <span class="font-bold mb-2">{{ 'labels.selectPeriod' | translate }}</span>
                     <div class="flex flex-wrap gap-2">
                         <div
                             *ngFor="let categoria of categorias"
@@ -25,13 +25,13 @@
 
                 <!-- Rango de Fechas -->
                 <div class="flex flex-col gap-2">
-                    <label for="dateRange" class="font-bold">Rango de fechas</label>
+                    <label for="dateRange" class="font-bold">{{ 'labels.dateRange' | translate }}</label>
                     <p-calendar
                         id="dateRange"
                         showIcon="true"
                         [(ngModel)]="fechasSeleccionadas"
                         selectionMode="range"
-                        placeholder="Fechas"
+                        placeholder="{{ 'placeholders.dateRange' | translate }}"
                         class="w-full sm:w-[21rem] md:w-[18rem] lg:w-[18rem] xl:w-[18rem]"
                         [style]="{width:' 100%' }"
                         [disabled]="calendarDisabled"
@@ -40,7 +40,7 @@
 
                 <!-- Botón de consultar -->
                 <div class="flex flex-col self-end">
-                    <p-button label="Consultar" class="w-full md:w-auto"/>
+                    <p-button label="{{ 'buttons.consult' | translate }}" class="w-full md:w-auto"/>
                 </div>
 
             </div>
@@ -52,17 +52,17 @@
 <!-- Tabla de pacientes -->
 <div class="card">
     <div class="flex flex-row justify-between">
-        <div class="font-semibold text-xl mb-4">Pacientes</div>
+        <div class="font-semibold text-xl mb-4">{{ 'patient.plural' | translate }}</div>
         <!-- Contenedor para los botones alineados a la derecha -->
         <div class="flex gap-2">
             <p-button
-                label="Nuevo paciente"
+                label="{{ 'buttons.new' | translate: { item: labelPatient } }}"
                 (onClick)="abrirModal()"
                 icon="pi pi-plus"
             ></p-button>
 
             <p-button
-                label="Eliminar pacientes"
+                label="{{ 'buttons.delete' | translate: { items: labelPatients } }}"
                 severity="danger"
                 icon="pi pi-trash">
             </p-button>
@@ -73,6 +73,7 @@
         #dt1
         dataKey="id"
         [rows]="50"
+        [value]="patients"
         [loading]="false"
         [rowHover]="true"
         [paginator]="true"
@@ -87,7 +88,7 @@
                 <!-- Contenedor de botones alineados a la izquierda -->
                 <div class="flex flex-col-375 sm:flex-row gap-2">
                     <p-button
-                        label="Exportar a Excel"
+                        label="{{ 'buttons.exportExcelTable' | translate }}"
                         icon="pi pi-file-excel"
                         severity="success"
                         outlined="true"
@@ -97,7 +98,7 @@
                     ></p-button>
 
                     <p-button
-                        label="Descargar en PDF"
+                        label="{{ 'buttons.downloadPDFTable' | translate }}"
                         severity="danger"
                         outlined="true"
                         icon="pi pi-file-pdf"
@@ -114,7 +115,7 @@
                         type="text"
                         #filter
                         (input)="onGlobalFilter(dt1, $event)"
-                        placeholder="Buscar ..."
+                        placeholder="{{ 'placeholders.search' | translate }}"
                         style="padding-left: 2rem;"
                         class="w-full sm:w-64 lg:w-80"
                     />
@@ -128,117 +129,119 @@
                 <th id="check" style="width: 3em">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th scope="col" style="min-width: 6rem">Clave</th>
-                <th scope="col" style="min-width: 10rem">Nombre</th>
-                <th scope="col" style="min-width: 10rem">Apellidos</th>
-                <th scope="col" style="min-width: 8rem">Fecha de nacimiento</th>
-                <th scope="col" style="min-width: 6rem">Edad</th>
-                <th scope="col" style="min-width: 8rem">Género</th>
-                <th scope="col" style="min-width: 10rem">Ocupación</th>
-                <th scope="col" style="min-width: 10rem">Código Postal</th>
-                <th scope="col" style="min-width: 12rem">Dirección</th>
-                <th scope="col" style="min-width: 10rem">Estado</th>
+                <th scope="col" style="min-width: 6rem">{{ 'labels.key' | translate }}</th>
+                <th scope="col" style="min-width: 10rem">{{ 'labels.name' | translate }}</th>
+                <th scope="col" style="min-width: 10rem">{{ 'labels.lastname' | translate }}</th>
+                <th scope="col" style="min-width: 8rem">{{ 'labels.birthDate' | translate }}</th>
+                <th scope="col" style="min-width: 6rem">{{ 'labels.age' | translate }}</th>
+                <th scope="col" style="min-width: 8rem">{{ 'labels.gender' | translate }}</th>
+                <th scope="col" style="min-width: 10rem">{{ 'labels.occupation' | translate }}</th>
+                <th scope="col" style="min-width: 10rem">{{ 'labels.postalCode' | translate }}</th>
+                <th scope="col" style="min-width: 12rem">{{ 'labels.address' | translate }}</th>
+                <th scope="col" style="min-width: 10rem">{{ 'labels.state' | translate }}</th>
             </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-reporte>
-            <tr [pSelectableRow]="reporte">
+        <ng-template pTemplate="body" let-patient>
+            <tr [pSelectableRow]="patient">
                 <!-- Checkbox para cada fila -->
                 <td>
-                    <p-tableCheckbox [value]="reporte"></p-tableCheckbox>
+                    <p-tableCheckbox [value]="patient"></p-tableCheckbox>
                 </td>
-                <td>{{ reporte.clave }}</td>
-                <td>{{ reporte.nombre }}</td>
-                <td>{{ reporte.apellidos }}</td>
-                <td>{{ reporte.fechaNacimiento }}</td>
-                <td>{{ reporte.edad }}</td>
-                <td>{{ reporte.genero }}</td>
-                <td>{{ reporte.ocupacion }}</td>
-                <td>{{ reporte.codigoPostal }}</td>
-                <td>{{ reporte.direccion }}</td>
-                <td>{{ reporte.estado }}</td>
+                <td>{{ patient.clave }}</td>
+                <td>{{ patient.nombre }}</td>
+                <td>{{ patient.apellidos }}</td>
+                <td>{{ patient.fechaNacimiento }}</td>
+                <td>{{ patient.edad }}</td>
+                <td>{{ patient.genero }}</td>
+                <td>{{ patient.ocupacion }}</td>
+                <td>{{ patient.codigoPostal }}</td>
+                <td>{{ patient.direccion }}</td>
+                <td>{{ patient.estado }}</td>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="11">No se encontraron pacientes</td>
+                <td colspan="11">{{ 'messages.noDataFound' | translate: { items: 'pacientes' } }}</td>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="loadingbody">
             <tr>
-                <td colspan="11">Cargando datos. Por favor espere.</td>
+                <td colspan="11">{{ 'messages.loadingData' | translate }}</td>
             </tr>
         </ng-template>
     </p-table>
 </div>
 
 <p-dialog
-    header="Datos del paciente"
+    header="{{ 'patient.titleModal' | translate }}"
     class="font-bold"
     [modal]="true"
     [(visible)]="visible"
-    [style]="{ width: '70rem', 'max-width': '70rem', 'overflow-x': 'hidden' }"
+    [style]="{ width: '70rem', 'max-width': '70rem', 'overflow-x': 'hidden', 'padding': '0.5rem' }"
     (onHide)="cerrarVentanaNotificacion()">
 
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="nombre">Nombre</label>
-            <input pInputText id="nombre" type="text" />
+            <label for="nombre">{{ 'labels.name' | translate }}</label>
+            <input pInputText id="nombre" type="text" placeholder="{{ 'placeholders.name' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="paterno">Apellido Paterno</label>
-            <input pInputText id="paterno" type="text" />
+            <label for="paterno">{{ 'labels.fatherLastName' | translate }}</label>
+            <input pInputText id="paterno" type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="materno">Apellido Materno</label>
-            <input pInputText id="materno" type="text" />
-        </div>
-    </div>
-    <div class="flex flex-wrap gap-6 mb-4">
-        <div class="flex flex-col grow basis-0 gap-2">
-            <label for="correo">Correo Electrónico</label>
-            <input pInputText id="correo" type="text" />
-        </div>
-        <div class="flex flex-col grow basis-0 gap-2">
-            <label for="telefono">Teléfono</label>
-            <input pInputText id="telefono" type="text" />
-        </div>
-        <div class="flex flex-col grow basis-0 gap-2">
-            <label for="ocupacion">Ocupación</label>
-            <input pInputText id="ocupacion" type="text" />
+            <label for="materno">{{ 'labels.motherLastName' | translate }}</label>
+            <input pInputText id="materno" type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}" />
         </div>
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="genero">Género</label>
+            <label for="correo">{{ 'labels.email' | translate }}</label>
+            <input pInputText id="correo" type="text" placeholder="{{ 'placeholders.email' | translate }}" />
+        </div>
+        <div class="flex flex-col grow basis-0 gap-2">
+            <label for="telefono">{{ 'labels.phone' | translate }}</label>
+            <input pInputText id="telefono" type="text" placeholder="{{ 'placeholders.phone' | translate }}" />
+        </div>
+        <div class="flex flex-col grow basis-0 gap-2">
+            <label for="ocupacion">{{ 'labels.occupation' | translate }}</label>
+            <input pInputText id="ocupacion" type="text" placeholder="{{ 'placeholders.occupation' | translate }}" />
+        </div>
+    </div>
+    <div class="flex flex-wrap gap-6 mb-4">
+        <div class="flex flex-col grow basis-0 gap-2">
+            <label for="genero">{{ 'labels.gender' | translate }}</label>
             <p-select
                 id="genero"
+                placeholder="{{ 'placeholders.gender' | translate }}"
             ></p-select>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="nacimiento">Fecha de nacimiento</label>
+            <label for="nacimiento">{{ 'labels.birthDate' | translate }}</label>
             <p-calendar
                 id="nacimiento"
                 showIcon="true"
                 class="w-full"
+                placeholder="{{ 'placeholders.birthDate' | translate }}"
                 [style]="{ width: '100%' }"
             ></p-calendar>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="edad">Edad</label>
-            <input pInputText id="edad" type="text" [readonly]="true" />
+            <label for="edad">{{ 'labels.age' | translate }}</label>
+            <input pInputText id="edad" type="text" [readonly]="true" placeholder="{{ 'placeholders.age' | translate }}" />
         </div>
     </div>
     <div class="flex flex-wrap gap-6">
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="direccion">Dirección</label>
-            <input pInputText id="direccion" type="text" />
+            <label for="direccion">{{ 'labels.address' | translate }}</label>
+            <input pInputText id="direccion" type="text" placeholder="{{ 'placeholders.address' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="cp">Código Postal</label>
-            <input pInputText id="cp" type="text" />
+            <label for="cp">{{ 'labels.postalCode' | translate }}</label>
+            <input pInputText id="cp" type="text" placeholder="{{ 'placeholders.postalCode' | translate }}" />
         </div>
     </div>
 

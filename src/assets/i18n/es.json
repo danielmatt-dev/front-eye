@@ -74,7 +74,8 @@
         "age": "Edad",
         "condition": "Afección",
         "eye": "Ojo",
-        "result": "Resultado"
+        "result": "Resultado",
+        "occupation": "Ocupación"
     },
     "placeholders": {
         "email": "ejemplo@correo.com",
@@ -88,7 +89,9 @@
         "address": "Av. Principal #456, Col. Jardines",
         "postalCode": "12345",
         "search": "Buscar...",
-        "dateRange": "Desde - Hasta"
+        "dateRange": "Desde - Hasta",
+        "age": "40 años",
+        "occupation": "Ej: Ingeniero, Médico, Estudiante"
     },
     "buttons": {
         "save": "Guardar",
@@ -109,6 +112,11 @@
     "doctor": {
         "singular": "Doctor",
         "plural": "Doctores",
+        "titleModal": "Datos del doctor"
+    },
+    "patient": {
+        "singular": "Paciente",
+        "plural": "Pacientes",
         "titleModal": "Datos del doctor"
     },
     "primeng": {

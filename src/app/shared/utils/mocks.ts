@@ -152,3 +152,67 @@ export const generos = [
     'Masculino',
     'Femenino',
 ]
+
+export const patients = [
+    {
+        clave: 'P001',
+        nombre: 'Ana',
+        apellidos: 'Gómez Martínez',
+        fechaNacimiento: '1990-03-12',
+        edad: 34,
+        genero: 'Femenino',
+        ocupacion: 'Enfermera',
+        codigoPostal: '94300',
+        direccion: 'Calle Sur 8 #234, Orizaba',
+        estado: 'Veracruz'
+    },
+    {
+        clave: 'P002',
+        nombre: 'Luis',
+        apellidos: 'Hernández Pérez',
+        fechaNacimiento: '1985-11-05',
+        edad: 38,
+        genero: 'Masculino',
+        ocupacion: 'Ingeniero',
+        codigoPostal: '94320',
+        direccion: 'Av. Oriente 5 #120, Orizaba',
+        estado: 'Veracruz'
+    },
+    {
+        clave: 'P003',
+        nombre: 'María',
+        apellidos: 'López Ruiz',
+        fechaNacimiento: '2000-07-19',
+        edad: 23,
+        genero: 'Femenino',
+        ocupacion: 'Estudiante',
+        codigoPostal: '94340',
+        direccion: 'Privada Norte 3 #56, Orizaba',
+        estado: 'Veracruz'
+    },
+    {
+        clave: 'P004',
+        nombre: 'Carlos',
+        apellidos: 'Ramírez Torres',
+        fechaNacimiento: '1972-01-25',
+        edad: 52,
+        genero: 'Masculino',
+        ocupacion: 'Abogado',
+        codigoPostal: '94360',
+        direccion: 'Calle Reforma #78, Orizaba',
+        estado: 'Veracruz'
+    },
+    {
+        clave: 'P005',
+        nombre: 'Lucía',
+        apellidos: 'Fernández Castro',
+        fechaNacimiento: '1995-09-30',
+        edad: 28,
+        genero: 'Femenino',
+        ocupacion: 'Doctora',
+        codigoPostal: '94380',
+        direccion: 'Av. Colón #900, Orizaba',
+        estado: 'Veracruz'
+    }
+];
+
