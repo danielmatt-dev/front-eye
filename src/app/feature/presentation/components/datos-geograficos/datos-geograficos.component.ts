@@ -8,10 +8,11 @@ import 'leaflet.featuregroup.subgroup';
 import 'leaflet.markercluster';
 import 'leaflet.control.layers.tree';
 import { dataPointsMocks } from '../reporte/mocks';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-datos-geograficos',
-    imports: [Calendar, FormsModule, Button, NgForOf, NgClass],
+    imports: [Calendar, FormsModule, Button, NgForOf, NgClass, TranslatePipe],
     templateUrl: './datos-geograficos.component.html',
     standalone: true,
     styleUrl: './datos-geograficos.component.scss'
@@ -34,7 +35,7 @@ export class DatosGeograficosComponent implements AfterViewInit {
     }
 
     private initMap() {
-        const map = L.map('map').setView([18.8498, -97.1039], 13)       ;
+        const map = L.map('map').setView([18.8498, -97.1039], 13);
 
         // Capa base de OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

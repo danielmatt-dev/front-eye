@@ -36,12 +36,12 @@ export class DoctorComponent implements OnInit {
         { label: 'Personalizado', selected: false }
     ];
 
-    labelDoctor = 'doctor'
-    labelDoctors = 'doctores'
+    labelDoctor = 'doctor';
+    labelDoctors = 'doctores';
 
     constructor(
-        private primeng: PrimeNG,
-        private translateService: TranslateService
+        private readonly primeng: PrimeNG,
+        private readonly translateService: TranslateService
     ) {}
 
     ngOnInit() {
@@ -49,13 +49,12 @@ export class DoctorComponent implements OnInit {
         this.translateService.get('primeng').subscribe((res) => this.primeng.setTranslation(res));
 
         this.translateService.get('doctor.singular').subscribe((res: string) => {
-            this.labelDoctor = res.toLowerCase()
-        })
+            this.labelDoctor = res.toLowerCase();
+        });
 
         this.translateService.get('doctor.plural').subscribe((res: string) => {
-            this.labelDoctors = res.toLowerCase()
-        })
-
+            this.labelDoctors = res.toLowerCase();
+        });
     }
 
     abrirModal() {

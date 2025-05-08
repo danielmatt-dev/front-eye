@@ -30,7 +30,7 @@
         "address": "Dirección",
         "postalCode": "Código postal",
         "state": "Estado",
-        "selectPeriod": "Selecciona un periodo",
+        "selectPeriod": "Seleccione un periodo",
         "dateRange": "Rango de fechas"
     },
     "placeholders": {
@@ -52,8 +52,10 @@
         "register": "Registrar",
         "consult": "Consultar",
         "cancel": "Cancelar",
-        "exportExcel": "Exportar tabla a Excel",
-        "downloadPDF": "Descargar tabla en PDF",
+        "exportExcel": "Exportar a Excel",
+        "downloadPDF": "Descargar en PDF",
+        "exportExcelTable": "Exportar tabla a Excel",
+        "downloadPDFTable": "Descargar tabla en PDF",
         "new": "Registrar nuevo {{item}}",
         "delete": "Eliminar {{items}} seleccionados"
     },
