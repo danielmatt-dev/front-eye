@@ -12,5 +12,184 @@
         "rememberMe": "Recordarme",
         "forgotPassword": "¿Olvidaste tu contraseña?",
         "signIn": "Iniciar sesión"
+    },
+    "titles": {
+        "doctors": "Doctores",
+        "reports": "Reportes",
+        "distribution": {
+            "byCondition": "Distribución por afección",
+            "byGender": "Distribución por género",
+            "byAgeRange": "Distribución por rangos de edad"
+        },
+        "detections": "Detecciones",
+        "byCondition": "Por afección",
+        "byGender": "Por género",
+        "ageRanges": "Rangos de edad",
+        "detectionsByMonth": "Detecciones por mes",
+        "detectionsByAgeAndCondition": "Detecciones por rango de edad y afección",
+        "detectionsByAgeAndGender": "Detecciones por rango de edad y género",
+        "inspectionData": "Datos de la inspección",
+        "additionalData": "Datos adicionales",
+        "occurrenceProbability": "Probabilidad de Ocurrencia (IA)",
+        "completedInspections": "Inspecciones realizadas"
+    },
+    "subtitles": {
+        "byPeriod": {
+            "week": "Semana",
+            "month": "Mes",
+            "total": "Totales"
+        },
+        "conditions": {
+            "dmaeDry": "DMAE Seca",
+            "dmaeWet": "DMAE Húmeda",
+            "retDiabetic": "Ret. Diabética"
+        },
+        "gender": {
+            "male": "Hombres",
+            "female": "Mujeres"
+        },
+        "ageRanges": {
+            "under30": "Menos de 30",
+            "from30to45": "De 30 a 45",
+            "over45": "Más de 45"
+        }
+    },
+    "labels": {
+        "email": "Correo electrónico",
+        "password": "Contraseña",
+        "key": "Clave",
+        "name": "Nombre",
+        "lastname": "Apellidos",
+        "fatherLastName": "Apellido paterno",
+        "motherLastName": "Apellido materno",
+        "phone": "Teléfono",
+        "gender": "Género",
+        "birthDate": "Fecha de nacimiento",
+        "address": "Dirección",
+        "postalCode": "Código postal",
+        "state": "Estado",
+        "selectPeriod": "Seleccione un periodo",
+        "dateRange": "Rango de fechas",
+        "conditions": "Afecciones",
+        "results": "Resultados",
+        "id": "ID",
+        "date": "Fecha",
+        "time": "Hora",
+        "age": "Edad",
+        "condition": "Afección",
+        "eye": "Ojo",
+        "result": "Resultado",
+        "occupation": "Ocupación",
+        "image": "Imagen",
+        "disease": "Enfermedad",
+        "model": "Modelo"
+    },
+    "placeholders": {
+        "email": "ejemplo@correo.com",
+        "password": "Ingresa tu contraseña",
+        "name": "Juan",
+        "fatherLastName": "García",
+        "motherLastName": "Pérez",
+        "phone": "5551234567",
+        "gender": "Seleccione el género",
+        "birthDate": "01/01/1990",
+        "address": "Av. Principal #456, Col. Jardines",
+        "postalCode": "12345",
+        "search": "Buscar...",
+        "dateRange": "Desde - Hasta",
+        "age": "40 años",
+        "occupation": "Ej: Ingeniero, Médico, Estudiante",
+        "disease": "Seleccione la enfermedad",
+        "model": "Seleccione el modelo"
+    },
+    "buttons": {
+        "save": "Guardar",
+        "register": "Registrar",
+        "consult": "Consultar",
+        "cancel": "Cancelar",
+        "exportExcel": "Exportar a Excel",
+        "downloadPDF": "Descargar en PDF",
+        "exportExcelTable": "Exportar tabla a Excel",
+        "downloadPDFTable": "Descargar tabla en PDF",
+        "new": "Nuevo {{item}}",
+        "delete": "Eliminar {{items}}",
+        "upload": "Subir",
+        "choose": "Cargar",
+        "inspect": "Inspeccionar"
+    },
+    "messages": {
+        "noDataFound": "No se encontraron {{items}}",
+        "loadingData": "Cargando datos. Por favor espere.",
+        "imageSizeLimit": "La imagen debe ser menor a",
+        "4mb": "4 MB"
+    },
+    "doctor": {
+        "singular": "Doctor",
+        "plural": "Doctores",
+        "titleModal": "Datos del doctor"
+    },
+    "patient": {
+        "singular": "Paciente",
+        "plural": "Pacientes",
+        "titleModal": "Datos del paciente"
+    },
+    "inspections": {
+        "singular": "Inspección",
+        "plural": "Inspecciones"
+    },
+    "links": {
+        "viewDetail": "Ver detalle"
+    },
+    "afflictions": {
+        "proliferative": "Proliferativo",
+        "moderate": "Moderado",
+        "mild": "Leve",
+        "none": "Sin afección"
+    },
+    "primeng": {
+        "startsWith": "Comienza con",
+        "contains": "Contiene",
+        "notContains": "No contiene",
+        "endsWith": "Termina con",
+        "equals": "Igual",
+        "notEquals": "No igual",
+        "noFilter": "No filtrar",
+        "lt": "Menor que",
+        "lte": "Menor o igual a",
+        "gt": "Mayor que",
+        "gte": "Mayor o igual a",
+        "is": "Es",
+        "isNot": "No es",
+        "before": "Antes",
+        "after": "Despues",
+        "dateIs": "La fecha es",
+        "dateIsNot": "La fecha no es",
+        "dateBefore": "La fecha es anterior",
+        "dateAfter": "La fecha es despues",
+        "clear": "Limpiar",
+        "apply": "Aplicar",
+        "matchAll": "Coincidir con todos",
+        "matchAny": "Coincidir con cualquiera",
+        "addRule": "Adicionar regla",
+        "removeRule": "Eliminar regla",
+        "accept": "Si",
+        "reject": "No",
+        "choose": "Seleccionar",
+        "upload": "Subir",
+        "cancel": "Cancelar",
+        "dayNames": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+        "dayNamesShort": ["Dom", "Lun", "Mar", "Mier", "Jue", "Vie", "Sab"],
+        "dayNamesMin": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+        "monthNames": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+        "monthNamesShort": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+        "dateFormat": "dd/mm/yy",
+        "today": "Hoy",
+        "weekHeader": "Semana",
+        "weak": "Débil",
+        "medium": "Medio",
+        "strong": "Fuerte",
+        "passwordPrompt": "Ingrese una contraseña",
+        "emptyMessage": "No se encontraron resultados",
+        "emptyFilterMessage": "No se encontraron resultados"
     }
 }

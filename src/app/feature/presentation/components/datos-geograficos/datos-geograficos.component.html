@@ -6,7 +6,7 @@
 
                 <!-- Chips -->
                 <div class="flex flex-col">
-                <span class="font-bold mb-2">Selecciona un periodo</span>
+                <div class="font-bold mb-2">{{ 'labels.selectPeriod' | translate }}</div>
                 <div class="flex flex-wrap gap-2">
                     <div
                         *ngFor="let categoria of categorias"
@@ -24,13 +24,13 @@
 
                 <!-- Rango de Fechas -->
                 <div class="flex flex-col gap-2">
-                    <label for="dateRange" class="font-bold">Rango de fechas</label>
+                    <label for="dateRange" class="font-bold">{{ 'labels.dateRange' | translate }}</label>
                     <p-calendar
                         id="dateRange"
                         showIcon="true"
                         [(ngModel)]="fechasSeleccionadas"
                         selectionMode="range"
-                        placeholder="Fechas"
+                        placeholder="{{ 'placeholders.dateRange' | translate }}"
                         class="w-full sm:w-[21rem] md:w-[18rem] lg:w-[18rem] xl:w-[15rem]"
                         [style]="{width:' 100%' }"
                         [disabled]="calendarDisabled"
@@ -39,7 +39,7 @@
 
                 <!-- Botón de consultar -->
                 <div class="flex flex-col self-end">
-                    <p-button label="Consultar" class="w-full md:w-auto"/>
+                    <p-button label="{{ 'buttons.consult' | translate }}" class="w-full md:w-auto"/>
                 </div>
 
             </div>
@@ -47,14 +47,14 @@
             <!-- Botones para exportar datos -->
             <div class="flex flex-wrap gap-4 self-end">
                 <p-button
-                    label="Exportar a Excel"
+                    label="{{ 'buttons.exportExcel' | translate }}"
                     icon="pi pi-file-excel"
                     severity="success"
                     outlined="true"
                 ></p-button>
 
                 <p-button
-                    label="Descargar en PDF"
+                    label="{{ 'buttons.downloadPDF' | translate }}"
                     severity="danger"
                     outlined="true"
                     icon="pi pi-file-pdf"

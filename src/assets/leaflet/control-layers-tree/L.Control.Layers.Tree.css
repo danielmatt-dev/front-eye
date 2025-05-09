@@ -17,6 +17,7 @@
 .leaflet-layerstree-header {
     font-weight: bold;
     color: var(--text-color);
+    font-size: 12px;
 }
 
 .leaflet-layerstree-header-pointer {
@@ -60,8 +61,8 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    width: 12px;
-    height: 12px;
+    width: 13px;
+    height: 13px;
     border: 2px solid var(--primary-color);
     border-radius: 3px;
     outline: none;

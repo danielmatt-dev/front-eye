@@ -7,19 +7,21 @@ import { SelectButton } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DatePicker } from 'primeng/datepicker';
+import { mapColors } from '../../../../core/theme/colors';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [Fluid, UIChart, SelectButton, FormsModule, CalendarModule, DatePicker],
+    imports: [Fluid, UIChart, SelectButton, FormsModule, CalendarModule, DatePicker, TranslatePipe],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
-    red = '#ff3d32';
-    amber = '#f97316';
-    blue = '#3b82f6';
-    green = '#22c55e';
+    red = mapColors['red'];
+    amber = mapColors['amber'];
+    blue = mapColors['blue'];
+    green = mapColors['green'];
 
     barData1: any;
     barOptions1: any;
@@ -57,7 +59,7 @@ export class DashboardComponent implements OnInit {
                     backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
                     borderColor: documentStyle.getPropertyValue('--p-primary-500'),
                     data: [65, 59, 80, 81, 56, 55, 40]
-                },
+                }
             ]
         };
 

@@ -1,30 +1,31 @@
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
     <!-- Datos de la inspección -->
     <div class="col-span-1">
             <div class="card h-full">
-                <div class="font-semibold text-xl mb-4">Datos de la inspección</div>
+                <div class="font-semibold text-xl mb-4">{{ 'titles.inspectionData' | translate }}</div>
                 <div class="grid grid-cols-3 my-6">
-                    <div class="col-span-1">Fecha:</div>
+                    <div class="col-span-1">{{ 'labels.date' | translate }}:</div>
                     <div class="font-bold col-span-2">25 de mayo del 2024</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
-                    <div class="col-span-1">Hora:</div>
+                    <div class="col-span-1">{{ 'labels.time' | translate }}:</div>
                     <div class="font-bold col-span-2">16:31:20</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
-                    <div class="col-span-1">Ojo:</div>
+                    <div class="col-span-1">{{ 'labels.eye' | translate }}:</div>
                     <div class="font-bold col-span-2">Derecho</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
-                    <div class="col-span-1">Enfermedad:</div>
+                    <div class="col-span-1">{{ 'labels.disease' | translate }}:</div>
                     <div class="font-bold col-span-2">DMAE Húmeda</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
-                    <div class="col-span-1">Doctor:</div>
+                    <div class="col-span-1">{{ 'doctor.singular' | translate }}:</div>
                     <div class="font-bold col-span-2">Jorge Ernesto Gonzalez Diaz</div>
                 </div>
                 <div class="flex justify-end items-center gap-4">
-                    <div class="font-semibold text-xl">Resultado:</div>
+                    <div class="font-semibold text-xl">{{ 'labels.result' | translate }}:</div>
                     <p-button
                         label="Proliferativo"
                         disabled="true"
@@ -33,14 +34,15 @@
                 </div>
             </div>
         </div>
+
     <!-- Probabilidad de Ocurrecia (IA) -->
     <div class="col-span-1">
             <div class="card h-full">
-                <div class="font-semibold text-xl mb-8">Probabilidad de Ocurrecia (IA)</div>
+                <div class="font-semibold text-xl mb-8">{{ 'titles.occurrenceProbability' | translate }}</div>
                 <!-- Usamos grid-rows-[repeat(4,1fr)] para que las 4 filas se repartan el 100% del alto -->
                 <div class="grid grid-rows-5 h-full">
                     <div class="row-span-1 grid grid-cols-3">
-                        <div class="col-span-1">Proliferativo</div>
+                        <div class="col-span-1">{{ 'afflictions.proliferative' | translate }}</div>
                         <p-progressBar
                             [value]="89.21"
                             class="col-span-2"
@@ -52,7 +54,7 @@
                         </p-progressBar>
                     </div>
                     <div class="row-span-1 grid grid-cols-3">
-                        <div class="col-span-1">Moderado</div>
+                        <div class="col-span-1">{{ 'afflictions.moderate' | translate }}</div>
                         <p-progressBar
                             [value]="44.10"
                             class="col-span-2"
@@ -64,7 +66,7 @@
                         </p-progressBar>
                     </div>
                     <div class="row-span-1 grid grid-cols-3">
-                        <div class="col-span-1">Leve</div>
+                        <div class="col-span-1">{{ 'afflictions.mild' | translate }}</div>
                         <p-progressBar
                             [value]="26.3"
                             class="col-span-2"
@@ -76,7 +78,7 @@
                         </p-progressBar>
                     </div>
                     <div class="row-span-1 grid grid-cols-3">
-                        <div class="col-span-1">Sin afección</div>
+                        <div class="col-span-1">{{ 'afflictions.none' | translate }}</div>
                         <p-progressBar
                             [value]="15"
                             class="col-span-2"
@@ -90,107 +92,124 @@
                 </div>
             </div>
         </div>
+
     <!-- Imagen -->
     <div class="col-span-1">
-            <div class="card h-full">
-                <div class="font-semibold text-xl mb-4">Imagen</div>
-            </div>
+        <div class="card h-full">
+            <div class="font-semibold text-xl mb-4">{{ 'labels.image' | translate }}</div>
+            <p-image
+                src="assets/images/fondo_ojo.jpg"
+                alt="Fondo Ojo"
+                preview="true"
+                class="flex justify-center items-center object-contain rounded-md"
+                height="220px"
+                width="220px"
+            ></p-image>
         </div>
-</div>
+    </div>
 
-<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    <!-- Datos del paciente -->
     <div class="col-span-1">
         <div class="card h-full">
-            <div class="font-semibold text-xl mb-4">Datos del paciente</div>
-            <div class="grid grid-cols-3 my-6">
-                <div class="col-span-1">Paciente:</div>
-                <div class="font-bold col-span-2 mx-1">Jose Luis Sanchez Cervantes</div>
+            <div class="font-semibold text-xl mb-4">{{ 'patient.titleModal' | translate }}</div>
+            <div class="grid grid-cols-2 my-6">
+                <div class="col-span-1">{{ 'patient.singular' | translate }}:</div>
+                <div class="font-bold col-span-1">Jose Luis Sanchez Cervantes</div>
             </div>
-            <div class="grid grid-cols-3 my-6">
-                <div class="col-span-1">Fecha de nacimiento:</div>
-                <div class="font-bold col-span-2 mx-1">15 de marzo de 1984</div>
+            <div class="grid grid-cols-2 my-6">
+                <div class="col-span-1">{{ 'labels.birthDate' | translate }}:</div>
+                <div class="font-bold col-span-1">15 de marzo de 1984</div>
             </div>
-            <div class="grid grid-cols-3 my-6">
-                <div class="col-span-1">Edad</div>
-                <div class="font-bold col-span-2 mx-1">40</div>
+            <div class="grid grid-cols-2 my-6">
+                <div class="col-span-1">{{ 'labels.age' | translate }}:</div>
+                <div class="font-bold col-span-1">40 años</div>
             </div>
-            <div class="grid grid-cols-3 my-6">
-                <div class="col-span-1">Género</div>
-                <div class="font-bold col-span-2 mx-1">Masculino</div>
+            <div class="grid grid-cols-2 my-6">
+                <div class="col-span-1">{{ 'labels.gender' | translate }}:</div>
+                <div class="font-bold col-span-1">Masculino</div>
             </div>
-            <div class="grid grid-cols-3 my-6">
-                <div class="col-span-1">Teléfono:</div>
-                <div class="font-bold col-span-2 mx-1">558-202-2345</div>
+            <div class="grid grid-cols-2 my-6">
+                <div class="col-span-1">{{ 'labels.phone' | translate }}:</div>
+                <div class="font-bold col-span-1">558-202-2345</div>
             </div>
-            <div class="grid grid-cols-3 mt-6">
-                <div class="col-span-1">Correo electrónico:</div>
-                <span class="font-bold col-span-2 mx-1">jose.luis&#64;correo.com</span>
+            <div class="grid grid-cols-2 mt-6">
+                <div class="col-span-1">{{ 'labels.email' | translate }}:</div>
+                <span class="font-bold col-span-1">jose.luis&#64;correo.com</span>
             </div>
         </div>
     </div>
+
+    <!-- Datos adicionales -->
     <div class="col-span-1">
         <div class="card h-full">
-            <div class="font-semibold text-xl mb-4">Datos adicionales</div>
+            <div class="font-semibold text-xl mb-4">{{ 'titles.additionalData' | translate }}</div>
             <div class="text-justify">
                 Paciente de 41 años que presenta síntomas consistentes con la Degeneración Macular Asociada a la Edad (DMAE). Durante la evaluación inicial, se observan cambios en la visión central y posibles distorsiones visuales.<br><br>
                 Es importante revisar el historial médico del paciente para identificar factores de riesgo adicionales, como antecedentes familiares de DMAE, tabaquismo, hipertensión y colesterol alto.
             </div>
         </div>
     </div>
+
+    <!-- Inspecciones realizadas -->
     <div class="col-span-1">
-        <div class="card h-full">
-            <div class="font-semibold text-xl mb-4">Inspecciones realizadas</div>
+        <div class="card h-full overflow-auto">
+            <div class="font-semibold text-xl mb-4">{{ 'titles.completedInspections' | translate }}</div>
             <p-table
                 dataKey="id"
                 [rows]="10"
+                [value]="inspecciones"
+                [loading]="false"
                 [rowHover]="true"
                 [paginator]="true"
+                [scrollable]="true"
                 [globalFilterFields]="['']"
                 responsiveLayout="scroll"
                 (onRowSelect)="onRowSelect($event)"
-                selectionMode="single">
-
+                selectionMode="single"
+                class="w-full"
+            >
                 <ng-template pTemplate="header">
                     <tr>
-                        <th scope="col" style="min-width: 6rem">ID</th>
-                        <th scope="col" style="min-width: 8rem">Fecha</th>
-                        <th scope="col" style="min-width: 8rem">Ojo</th>
-                        <th scope="col" style="min-width: 10rem">Resultado</th>
+                        <th scope="col" style="min-width: 6rem">{{ 'labels.id' | translate }}</th>
+                        <th scope="col" style="min-width: 8rem">{{ 'labels.date' | translate }}</th>
+                        <th scope="col" style="min-width: 8rem">{{ 'labels.eye' | translate }}</th>
+                        <th scope="col" style="min-width: 10rem">{{ 'labels.result' | translate }}</th>
                     </tr>
                 </ng-template>
 
                 <ng-template pTemplate="body" let-inspeccion>
                     <tr [pSelectableRow]="inspeccion">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ inspeccion.id }}</td>
+                        <td>{{ inspeccion.fecha }}</td>
+                        <td>{{ inspeccion.ojo }}</td>
+                        <td>{{ inspeccion.resultado }}</td>
                     </tr>
                 </ng-template>
 
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td colspan="11">No se encontraron resultados</td>
+                        <td colspan="4">{{ 'messages.noDataFound' | translate: { items: 'inspecciones' } }}</td>
                     </tr>
                 </ng-template>
 
                 <ng-template pTemplate="loadingbody">
                     <tr>
-                        <td colspan="11">Cargando datos. Por favor espere.</td>
+                        <td colspan="4">{{ 'messages.loadingData' | translate }}</td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
     </div>
+
 </div>
 
-<div class="flex flex-wrap justify-end gap-6 mt-6">
+<div class="flex flex-row justify-end gap-6 mt-6">
     <p-button
         severity="danger"
-        label="Cancelar"
+        label="{{ 'buttons.cancel' | translate }}"
     ></p-button>
     <p-button
-        label="Descargar como PDF"
+        label="{{ 'buttons.downloadPDF' | translate }}"
     ></p-button>
 </div>
 

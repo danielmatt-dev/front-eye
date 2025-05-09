@@ -3,64 +3,66 @@
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
     <div class="col-span-1 order-2 xl:col-span-2 xl:order-1">
         <div class="card">
-            <div class="font-semibold text-xl mb-4">Datos del paciente</div>
+            <div class="font-semibold text-xl mb-4"> {{ 'patient.titleModal'| translate }} </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="nombre">Nombre</label>
-                    <input pInputText id="nombre" type="text" />
+                    <label for="nombre">{{ 'labels.name'| translate }}</label>
+                    <input pInputText id="nombre" type="text" placeholder="{{ 'placeholders.name'| translate }}" />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="paterno">Apellido Paterno</label>
-                    <input pInputText id="paterno" type="text" />
+                    <label for="paterno">{{ 'labels.fatherLastName'| translate }}</label>
+                    <input pInputText id="paterno" type="text" placeholder="{{ 'placeholders.fatherLastName'| translate }}" />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="materno">Apellido Materno</label>
-                    <input pInputText id="materno" type="text" />
+                    <label for="materno">{{ 'labels.motherLastName'| translate }}</label>
+                    <input pInputText id="materno" type="text" placeholder="{{ 'placeholders.motherLastName'| translate }}" />
                 </div>
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="correo">Correo Electrónico</label>
-                    <input pInputText id="correo" type="text" />
+                    <label for="correo">{{ 'labels.email'| translate }}</label>
+                    <input pInputText id="correo" type="text" placeholder="{{ 'placeholders.email'| translate }}" />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="telefono">Teléfono</label>
-                    <input pInputText id="telefono" type="text" />
+                    <label for="telefono">{{ 'labels.phone'| translate }}</label>
+                    <input pInputText id="telefono" type="text" placeholder="{{ 'placeholders.phone'| translate }}" />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="ocupacion">Ocupación</label>
-                    <input pInputText id="ocupacion" type="text" />
+                    <label for="ocupacion">{{ 'labels.occupation'| translate }}</label>
+                    <input pInputText id="ocupacion" type="text" placeholder="{{ 'placeholders.occupation'| translate }}" />
                 </div>
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="genero">Género</label>
+                    <label for="genero">{{ 'labels.gender'| translate }}</label>
                     <p-select
                         id="genero"
+                        placeholder="{{ 'placeholders.gender'| translate }}"
                     ></p-select>
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="nacimiento">Fecha de nacimiento</label>
+                    <label for="nacimiento">{{ 'labels.birthDate'| translate }}</label>
                     <p-calendar
                         id="nacimiento"
                         showIcon="true"
                         class="w-full"
+                        placeholder="{{ 'placeholders.birthDate'| translate }}"
                         [style]="{ width: '100%' }"
                     ></p-calendar>
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="edad">Edad</label>
-                    <input pInputText id="edad" type="text" [readonly]="true" />
+                    <label for="edad">{{ 'labels.age'| translate }}</label>
+                    <input pInputText id="edad" type="text" [readonly]="true" placeholder="{{ 'placeholders.age'| translate }}" />
                 </div>
             </div>
             <div class="flex flex-wrap gap-6">
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="direccion">Dirección</label>
-                    <input pInputText id="direccion" type="text" />
+                    <label for="direccion">{{ 'labels.address'| translate }}</label>
+                    <input pInputText id="direccion" type="text" placeholder="{{ 'placeholders.address'| translate }}" />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="cp">Código Postal</label>
-                    <input pInputText id="cp" type="text" />
+                    <label for="cp">{{ 'labels.postalCode'| translate }}</label>
+                    <input pInputText id="cp" type="text" placeholder="{{ 'placeholders.postalCode'| translate }}" />
                 </div>
             </div>
         </div>
@@ -68,16 +70,16 @@
 
     <div class="col-span-1 order-1 xl:order-2">
         <div class="card h-full">
-            <div class="font-semibold text-xl mb-4">Imagen</div>
+            <div class="font-semibold text-xl mb-4">{{ 'labels.image'| translate }}</div>
             <p-fileupload
                 name="demo[]"
                 (onUpload)="onUpload($event)"
                 [multiple]="false"
                 accept="image/*"
                 maxFileSize="4194304"
-                chooseLabel="Cargar"
-                uploadLabel="Subir"
-                cancelLabel="Cancelar"
+                chooseLabel="{{ 'buttons.choose'| translate }}"
+                uploadLabel="{{ 'buttons.upload'| translate }}"
+                cancelLabel="{{ 'buttons.cancel'| translate }}"
                 [style]="{ height: '90%', width: '100%' }"
                 mode="advanced"
                 url="https://www.primefaces.org/cdn/api/upload.php">
@@ -87,7 +89,7 @@
                     <div class="flex items-center justify-center h-full flex-col">
                         <i class="pi pi-cloud-upload !border-2 !rounded-full !px-4 !py-4 !text-4xl !text-muted-color"></i>
                         <p class="mt-6 text-center">
-                            La imagen debe ser menor a <strong>4 MB</strong>.
+                            {{ 'messages.imageSizeLimit'| translate }} <strong>{{ 'messages.4mb'| translate }}</strong>.
                         </p>
                     </div>
                 </ng-template>
@@ -117,35 +119,38 @@
     <div class="col-span-1 lg:col-span-2">
         <div class="card">
             <div class="flex justify-between">
-                <div class="font-semibold text-xl mb-4">Datos de la inspección</div>
+                <div class="font-semibold text-xl mb-4">{{ 'titles.inspectionData'| translate }}</div>
                 <a href="/insights/ver-detalle" class="text-primary" style="text-decoration: underline;">
-                    Ver detalle
+                    {{ 'links.viewDetail'| translate }}
                 </a>
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="doctor">Doctor</label>
-                    <input pInputText id="doctor" type="text" [readonly]="true"/>
+                    <label for="doctor">{{ 'doctor.singular'| translate }}</label>
+                    <input pInputText id="doctor" type="text" [readonly]="true" placeholder="{{ 'placeholders.name'| translate }} {{ 'placeholders.fatherLastName'| translate }} {{ 'placeholders.motherLastName'| translate }}" />
                 </div>
             </div>
             <div class="flex flex-wrap gap-6 mb-6">
                 <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="ojo">Ojo</label>
+                    <label for="ojo">{{ 'labels.eye'| translate }}</label>
                     <p-select-button
                         id="ojo"
                         [options]="options"
                     />
                 </div>
                 <div class="flex flex-col grow basis-16 gap-2">
-                    <label for="enfermedad">Enfermedad</label>
+                    <label for="enfermedad">{{ 'labels.disease'| translate }}</label>
                     <p-select
                         id="enfermedad"
+                        [options]="afecciones"
+                        placeholder="{{ 'placeholders.disease'| translate }}"
                     ></p-select>
                 </div>
                 <div class="flex flex-col grow basis-16 gap-2">
-                    <label for="modelo">Modelo</label>
+                    <label for="modelo">{{ 'labels.model'| translate }}</label>
                     <p-select
                         id="modelo"
+                        placeholder="{{ 'placeholders.model'| translate }}"
                     ></p-select>
                 </div>
             </div>
@@ -153,7 +158,7 @@
                 <div class="flex flex-col grow basis-0 gap-2">
                     <div class="flex flex-col grow basis-0 gap-2">
                         <div class="flex justify-end items-center gap-4 w-full">
-                            <div class="font-semibold text-xl">Resultado:</div>
+                            <div class="font-semibold text-xl">{{ 'labels.result'| translate }}:</div>
                             <p-button
                                 label="Moderado"
                                 disabled="true"
@@ -168,7 +173,7 @@
     </div>
     <div class="col-span-1">
         <div class="card h-full">
-            <div class="font-semibold text-xl mb-4">Datos adicionales</div>
+            <div class="font-semibold text-xl mb-4">{{ 'titles.additionalData'| translate }}</div>
             <div>
                 <textarea
                     pTextarea
@@ -183,9 +188,9 @@
 <div class="flex flex-wrap justify-end gap-6 mt-6">
     <p-button
         severity="danger"
-        label="Cancelar"
+        label="{{ 'buttons.cancel'| translate }}"
     ></p-button>
     <p-button
-        label="Inspeccionar"
+        label="{{ 'buttons.inspect'| translate }}"
     ></p-button>
 </div>
