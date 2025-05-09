@@ -224,7 +224,7 @@ export const inspecciones = [
         edad: 34,
         afeccion: 'DMAE Seca',
         ojo: 'Izquierdo',
-        resultado: 'Normal'
+        resultado: 'Sin Afección'
     },
     {
         id: 'I002',
@@ -233,7 +233,7 @@ export const inspecciones = [
         edad: 58,
         afeccion: 'Ret. Diabética',
         ojo: 'Derecho',
-        resultado: 'Alteración leve'
+        resultado: 'Leve'
     },
     {
         id: 'I003',
@@ -242,7 +242,7 @@ export const inspecciones = [
         edad: 42,
         afeccion: 'DMAE Húmeda',
         ojo: 'Izquierdo',
-        resultado: 'Alteración moderada'
+        resultado: 'Moderado'
     },
     {
         id: 'I004',
@@ -251,7 +251,7 @@ export const inspecciones = [
         edad: 29,
         afeccion: 'Ret. Diabética',
         ojo: 'Derecho',
-        resultado: 'Sin cambios'
+        resultado: 'Proliferativo'
     },
     {
         id: 'I005',
@@ -260,6 +260,6 @@ export const inspecciones = [
         edad: 67,
         afeccion: 'DMAE Seca',
         ojo: 'Derecho',
-        resultado: 'Alteración severa'
+        resultado: 'Proliferativo'
     }
 ];

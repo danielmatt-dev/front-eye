@@ -29,7 +29,9 @@
         "detectionsByAgeAndCondition": "Detecciones por rango de edad y afección",
         "detectionsByAgeAndGender": "Detecciones por rango de edad y género",
         "inspectionData": "Datos de la inspección",
-        "additionalData": "Datos adicionales"
+        "additionalData": "Datos adicionales",
+        "occurrenceProbability": "Probabilidad de Ocurrencia (IA)",
+        "completedInspections": "Inspecciones realizadas"
     },
     "subtitles": {
         "byPeriod": {
@@ -137,6 +139,12 @@
     },
     "links": {
         "viewDetail": "Ver detalle"
+    },
+    "afflictions": {
+        "proliferative": "Proliferativo",
+        "moderate": "Moderado",
+        "mild": "Leve",
+        "none": "Sin afección"
     },
     "primeng": {
         "startsWith": "Comienza con",

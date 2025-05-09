@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
