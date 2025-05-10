@@ -3,7 +3,27 @@
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
     <div class="col-span-1 order-2 xl:col-span-2 xl:order-1">
         <div class="card">
-            <div class="font-semibold text-xl mb-4"> {{ 'patient.titleModal'| translate }} </div>
+            <div class="flex justify-between mb-4">
+                <div class="font-semibold text-xl mb-4"> {{ 'patient.titleModal'| translate }} </div>
+                <p-dropdown
+                    class="w-80 mb-2"
+                    [options]="patientOptions"
+                    optionLabel="fullName"
+                    placeholder="{{ 'placeholders.patients' | translate }}"
+                    optionValue="clave"
+                    [filter]="true"
+                    [filterBy]="filterFields"
+                    appendTo="body">
+                    <ng-template let-item pTemplate="item">
+                        <span
+                            class="w-72"
+                            tooltipStyleClass="width: 100rem"
+                            pTooltip="{{ getTooltip(item) }}"
+                            tooltipPosition="top">{{ item.fullName }}
+                        </span>
+                    </ng-template>
+                </p-dropdown>
+            </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="nombre">{{ 'labels.name'| translate }}</label>

@@ -82,7 +82,9 @@
         "occupation": "Ocupación",
         "image": "Imagen",
         "disease": "Enfermedad",
-        "model": "Modelo"
+        "model": "Modelo",
+        "actions": "Acciones",
+        "years": "años"
     },
     "placeholders": {
         "email": "ejemplo@correo.com",
@@ -100,7 +102,8 @@
         "age": "40 años",
         "occupation": "Ej: Ingeniero, Médico, Estudiante",
         "disease": "Seleccione la enfermedad",
-        "model": "Seleccione el modelo"
+        "model": "Seleccione el modelo",
+        "patients": "Seleccione un paciente"
     },
     "buttons": {
         "save": "Guardar",
