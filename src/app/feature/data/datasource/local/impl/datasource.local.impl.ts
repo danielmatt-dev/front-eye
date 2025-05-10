@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { DatasourceLocal } from '../datasource.local';
+import { Theme } from '../../../../../shared/enums/enums';
 
 @Injectable({
     providedIn: 'root'
@@ -23,6 +25,15 @@ export class DatasourceLocalImpl implements DatasourceLocal {
 
     clear(): void {
         localStorage.clear()
+    }
+
+    getTheme(): Theme {
+        const savedTheme = localStorage.getItem('theme');
+        return savedTheme ? (savedTheme as Theme) : Theme.light;
+    }
+
+    setTheme(theme: Theme): void {
+        localStorage.setItem('theme', theme);
     }
 
 }
