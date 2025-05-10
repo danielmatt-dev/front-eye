@@ -46,7 +46,7 @@ export class AppMenu implements OnInit {
                         },
                         {
                             label: 'Cerrar sesión',
-                            icon: 'pi pi-fw pi-lock',
+                            icon: 'pi pi-fw pi-sign-out',
                             command: () => { this.logout().then() }
                         }
                     ]
@@ -82,7 +82,7 @@ export class AppMenu implements OnInit {
                         { label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
                         {
                             label: 'Cerrar sesión',
-                            icon: 'pi pi-fw pi-lock',
+                            icon: 'pi pi-fw pi-sign-out',
                             command: () => { this.logout().then() }
                         }
                     ]

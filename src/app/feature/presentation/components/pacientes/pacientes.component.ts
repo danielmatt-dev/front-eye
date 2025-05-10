@@ -11,11 +11,13 @@ import { Select } from 'primeng/select';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { patients } from '../../../../shared/utils/mocks';
 import { PrimeNG } from 'primeng/config';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
 
 @Component({
     standalone: true,
     selector: 'app-pacientes',
-    imports: [Button, Calendar, NgForOf, NgClass, FormsModule, InputText, PrimeTemplate, TableModule, Dialog, Select, TranslatePipe],
+    imports: [Button, Calendar, NgForOf, NgClass, FormsModule, InputText, PrimeTemplate, TableModule, Dialog, Select, TranslatePipe, IconField, InputIcon],
     templateUrl: './pacientes.component.html',
     styleUrl: './pacientes.component.scss'
 })
@@ -27,9 +29,9 @@ export class PacientesComponent implements OnInit {
     fechasSeleccionadas: Date[] = [];
     calendarDisabled = true;
 
-    selectedPacientes = []
+    selectedPacientes = [];
 
-    patients = patients
+    patients = patients;
 
     categorias = [
         { label: 'Mes actual', selected: false },
