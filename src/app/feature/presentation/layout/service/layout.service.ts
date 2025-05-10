@@ -1,5 +1,7 @@
-import { Injectable, effect, signal, computed } from '@angular/core';
+import { computed, effect, Injectable, signal } from '@angular/core';
 import { Subject } from 'rxjs';
+import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
+import { Theme } from '../../../../shared/enums/enums';
 
 export interface layoutConfig {
     preset?: string;
@@ -28,7 +30,7 @@ interface MenuChangeEvent {
 export class LayoutService {
     _config: layoutConfig = {
         preset: 'Aura',
-        primary: 'emerald',
+        primary: 'indigo',
         surface: null,
         darkTheme: false,
         menuMode: 'static'
@@ -78,7 +80,19 @@ export class LayoutService {
 
     private initialized = false;
 
-    constructor() {
+    constructor(private readonly local: DatasourceLocalImpl) {
+
+        this._config = {
+            preset: 'Aura',
+            primary: 'indigo',
+            surface: null,
+            darkTheme: this.local.getTheme() === Theme.dark,
+            menuMode: 'static'
+        };
+
+        this.layoutConfig = signal<layoutConfig>(this._config);
+        this.toggleDarkMode(this._config);
+
         effect(() => {
             const config = this.layoutConfig();
             if (config) {
@@ -126,6 +140,7 @@ export class LayoutService {
         } else {
             document.documentElement.classList.remove('app-dark');
         }
+        this.local.setTheme(_config.darkTheme === true ? Theme.dark : Theme.light);
     }
 
     private onTransitionEnd() {
