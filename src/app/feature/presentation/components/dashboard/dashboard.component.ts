@@ -56,8 +56,8 @@ export class DashboardComponent implements OnInit {
             datasets: [
                 {
                     label: 'My First dataset',
-                    backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                    borderColor: documentStyle.getPropertyValue('--p-primary-500'),
+                    backgroundColor: documentStyle.getPropertyValue('--p-indigo-500'),
+                    borderColor: documentStyle.getPropertyValue('--p-indigo-500'),
                     data: [65, 59, 80, 81, 56, 55, 40]
                 }
             ]
@@ -103,14 +103,14 @@ export class DashboardComponent implements OnInit {
             datasets: [
                 {
                     label: 'My First dataset',
-                    backgroundColor: documentStyle.getPropertyValue('--p-primary-500'),
-                    borderColor: documentStyle.getPropertyValue('--p-primary-500'),
+                    backgroundColor: documentStyle.getPropertyValue('--p-indigo-500'),
+                    borderColor: documentStyle.getPropertyValue('--p-indigo-500'),
                     data: [65, 59, 80, 81, 56, 55, 40]
                 },
                 {
                     label: 'My Second dataset',
-                    backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
-                    borderColor: documentStyle.getPropertyValue('--p-primary-200'),
+                    backgroundColor: documentStyle.getPropertyValue('--p-indigo-200'),
+                    borderColor: documentStyle.getPropertyValue('--p-indigo-200'),
                     data: [28, 48, 40, 19, 86, 27, 90]
                 }
             ]
