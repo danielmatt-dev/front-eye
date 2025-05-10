@@ -40,6 +40,8 @@ import { TranslatePipe } from '@ngx-translate/core';
                 <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
                     <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
                 </button>
+
+                <!-- Botón para cambiar el tema y estilo de la aplicación
                 <div class="relative">
                     <button
                         class="layout-topbar-action layout-topbar-action-highlight"
@@ -54,6 +56,9 @@ import { TranslatePipe } from '@ngx-translate/core';
                     </button>
                     <app-configurator />
                 </div>
+                -->
+                <app-configurator />
+
             </div>
 
             <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
@@ -62,14 +67,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-calendar"></i>
-                        <span>Calendar</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
-                    </button>
                     <button type="button" class="layout-topbar-action">
                         <i class="pi pi-user"></i>
                         <span>Profile</span>

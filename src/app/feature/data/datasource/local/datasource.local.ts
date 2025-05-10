@@ -1,4 +1,6 @@
-interface DatasourceLocal {
+import { Theme } from '../../../../shared/enums/enums';
+
+export interface DatasourceLocal {
     setToken(token: string): void;
 
     getToken(): string | null;
@@ -6,6 +8,10 @@ interface DatasourceLocal {
     setRole(role: string): void;
 
     getRole(): string | null;
+
+    setTheme(theme: Theme): void
+
+    getTheme(): Theme
 
     clear(): void
 
