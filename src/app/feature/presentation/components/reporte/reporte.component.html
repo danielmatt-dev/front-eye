@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="flex flex-col gap-8 mb-8">
     <div class="card p-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -24,6 +25,7 @@
                 <p-date-picker
                     id="dateRange2"
                     showIcon="true"
+                    [showButtonBar]="true"
                     [(ngModel)]="fechasSeleccionadas"
                     selectionMode="range"
                     placeholder="{{ 'placeholders.dateRange' | translate }}"
@@ -32,25 +34,30 @@
                 ></p-date-picker>
             </div>
             <div class="flex flex-col justify-end">
-                <p-button label="{{ 'buttons.consult' | translate }}" class="w-full md:w-auto"/>
+                <p-button
+                    class="w-full md:w-auto"
+                    label="{{ 'buttons.consult' | translate }}"
+                    (onClick)="consultar()"
+                />
             </div>
         </div>
     </div>
 </div>
 
 <div class="card">
-    <div class="font-semibold text-xl mb-4">{{ 'titles.reports' | translate }}</div>
+    <div class="font-semibold text-xl mb-4 mx-4">{{ 'titles.reports' | translate }}</div>
     <p-table
-        #dt1
+        #dt
         dataKey="id"
         [rows]="50"
-        [value]="reportes"
+        [value]="reportesFiltrados"
         [loading]="false"
         [rowHover]="true"
         [paginator]="true"
-        [globalFilterFields]="['']"
+        [globalFilterFields]="['id', 'fecha', 'hora', 'edad', 'afeccion', 'ojo', 'resultado']"
         responsiveLayout="scroll"
-        (onRowSelect)="onRowSelect($event)"
+        [scrollable]="true"
+        scrollHeight="40rem"
         selectionMode="single">
 
         <ng-template pTemplate="caption">
@@ -62,7 +69,7 @@
                         icon="pi pi-file-excel"
                         severity="success"
                         outlined="true"
-                        (click)="clear(dt1)"
+                        (click)="clear(dt)"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     ></p-button>
@@ -76,32 +83,54 @@
                 </div>
 
                 <!-- Input de búsqueda alineado a la derecha -->
-                <div class="relative w-full sm:w-64 lg:w-80">
-                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                        <i class="pi pi-search text-gray-400"></i>
-                    </div>
-                    <input
-                        pInputText
-                        type="text"
-                        #filter
-                        (input)="onGlobalFilter(dt1, $event)"
-                        placeholder="{{ 'placeholders.search' | translate }}"
-                        style="padding-left: 2rem;"
-                        class="w-full sm:w-64 lg:w-80"
-                    />
+                <div class=" flex justify-end items-end relative w-full sm:w-64 lg:w-96">
+                    <p-iconfield>
+                        <p-inputicon styleClass="pi pi-search" />
+                        <input
+                            #filter
+                            pInputText
+                            class="sm:w-64 lg:w-96"
+                            type="text"
+                            (input)="onGlobalFilter(dt, $event)"
+                            placeholder="{{ 'placeholders.search' | translate }}" />
+                        <p-inputicon
+                            (click)="clear(dt)"
+                            styleClass="pi pi-times"
+                            (keydown)="onKeyDown($event)"
+                            (keyup)="onKeyUp($event)"
+                        />
+                    </p-iconfield>
                 </div>
             </div>
         </ng-template>
 
         <ng-template pTemplate="header">
             <tr>
-                <th scope="col" style="min-width: 8rem">{{ 'labels.id' | translate }}</th>
-                <th scope="col" style="min-width: 8rem">{{ 'labels.date' | translate }}</th>
-                <th scope="col" style="min-width: 8rem">{{ 'labels.time' | translate }}</th>
-                <th scope="col" style="min-width: 8rem">{{ 'labels.age' | translate }}</th>
-                <th scope="col" style="min-width: 12rem">{{ 'labels.condition' | translate }}</th>
-                <th scope="col" style="min-width: 12rem">{{ 'labels.eye' | translate }}</th>
-                <th scope="col" style="min-width: 12rem">{{ 'labels.result' | translate }}</th>
+                <th scope="col" style="min-width: 6rem; font-weight: bold">{{ 'labels.id' | translate }}</th>
+                <th id="date" pSortableColumn="fecha" style="min-width: 6rem; font-weight: bold">
+                    {{ 'labels.date' | translate }}
+                    <p-sortIcon field="fecha"></p-sortIcon>
+                </th>
+                <th id="time" pSortableColumn="hora" style="min-width: 4rem; font-weight: bold">
+                    {{ 'labels.time' | translate }}
+                    <p-sortIcon field="hora"></p-sortIcon>
+                </th>
+                <th id="age" pSortableColumn="edad" style="min-width: 6rem; font-weight: bold">
+                    {{ 'labels.age' | translate }}
+                    <p-sortIcon field="edad"></p-sortIcon>
+                </th>
+                <th id="condition" pSortableColumn="afeccion" style="min-width: 8rem; font-weight: bold">
+                    {{ 'labels.condition' | translate }}
+                    <p-sortIcon field="afeccion"></p-sortIcon>
+                </th>
+                <th id="eye" pSortableColumn="ojo" style="min-width: 8rem; font-weight: bold">
+                    {{ 'labels.eye' | translate }}
+                    <p-sortIcon field="ojo"></p-sortIcon>
+                </th>
+                <th id="result" pSortableColumn="resultado" style="min-width: 8rem; font-weight: bold">
+                    {{ 'labels.result' | translate }}
+                    <p-sortIcon field="resultado"></p-sortIcon>
+                </th>
             </tr>
         </ng-template>
 
@@ -110,7 +139,7 @@
                 <td>{{ reporte.id }}</td>
                 <td>{{ reporte.fecha }}</td>
                 <td>{{ reporte.hora }}</td>
-                <td>{{ reporte.edad }}</td>
+                <td>{{ reporte.edad }} {{ 'labels.years' | translate }}</td>
                 <td>{{ reporte.afeccion }}</td>
                 <td>{{ reporte.ojo }}</td>
                 <td>{{ reporte.resultado }}</td>
