@@ -120,6 +120,18 @@
         "choose": "Cargar",
         "inspect": "Inspeccionar"
     },
+    "toast": {
+        "warn": {
+            "titles": {
+                "dateRangeNotSelected": "Rango de fechas no seleccionado",
+                "dateFinalNotSelected": "Fecha final no seleccionada"
+            },
+            "messages": {
+                "dateRangeNotSelected": "Por favor, selecciona la fecha de inicio y la fecha final para realizar la consulta",
+                "dateFinalNotSelected": "Por favor, selecciona la fecha final para realizar la consulta"
+            }
+        }
+    },
     "messages": {
         "noDataFound": "No se encontraron {{items}}",
         "loadingData": "Cargando datos. Por favor espere.",

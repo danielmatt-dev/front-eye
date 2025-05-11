@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -13,13 +13,19 @@ import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasou
 import { afecciones, reports, resultados } from '../../../../shared/utils/mocks';
 import { NgIf } from '@angular/common';
 import { DatePicker } from 'primeng/datepicker';
-import { PrimeNG } from 'primeng/config';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
+import { PrimeNG } from 'primeng/config';
 
 @Component({
     selector: 'app-reporte',
     standalone: true,
-    imports: [DropdownModule, FormsModule, TableModule, InputText, ButtonModule, Select, Fluid, UIChart, NgIf, DatePicker, TranslatePipe],
+    imports: [DropdownModule, FormsModule, TableModule, InputText, ButtonModule, Select, Fluid, UIChart, NgIf, DatePicker, TranslatePipe, IconField, InputIcon, ToastModule],
+    providers: [MessageService],
     templateUrl: './reporte.component.html',
     styleUrl: './reporte.component.scss'
 })
@@ -32,6 +38,9 @@ export class ReporteComponent implements OnInit {
     fechasSeleccionadas: Date[] = [];
 
     reportes = reports;
+    reportesFiltrados = this.reportes;
+
+    @ViewChild('filter') filter!: ElementRef;
 
     lineData: any;
 
@@ -46,27 +55,44 @@ export class ReporteComponent implements OnInit {
     pieOptions: any;
 
     subscription: Subscription;
+    localeTextProvider: LocaleTextProvider
 
     showGraphics = false;
 
     constructor(
         private readonly layoutService: LayoutService,
         private readonly local: DatasourceLocalImpl,
-        private readonly primeng: PrimeNG,
-        private readonly translateService: TranslateService
+        private readonly translateService: TranslateService,
+        private readonly primeng: PrimeNG
     ) {
         this.subscription = this.layoutService.configUpdate$.pipe(debounceTime(25)).subscribe(() => {
             this.initCharts();
         });
+        this.localeTextProvider = LocaleTextProvider.getInstance(this.translateService, this.primeng)
     }
 
     ngOnInit(): void {
-        this.translate('es');
-
         if (this.local.getRole() === 'DOCTOR') {
             this.showGraphics = true;
             this.initCharts();
         }
+    }
+
+    consultar() {
+        // || <>
+
+        this.reportesFiltrados = this.reportes.filter((reporte) => {
+            const [day, month, year] = reporte.fecha.split('/').map(Number)
+            const fechaReporte = new Date(year, month - 1, day)
+
+            const filtroAfeccion = this.afeccionSeleccionada === 'Todas' || reporte.afeccion === this.afeccionSeleccionada;
+
+            const filtroResultado = this.resultadoSeleccionado === 'Todos' || reporte.resultado === this.resultadoSeleccionado;
+
+            const filtroFecha = this.isDateInRange(fechaReporte)
+
+            return filtroAfeccion && filtroResultado && filtroFecha;
+        });
     }
 
     initCharts() {
@@ -208,15 +234,23 @@ export class ReporteComponent implements OnInit {
         };
     }
 
-    translate(lang: string) {
-        this.translateService.use(lang);
-        this.translateService.get('primeng').subscribe((res) => this.primeng.setTranslation(res));
-    }
+    private isDateInRange(fechaReporte: Date): boolean {
 
-    async onRowSelect(event: any) {}
+        if (this.fechasSeleccionadas === null || this.fechasSeleccionadas.length === 0) {
+            return true
+        }
+
+        if (this.fechasSeleccionadas[1] === null) {
+            const fechaSeleccionada = this.fechasSeleccionadas[0]
+            return fechaReporte.getDate() === fechaSeleccionada.getDate()
+        }
+
+        return (fechaReporte >= this.fechasSeleccionadas[0] && fechaReporte <= this.fechasSeleccionadas[1])
+    }
 
     clear(table: Table) {
         table.clear();
+        this.filter.nativeElement.value = '';
     }
 
     onGlobalFilter(table: Table, event: Event) {
