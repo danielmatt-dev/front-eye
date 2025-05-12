@@ -7,9 +7,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { SelectButton } from 'primeng/selectbutton';
 import { Textarea } from 'primeng/textarea';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { afecciones, patients } from '../../../../shared/utils/mocks';
-import { PrimeNG } from 'primeng/config';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
@@ -55,14 +54,10 @@ export class NuevaInspeccionComponent implements OnInit {
     filterFields: string = 'fullName,ocupacion,estado,direccion,genero';
 
     constructor(
-        private readonly primeng: PrimeNG,
-        private readonly translateService: TranslateService,
         private readonly messageService: MessageService
     ) {}
 
     ngOnInit() {
-        this.translateService.use('es');
-        this.translateService.get('primeng').subscribe((res) => this.primeng.setTranslation(res));
 
         this.patientOptions = this.pacientes.map((patient) => ({
             ...patient,
