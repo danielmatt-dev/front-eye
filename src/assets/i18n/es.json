@@ -118,7 +118,8 @@
         "delete": "Eliminar {{items}}",
         "upload": "Subir",
         "choose": "Cargar",
-        "inspect": "Inspeccionar"
+        "inspect": "Inspeccionar",
+        "update": "Actualizar"
     },
     "toast": {
         "warn": {
