@@ -9,6 +9,7 @@ import Nora from '@primeng/themes/nora';
 import { PrimeNG } from 'primeng/config';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { LayoutService } from '../service/layout.service';
+import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
 
 const presets = {
     Aura,
@@ -41,6 +42,7 @@ declare type SurfacesType = {
     standalone: true,
     imports: [CommonModule, FormsModule, SelectButtonModule],
     template: `
+        <!--
         <div class="flex flex-col gap-4">
             <div>
                 <span class="text-sm text-muted-color font-semibold">Primary</span>
@@ -85,6 +87,7 @@ declare type SurfacesType = {
                 <p-selectbutton [ngModel]="menuMode()" (ngModelChange)="onMenuModeChange($event)" [options]="menuModeOptions" [allowEmpty]="false" size="small" />
             </div>
         </div>
+        -->
     `,
     host: {
         class: 'hidden absolute top-[3.25rem] right-0 w-72 p-4 bg-surface-0 dark:bg-surface-900 border border-surface rounded-border origin-top shadow-[0px_3px_5px_rgba(0,0,0,0.02),0px_0px_2px_rgba(0,0,0,0.05),0px_1px_4px_rgba(0,0,0,0.08)]'
@@ -110,10 +113,23 @@ export class AppConfigurator {
         { label: 'Overlay', value: 'overlay' }
     ];
 
+    constructor(
+        private readonly local: DatasourceLocalImpl
+    ) {
+        const userRole = this.local.getRole();
+        const primaryColor = userRole === 'DOCTOR' ? 'cyan' : 'indigo';
+        this.updatePrimaryColor(primaryColor);
+    }
+
     ngOnInit() {
         if (isPlatformBrowser(this.platformId)) {
             this.onPresetChange(this.layoutService.layoutConfig().preset);
         }
+    }
+
+    private updatePrimaryColor(colorName: string) {
+        const color = { name: colorName, palette: {} };
+        this.updateColors({ stopPropagation: () => {} }, 'primary', color);
     }
 
     surfaces: SurfacesType[] = [
@@ -268,7 +284,7 @@ export class AppConfigurator {
     primaryColors = computed<SurfacesType[]>(() => {
         const presetPalette = presets[this.layoutService.layoutConfig().preset as KeyOfType<typeof presets>].primitive;
         //const colors = ['emerald', 'green', 'lime', 'orange', 'amber', 'yellow', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose'];
-        const colors = ['indigo']
+        const colors = ['cyan', 'indigo'];
         const palettes: SurfacesType[] = [{ name: 'noir', palette: {} }];
 
         colors.forEach((color) => {

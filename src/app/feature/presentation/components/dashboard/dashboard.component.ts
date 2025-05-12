@@ -9,6 +9,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { DatePicker } from 'primeng/datepicker';
 import { mapColors } from '../../../../core/theme/colors';
 import { TranslatePipe } from '@ngx-translate/core';
+import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
 
 @Component({
     selector: 'app-dashboard',
@@ -35,7 +36,10 @@ export class DashboardComponent implements OnInit {
 
     subscription: Subscription;
 
-    constructor(private readonly layoutService: LayoutService) {
+    constructor(
+        private readonly layoutService: LayoutService,
+        private readonly local: DatasourceLocalImpl
+    ) {
         this.subscription = this.layoutService.configUpdate$.pipe(debounceTime(25)).subscribe(() => {
             this.initCharts();
         });
@@ -51,13 +55,20 @@ export class DashboardComponent implements OnInit {
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
+        const userRole = this.local.getRole()
+        let primaryColor = '--p-indigo-500'
+
+        if (userRole === 'DOCTOR') {
+            primaryColor = '--p-cyan-500'
+        }
+
         this.barData1 = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [
                 {
                     label: 'My First dataset',
-                    backgroundColor: documentStyle.getPropertyValue('--p-indigo-500'),
-                    borderColor: documentStyle.getPropertyValue('--p-indigo-500'),
+                    backgroundColor: documentStyle.getPropertyValue(primaryColor),
+                    borderColor: documentStyle.getPropertyValue(primaryColor),
                     data: [65, 59, 80, 81, 56, 55, 40]
                 }
             ]
@@ -103,8 +114,8 @@ export class DashboardComponent implements OnInit {
             datasets: [
                 {
                     label: 'My First dataset',
-                    backgroundColor: documentStyle.getPropertyValue('--p-indigo-500'),
-                    borderColor: documentStyle.getPropertyValue('--p-indigo-500'),
+                    backgroundColor: documentStyle.getPropertyValue(primaryColor),
+                    borderColor: documentStyle.getPropertyValue(primaryColor),
                     data: [65, 59, 80, 81, 56, 55, 40]
                 },
                 {

@@ -31,7 +31,7 @@ export class LayoutService {
     _config: layoutConfig = {
         preset: 'Aura',
         primary: 'indigo',
-        surface: null,
+        surface: 'zinc',
         darkTheme: false,
         menuMode: 'static'
     };
@@ -48,13 +48,13 @@ export class LayoutService {
 
     layoutState = signal<LayoutState>(this._state);
 
-    private configUpdate = new Subject<layoutConfig>();
+    private readonly configUpdate = new Subject<layoutConfig>();
 
-    private overlayOpen = new Subject<any>();
+    private readonly overlayOpen = new Subject<any>();
 
-    private menuSource = new Subject<MenuChangeEvent>();
+    private readonly menuSource = new Subject<MenuChangeEvent>();
 
-    private resetSource = new Subject();
+    private readonly resetSource = new Subject();
 
     menuSource$ = this.menuSource.asObservable();
 
@@ -84,7 +84,7 @@ export class LayoutService {
 
         this._config = {
             preset: 'Aura',
-            primary: 'indigo',
+            primary: this.local.getRole() === 'DOCTOR' ? 'cyan' : 'indigo',
             surface: null,
             darkTheme: this.local.getTheme() === Theme.dark,
             menuMode: 'static'
