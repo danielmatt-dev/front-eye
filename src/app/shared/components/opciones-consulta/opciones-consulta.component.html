@@ -1,0 +1,52 @@
+<div class="card p-4">
+    <div class="flex flex-wrap items-center gap-4 lg:justify-between">
+
+        <div class="flex flex-wrap gap-4">
+
+            <!-- Chips -->
+            <div class="flex flex-col">
+                <div class="font-bold mb-2">{{ 'labels.selectPeriod' | translate }}</div>
+                <div class="flex flex-wrap gap-2">
+                    <div
+                        *ngFor="let categoria of categorias"
+                        class="px-4 py-2 rounded-full cursor-pointer transition-all"
+                        [ngClass]="{
+                            'bg-primary text-primary-contrast': categoria.selected,
+                            'bg-gray-100 text-color dark:bg-surface-700': !categoria.selected
+                        }"
+                        (click)="seleccionarChip(categoria)"
+                        (keydown.enter)="seleccionarChip(categoria)">
+                        {{ categoria.label }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rango de Fechas -->
+            <div class="flex flex-col gap-2">
+                <label for="dateRange" class="font-bold">{{ 'labels.dateRange' | translate }}</label>
+                <p-date-picker
+                    id="dateRange"
+                    showIcon="true"
+                    [(ngModel)]="fechasSeleccionadas"
+                    selectionMode="range"
+                    placeholder="{{ 'placeholders.dateRange' | translate }}"
+                    class="w-full sm:w-[21rem] md:w-[18rem] lg:w-[18rem] xl:w-[18rem]"
+                    [style]="{width:' 100%' }"
+                    [disabled]="calendarDisabled"
+                    (onSelect)="onFechaSeleccionada(fechasSeleccionadas)"
+                ></p-date-picker>
+            </div>
+
+            <!-- Botón de consultar -->
+            <div class="flex flex-col self-end">
+                <p-button
+                    label="{{ 'buttons.consult' | translate }}"
+                    class="w-full md:w-auto"
+                    (onClick)="onConsultar()"
+                />
+            </div>
+
+        </div>
+
+    </div>
+</div>
