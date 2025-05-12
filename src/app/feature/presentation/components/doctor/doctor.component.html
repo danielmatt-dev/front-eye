@@ -1,15 +1,17 @@
+<p-confirmDialog></p-confirmDialog>
+
 <!-- Opciones de consulta -->
 <div class="mb-8">
     <app-opciones-consulta
         (periodoSeleccionado)="onPeriodoSeleccionado($event)"
         (rangoFechasSeleccionado)="onRangoFechasSeleccionado($event)"
-        (consultar)="abrirModal()"
+        (consultar)="filtrarDoctores()"
     />
 </div>
 
 <!-- Tabla de doctores -->
 <div class="card">
-    <div class="flex flex-wrap sm:flex-row justify-between gap-4">
+    <div class="flex flex-wrap sm:flex-row justify-between gap-4 mx-4">
         <div class="font-semibold text-xl">{{ 'titles.doctors' | translate }}</div>
         <!-- Contenedor para los botones alineados a la derecha -->
         <div class="flex gap-4">
@@ -22,6 +24,7 @@
             <p-button
                 label="{{ 'buttons.delete' | translate: { items: labelDoctors } }}"
                 severity="danger"
+                (onClick)="eliminarDoctoresSeleccionados()"
                 icon="pi pi-trash">
             </p-button>
         </div>
@@ -29,15 +32,14 @@
 
     <p-table
         #dt1
-        dataKey="id"
+        dataKey="clave"
         [rows]="50"
         [loading]="false"
         [rowHover]="true"
         [paginator]="true"
-        [globalFilterFields]="['']"
-        [value]="doctores"
+        [globalFilterFields]="['clave', 'nombre', 'apellidos', 'fechaNacimiento', 'fechaAlta', 'genero', 'codigoPostal', 'direccion', 'estado']"
+        [value]="doctoresFiltrados"
         responsiveLayout="scroll"
-        (onRowSelect)="onRowSelect($event)"
         selectionMode="multiple"
         [(selection)]="selectedDoctores">
 
@@ -64,19 +66,23 @@
                 </div>
 
                 <!-- Input de búsqueda alineado a la derecha -->
-                <div class="relative w-full sm:w-64 lg:w-80">
-                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                        <i class="pi pi-search text-gray-400"></i>
-                    </div>
-                    <input
-                        pInputText
-                        type="text"
-                        #filter
-                        (input)="onGlobalFilter(dt1, $event)"
-                        placeholder="{{ 'placeholders.search' | translate }}"
-                        style="padding-left: 2rem;"
-                        class="w-full sm:w-64 lg:w-80"
-                    />
+                <div class=" flex justify-end items-end relative w-full sm:w-64 lg:w-96">
+                    <p-iconfield>
+                        <p-inputicon styleClass="pi pi-search" />
+                        <input
+                            pInputText
+                            class="sm:w-64 lg:w-96"
+                            type="text"
+                            (input)="onGlobalFilter(dt1, $event)"
+                            placeholder="{{ 'placeholders.search' | translate }}"
+                        />
+                        <p-inputicon
+                            (click)="clear(dt1)"
+                            styleClass="pi pi-times"
+                            (keydown)="onKeyDown($event)"
+                            (keyup)="onKeyUp($event)"
+                        />
+                    </p-iconfield>
                 </div>
             </div>
         </ng-template>
@@ -87,14 +93,39 @@
                 <th id="check" style="width: 3em">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th scope="col" style="min-width: 10rem">{{ 'labels.key' | translate }}</th>
-                <th scope="col" style="min-width: 10rem">{{ 'labels.name' | translate }}</th>
-                <th scope="col" style="min-width: 8rem">{{ 'labels.lastname' | translate }}</th>
-                <th scope="col" style="min-width: 8rem">{{ 'labels.birthDate' | translate }}</th>
-                <th scope="col" style="min-width: 10rem">{{ 'labels.gender' | translate }}</th>
-                <th scope="col" style="min-width: 12rem">{{ 'labels.postalCode' | translate }}</th>
-                <th scope="col" style="min-width: 12rem">{{ 'labels.address' | translate }}</th>
-                <th scope="col" style="min-width: 10rem">{{ 'labels.state' | translate }}</th>
+                <th id="key" pSortableColumn="clave" style="min-width: 6rem">
+                    {{ 'labels.key' | translate }}
+                    <p-sortIcon field="clave"></p-sortIcon>
+                </th>
+                <th id="name" pSortableColumn="nombre" style="min-width: 10rem">
+                    {{ 'labels.name' | translate }}
+                    <p-sortIcon field="nombre"></p-sortIcon>
+                </th>
+                <th id="lastname" pSortableColumn="apellidos" style="min-width: 12rem">
+                    {{ 'labels.lastname' | translate }}
+                    <p-sortIcon field="apellidos"></p-sortIcon>
+                </th>
+                <th id="birthDate" pSortableColumn="fechaNacimiento" style="min-width: 8rem">
+                    {{ 'labels.birthDate' | translate }}
+                    <p-sortIcon field="fechaNacimiento"></p-sortIcon>
+                </th>
+                <th id="gender" pSortableColumn="genero" style="min-width: 8rem">
+                    {{ 'labels.gender' | translate }}
+                    <p-sortIcon field="genero"></p-sortIcon>
+                </th>
+                <th id="postalCode" pSortableColumn="codigoPostal" style="min-width: 6rem">
+                    {{ 'labels.postalCode' | translate }}
+                    <p-sortIcon field="codigoPostal"></p-sortIcon>
+                </th>
+                <th id="address" pSortableColumn="direccion" style="min-width: 18rem">
+                    {{ 'labels.address' | translate }}
+                    <p-sortIcon field="direccion"></p-sortIcon>
+                </th>
+                <th id="state" pSortableColumn="estado" style="min-width: 8rem">
+                    {{ 'labels.state' | translate }}
+                    <p-sortIcon field="estado"></p-sortIcon>
+                </th>
+                <th scope="col" style="min-width: 12rem">{{ 'labels.actions' | translate }}</th>
             </tr>
         </ng-template>
 
@@ -106,12 +137,34 @@
                 </td>
                 <td>{{ doctor.clave }}</td>
                 <td>{{ doctor.nombre }}</td>
-                <td>{{ doctor.apellidos }}</td>
+                <td>{{ doctor.apellidoPaterno }} {{ doctor.apellidoMaterno }} </td>
                 <td>{{ doctor.fechaNacimiento }}</td>
                 <td>{{ doctor.genero }}</td>
                 <td>{{ doctor.codigoPostal }}</td>
                 <td>{{ doctor.direccion }}</td>
                 <td>{{ doctor.estado }}</td>
+                <td>
+                    <p-button
+                        icon="pi pi-pencil"
+                        class="mx-1"
+                        severity="info"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (click)="editarDoctor(doctor.clave)"
+                        (keydown)="onKeyDown($event)"
+                        (keyup)="onKeyUp($event)"
+                    />
+                    <p-button
+                        icon="pi pi-trash"
+                        class="mx-1"
+                        severity="danger"
+                        [rounded]="true"
+                        [outlined]="true"
+                        (click)="eliminarDoctor(doctor.clave)"
+                        (keydown)="onKeyDown($event)"
+                        (keyup)="onKeyUp($event)"
+                    />
+                </td>
             </tr>
         </ng-template>
 
@@ -133,63 +186,102 @@
     header="{{ 'doctor.titleModal' | translate }}"
     class="font-bold"
     [modal]="true"
-    [(visible)]="visible"
+    [(visible)]="isVisible"
     [style]="{ width: '70rem', 'min-width': '30rem', 'max-width': '70rem', 'overflow-x': 'hidden', 'padding': '0.5rem' }"
     (onHide)="cerrarVentanaNotificacion()">
 
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="nombre">{{ 'labels.name' | translate }}</label>
-            <input pInputText id="nombre" type="text" placeholder="{{ 'placeholders.name' | translate }}" />
+            <input
+                pInputText
+                id="nombre"
+                [(ngModel)]="nombre"
+                type="text" placeholder="{{ 'placeholders.name' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="paterno">{{ 'labels.fatherLastName' | translate }}</label>
-            <input pInputText id="paterno" type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}" />
+            <input
+                pInputText
+                id="paterno"
+                [(ngModel)]="apellidoPaterno"
+                type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="materno">{{ 'labels.motherLastName' | translate }}</label>
-            <input pInputText id="materno" type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}" />
+            <input
+                pInputText
+                id="materno"
+                [(ngModel)]="apellidoMaterno"
+                type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}" />
         </div>
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="correo">{{ 'labels.email' | translate }}</label>
-            <input pInputText id="correo" type="text" placeholder="{{ 'placeholders.email' | translate }}" />
+            <input
+                pInputText
+                id="correo"
+                [(ngModel)]="correo"
+                type="text" placeholder="{{ 'placeholders.email' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="telefono">{{ 'labels.phone' | translate }}</label>
-            <input pInputText id="telefono" type="text" placeholder="{{ 'placeholders.phone' | translate }}" />
+            <input
+                pInputText
+                id="telefono"
+                [(ngModel)]="telefono"
+                type="text" placeholder="{{ 'placeholders.phone' | translate }}" />
         </div>
 
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="genero">{{ 'labels.gender' | translate }}</label>
-            <p-select
-                id="genero"
-                [options]="generos"
-                placeholder="{{ 'placeholders.gender' | translate }}"
-            ></p-select>
-        </div>
-        <div class="flex flex-col grow basis-0 gap-2">
             <label for="nacimiento">{{ 'labels.birthDate' | translate }}</label>
+            <input
+                pInputText
+                id="nacimiento"
+                [(ngModel)]="fechaNacimiento"
+                type="text" placeholder="{{ 'placeholders.birthDate' | translate }}" />
+            <!--
             <p-date-picker
                 id="nacimiento"
                 showIcon="true"
                 class="w-full"
+                [ngModel]="fechaNacimiento"
                 [style]="{ width: '100%' }"
                 placeholder="{{ 'placeholders.birthDate' | translate }}"
             ></p-date-picker>
+            -->
+        </div>
+        <div class="flex flex-col grow basis-0 gap-2">
+            <label for="genero">{{ 'labels.gender' | translate }}</label>
+            <p-select
+                id="genero"
+                [options]="generos"
+                [(ngModel)]="genero"
+                placeholder="{{ 'placeholders.gender' | translate }}"
+            ></p-select>
         </div>
     </div>
     <div class="flex flex-wrap gap-6">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="direccion">{{ 'labels.address' | translate }}</label>
-            <input pInputText id="direccion" type="text" placeholder="{{ 'placeholders.address' | translate }}" />
+            <input
+                pInputText
+                id="direccion"
+                [(ngModel)]="direccion"
+                type="text"
+                placeholder="{{ 'placeholders.address' | translate }}"
+            />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="cp">{{ 'labels.postalCode' | translate }}</label>
-            <input pInputText id="cp" type="text" placeholder="{{ 'placeholders.postalCode' | translate }}" />
+            <input
+                pInputText
+                id="cp"
+                [(ngModel)]="codigoPostal"
+                type="text" placeholder="{{ 'placeholders.postalCode' | translate }}" />
         </div>
     </div>
     <div class="flex flex-wrap justify-end gap-6 mt-6">
@@ -199,7 +291,14 @@
             label="{{ 'buttons.cancel' | translate }}"
         ></p-button>
         <p-button
+            *ngIf="!isUpdate"
             label="{{ 'buttons.register' | translate }}"
+            (onClick)="addDoctor()"
+        ></p-button>
+        <p-button
+            *ngIf="isUpdate"
+            label="{{ 'buttons.update' | translate }}"
+            (onClick)="actualizarDoctor()"
         ></p-button>
     </div>
 
