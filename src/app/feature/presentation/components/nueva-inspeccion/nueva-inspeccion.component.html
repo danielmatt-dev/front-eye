@@ -10,9 +10,10 @@
                     [options]="patientOptions"
                     optionLabel="fullName"
                     placeholder="{{ 'placeholders.patients' | translate }}"
-                    optionValue="clave"
                     [filter]="true"
                     [filterBy]="filterFields"
+                    [(ngModel)]="selectedPatient"
+                    (onChange)="onPatientSelect($event)"
                     appendTo="body">
                     <ng-template let-item pTemplate="item">
                         <span
@@ -27,62 +28,130 @@
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="nombre">{{ 'labels.name'| translate }}</label>
-                    <input pInputText id="nombre" type="text" placeholder="{{ 'placeholders.name'| translate }}" />
+                    <input
+                        pInputText
+                        [(ngModel)]="nombre"
+                        readonly
+                        id="nombre"
+                        type="text"
+                        placeholder="{{ 'placeholders.name'| translate }}"
+                    />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="paterno">{{ 'labels.fatherLastName'| translate }}</label>
-                    <input pInputText id="paterno" type="text" placeholder="{{ 'placeholders.fatherLastName'| translate }}" />
+                    <input
+                        pInputText
+                        readonly
+                        [(ngModel)]="paterno"
+                        id="paterno"
+                        type="text"
+                        placeholder="{{ 'placeholders.fatherLastName'| translate }}"
+                    />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="materno">{{ 'labels.motherLastName'| translate }}</label>
-                    <input pInputText id="materno" type="text" placeholder="{{ 'placeholders.motherLastName'| translate }}" />
+                    <input
+                        pInputText
+                        readonly
+                        id="materno"
+                        type="text"
+                        [(ngModel)]="materno"
+                        placeholder="{{ 'placeholders.motherLastName'| translate }}"
+                    />
                 </div>
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="correo">{{ 'labels.email'| translate }}</label>
-                    <input pInputText id="correo" type="text" placeholder="{{ 'placeholders.email'| translate }}" />
+                    <input
+                        pInputText
+                        readonly
+                        id="correo"
+                        type="text"
+                        [(ngModel)]="correo"
+                        placeholder="{{ 'placeholders.email'| translate }}"
+                    />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="telefono">{{ 'labels.phone'| translate }}</label>
-                    <input pInputText id="telefono" type="text" placeholder="{{ 'placeholders.phone'| translate }}" />
+                    <input
+                        pInputText
+                        readonly
+                        id="telefono"
+                        type="text"
+                        [(ngModel)]="telefono"
+                        placeholder="{{ 'placeholders.phone'| translate }}"
+                    />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="ocupacion">{{ 'labels.occupation'| translate }}</label>
-                    <input pInputText id="ocupacion" type="text" placeholder="{{ 'placeholders.occupation'| translate }}" />
+                    <input
+                        pInputText
+                        readonly
+                        id="ocupacion"
+                        type="text"
+                        [(ngModel)]="ocupacion"
+                        placeholder="{{ 'placeholders.occupation'| translate }}"
+                    />
                 </div>
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="genero">{{ 'labels.gender'| translate }}</label>
-                    <p-select
+                    <input
+                        pInputText
+                        readonly
                         id="genero"
+                        type="text"
+                        [(ngModel)]="genero"
                         placeholder="{{ 'placeholders.gender'| translate }}"
-                    ></p-select>
+                    />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="nacimiento">{{ 'labels.birthDate'| translate }}</label>
-                    <p-calendar
+                    <input
+                        pInputText
+                        readonly
                         id="nacimiento"
-                        showIcon="true"
-                        class="w-full"
+                        type="text"
+                        [(ngModel)]="fechaNacimiento"
                         placeholder="{{ 'placeholders.birthDate'| translate }}"
-                        [style]="{ width: '100%' }"
-                    ></p-calendar>
+                    />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="edad">{{ 'labels.age'| translate }}</label>
-                    <input pInputText id="edad" type="text" [readonly]="true" placeholder="{{ 'placeholders.age'| translate }}" />
+                    <input
+                        pInputText
+                        readonly
+                        id="edad"
+                        type="text"
+                        [(ngModel)]="edad"
+                        placeholder="{{ 'placeholders.age'| translate }}"
+                    />
                 </div>
             </div>
             <div class="flex flex-wrap gap-6">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="direccion">{{ 'labels.address'| translate }}</label>
-                    <input pInputText id="direccion" type="text" placeholder="{{ 'placeholders.address'| translate }}" />
+                    <input
+                        pInputText
+                        readonly
+                        id="direccion"
+                        type="text"
+                        [(ngModel)]="direccion"
+                        placeholder="{{ 'placeholders.address'| translate }}"
+                    />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="cp">{{ 'labels.postalCode'| translate }}</label>
-                    <input pInputText id="cp" type="text" placeholder="{{ 'placeholders.postalCode'| translate }}" />
+                    <input
+                        pInputText
+                        readonly
+                        id="cp"
+                        type="text"
+                        [(ngModel)]="codigoPostal"
+                        placeholder="{{ 'placeholders.postalCode'| translate }}"
+                    />
                 </div>
             </div>
         </div>
@@ -147,7 +216,14 @@
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="doctor">{{ 'doctor.singular'| translate }}</label>
-                    <input pInputText id="doctor" type="text" [readonly]="true" placeholder="{{ 'placeholders.name'| translate }} {{ 'placeholders.fatherLastName'| translate }} {{ 'placeholders.motherLastName'| translate }}" />
+                    <input
+                        pInputText
+                        readonly
+                        id="doctor"
+                        type="text"
+                        [(ngModel)]="doctor"
+                        placeholder="{{ 'placeholders.name'| translate }} {{ 'placeholders.fatherLastName'| translate }} {{ 'placeholders.motherLastName'| translate }}"
+                    />
                 </div>
             </div>
             <div class="flex flex-wrap gap-6 mb-6">
@@ -163,6 +239,7 @@
                     <p-select
                         id="enfermedad"
                         [options]="afecciones"
+                        [(ngModel)]="selectedAfeccion"
                         placeholder="{{ 'placeholders.disease'| translate }}"
                     ></p-select>
                 </div>
