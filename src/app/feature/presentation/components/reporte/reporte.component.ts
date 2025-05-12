@@ -101,13 +101,20 @@ export class ReporteComponent implements OnInit {
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
+        const userRole = this.local.getRole()
+        let primaryColor = '--p-indigo-500'
+
+        if (userRole === 'DOCTOR') {
+            primaryColor = '--p-cyan-500'
+        }
+
         this.barData = {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [
                 {
                     label: 'My First dataset',
-                    backgroundColor: documentStyle.getPropertyValue('--p-indigo-500'),
-                    borderColor: documentStyle.getPropertyValue('--p-indigo-500'),
+                    backgroundColor: documentStyle.getPropertyValue(primaryColor),
+                    borderColor: documentStyle.getPropertyValue(primaryColor),
                     data: [65, 59, 80, 81, 56, 55, 40]
                 },
                 {
@@ -159,7 +166,7 @@ export class ReporteComponent implements OnInit {
             datasets: [
                 {
                     data: [540, 325, 702],
-                    backgroundColor: [documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500')],
+                    backgroundColor: [documentStyle.getPropertyValue(primaryColor), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500')],
                     hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400')]
                 }
             ]
@@ -186,8 +193,8 @@ export class ReporteComponent implements OnInit {
                     label: 'First Dataset',
                     data: [65, 59, 80, 81, 56, 55, 40],
                     fill: false,
-                    backgroundColor: documentStyle.getPropertyValue('--p-indigo-500'),
-                    borderColor: documentStyle.getPropertyValue('--p-indigo-500'),
+                    backgroundColor: documentStyle.getPropertyValue(primaryColor),
+                    borderColor: documentStyle.getPropertyValue(primaryColor),
                     tension: 0.4
                 },
                 {

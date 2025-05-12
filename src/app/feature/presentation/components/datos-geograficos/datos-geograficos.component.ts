@@ -50,7 +50,17 @@ export class DatosGeograficosComponent implements AfterViewInit {
         });
 
         dataPointsMocks.forEach((p) => {
-            const m = L.marker([p.lat, p.lng]).bindPopup(`<b>${p.name}</b>`);
+
+            let greenIcon = new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            const m = L.marker([p.lat, p.lng], {icon:  greenIcon}).bindPopup(`<b>${p.name}</b>`);
             markerClusterGroup.addLayer(m);
         });
 
