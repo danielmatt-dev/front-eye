@@ -5,8 +5,6 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import { Calendar } from 'primeng/calendar';
-import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
 import { Textarea } from 'primeng/textarea';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -14,14 +12,16 @@ import { afecciones, patients } from '../../../../shared/utils/mocks';
 import { PrimeNG } from 'primeng/config';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { MultiSelectModule } from 'primeng/multiselect';
 import { TooltipModule } from 'primeng/tooltip';
 import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
+import { DatePickerModule } from 'primeng/datepicker';
+import { SelectModule } from 'primeng/select';
 
 @Component({
     selector: 'app-nueva-inspeccion',
     standalone: true,
-    imports: [CommonModule, FileUploadModule, ToastModule, ButtonModule, InputText, Calendar, Select, SelectButton, Textarea, TranslatePipe, IconFieldModule, InputIconModule, MultiSelectModule, TooltipModule, DropdownModule],
+    imports: [CommonModule, FileUploadModule, ToastModule, ButtonModule, InputText, SelectButton, Textarea, TranslatePipe, IconFieldModule, InputIconModule, TooltipModule, DropdownModule, FormsModule, DatePickerModule, SelectModule],
     templateUrl: './nueva-inspeccion.component.html',
     styleUrl: './nueva-inspeccion.component.scss',
     providers: [MessageService]
@@ -32,10 +32,26 @@ export class NuevaInspeccionComponent implements OnInit {
     uploadedFiles: any[] = [];
     options = ['Derecho', 'Izquierdo'];
 
-    afecciones = afecciones;
+    afecciones = afecciones.filter((afeccion) => afeccion !== 'Todas' );
+    selectedAfeccion?: string = undefined
     pacientes = patients;
 
+    doctor = 'Juan García Pérez'
+    nombre = '';
+    paterno = '';
+    materno = ''
+    fechaNacimiento = undefined;
+    edad = '';
+    genero = '';
+    correo = ''
+    telefono = ''
+    ocupacion = '';
+    codigoPostal = '';
+    direccion = '';
+    estado = '';
+
     patientOptions: any[] = [];
+    selectedPatient: any;
     filterFields: string = 'fullName,ocupacion,estado,direccion,genero';
 
     constructor(
@@ -50,13 +66,13 @@ export class NuevaInspeccionComponent implements OnInit {
 
         this.patientOptions = this.pacientes.map((patient) => ({
             ...patient,
-            fullName: `${patient.nombre} ${patient.apellidos}`
+            fullName: `${patient.nombre} ${patient.apellidoPaterno} ${patient.apellidoMaterno}`
         }));
     }
 
     getTooltip(patient: any): string {
         return `
-            Nombre: ${patient.nombre} ${patient.apellidos}\n
+            Nombre: ${patient.nombre} ${patient.apellidoPaterno} ${patient.apellidoMaterno}\n
             Edad: ${patient.edad} años\n
             Género: ${patient.genero}\n
             Ocupación: ${patient.ocupacion}\n
@@ -76,5 +92,23 @@ export class NuevaInspeccionComponent implements OnInit {
     choose(event: any, chooseCallback: any) {
         chooseCallback();
         this.files = event.files;
+    }
+
+    onPatientSelect(event: any) {
+        this.selectedPatient = event.value
+        this.nombre = this.selectedPatient.nombre
+        this.selectedPatient = event.value;
+        this.nombre = this.selectedPatient.nombre || '';
+        this.paterno = this.selectedPatient.apellidoPaterno || '';
+        this.materno = this.selectedPatient.apellidoMaterno || '';
+        this.fechaNacimiento = this.selectedPatient.fechaNacimiento
+        this.edad = this.selectedPatient.edad + ' años' || '';
+        this.genero = this.selectedPatient.genero || '';
+        this.correo = this.selectedPatient.correo
+        this.telefono = this.selectedPatient.telefono
+        this.ocupacion = this.selectedPatient.ocupacion || '';
+        this.codigoPostal = this.selectedPatient.codigoPostal || '';
+        this.direccion = this.selectedPatient.direccion || '';
+        this.estado = this.selectedPatient.estado || '';
     }
 }
