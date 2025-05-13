@@ -15,11 +15,13 @@ import { InputIcon } from 'primeng/inputicon';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { NgIf } from '@angular/common';
+import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-consulta/opciones-consulta-helper';
+import { Toast } from 'primeng/toast';
 
 @Component({
     standalone: true,
     selector: 'app-doctor',
-    imports: [FormsModule, ButtonModule, TableModule, DialogModule, SelectModule, InputText, DatePickerModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ConfirmDialogModule, NgIf],
+    imports: [FormsModule, ButtonModule, TableModule, DialogModule, SelectModule, InputText, DatePickerModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ConfirmDialogModule, NgIf, Toast],
     providers: [ConfirmationService, MessageService],
     templateUrl: './doctor.component.html',
     styleUrl: './doctor.component.scss'
@@ -36,12 +38,12 @@ export class DoctorComponent implements OnInit {
     selectedDoctores: any[] = [];
 
     doctores = doctores;
-    doctoresFiltrados = this.doctores
+    doctoresFiltrados = this.doctores;
 
     labelDoctor = 'doctor';
     labelDoctors = 'doctores';
 
-    claveDoctor = ''
+    claveDoctor = '';
     nombre = '';
     apellidoPaterno = '';
     apellidoMaterno = '';
@@ -52,12 +54,16 @@ export class DoctorComponent implements OnInit {
     direccion = '';
     codigoPostal = '';
 
+    opcionesConsultaHelper: OpcionesConsultaHelper;
+
     constructor(
         private readonly primeng: PrimeNG,
         private readonly translateService: TranslateService,
         private readonly confirmationService: ConfirmationService,
         private readonly messageService: MessageService
-    ) {}
+    ) {
+        this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(messageService, translateService, primeng);
+    }
 
     ngOnInit() {
         this.translateService.use('es');
@@ -103,7 +109,7 @@ export class DoctorComponent implements OnInit {
             this.apellidoMaterno = doctor.apellidoMaterno;
             this.correo = `${doctor.nombre.toLowerCase()}.${this.apellidoPaterno.toLowerCase()}@hospital.com`;
             this.genero = doctor.genero;
-            this.telefono = doctor.telefono
+            this.telefono = doctor.telefono;
             this.fechaNacimiento = doctor.fechaNacimiento;
             this.direccion = doctor.direccion;
             this.codigoPostal = doctor.codigoPostal;
@@ -163,6 +169,7 @@ export class DoctorComponent implements OnInit {
                 rejectButtonStyleClass: 'p-button-secondary',
                 accept: () => {
                     this.doctores = this.doctores.filter((d) => d.clave !== clave);
+                    this.doctoresFiltrados = this.doctores
                 }
             });
         }
@@ -185,6 +192,7 @@ export class DoctorComponent implements OnInit {
                     const index = this.doctores.findIndex((d) => d.clave === doctor.clave);
                     if (index !== -1) {
                         this.doctores.splice(index, 1);
+                        this.doctoresFiltrados = this.doctores
                     }
                 });
                 this.messageService.add({ severity: 'success', summary: 'Eliminación Exitosa', detail: 'Doctores eliminados correctamente' });
@@ -243,8 +251,12 @@ export class DoctorComponent implements OnInit {
 
     filtrarDoctores(): void {
 
-        if (this.fechasSeleccionadas.length === 0) {
-            this.doctoresFiltrados = this.doctores
+        if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.periodoSeleccionado, this.fechasSeleccionadas)) {
+            return;
+        }
+
+        if (this.fechasSeleccionadas.length === 0 || this.periodoSeleccionado === '') {
+            this.doctoresFiltrados = this.doctores;
         }
 
         let fechaInicio: Date;
@@ -267,9 +279,11 @@ export class DoctorComponent implements OnInit {
                 if (this.fechasSeleccionadas.length === 2) {
                     fechaInicio = new Date(this.fechasSeleccionadas[0]);
                     fechaFin = new Date(this.fechasSeleccionadas[1]);
-                } else {
-                    console.warn('Rango de fechas no válido.');
-                    return;
+                }
+
+                if (this.fechasSeleccionadas[1] === null) {
+                    fechaInicio = new Date(this.fechasSeleccionadas[0]);
+                    fechaFin = new Date(this.fechasSeleccionadas[0]);
                 }
                 break;
             default:
@@ -282,10 +296,7 @@ export class DoctorComponent implements OnInit {
         // Filtrar doctores en base a la fechaAlta
         this.doctoresFiltrados = this.doctores.filter((doctor) => {
             const fechaAlta = new Date(doctor.fechaAlta.split('/').reverse().join('-')); // Convertir dd/MM/yyyy a yyyy-MM-dd
-            return (
-                formatoFecha(fechaAlta) >= formatoFecha(fechaInicio) &&
-                formatoFecha(fechaAlta) <= formatoFecha(fechaFin)
-            );
+            return formatoFecha(fechaAlta) >= formatoFecha(fechaInicio) && formatoFecha(fechaAlta) <= formatoFecha(fechaFin);
         });
 
         console.log('Doctores Filtrados:', this.doctoresFiltrados);

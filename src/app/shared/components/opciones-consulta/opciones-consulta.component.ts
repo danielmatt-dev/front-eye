@@ -27,12 +27,25 @@ export class OpcionesConsultaComponent {
         { label: 'Personalizado', selected: false }
     ];
 
-    seleccionarChip(categoriaSeleccionada: any) {
-        this.categorias.forEach((c) => (c.selected = false));
-        categoriaSeleccionada.selected = true;
+    seleccionarChip(categoriaSeleccionada: any): void {
+        // Si el chip ya está seleccionado, lo deseleccionamos
+        if (categoriaSeleccionada.selected) {
+            categoriaSeleccionada.selected = false;
+            this.periodoSeleccionado.emit(''); // Emitir vacío al deseleccionar
+            this.calendarDisabled = true;
+            this.fechasSeleccionadas = [];
+            this.emitirRangoFechas();
+            return;
+        }
 
+        // Deseleccionar todos los chips
+        this.categorias.forEach((c) => (c.selected = false));
+
+        // Seleccionar el chip actual
+        categoriaSeleccionada.selected = true;
         this.periodoSeleccionado.emit(categoriaSeleccionada.label);
 
+        // Activar o desactivar el calendario según el tipo de selección
         if (categoriaSeleccionada.label === 'Personalizado') {
             this.calendarDisabled = false;
         } else {
