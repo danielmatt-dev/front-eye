@@ -61,6 +61,7 @@ export class AppMenu implements OnInit {
                         {
                             label: 'Administrar inspecciones',
                             icon: 'pi pi-fw pi-eye',
+                            expanded: true,
                             items: [
                                 {
                                     label: 'Nueva inspección',
