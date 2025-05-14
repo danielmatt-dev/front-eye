@@ -1,3 +1,5 @@
+<p-toast/>
+
 <!-- Opciones de consulta -->
 <div class="mb-8">
     <app-opciones-consulta
@@ -34,6 +36,7 @@
         (onRowSelect)="onRowSelect($event)"
         selectionMode="single"
         scrollHeight="40rem"
+        scrollable="true"
         [(selection)]="selectedInspecciones">
 
         <ng-template pTemplate="caption">
@@ -82,20 +85,16 @@
 
         <ng-template pTemplate="header">
             <tr>
-                <!-- Columna de checkbox -->
-                <th id="check" style="width: 3em">
-                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                </th>
                 <th id="id" pSortableColumn="id" style="min-width: 6rem; font-weight: bold">
                     {{ 'labels.id' | translate }}
                     <p-sortIcon field="id"></p-sortIcon>
                 </th>
                 <!-- Columna de Fecha con Ordenación Correcta -->
-                <th pSortableColumn="fecha" style="min-width: 10rem; font-weight: bold" (click)="sortByDate()">
+                <th id="date" pSortableColumn="fecha" style="min-width: 10rem; font-weight: bold" (click)="sortByDate()" (keyup)="onKeyUp($event)" >
                     {{ 'labels.date' | translate }}
                     <p-sortIcon field="fecha"></p-sortIcon>
                 </th>
-                <th id="time" pSortableColumn="hora" style="min-width: 8rem; font-weight: bold">
+                <th id="time" pSortableColumn="hora" style="min-width: 8rem; font-weight: bold" (click)="sortByHour()" (keyup)="onKeyUp($event)" (keydown)="onKeyDown($event)" >
                     {{ 'labels.time' | translate }}
                     <p-sortIcon field="hora"></p-sortIcon>
                 </th>
@@ -120,10 +119,6 @@
 
         <ng-template pTemplate="body" let-inspeccion>
             <tr [pSelectableRow]="inspeccion">
-                <!-- Checkbox para cada fila -->
-                <td>
-                    <p-tableCheckbox [value]="inspeccion"></p-tableCheckbox>
-                </td>
                 <td>{{ inspeccion.id }}</td>
                 <td>{{ inspeccion.fecha }}</td>
                 <td>{{ inspeccion.hora }}</td>

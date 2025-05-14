@@ -16,6 +16,7 @@ export class OpcionesConsultaComponent {
     @Output() periodoSeleccionado = new EventEmitter<string>();
     @Output() rangoFechasSeleccionado = new EventEmitter<Date[]>();
     @Output() consultar = new EventEmitter<void>();
+    @Output() limpiar = new EventEmitter<Date[]>();
 
     fechasSeleccionadas: Date[] = [];
     calendarDisabled = true;
@@ -68,4 +69,8 @@ export class OpcionesConsultaComponent {
         this.consultar.emit();
     }
 
+    onLimpiar(): void {
+        this.fechasSeleccionadas = []
+        this.rangoFechasSeleccionado.emit(this.fechasSeleccionadas)
+    }
 }

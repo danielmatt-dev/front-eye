@@ -13,11 +13,12 @@ import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-consulta/opciones-consulta-helper';
 import { Router } from '@angular/router';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
     standalone: true,
     selector: 'app-todas-inspecciones',
-    imports: [Button, InputText, PrimeTemplate, TableModule, FormsModule, DialogModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon],
+    imports: [Button, InputText, PrimeTemplate, TableModule, FormsModule, DialogModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ToastModule],
     providers: [MessageService],
     templateUrl: './todas-inspecciones.component.html',
     styleUrl: './todas-inspecciones.component.scss'
@@ -91,6 +92,20 @@ export class TodasInspeccionesComponent implements OnInit {
         });
     }
 
+    sortByHour() {
+        this.inspeccionesFiltradas.sort((a, b) => {
+            // Convertir las horas en formato 'HH:mm' a minutos totales desde las 00:00
+            const minutosA = this.convertToMinutes(a.hora);
+            const minutosB = this.convertToMinutes(b.hora);
+            return minutosA - minutosB;
+        });
+    }
+
+    convertToMinutes(hora: string): number {
+        const [horas, minutos] = hora.split(':').map(Number);
+        return horas * 60 + minutos;
+    }
+
     filtrarInspecciones(): void {
 
         // Validación del rango seleccionado
@@ -122,15 +137,17 @@ export class TodasInspeccionesComponent implements OnInit {
                 fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth() - 2, 1);
                 break;
             case 'Personalizado':
-                if (this.fechasSeleccionadas.length === 2) {
-                    fechaInicio = new Date(this.fechasSeleccionadas[0]);
-                    fechaFin = new Date(this.fechasSeleccionadas[1]);
-                } else if (this.fechasSeleccionadas.length === 1 || this.fechasSeleccionadas[1] === null) {
+
+                if (this.fechasSeleccionadas.length === 2 && this.fechasSeleccionadas[1] === null) {
                     fechaInicio = new Date(this.fechasSeleccionadas[0]);
                     fechaFin = new Date(this.fechasSeleccionadas[0]);
-                } else {
-                    console.warn('Rango de fechas personalizado no válido.');
-                    return;
+                }
+
+                if (this.fechasSeleccionadas.length === 2 &&
+                    this.fechasSeleccionadas[0] !== null &&
+                    this.fechasSeleccionadas[1] !== null) {
+                    fechaInicio = new Date(this.fechasSeleccionadas[0]);
+                    fechaFin = new Date(this.fechasSeleccionadas[1]);
                 }
                 break;
             default:
