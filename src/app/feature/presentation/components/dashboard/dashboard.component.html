@@ -14,15 +14,15 @@
             </div>
             <div class="grid grid-cols-3">
                 <div class="text-center">
-                    <span class="text-2xl font-bold">17</span>
+                    <span class="text-2xl font-bold">{{ deteccionesSemana }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.byPeriod.week' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">149</span>
+                    <span class="text-2xl font-bold">{{ deteccionesMes }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.byPeriod.month' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">2,058</span>
+                    <span class="text-2xl font-bold">{{ deteccionesTotales }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.byPeriod.total' | translate }}</div>
                 </div>
             </div>
@@ -43,15 +43,15 @@
             </div>
             <div class="grid grid-cols-3">
                 <div class="text-center">
-                    <span class="text-2xl font-bold">674</span>
+                    <span class="text-2xl font-bold">{{ dmaeSeca }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.conditions.dmaeDry' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">238</span>
+                    <span class="text-2xl font-bold">{{dmaeHumeda }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.conditions.dmaeWet' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">1,146</span>
+                    <span class="text-2xl font-bold">{{ retDiabetica }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.conditions.retDiabetic' | translate }}</div>
                 </div>
             </div>
@@ -72,11 +72,11 @@
             </div>
             <div class="flex justify-center items-end">
                 <div class="text-center px-6">
-                    <span class="text-2xl font-bold">74%</span>
+                    <span class="text-2xl font-bold">{{ porcentajeHombres }}%</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.gender.male' | translate }}</div>
                 </div>
                 <div class="text-center px-6">
-                    <span class="text-2xl font-bold">26%</span>
+                    <span class="text-2xl font-bold">{{ porcentajeMujeres }}%</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.gender.female' | translate }}</div>
                 </div>
             </div>
@@ -97,15 +97,15 @@
             </div>
             <div class="grid grid-cols-3">
                 <div class="text-center">
-                    <span class="text-2xl font-bold">19%</span>
+                    <span class="text-2xl font-bold">{{ porcentajeMenos30 }}%</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.ageRanges.under30' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">37%</span>
+                    <span class="text-2xl font-bold">{{ porcentajeEntre30y45 }}%</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.ageRanges.from30to45' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">44%</span>
+                    <span class="text-2xl font-bold">{{ porcentajeMas45 }}%</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.ageRanges.over45' | translate }}</div>
                 </div>
             </div>
@@ -130,16 +130,18 @@
 </p-fluid>
 
 <div class="card mt-8">
-    <div class="font-semibold text-xl mb-4">{{ 'titles.detectionsByAgeAndGender' | translate }}</div>
+    <div class="font-semibold text-xl mb-4">{{ 'titles.detectionsByAgeAndCondition' | translate }}</div>
     <div class="flex justify-between my-6">
         <p-select-button
             id="ojo"
             [options]="options"
-            [ngModel]="optionSelected"
+            [(ngModel)]="optionSelected"
+            (ngModelChange)="filtrar()"
         />
         <p-date-picker
             selectionMode="range"
-            placeholder="01 Enero - 31 de Mayo de 2024"
+            placeholder="{{ 'placeholders.dateRange' | translate }}"
+            showButtonBar="true"
             showIcon="true"
         />
     </div>
