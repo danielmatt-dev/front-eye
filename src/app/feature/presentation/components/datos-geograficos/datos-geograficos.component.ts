@@ -1,19 +1,21 @@
 import { AfterViewInit, Component, HostListener } from '@angular/core';
-import { Calendar } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
-import { Button } from 'primeng/button';
-import { NgClass, NgForOf } from '@angular/common';
 import * as L from 'leaflet';
 import 'leaflet.featuregroup.subgroup';
 import 'leaflet.markercluster';
 import 'leaflet.control.layers.tree';
-import { dataPointsMocks } from '../../../../shared/utils/mocks';
-import { TranslatePipe } from '@ngx-translate/core';
+import { dataPointsMocks, findPatient } from '../../../../shared/utils/mocks';
 import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
+import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-consulta/opciones-consulta-helper';
+import { PrimeNG } from 'primeng/config';
+import { TranslateService } from '@ngx-translate/core';
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
 
 @Component({
     selector: 'app-datos-geograficos',
-    imports: [Calendar, FormsModule, Button, NgForOf, NgClass, TranslatePipe, OpcionesConsultaComponent],
+    imports: [FormsModule, OpcionesConsultaComponent, Toast],
+    providers: [MessageService],
     templateUrl: './datos-geograficos.component.html',
     standalone: true,
     styleUrl: './datos-geograficos.component.scss'
@@ -21,31 +23,62 @@ import { OpcionesConsultaComponent } from '../../../../shared/components/opcione
 export class DatosGeograficosComponent implements AfterViewInit {
     private readonly leafletMap!: L.Map;
 
+    map!: L.Map;
+    markerClusterGroup!: L.MarkerClusterGroup;
+
     periodoSeleccionado = '';
     fechasSeleccionadas: Date[] = [];
 
     mostrarBotones: boolean = true;
 
+    opcionesConsultaHelper: OpcionesConsultaHelper;
+    dataPoints = dataPointsMocks;
+    dataPointsMocksFiltrados = this.dataPoints;
+
+    filtros: { [key: number]: string } = {
+        0: 'DMAE Seca',
+        1: 'DMAE Húmeda',
+        2: 'Retinopatía Diabética',
+        3: 'Menos de 30',
+        4: 'De 30 a 45',
+        5: 'Hombre',
+        6: 'Mujer',
+        7: 'Proliferativo',
+        8: 'Moderado',
+        9: 'Leve',
+        10: 'Sin Afección',
+    }
+
+    filtrosSeleccionados: string[] = []
+
     ngAfterViewInit() {
         this.initMap();
     }
 
+    constructor(
+        private readonly primeng: PrimeNG,
+        private readonly translateService: TranslateService,
+        private readonly messageService: MessageService
+    ) {
+        this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
+    }
+
     private initMap() {
-        const map = L.map('map').setView([18.8498, -97.1039], 13);
+        this.map = L.map('map').setView([18.8498, -97.1039], 13);
 
         // Capa base de OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '© OpenStreetMap'
-        }).addTo(map);
+        }).addTo(this.map);
 
-        const markerClusterGroup = L.markerClusterGroup({
+        this.markerClusterGroup = L.markerClusterGroup({
             spiderfyOnMaxZoom: true,
             showCoverageOnHover: false,
             zoomToBoundsOnClick: false
         });
 
-        dataPointsMocks.forEach((p) => {
+        this.dataPointsMocksFiltrados.forEach((p) => {
             let iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png';
 
             // Asignamos colores según la afección
@@ -87,16 +120,16 @@ export class DatosGeograficosComponent implements AfterViewInit {
 
             const m = L.marker([p.lat, p.lng], { icon: markerIcon }).bindPopup(`<b>${p.name}</b><br>Resultado: ${p.resultado}<br>Afección: ${p.afeccion}`);
 
-            markerClusterGroup.addLayer(m);
+            this.markerClusterGroup.addLayer(m);
         });
 
-        map.addLayer(markerClusterGroup);
+        this.map.addLayer(this.markerClusterGroup);
 
-        // Cuando haces click en un cluster → spiderfy (no bug)
-        markerClusterGroup.on('clusterclick', (e) => e.propagatedFrom.spiderfy());
+        // Cuando haces clic en un cluster → spiderfy (no bug)
+        this.markerClusterGroup.on('clusterclick', (e) => e.propagatedFrom.spiderfy());
 
         // Asegura recalcular tamaño al cambiar contenedor
-        new ResizeObserver(() => map.invalidateSize()).observe(document.getElementById('map')!);
+        new ResizeObserver(() => this.map.invalidateSize()).observe(document.getElementById('map')!);
 
         const filtros = {
             label: 'Filtros',
@@ -136,17 +169,23 @@ export class DatosGeograficosComponent implements AfterViewInit {
         };
 
         const treeControl = (L.control as any).layers.tree(null, filtros, { collapsed: true });
-        treeControl.addTo(map);
+        treeControl.addTo(this.map);
+
+        this.map.on('overlayadd', (event) => {
+            const filtro = event.name;
+            console.log('Filtro: ', filtro)
+        });
+
+        this.map.on('overlayremove', function(event){
+            const filtro = event.name;
+            console.log('Filtro: ', filtro)
+        });
+
     }
 
     @HostListener('window:resize')
     onWindowResize(): void {
         this.leafletMap.invalidateSize();
-    }
-
-    // Método para escuchar el cambio de `mostrarBotones` del hijo
-    onMostrarBotonesChanged(mostrar: boolean) {
-        this.mostrarBotones = mostrar;
     }
 
     // Métodos para manejar las acciones de los botones
@@ -169,7 +208,128 @@ export class DatosGeograficosComponent implements AfterViewInit {
     }
 
     onFiltrarDatos() {
+        if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.periodoSeleccionado, this.fechasSeleccionadas)) {
+            return;
+        }
 
+        if (this.fechasSeleccionadas.length === 0 && this.periodoSeleccionado === '') {
+            this.dataPointsMocksFiltrados = this.dataPoints;
+            this.redibujarMapa();
+            return
+        }
+
+        let fechaInicio: Date;
+        let fechaFin: Date = new Date(); // Fecha de hoy
+
+        switch (this.periodoSeleccionado) {
+            case 'Mes actual':
+                // Primer día del mes actual hasta hoy
+                fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth(), 1);
+                break;
+            case '2 meses':
+                // Primer día de hace dos meses hasta hoy
+                fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth() - 1, 1);
+                break;
+            case '3 meses':
+                // Primer día de hace tres meses hasta hoy
+                fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth() - 2, 1);
+                break;
+            case 'Personalizado':
+                if (this.fechasSeleccionadas.length === 2) {
+                    fechaInicio = new Date(this.fechasSeleccionadas[0]);
+                    fechaFin = new Date(this.fechasSeleccionadas[1]);
+                }
+
+                if (this.fechasSeleccionadas[1] === null) {
+                    fechaInicio = new Date(this.fechasSeleccionadas[0]);
+                    fechaFin = new Date(this.fechasSeleccionadas[0]);
+                }
+                break;
+            default:
+                return;
+        }
+
+        const formatoFecha = (fecha: Date) => fecha.toISOString().split('T')[0];
+
+        this.dataPointsMocksFiltrados = this.dataPoints.filter((data) => {
+            return formatoFecha(data.fechaCreacion) >= formatoFecha(fechaInicio) && formatoFecha(data.fechaCreacion) <= formatoFecha(fechaFin);
+        });
+
+        console.log('Datos Filtrados:', this.dataPointsMocksFiltrados);
+        this.redibujarMapa();
+    }
+
+    private redibujarMapa() {
+        const map = this.map; // Asegúrate de que tienes la instancia del mapa aquí
+
+        // Limpiar los marcadores actuales
+        if (this.markerClusterGroup) {
+            map.removeLayer(this.markerClusterGroup); // Eliminar el grupo de marcadores
+        }
+
+        this.markerClusterGroup = L.markerClusterGroup({
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: false,
+            zoomToBoundsOnClick: false
+        });
+
+        // Añadir los puntos filtrados al mapa
+        this.dataPointsMocksFiltrados.forEach((p) => {
+            let iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png';
+
+            if (p.afeccion === 'DMAE Seca') {
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png';
+            }
+
+            if (p.afeccion === 'Retinopatía Diabética') {
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png';
+            }
+
+            let markerIcon = new L.Icon({
+                iconUrl: iconUrl,
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            const m = L.marker([p.lat, p.lng], { icon: markerIcon }).bindPopup(`<b>${p.name}</b><br>Resultado: ${p.resultado}<br>Afección: ${p.afeccion}`);
+            this.markerClusterGroup.addLayer(m);
+        });
+
+        map.addLayer(this.markerClusterGroup); // Añadir el grupo de marcadores al mapa
+
+        // Ajustar el mapa si es necesario
+        map.invalidateSize();
+    }
+
+    filtrarPuntos(filtro: any) {
+        return this.dataPointsMocksFiltrados.filter(point => {
+            const paciente = findPatient(point.id);
+            switch (filtro) {
+                case 'DMAE Seca':
+                case 'DMAE Húmeda':
+                case 'Retinopatía Diabética':
+                    return point.afeccion === filtro;
+                case 'Leve':
+                case 'Moderada':
+                case 'Proliferativa':
+                    return point.resultado === filtro;
+                case 'Menos de 30':
+                    return paciente && paciente.edad < 30;
+                case 'De 30 a 45':
+                    return paciente && paciente.edad >= 30 && paciente.edad <= 45;
+                case 'Más de 45':
+                    return paciente && paciente.edad > 45;
+                case 'Hombre':
+                    return paciente && paciente.genero === 'Masculino';
+                case 'Mujer':
+                    return paciente && paciente.genero === 'Femenino';
+                default:
+                    return false;
+            }
+        });
     }
 
 }

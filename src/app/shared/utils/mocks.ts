@@ -33,28 +33,28 @@ export const reports = [
 ];
 
 export const dataPointsMocks = [
-    { lat: 18.8498, lng: -97.1039, name: 'Laura Fernández Fernández', resultado: 'Proliferativo', afeccion: 'DMAE Seca', id: 'P001' },
-    { lat: 18.8477, lng: -97.1014, name: 'Francisco Pérez Fernández', resultado: 'Leve', afeccion: 'Retinopatía Diabética', id: 'P002' },
-    { lat: 18.8512, lng: -97.1056, name: 'Lucía Ramírez Castro', resultado: 'Moderado', afeccion: 'DMAE Húmeda', id: 'P003' },
-    { lat: 18.8536, lng: -97.1069, name: 'Fernando Torres Gómez', resultado: 'Proliferativo', afeccion: 'Retinopatía Diabética', id: 'P004' },
-    { lat: 18.8452, lng: -97.1022, name: 'Raúl Ramírez López', resultado: 'Sin Afección', afeccion: 'DMAE Húmeda', id: 'P005' },
-    { lat: 18.8501, lng: -97.1104, name: 'Andrea Castro López', resultado: 'Leve', afeccion: 'Retinopatía Diabética', id: 'P006' },
-    { lat: 18.8509, lng: -97.1007, name: 'Laura Pérez Ruiz', resultado: 'Moderado', afeccion: 'DMAE Seca', id: 'P007' },
-    { lat: 18.8459, lng: -97.0978, name: 'Pedro Martínez Torres', resultado: 'Proliferativo', afeccion: 'DMAE Húmeda', id: 'P008' },
-    { lat: 18.8520, lng: -97.1001, name: 'Rosa Castro López', resultado: 'Leve', afeccion: 'Retinopatía Diabética', id: 'P009' },
-    { lat: 18.8490, lng: -97.1025, name: 'Ana Castro Fernández', resultado: 'Sin Afección', afeccion: 'DMAE Seca', id: 'P010' },
+    { lat: 18.8498, lng: -97.1039, name: 'Laura Fernández Fernández', resultado: 'Proliferativo', afeccion: 'DMAE Seca', id: 'P001', fechaCreacion: new Date('2025-02-09') },
+    { lat: 18.8477, lng: -97.1014, name: 'Francisco Pérez Fernández', resultado: 'Leve', afeccion: 'Retinopatía Diabética', id: 'P002', fechaCreacion: new Date('2025-03-22') },
+    { lat: 18.8512, lng: -97.1056, name: 'Lucía Ramírez Castro', resultado: 'Moderado', afeccion: 'DMAE Húmeda', id: 'P003', fechaCreacion: new Date('2025-03-18') },
+    { lat: 18.8536, lng: -97.1069, name: 'Fernando Torres Gómez', resultado: 'Proliferativo', afeccion: 'Retinopatía Diabética', id: 'P004', fechaCreacion: new Date('2025-03-07') },
+    { lat: 18.8452, lng: -97.1022, name: 'Raúl Ramírez López', resultado: 'Sin Afección', afeccion: 'DMAE Húmeda', id: 'P005', fechaCreacion: new Date('2025-03-01') },
+    { lat: 18.8501, lng: -97.1104, name: 'Andrea Castro López', resultado: 'Leve', afeccion: 'Retinopatía Diabética', id: 'P006', fechaCreacion: new Date('2025-05-12') },
+    { lat: 18.8509, lng: -97.1007, name: 'Laura Pérez Ruiz', resultado: 'Moderado', afeccion: 'DMAE Seca', id: 'P007', fechaCreacion: new Date('2025-04-11') },
+    { lat: 18.8459, lng: -97.0978, name: 'Pedro Martínez Torres', resultado: 'Proliferativo', afeccion: 'DMAE Húmeda', id: 'P008', fechaCreacion: new Date('2025-04-27') },
+    { lat: 18.8520, lng: -97.1001, name: 'Rosa Castro López', resultado: 'Leve', afeccion: 'Retinopatía Diabética', id: 'P009', fechaCreacion: new Date('2025-02-08') },
+    { lat: 18.8490, lng: -97.1025, name: 'Ana Castro Fernández', resultado: 'Sin Afección', afeccion: 'DMAE Seca', id: 'P010', fechaCreacion: new Date('2025-01-17') },
 
-    { lat: 18.8513, lng: -97.0981, name: 'Lucía Castro Ruiz', resultado: 'Proliferativo', afeccion: 'DMAE Húmeda', id: 'P011' },
-    { lat: 18.8455, lng: -97.1060, name: 'Raúl Ruiz Gómez', resultado: 'Moderado', afeccion: 'Retinopatía Diabética', id: 'P012' },
-    { lat: 18.8429, lng: -97.1044, name: 'Lucía Fernández Martínez', resultado: 'Leve', afeccion: 'DMAE Seca', id: 'P013' },
-    { lat: 18.8518, lng: -97.1087, name: 'Pedro Ruiz Fernández', resultado: 'Sin Afección', afeccion: 'DMAE Húmeda', id: 'P014' },
-    { lat: 18.8531, lng: -97.1075, name: 'Raúl Pérez Ramírez', resultado: 'Moderado', afeccion: 'Retinopatía Diabética', id: 'P015' },
+    { lat: 18.8513, lng: -97.0981, name: 'Lucía Castro Ruiz', resultado: 'Proliferativo', afeccion: 'DMAE Húmeda', id: 'P011', fechaCreacion: new Date('2025-01-28') },
+    { lat: 18.8455, lng: -97.1060, name: 'Raúl Ruiz Gómez', resultado: 'Moderado', afeccion: 'Retinopatía Diabética', id: 'P012', fechaCreacion: new Date('2025-04-18') },
+    { lat: 18.8429, lng: -97.1044, name: 'Lucía Fernández Martínez', resultado: 'Leve', afeccion: 'DMAE Seca', id: 'P013', fechaCreacion: new Date('2025-02-09') },
+    { lat: 18.8518, lng: -97.1087, name: 'Pedro Ruiz Fernández', resultado: 'Sin Afección', afeccion: 'DMAE Húmeda', id: 'P014', fechaCreacion: new Date('2025-02-17') },
+    { lat: 18.8531, lng: -97.1075, name: 'Raúl Pérez Ramírez', resultado: 'Moderado', afeccion: 'Retinopatía Diabética', id: 'P015', fechaCreacion: new Date('2025-05-12') },
 
-    { lat: 18.8484, lng: -97.1070, name: 'Laura Castro Fernández', resultado: 'Leve', afeccion: 'DMAE Seca', id: 'P016' },
-    { lat: 18.8468, lng: -97.1108, name: 'Raúl Pérez López', resultado: 'Sin Afección', afeccion: 'DMAE Húmeda', id: 'P017' },
-    { lat: 18.8547, lng: -97.1089, name: 'Lucía Castro Fernández', resultado: 'Proliferativo', afeccion: 'Retinopatía Diabética', id: 'P018' },
-    { lat: 18.8553, lng: -97.0997, name: 'Pedro Ruiz Martínez', resultado: 'Leve', afeccion: 'DMAE Seca', id: 'P019' },
-    { lat: 18.8505, lng: -97.0983, name: 'Raúl Ruiz Pérez', resultado: 'Moderado', afeccion: 'DMAE Húmeda', id: 'P020' }
+    { lat: 18.8484, lng: -97.1070, name: 'Laura Castro Fernández', resultado: 'Leve', afeccion: 'DMAE Seca', id: 'P016', fechaCreacion: new Date('2025-03-10') },
+    { lat: 18.8468, lng: -97.1108, name: 'Raúl Pérez López', resultado: 'Sin Afección', afeccion: 'DMAE Húmeda', id: 'P017', fechaCreacion: new Date('2025-02-06') },
+    { lat: 18.8547, lng: -97.1089, name: 'Lucía Castro Fernández', resultado: 'Proliferativo', afeccion: 'Retinopatía Diabética', id: 'P018', fechaCreacion: new Date('2025-02-09') },
+    { lat: 18.8553, lng: -97.0997, name: 'Pedro Ruiz Martínez', resultado: 'Leve', afeccion: 'DMAE Seca', id: 'P019', fechaCreacion: new Date('2025-02-19') },
+    { lat: 18.8505, lng: -97.0983, name: 'Raúl Ruiz Pérez', resultado: 'Moderado', afeccion: 'DMAE Húmeda', id: 'P020', fechaCreacion: new Date('2025-04-10') }
 ];
 
 export const doctores = [
