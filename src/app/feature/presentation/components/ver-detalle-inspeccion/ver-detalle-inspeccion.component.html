@@ -1,3 +1,5 @@
+<p-toast/>
+
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
     <!-- Datos de la inspección -->
@@ -152,7 +154,7 @@
 
     <!-- Inspecciones realizadas -->
     <div class="col-span-1">
-        <div class="card h-full overflow-auto">
+        <div class="card h-full overflow-auto" style="padding-bottom: 0">
             <div class="font-semibold text-xl mb-4">{{ 'titles.completedInspections' | translate }}</div>
             <p-table
                 dataKey="id"
@@ -166,14 +168,15 @@
                 responsiveLayout="scroll"
                 (onRowSelect)="onRowSelect($event)"
                 selectionMode="single"
+                scrollHeight="14rem"
                 class="w-full"
             >
                 <ng-template pTemplate="header">
                     <tr>
-                        <th scope="col" style="min-width: 6rem">{{ 'labels.id' | translate }}</th>
-                        <th scope="col" style="min-width: 8rem">{{ 'labels.date' | translate }}</th>
-                        <th scope="col" style="min-width: 8rem">{{ 'labels.eye' | translate }}</th>
-                        <th scope="col" style="min-width: 10rem">{{ 'labels.result' | translate }}</th>
+                        <th scope="col" style="min-width: 4rem">{{ 'labels.id' | translate }}</th>
+                        <th scope="col" style="min-width: 6rem">{{ 'labels.date' | translate }}</th>
+                        <th scope="col" style="min-width: 6rem">{{ 'labels.eye' | translate }}</th>
+                        <th scope="col" style="min-width: 8rem">{{ 'labels.result' | translate }}</th>
                     </tr>
                 </ng-template>
 
@@ -206,10 +209,12 @@
 <div class="flex flex-row justify-end gap-6 mt-6">
     <p-button
         severity="danger"
+        (onClick)="cancelar()"
         label="{{ 'buttons.cancel' | translate }}"
     ></p-button>
     <p-button
         label="{{ 'buttons.downloadPDF' | translate }}"
+        (onClick)="descargar()"
     ></p-button>
 </div>
 
