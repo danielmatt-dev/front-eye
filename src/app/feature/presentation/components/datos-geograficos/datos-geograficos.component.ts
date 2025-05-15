@@ -11,6 +11,9 @@ import { PrimeNG } from 'primeng/config';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
+import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
     selector: 'app-datos-geograficos',
@@ -118,7 +121,8 @@ export class DatosGeograficosComponent implements AfterViewInit {
                 shadowSize: [41, 41]
             });
 
-            const m = L.marker([p.lat, p.lng], { icon: markerIcon }).bindPopup(`<b>${p.name}</b><br>Resultado: ${p.resultado}<br>Afección: ${p.afeccion}`);
+            const m = L.marker([p.lat, p.lng], { icon: markerIcon })
+                .bindPopup(`<b>${p.name}</b><br>Resultado: ${p.resultado}<br>Afección: ${p.afeccion}<br>Num. Inspecciones: ${p.numInspecciones}`);
 
             this.markerClusterGroup.addLayer(m);
         });
@@ -186,17 +190,6 @@ export class DatosGeograficosComponent implements AfterViewInit {
     @HostListener('window:resize')
     onWindowResize(): void {
         this.leafletMap.invalidateSize();
-    }
-
-    // Métodos para manejar las acciones de los botones
-    onExportarExcel() {
-        console.log('Exportando a Excel...');
-        // Aquí puedes agregar la lógica para exportar a Excel
-    }
-
-    onDownloadPDF() {
-        console.log('Exportando a PDF...');
-        // Aquí puedes agregar la lógica para exportar a PDF
     }
 
     onPeriodoSeleccionado(periodo: string) {
@@ -330,6 +323,104 @@ export class DatosGeograficosComponent implements AfterViewInit {
                     return false;
             }
         });
+    }
+
+    exportPDF() {
+        const doc = new jsPDF();
+        doc.text('Datos geográficos', 10, 10);
+
+        // Encabezados de la tabla
+        const tableColumn = ['Paciente', 'Latitud', 'Longitud', 'Dirección'];
+
+        // Crear las filas con los datos de los puntos
+        const tableRows = this.dataPointsMocksFiltrados.map((point) => {
+
+            const paciente = findPatient(point.id)
+
+            return [
+                point.name,
+                point.lat,
+                point.lng,
+                paciente.direccion
+            ];
+        });
+
+        // Generar la tabla con autoTable
+        autoTable(doc, {
+            head: [tableColumn],  // Cabecera de la tabla
+            body: tableRows,      // Filas de la tabla
+            startY: 20,           // Espacio desde la parte superior
+            headStyles: {
+                fillColor: [211, 211, 211],  // Color gris claro
+                textColor: [0, 0, 0],        // Texto negro
+                fontStyle: 'bold',           // Negrita
+                halign: 'center'             // Centrado
+            },
+            styles: {
+                fontSize: 10,                // Tamaño de letra
+                cellPadding: 4               // Espaciado en celdas
+            }
+        });
+
+        // Guardar el archivo PDF
+        doc.save('datos_geograficos.pdf');
+    }
+
+    exportExcel() {
+        // Encabezados de la tabla
+        const tableColumn = ['Paciente', 'Latitud', 'Longitud', 'Dirección'];
+
+        // Crear las filas con los datos de los puntos
+        const tableRows = this.dataPointsMocksFiltrados.map((point) => {
+
+            const paciente = findPatient(point.id)
+
+            return [
+                point.name,
+                point.lat,
+                point.lng,
+                paciente.direccion
+            ];
+        });
+
+        // Combinar encabezados y filas
+        const data = [tableColumn, ...tableRows];
+
+        // Crear la hoja de trabajo
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
+
+        // Ajustar el ancho de las columnas
+        ws['!cols'] = tableColumn.map(() => ({ wch: 20 }));
+
+        // Ajustar el alto de las filas (espaciado)
+        ws['!rows'] = data.map(() => ({ hpt: 20 }));
+
+        // Aplicar estilo a los encabezados
+        tableColumn.forEach((col, index) => {
+            const cellAddress = XLSX.utils.encode_cell({ c: index, r: 0 });
+            if (ws[cellAddress]) {
+                ws[cellAddress].s = {
+                    fill: {
+                        fgColor: { rgb: 'D3D3D3' }  // Color gris claro
+                    },
+                    font: {
+                        bold: true,                   // Negrita
+                        color: { rgb: '000000' },     // Texto negro
+                        sz: 12                        // Tamaño de letra
+                    },
+                    alignment: {
+                        horizontal: 'center',         // Centrado
+                        vertical: 'center'            // Centrado vertical
+                    }
+                };
+            }
+        });
+
+        // Crear el libro de trabajo con la hoja
+        const wb: XLSX.WorkBook = { Sheets: { 'Mapa': ws }, SheetNames: ['Mapa'] };
+
+        // Descargar el archivo Excel
+        XLSX.writeFile(wb, 'mapa.xlsx');
     }
 
 }

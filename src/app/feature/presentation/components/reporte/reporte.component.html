@@ -69,7 +69,7 @@
                         icon="pi pi-file-excel"
                         severity="success"
                         outlined="true"
-                        (click)="clear(dt)"
+                        (onClick)="exportExcel()"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     ></p-button>
@@ -78,6 +78,7 @@
                         label="{{ 'buttons.downloadPDF' | translate }}"
                         severity="danger"
                         outlined="true"
+                        (onClick)="exportPDF()"
                         icon="pi pi-file-pdf"
                     ></p-button>
                 </div>

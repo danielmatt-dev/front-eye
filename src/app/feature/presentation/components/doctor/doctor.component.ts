@@ -17,6 +17,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { NgIf } from '@angular/common';
 import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-consulta/opciones-consulta-helper';
 import { Toast } from 'primeng/toast';
+import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable'
 
 @Component({
     standalone: true,
@@ -300,6 +303,107 @@ export class DoctorComponent implements OnInit {
         });
 
         console.log('Doctores Filtrados:', this.doctoresFiltrados);
+    }
+
+    exportExcel() {
+        // Obtener los encabezados (keys) en mayúscula inicial
+        const tableColumn = ['Clave', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Fecha de Nacimiento', 'Teléfono', 'Género', 'Código Postal', 'Dirección', 'Estado'];
+
+        // Crear las filas de la tabla utilizando los datos filtrados
+        const tableRows = this.doctoresFiltrados.map((doc) => {
+            return [
+                doc.clave,
+                doc.nombre,
+                doc.apellidoPaterno,
+                doc.apellidoMaterno,
+                doc.fechaNacimiento,
+                doc.telefono,
+                doc.genero,
+                doc.codigoPostal,
+                doc.direccion,
+                doc.estado
+            ];
+        });
+
+        // Combinar encabezados y filas
+        const data = [tableColumn, ...tableRows];
+
+        // Crear la hoja de trabajo
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
+
+        // Ajustar el ancho de las columnas
+        ws['!cols'] = tableColumn.map(() => ({ wch: 20 }));
+
+        // Ajustar el alto de las filas (espaciado)
+        ws['!rows'] = data.map(() => ({ hpt: 20 }));
+
+        // Aplicar estilo a los encabezados
+        tableColumn.forEach((col, index) => {
+            const cellAddress = XLSX.utils.encode_cell({ c: index, r: 0 });
+            if (ws[cellAddress]) {
+                ws[cellAddress].s = {
+                    fill: {
+                        fgColor: { rgb: 'D3D3D3' }  // Color gris claro
+                    },
+                    font: {
+                        bold: true,                   // Negrita
+                        color: { rgb: '000000' },     // Texto negro
+                        sz: 12                        // Tamaño de letra
+                    },
+                    alignment: {
+                        horizontal: 'center',         // Centrado
+                        vertical: 'center'            // Centrado vertical
+                    }
+                };
+            }
+        });
+
+        // Crear el libro de trabajo con la hoja
+        const wb: XLSX.WorkBook = { Sheets: { 'Doctores': ws }, SheetNames: ['Doctores'] };
+
+        // Descargar el archivo Excel
+        XLSX.writeFile(wb, 'doctores.xlsx');
+    }
+
+    exportPDF() {
+        const doc = new jsPDF();
+        doc.text('Doctores', 10, 10);
+
+        // Columnas de la tabla
+        const tableColumn = ['Clave', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Fecha de Nacimiento', 'Teléfono', 'Género', 'Código Postal', 'Dirección', 'Estado'];
+
+        // Filtrar los datos a exportar (utilizando los datos de doctores)
+        const tableRows = this.doctoresFiltrados.map((doctor) => [
+            doctor.clave,                        // Clave del doctor
+            doctor.nombre,                       // Nombre del doctor
+            doctor.apellidoPaterno,              // Apellido Paterno
+            doctor.apellidoMaterno,              // Apellido Materno
+            doctor.fechaNacimiento,              // Fecha de Nacimiento
+            doctor.telefono,                     // Teléfono
+            doctor.genero,                       // Género
+            doctor.codigoPostal,                 // Código Postal
+            doctor.direccion,                    // Dirección
+            doctor.estado                        // Estado
+        ]);
+
+        autoTable(doc, {
+            head: [tableColumn],  // Cabecera de la tabla
+            body: tableRows,      // Filas de la tabla
+            startY: 20,           // Espacio desde la parte superior
+            headStyles: {
+                fillColor: [211, 211, 211],  // Color gris claro
+                textColor: [0, 0, 0],        // Texto negro
+                fontStyle: 'bold',           // Negrita
+                halign: 'center'             // Centrado
+            },
+            styles: {
+                fontSize: 10,                // Tamaño de letra
+                cellPadding: 1
+            }
+        });
+
+        // Guardar el archivo PDF
+        doc.save('doctores.pdf');
     }
 
     protected readonly generos = generos;
