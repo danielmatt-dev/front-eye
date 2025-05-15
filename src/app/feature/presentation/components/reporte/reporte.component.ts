@@ -20,6 +20,9 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
 import { PrimeNG } from 'primeng/config';
+import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable'
 
 @Component({
     selector: 'app-reporte',
@@ -271,5 +274,101 @@ export class ReporteComponent implements OnInit {
     onKeyUp(event: KeyboardEvent) {
         console.log('Key Up:', event.key);
     }
+
+    exportExcel() {
+        // Definir los encabezados de la tabla
+        const tableColumn = ['ID', 'Fecha', 'Hora', 'Edad', 'Afección', 'Ojo', 'Resultado'];
+
+        // Crear las filas de la tabla utilizando los datos filtrados
+        const tableRows = this.reportesFiltrados.map((rep) => {
+            return [
+                rep.id,
+                rep.fecha,
+                rep.hora,
+                rep.edad,
+                rep.afeccion,
+                rep.ojo,
+                rep.resultado
+            ];
+        });
+
+        // Combinar encabezados y filas
+        const data = [tableColumn, ...tableRows];
+
+        // Crear la hoja de trabajo
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
+
+        // Ajustar el ancho de las columnas
+        ws['!cols'] = tableColumn.map(() => ({ wch: 20 }));
+
+        // Ajustar el alto de las filas (espaciado)
+        ws['!rows'] = data.map(() => ({ hpt: 20 }));
+
+        // Aplicar estilo a los encabezados
+        tableColumn.forEach((col, index) => {
+            const cellAddress = XLSX.utils.encode_cell({ c: index, r: 0 });
+            if (ws[cellAddress]) {
+                ws[cellAddress].s = {
+                    fill: {
+                        fgColor: { rgb: 'D3D3D3' }  // Color gris claro
+                    },
+                    font: {
+                        bold: true,                   // Negrita
+                        color: { rgb: '000000' },     // Texto negro
+                        sz: 12                        // Tamaño de letra
+                    },
+                    alignment: {
+                        horizontal: 'center',         // Centrado
+                        vertical: 'center'            // Centrado vertical
+                    }
+                };
+            }
+        });
+
+        // Crear el libro de trabajo con la hoja
+        const wb: XLSX.WorkBook = { Sheets: { 'Reportes': ws }, SheetNames: ['Reportes'] };
+
+        // Descargar el archivo Excel
+        XLSX.writeFile(wb, 'reportes.xlsx');
+    }
+
+    exportPDF() {
+        const doc = new jsPDF();
+        doc.text('Reportes', 10, 10);
+
+        // Columnas de la tabla
+        const tableColumn = ['ID', 'Fecha', 'Hora', 'Edad', 'Afección', 'Ojo', 'Resultado'];
+
+        // Filtrar los datos a exportar
+        const tableRows = this.reportesFiltrados.map((report) => [
+            report.id,
+            report.fecha,
+            report.hora,
+            report.edad,
+            report.afeccion,
+            report.ojo,
+            report.resultado
+        ]);
+
+        autoTable(doc, {
+            head: [tableColumn],  // Cabecera de la tabla
+            body: tableRows,      // Filas de la tabla
+            startY: 20,           // Espacio desde la parte superior
+            headStyles: {
+                fillColor: [211, 211, 211],  // Color gris claro
+                textColor: [0, 0, 0],        // Texto negro
+                fontStyle: 'bold',           // Negrita
+                halign: 'center'             // Centrado
+            },
+            styles: {
+                fontSize: 10,                // Tamaño de letra
+                cellPadding: 4               // Espaciado en celdas
+            }
+        });
+
+        // Guardar el archivo PDF
+        doc.save('reportes.pdf');
+    }
+
 }
 

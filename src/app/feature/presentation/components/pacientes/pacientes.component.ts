@@ -13,6 +13,7 @@ import { patients } from '../../../../shared/utils/mocks';
 import { PrimeNG } from 'primeng/config';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
+import * as XLSX from 'xlsx';
 
 @Component({
     standalone: true,
@@ -95,4 +96,13 @@ export class PacientesComponent implements OnInit {
     onKeyUp(event: KeyboardEvent) {
         console.log('Key Up:', event.key);
     }
+
+    exportExcel() {
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.selectedPacientes);
+        const wb: XLSX.WorkBook = { Sheets: { 'Pacientes': ws }, SheetNames: ['Reportes'] };
+
+        // Descargar el archivo Excel
+        XLSX.writeFile(wb, 'pacientes.xlsx');
+    }
+
 }
