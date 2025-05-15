@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Button } from 'primeng/button';
-import { NgClass, NgForOf } from '@angular/common';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     selector: 'app-opciones-consulta',
-    imports: [Button, NgForOf, TranslatePipe, NgClass, FormsModule, DatePickerModule],
+    imports: [Button, NgForOf, TranslatePipe, NgClass, FormsModule, DatePickerModule, NgIf],
     templateUrl: './opciones-consulta.component.html',
     standalone: true,
     styleUrl: './opciones-consulta.component.scss'
@@ -17,6 +17,11 @@ export class OpcionesConsultaComponent {
     @Output() rangoFechasSeleccionado = new EventEmitter<Date[]>();
     @Output() consultar = new EventEmitter<void>();
     @Output() limpiar = new EventEmitter<Date[]>();
+    @Output() mostrarBotonesChanged = new EventEmitter<boolean>();
+    @Output() exportPDF = new EventEmitter<void>();
+    @Output() exportExcel = new EventEmitter<void>();
+
+    @Input() showButtons!: boolean;
 
     fechasSeleccionadas: Date[] = [];
     calendarDisabled = true;
@@ -69,8 +74,16 @@ export class OpcionesConsultaComponent {
         this.consultar.emit();
     }
 
+    onExportPDF() {
+        this.exportPDF.emit()
+    }
+
+    onExportExcel() {
+        this.exportExcel.emit()
+    }
+
     onLimpiar(): void {
-        this.fechasSeleccionadas = []
-        this.rangoFechasSeleccionado.emit(this.fechasSeleccionadas)
+        this.fechasSeleccionadas = [];
+        this.rangoFechasSeleccionado.emit(this.fechasSeleccionadas);
     }
 }

@@ -1,67 +1,14 @@
 <div class="flex flex-col gap-8 mb-8">
-    <div class="card p-4">
-        <div class="flex flex-wrap items-center gap-4 lg:justify-between">
-
-            <div class="flex flex-wrap gap-4">
-
-                <!-- Chips -->
-                <div class="flex flex-col">
-                <div class="font-bold mb-2">{{ 'labels.selectPeriod' | translate }}</div>
-                <div class="flex flex-wrap gap-2">
-                    <div
-                        *ngFor="let categoria of categorias"
-                        class="px-4 py-2 rounded-full cursor-pointer transition-all"
-                        [ngClass]="{
-                            'bg-primary text-primary-contrast': categoria.selected,
-                            'bg-gray-100 text-color dark:bg-surface-700': !categoria.selected
-                        }"
-                        (click)="seleccionarChip(categoria)"
-                        (keydown.enter)="seleccionarChip(categoria)">
-                        {{ categoria.label }}
-                    </div>
-                </div>
-            </div>
-
-                <!-- Rango de Fechas -->
-                <div class="flex flex-col gap-2">
-                    <label for="dateRange" class="font-bold">{{ 'labels.dateRange' | translate }}</label>
-                    <p-calendar
-                        id="dateRange"
-                        showIcon="true"
-                        [(ngModel)]="fechasSeleccionadas"
-                        selectionMode="range"
-                        placeholder="{{ 'placeholders.dateRange' | translate }}"
-                        class="w-full sm:w-[21rem] md:w-[18rem] lg:w-[18rem] xl:w-[15rem]"
-                        [style]="{width:' 100%' }"
-                        [disabled]="calendarDisabled"
-                    ></p-calendar>
-                </div>
-
-                <!-- Botón de consultar -->
-                <div class="flex flex-col self-end">
-                    <p-button label="{{ 'buttons.consult' | translate }}" class="w-full md:w-auto"/>
-                </div>
-
-            </div>
-
-            <!-- Botones para exportar datos -->
-            <div class="flex flex-wrap gap-4 self-end">
-                <p-button
-                    label="{{ 'buttons.exportExcel' | translate }}"
-                    icon="pi pi-file-excel"
-                    severity="success"
-                    outlined="true"
-                ></p-button>
-
-                <p-button
-                    label="{{ 'buttons.downloadPDF' | translate }}"
-                    severity="danger"
-                    outlined="true"
-                    icon="pi pi-file-pdf"
-                ></p-button>
-            </div>
-
-        </div>
+    <div class="mb-8">
+        <app-opciones-consulta
+            (periodoSeleccionado)="onPeriodoSeleccionado($event)"
+            (rangoFechasSeleccionado)="onRangoFechasSeleccionado($event)"
+            (consultar)="onFiltrarDatos()"
+            (mostrarBotonesChanged)="onMostrarBotonesChanged($event)"
+            (exportExcel)="onExportarExcel()"
+            (exportPDF)="onDownloadPDF()"
+            [showButtons]="mostrarBotones"
+        />
     </div>
 </div>
 

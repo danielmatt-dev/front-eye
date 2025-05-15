@@ -1,5 +1,3 @@
-import { mapColors } from '../../core/theme/colors';
-
 export const resultados = [
     'Todos', 'Proliferativo', 'Moderado', 'Leve', 'Sin Afección'
 ]
@@ -35,57 +33,29 @@ export const reports = [
 ];
 
 export const dataPointsMocks = [
-    // Centros de interés y turísticos
-    { lat: 18.8498, lng: -97.1039, name: 'Centro Histórico' },
-    { lat: 18.8477, lng: -97.1014, name: 'Teleférico de Orizaba' },
-    { lat: 18.8512, lng: -97.1056, name: 'Parque Castillo' },
-    { lat: 18.8536, lng: -97.1069, name: 'Museo de Arte del Estado' },
-    { lat: 18.8452, lng: -97.1022, name: 'Palacio de Hierro' },
-    { lat: 18.8501, lng: -97.1104, name: 'ADO Orizaba' },
-    { lat: 18.8509, lng: -97.1007, name: 'Catedral de San Miguel Arcángel' },
-    { lat: 18.8459, lng: -97.0978, name: 'Parque López' },
-    { lat: 18.8520, lng: -97.1001, name: 'Museo Francisco Gabilondo Soler' },
-    { lat: 18.8490, lng: -97.1025, name: 'Alameda Central' },
+    { lat: 18.8498, lng: -97.1039, name: 'Laura Fernández Fernández', resultado: 'Proliferativo', afeccion: 'DMAE Seca', id: 'P001' },
+    { lat: 18.8477, lng: -97.1014, name: 'Francisco Pérez Fernández', resultado: 'Leve', afeccion: 'Retinopatía Diabética', id: 'P002' },
+    { lat: 18.8512, lng: -97.1056, name: 'Lucía Ramírez Castro', resultado: 'Moderado', afeccion: 'DMAE Húmeda', id: 'P003' },
+    { lat: 18.8536, lng: -97.1069, name: 'Fernando Torres Gómez', resultado: 'Proliferativo', afeccion: 'Retinopatía Diabética', id: 'P004' },
+    { lat: 18.8452, lng: -97.1022, name: 'Raúl Ramírez López', resultado: 'Sin Afección', afeccion: 'DMAE Húmeda', id: 'P005' },
+    { lat: 18.8501, lng: -97.1104, name: 'Andrea Castro López', resultado: 'Leve', afeccion: 'Retinopatía Diabética', id: 'P006' },
+    { lat: 18.8509, lng: -97.1007, name: 'Laura Pérez Ruiz', resultado: 'Moderado', afeccion: 'DMAE Seca', id: 'P007' },
+    { lat: 18.8459, lng: -97.0978, name: 'Pedro Martínez Torres', resultado: 'Proliferativo', afeccion: 'DMAE Húmeda', id: 'P008' },
+    { lat: 18.8520, lng: -97.1001, name: 'Rosa Castro López', resultado: 'Leve', afeccion: 'Retinopatía Diabética', id: 'P009' },
+    { lat: 18.8490, lng: -97.1025, name: 'Ana Castro Fernández', resultado: 'Sin Afección', afeccion: 'DMAE Seca', id: 'P010' },
 
-    // Parques y naturaleza
-    { lat: 18.8513, lng: -97.0981, name: 'Ecoparque Cerro del Borrego' },
-    { lat: 18.8455, lng: -97.1060, name: 'Paseo del Río Orizaba' },
-    { lat: 18.8429, lng: -97.1044, name: 'Paseo de los 500 Escalones' },
-    { lat: 18.8518, lng: -97.1087, name: 'Parque Apolinar Castillo' },
-    { lat: 18.8531, lng: -97.1075, name: 'Parque Bicentenario' },
+    { lat: 18.8513, lng: -97.0981, name: 'Lucía Castro Ruiz', resultado: 'Proliferativo', afeccion: 'DMAE Húmeda', id: 'P011' },
+    { lat: 18.8455, lng: -97.1060, name: 'Raúl Ruiz Gómez', resultado: 'Moderado', afeccion: 'Retinopatía Diabética', id: 'P012' },
+    { lat: 18.8429, lng: -97.1044, name: 'Lucía Fernández Martínez', resultado: 'Leve', afeccion: 'DMAE Seca', id: 'P013' },
+    { lat: 18.8518, lng: -97.1087, name: 'Pedro Ruiz Fernández', resultado: 'Sin Afección', afeccion: 'DMAE Húmeda', id: 'P014' },
+    { lat: 18.8531, lng: -97.1075, name: 'Raúl Pérez Ramírez', resultado: 'Moderado', afeccion: 'Retinopatía Diabética', id: 'P015' },
 
-    // Instituciones educativas
-    { lat: 18.8484, lng: -97.1070, name: 'Universidad Veracruzana - Facultad de Ciencias Químicas' },
-    { lat: 18.8468, lng: -97.1108, name: 'Instituto Tecnológico de Orizaba' },
-    { lat: 18.8547, lng: -97.1089, name: 'Escuela Secundaria Técnica No. 4' },
-    { lat: 18.8553, lng: -97.0997, name: 'Centro Educativo de Orizaba' },
-    { lat: 18.8505, lng: -97.0983, name: 'Colegio Preparatorio de Orizaba' },
-
-    // Instalaciones deportivas
-    { lat: 18.8500, lng: -97.1080, name: 'Gimnasio CDO Sur' },
-    { lat: 18.8483, lng: -97.1032, name: 'Estadio Socum' },
-    { lat: 18.8510, lng: -97.1008, name: 'Deportivo Orizaba' },
-    { lat: 18.8535, lng: -97.1064, name: 'Parque de las Sonrisas' },
-
-    // Comercios y centros comerciales
-    { lat: 18.8497, lng: -97.1051, name: 'Plaza Valle Orizaba' },
-    { lat: 18.8465, lng: -97.1030, name: 'Plaza Orizaba' },
-    { lat: 18.8491, lng: -97.1015, name: 'Mercado Melchor Ocampo' },
-    { lat: 18.8480, lng: -97.1048, name: 'Tianguis Orizaba' },
-    { lat: 18.8514, lng: -97.1029, name: 'Chedraui Orizaba' },
-
-    // Hospitales y servicios médicos
-    { lat: 18.8493, lng: -97.1076, name: 'Hospital Regional de Río Blanco' },
-    { lat: 18.8488, lng: -97.1099, name: 'Clínica del IMSS' },
-    { lat: 18.8470, lng: -97.1041, name: 'Hospital Covadonga' },
-    { lat: 18.8502, lng: -97.0990, name: 'Cruz Roja Orizaba' },
-
-    // Otros lugares emblemáticos
-    { lat: 18.8504, lng: -97.1035, name: 'Ex-Convento de San José de Gracia' },
-    { lat: 18.8481, lng: -97.1072, name: 'Antiguo Teatro Llave' },
-    { lat: 18.8473, lng: -97.1023, name: 'Museo Interactivo de Orizaba' },
-    { lat: 18.8461, lng: -97.1057, name: 'Archivo Histórico de Orizaba' }
-]
+    { lat: 18.8484, lng: -97.1070, name: 'Laura Castro Fernández', resultado: 'Leve', afeccion: 'DMAE Seca', id: 'P016' },
+    { lat: 18.8468, lng: -97.1108, name: 'Raúl Pérez López', resultado: 'Sin Afección', afeccion: 'DMAE Húmeda', id: 'P017' },
+    { lat: 18.8547, lng: -97.1089, name: 'Lucía Castro Fernández', resultado: 'Proliferativo', afeccion: 'Retinopatía Diabética', id: 'P018' },
+    { lat: 18.8553, lng: -97.0997, name: 'Pedro Ruiz Martínez', resultado: 'Leve', afeccion: 'DMAE Seca', id: 'P019' },
+    { lat: 18.8505, lng: -97.0983, name: 'Raúl Ruiz Pérez', resultado: 'Moderado', afeccion: 'DMAE Húmeda', id: 'P020' }
+];
 
 export const doctores = [
     {

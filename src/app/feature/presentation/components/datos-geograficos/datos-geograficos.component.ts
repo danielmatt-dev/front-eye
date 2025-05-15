@@ -9,10 +9,11 @@ import 'leaflet.markercluster';
 import 'leaflet.control.layers.tree';
 import { dataPointsMocks } from '../../../../shared/utils/mocks';
 import { TranslatePipe } from '@ngx-translate/core';
+import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
 
 @Component({
     selector: 'app-datos-geograficos',
-    imports: [Calendar, FormsModule, Button, NgForOf, NgClass, TranslatePipe],
+    imports: [Calendar, FormsModule, Button, NgForOf, NgClass, TranslatePipe, OpcionesConsultaComponent],
     templateUrl: './datos-geograficos.component.html',
     standalone: true,
     styleUrl: './datos-geograficos.component.scss'
@@ -20,15 +21,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class DatosGeograficosComponent implements AfterViewInit {
     private readonly leafletMap!: L.Map;
 
+    periodoSeleccionado = '';
     fechasSeleccionadas: Date[] = [];
-    calendarDisabled = true;
 
-    categorias = [
-        { label: 'Mes actual', selected: false },
-        { label: '2 meses', selected: false },
-        { label: '3 meses', selected: false },
-        { label: 'Personalizado', selected: false }
-    ];
+    mostrarBotones: boolean = true;
 
     ngAfterViewInit() {
         this.initMap();
@@ -50,9 +46,38 @@ export class DatosGeograficosComponent implements AfterViewInit {
         });
 
         dataPointsMocks.forEach((p) => {
+            let iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png';
 
-            let greenIcon = new L.Icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+            // Asignamos colores según la afección
+            if (p.afeccion === 'DMAE Seca') {
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png';
+            }
+
+            if (p.afeccion === 'Retinopatía Diabética') {
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png';
+            }
+
+            /*
+            if (p.resultado === 'Proliferativo') {
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png'
+            }
+
+            if (p.resultado === 'Moderado') {
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png'
+            }
+
+            if (p.resultado === 'Leve') {
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png'
+            }
+
+            if (p.resultado === 'Sin Afección') {
+                iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png'
+            }
+             */
+
+            // Creamos el ícono con el color correspondiente
+            let markerIcon = new L.Icon({
+                iconUrl: iconUrl,
                 shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
@@ -60,7 +85,8 @@ export class DatosGeograficosComponent implements AfterViewInit {
                 shadowSize: [41, 41]
             });
 
-            const m = L.marker([p.lat, p.lng], {icon:  greenIcon}).bindPopup(`<b>${p.name}</b>`);
+            const m = L.marker([p.lat, p.lng], { icon: markerIcon }).bindPopup(`<b>${p.name}</b><br>Resultado: ${p.resultado}<br>Afección: ${p.afeccion}`);
+
             markerClusterGroup.addLayer(m);
         });
 
@@ -118,14 +144,32 @@ export class DatosGeograficosComponent implements AfterViewInit {
         this.leafletMap.invalidateSize();
     }
 
-    seleccionarChip(categoriaSeleccionada: any) {
-        this.categorias.forEach((c) => (c.selected = false));
-        categoriaSeleccionada.selected = true;
-        if (categoriaSeleccionada.label === 'Personalizado') {
-            this.calendarDisabled = false;
-        } else {
-            this.calendarDisabled = true;
-            this.fechasSeleccionadas = [];
-        }
+    // Método para escuchar el cambio de `mostrarBotones` del hijo
+    onMostrarBotonesChanged(mostrar: boolean) {
+        this.mostrarBotones = mostrar;
     }
+
+    // Métodos para manejar las acciones de los botones
+    onExportarExcel() {
+        console.log('Exportando a Excel...');
+        // Aquí puedes agregar la lógica para exportar a Excel
+    }
+
+    onDownloadPDF() {
+        console.log('Exportando a PDF...');
+        // Aquí puedes agregar la lógica para exportar a PDF
+    }
+
+    onPeriodoSeleccionado(periodo: string) {
+        this.periodoSeleccionado = periodo;
+    }
+
+    onRangoFechasSeleccionado(fechas: Date[]) {
+        this.fechasSeleccionadas = fechas;
+    }
+
+    onFiltrarDatos() {
+
+    }
+
 }
