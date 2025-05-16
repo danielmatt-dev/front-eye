@@ -1047,7 +1047,8 @@ export const patients = [
         telefono: '2295171867',
         codigoPostal: '94333',
         direccion: 'Calle Oriente #56, Orizaba',
-        estado: 'Puebla'
+        estado: 'Puebla',
+        fechaAlta: '12/01/2025'
     },
     {
         clave: 'P002',
@@ -1062,7 +1063,8 @@ export const patients = [
         telefono: '2292837531',
         codigoPostal: '94384',
         direccion: 'Calle Sur #532, Orizaba',
-        estado: 'Tabasco'
+        estado: 'Tabasco',
+        fechaAlta: '05/05/2025'
     },
     {
         clave: 'P003',
@@ -1077,7 +1079,8 @@ export const patients = [
         telefono: '2297044885',
         codigoPostal: '94326',
         direccion: 'Calle Reforma #449, Orizaba',
-        estado: 'Oaxaca'
+        estado: 'Oaxaca',
+        fechaAlta: '12/01/2025',
     },
     {
         clave: 'P004',
@@ -1092,7 +1095,8 @@ export const patients = [
         telefono: '2291365574',
         codigoPostal: '94341',
         direccion: 'Calle Oriente #927, Orizaba',
-        estado: 'Chiapas'
+        estado: 'Chiapas',
+        fechaAlta: '01/03/2025'
     },
     {
         clave: 'P005',
@@ -1107,7 +1111,8 @@ export const patients = [
         telefono: '2299106370',
         codigoPostal: '94396',
         direccion: 'Calle Reforma #219, Orizaba',
-        estado: 'Chiapas'
+        estado: 'Chiapas',
+        fechaAlta: '07/03/2025'
     },
     {
         clave: 'P006',
@@ -1122,7 +1127,8 @@ export const patients = [
         telefono: '2293316200',
         codigoPostal: '94364',
         direccion: 'Calle Oriente #155, Orizaba',
-        estado: 'Chiapas'
+        estado: 'Chiapas',
+        fechaAlta: '10/05/2025'
     },
     {
         clave: 'P007',
@@ -1137,7 +1143,8 @@ export const patients = [
         telefono: '2296869076',
         codigoPostal: '94357',
         direccion: 'Calle Sur #52, Orizaba',
-        estado: 'Oaxaca'
+        estado: 'Oaxaca',
+        fechaAlta: '05/02/2025'
     },
     {
         clave: 'P008',
@@ -1152,7 +1159,8 @@ export const patients = [
         telefono: '2299327403',
         codigoPostal: '94342',
         direccion: 'Calle Reforma #722, Orizaba',
-        estado: 'Puebla'
+        estado: 'Puebla',
+        fechaAlta: '03/04/2025'
     },
     {
         clave: 'P009',
@@ -1167,7 +1175,8 @@ export const patients = [
         telefono: '2296160532',
         codigoPostal: '94343',
         direccion: 'Calle Sur #234, Orizaba',
-        estado: 'Tabasco'
+        estado: 'Tabasco',
+        fechaAlta: '22/03/2025'
     },
     {
         clave: 'P010',
@@ -1182,7 +1191,8 @@ export const patients = [
         telefono: '2292760822',
         codigoPostal: '94322',
         direccion: 'Calle Sur #751, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '13/03/2025'
     },
     {
         clave: 'P011',
@@ -1197,7 +1207,8 @@ export const patients = [
         telefono: '2292757069',
         codigoPostal: '94331',
         direccion: 'Calle Oriente #812, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '08/02/2025'
     },
     {
         clave: 'P012',
@@ -1212,7 +1223,8 @@ export const patients = [
         telefono: '2294461174',
         codigoPostal: '94384',
         direccion: 'Calle Oriente #386, Orizaba',
-        estado: 'Puebla'
+        estado: 'Puebla',
+        fechaAlta: '08/03/2025'
     },
     {
         clave: 'P013',
@@ -1227,7 +1239,8 @@ export const patients = [
         telefono: '2295537683',
         codigoPostal: '94331',
         direccion: 'Calle Reforma #679, Orizaba',
-        estado: 'Tabasco'
+        estado: 'Tabasco',
+        fechaAlta: '24/02/2025'
     },
     {
         clave: 'P014',
@@ -1242,7 +1255,8 @@ export const patients = [
         telefono: '2298808998',
         codigoPostal: '94302',
         direccion: 'Calle Reforma #701, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '15/05/2025'
     },
     {
         clave: 'P015',
@@ -1257,7 +1271,8 @@ export const patients = [
         telefono: '2295788093',
         codigoPostal: '94325',
         direccion: 'Calle Reforma #874, Orizaba',
-        estado: 'Oaxaca'
+        estado: 'Oaxaca',
+        fechaAlta: '12/02/2025'
     },
     {
         clave: 'P016',
@@ -1272,7 +1287,8 @@ export const patients = [
         telefono: '2297169800',
         codigoPostal: '94321',
         direccion: 'Calle Reforma #82, Orizaba',
-        estado: 'Chiapas'
+        estado: 'Chiapas',
+        fechaAlta: '13/05/2025'
     },
     {
         clave: 'P017',
@@ -1287,7 +1303,8 @@ export const patients = [
         telefono: '2293039273',
         codigoPostal: '94360',
         direccion: 'Calle Reforma #833, Orizaba',
-        estado: 'Tabasco'
+        estado: 'Tabasco',
+        fechaAlta: '16/01/2025'
     },
     {
         clave: 'P018',
@@ -1302,7 +1319,8 @@ export const patients = [
         telefono: '2292753709',
         codigoPostal: '94313',
         direccion: 'Calle Reforma #455, Orizaba',
-        estado: 'Oaxaca'
+        estado: 'Oaxaca',
+        fechaAlta: '02/04/2025'
     },
     {
         clave: 'P019',
@@ -1317,7 +1335,8 @@ export const patients = [
         telefono: '2296872362',
         codigoPostal: '94301',
         direccion: 'Calle Oriente #722, Orizaba',
-        estado: 'Chiapas'
+        estado: 'Chiapas',
+        fechaAlta: '03/03/2025'
     },
     {
         clave: 'P020',
@@ -1332,7 +1351,8 @@ export const patients = [
         telefono: '2295408332',
         codigoPostal: '94331',
         direccion: 'Calle Sur #945, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '27/04/2025'
     },
 
     {
@@ -1340,7 +1360,7 @@ export const patients = [
         nombre: 'Laura',
         apellidoPaterno: 'Ramírez',
         apellidoMaterno: 'Gómez',
-        fechaNacimiento: '22/9/1967',
+        fechaNacimiento: '22/09/1967',
         edad: 26,
         genero: 'Masculino',
         ocupacion: 'Ingeniero',
@@ -1348,14 +1368,15 @@ export const patients = [
         telefono: '2291313375',
         codigoPostal: '94172',
         direccion: 'Calle Reforma #259, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '06/05/2025'
     },
     {
         clave: 'P022',
         nombre: 'Raúl',
         apellidoPaterno: 'López',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '15/5/1955',
+        fechaNacimiento: '15/05/1955',
         edad: 21,
         genero: 'Femenino',
         ocupacion: 'Técnico',
@@ -1363,14 +1384,15 @@ export const patients = [
         telefono: '2296973430',
         codigoPostal: '94102',
         direccion: 'Calle Poniente #421, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '28/04/2025'
     },
     {
         clave: 'P023',
         nombre: 'Laura',
         apellidoPaterno: 'Ruiz',
         apellidoMaterno: 'López',
-        fechaNacimiento: '5/10/1954',
+        fechaNacimiento: '05/10/1954',
         edad: 52,
         genero: 'Masculino',
         ocupacion: 'Médico',
@@ -1378,14 +1400,15 @@ export const patients = [
         telefono: '2293072621',
         codigoPostal: '94353',
         direccion: 'Calle Poniente #192, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '04/05/2025'
     },
     {
         clave: 'P024',
         nombre: 'Fernando',
         apellidoPaterno: 'Castro',
         apellidoMaterno: 'Ruiz',
-        fechaNacimiento: '19/7/1952',
+        fechaNacimiento: '19/07/1952',
         edad: 59,
         genero: 'Masculino',
         ocupacion: 'Médico',
@@ -1393,14 +1416,15 @@ export const patients = [
         telefono: '2299292481',
         codigoPostal: '94325',
         direccion: 'Calle Oriente #569, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '08/04/2025'
     },
     {
         clave: 'P025',
         nombre: 'Rosa',
         apellidoPaterno: 'Gómez',
         apellidoMaterno: 'Ruiz',
-        fechaNacimiento: '28/6/1975',
+        fechaNacimiento: '28/06/1975',
         edad: 41,
         genero: 'Femenino',
         ocupacion: 'Enfermera',
@@ -1408,14 +1432,15 @@ export const patients = [
         telefono: '2291977068',
         codigoPostal: '94198',
         direccion: 'Calle Sur #625, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '13/03/2025'
     },
     {
         clave: 'P026',
         nombre: 'Laura',
         apellidoPaterno: 'Martínez',
         apellidoMaterno: 'Torres',
-        fechaNacimiento: '22/4/1956',
+        fechaNacimiento: '22/04/1956',
         edad: 48,
         genero: 'Femenino',
         ocupacion: 'Técnico',
@@ -1423,14 +1448,15 @@ export const patients = [
         telefono: '2293916682',
         codigoPostal: '94146',
         direccion: 'Calle Poniente #549, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '18/03/2025'
     },
     {
         clave: 'P027',
         nombre: 'Raúl',
         apellidoPaterno: 'Ruiz',
         apellidoMaterno: 'Pérez',
-        fechaNacimiento: '11/5/1966',
+        fechaNacimiento: '11/05/1966',
         edad: 59,
         genero: 'Masculino',
         ocupacion: 'Profesor',
@@ -1438,7 +1464,8 @@ export const patients = [
         telefono: '2293031675',
         codigoPostal: '94129',
         direccion: 'Calle Reforma #104, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '21/01/2025'
     },
     {
         clave: 'P028',
@@ -1453,14 +1480,15 @@ export const patients = [
         telefono: '2292482291',
         codigoPostal: '94315',
         direccion: 'Calle Poniente #728, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '20/04/2025'
     },
     {
         clave: 'P029',
         nombre: 'Jorge',
         apellidoPaterno: 'Pérez',
         apellidoMaterno: 'Gómez',
-        fechaNacimiento: '25/8/1954',
+        fechaNacimiento: '25/08/1954',
         edad: 47,
         genero: 'Masculino',
         ocupacion: 'Contador',
@@ -1468,7 +1496,8 @@ export const patients = [
         telefono: '2296032306',
         codigoPostal: '94104',
         direccion: 'Calle Sur #295, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '10/02/2025'
     },
     {
         clave: 'P030',
@@ -1483,7 +1512,8 @@ export const patients = [
         telefono: '2298647094',
         codigoPostal: '94332',
         direccion: 'Calle Poniente #826, Orizaba',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '20/03/2025'
     },
     {
         clave: 'P031',
@@ -1498,14 +1528,15 @@ export const patients = [
         telefono: '2295934131',
         codigoPostal: '94369',
         direccion: 'Calle Poniente #856, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '14/05/2025'
     },
     {
         clave: 'P032',
         nombre: 'Ana',
         apellidoPaterno: 'Fernández',
         apellidoMaterno: 'López',
-        fechaNacimiento: '12/1/1945',
+        fechaNacimiento: '12/01/1945',
         edad: 36,
         genero: 'Masculino',
         ocupacion: 'Ingeniero',
@@ -1513,14 +1544,15 @@ export const patients = [
         telefono: '2292246492',
         codigoPostal: '94160',
         direccion: 'Calle Oriente #788, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '14/03/2025'
     },
     {
         clave: 'P033',
         nombre: 'Jorge',
         apellidoPaterno: 'Hernández',
         apellidoMaterno: 'Hernández',
-        fechaNacimiento: '13/2/1966',
+        fechaNacimiento: '13/02/1966',
         edad: 55,
         genero: 'Femenino',
         ocupacion: 'Contador',
@@ -1528,14 +1560,15 @@ export const patients = [
         telefono: '2291221280',
         codigoPostal: '94227',
         direccion: 'Calle Reforma #783, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '24/02/2025'
     },
     {
         clave: 'P034',
         nombre: 'Lucía',
         apellidoPaterno: 'Pérez',
         apellidoMaterno: 'Torres',
-        fechaNacimiento: '20/1/1972',
+        fechaNacimiento: '20/01/1972',
         edad: 24,
         genero: 'Femenino',
         ocupacion: 'Ingeniero',
@@ -1543,14 +1576,15 @@ export const patients = [
         telefono: '2291692045',
         codigoPostal: '94298',
         direccion: 'Calle Poniente #171, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '16/01/2025'
     },
     {
         clave: 'P035',
         nombre: 'Ana',
         apellidoPaterno: 'Ruiz',
         apellidoMaterno: 'Hernández',
-        fechaNacimiento: '8/5/1943',
+        fechaNacimiento: '08/05/1943',
         edad: 53,
         genero: 'Masculino',
         ocupacion: 'Ingeniero',
@@ -1558,14 +1592,15 @@ export const patients = [
         telefono: '2295909938',
         codigoPostal: '94288',
         direccion: 'Calle Sur #800, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '21/04/2025'
     },
     {
         clave: 'P036',
         nombre: 'Fernando',
         apellidoPaterno: 'Pérez',
         apellidoMaterno: 'Gómez',
-        fechaNacimiento: '24/3/1945',
+        fechaNacimiento: '24/03/1945',
         edad: 59,
         genero: 'Masculino',
         ocupacion: 'Técnico',
@@ -1573,14 +1608,15 @@ export const patients = [
         telefono: '2292739625',
         codigoPostal: '94364',
         direccion: 'Calle Reforma #431, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '30/04/2025'
     },
     {
         clave: 'P037',
         nombre: 'Pedro',
         apellidoPaterno: 'Fernández',
         apellidoMaterno: 'Ruiz',
-        fechaNacimiento: '9/1/1968',
+        fechaNacimiento: '09/01/1968',
         edad: 26,
         genero: 'Masculino',
         ocupacion: 'Ingeniero',
@@ -1588,7 +1624,8 @@ export const patients = [
         telefono: '2295099041',
         codigoPostal: '94146',
         direccion: 'Calle Poniente #377, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '08/04/2025'
     },
     {
         clave: 'P038',
@@ -1603,14 +1640,15 @@ export const patients = [
         telefono: '2298641845',
         codigoPostal: '94198',
         direccion: 'Calle Sur #552, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz',
+        fechaAlta: '10/01/2025'
     },
     {
         clave: 'P039',
         nombre: 'Rosa',
         apellidoPaterno: 'Castro',
         apellidoMaterno: 'Gómez',
-        fechaNacimiento: '15/8/1956',
+        fechaNacimiento: '15/08/1956',
         edad: 30,
         genero: 'Masculino',
         ocupacion: 'Contador',
@@ -1618,14 +1656,14 @@ export const patients = [
         telefono: '2295976841',
         codigoPostal: '94170',
         direccion: 'Calle Sur #613, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '23/03/2025',
     },
     {
         clave: 'P040',
         nombre: 'Ana',
         apellidoPaterno: 'Martínez',
         apellidoMaterno: 'Torres',
-        fechaNacimiento: '11/4/1945',
+        fechaNacimiento: '11/04/1945',
         edad: 23,
         genero: 'Femenino',
         ocupacion: 'Médico',
@@ -1633,14 +1671,14 @@ export const patients = [
         telefono: '2294852363',
         codigoPostal: '94252',
         direccion: 'Calle Poniente #864, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '08/04/2025'
     },
     {
         clave: 'P041',
         nombre: 'Raúl',
         apellidoPaterno: 'Martínez',
         apellidoMaterno: 'Ruiz',
-        fechaNacimiento: '6/5/1959',
+        fechaNacimiento: '06/05/1959',
         edad: 27,
         genero: 'Masculino',
         ocupacion: 'Ingeniero',
@@ -1648,14 +1686,14 @@ export const patients = [
         telefono: '2293154132',
         codigoPostal: '94250',
         direccion: 'Calle Sur #245, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '15/04/2025'
     },
     {
         clave: 'P042',
         nombre: 'Jorge',
         apellidoPaterno: 'Hernández',
         apellidoMaterno: 'Pérez',
-        fechaNacimiento: '7/6/1966',
+        fechaNacimiento: '07/06/1966',
         edad: 30,
         genero: 'Femenino',
         ocupacion: 'Doctora',
@@ -1663,14 +1701,14 @@ export const patients = [
         telefono: '2296243170',
         codigoPostal: '94118',
         direccion: 'Calle Reforma #481, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '12/04/2025'
     },
     {
         clave: 'P043',
         nombre: 'Jorge',
         apellidoPaterno: 'López',
         apellidoMaterno: 'Hernández',
-        fechaNacimiento: '7/2/1970',
+        fechaNacimiento: '07/02/1970',
         edad: 54,
         genero: 'Femenino',
         ocupacion: 'Doctora',
@@ -1678,14 +1716,14 @@ export const patients = [
         telefono: '2297356925',
         codigoPostal: '94216',
         direccion: 'Calle Oriente #883, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '30/04/2025'
     },
     {
         clave: 'P044',
         nombre: 'Laura',
         apellidoPaterno: 'Gómez',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '11/1/1945',
+        fechaNacimiento: '11/01/1945',
         edad: 59,
         genero: 'Masculino',
         ocupacion: 'Contador',
@@ -1693,14 +1731,14 @@ export const patients = [
         telefono: '2293251418',
         codigoPostal: '94141',
         direccion: 'Calle Oriente #190, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '15/01/2025'
     },
     {
         clave: 'P045',
         nombre: 'Ana',
         apellidoPaterno: 'Hernández',
         apellidoMaterno: 'Gómez',
-        fechaNacimiento: '22/2/1942',
+        fechaNacimiento: '22/02/1942',
         edad: 25,
         genero: 'Masculino',
         ocupacion: 'Médico',
@@ -1708,14 +1746,14 @@ export const patients = [
         telefono: '2296270819',
         codigoPostal: '94303',
         direccion: 'Calle Oriente #248, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '12/02/2025'
     },
     {
         clave: 'P046',
         nombre: 'Carlos',
         apellidoPaterno: 'Martínez',
         apellidoMaterno: 'Martínez',
-        fechaNacimiento: '25/6/1966',
+        fechaNacimiento: '25/06/1966',
         edad: 50,
         genero: 'Masculino',
         ocupacion: 'Profesor',
@@ -1723,14 +1761,14 @@ export const patients = [
         telefono: '2292772932',
         codigoPostal: '94178',
         direccion: 'Calle Reforma #814, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '29/04/2025'
     },
     {
         clave: 'P047',
         nombre: 'Fernando',
         apellidoPaterno: 'Pérez',
         apellidoMaterno: 'Hernández',
-        fechaNacimiento: '28/3/1945',
+        fechaNacimiento: '28/03/1945',
         edad: 33,
         genero: 'Masculino',
         ocupacion: 'Profesor',
@@ -1738,14 +1776,14 @@ export const patients = [
         telefono: '2297722272',
         codigoPostal: '94388',
         direccion: 'Calle Oriente #443, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '18/03/2025'
     },
     {
         clave: 'P048',
         nombre: 'Ana',
         apellidoPaterno: 'Torres',
         apellidoMaterno: 'Martínez',
-        fechaNacimiento: '8/2/1962',
+        fechaNacimiento: '08/02/1962',
         edad: 29,
         genero: 'Masculino',
         ocupacion: 'Enfermera',
@@ -1753,14 +1791,14 @@ export const patients = [
         telefono: '2293019776',
         codigoPostal: '94317',
         direccion: 'Calle Oriente #416, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '07/04/2025'
     },
     {
         clave: 'P049',
         nombre: 'Laura',
         apellidoPaterno: 'López',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '5/6/1951',
+        fechaNacimiento: '05/06/1951',
         edad: 43,
         genero: 'Masculino',
         ocupacion: 'Contador',
@@ -1768,14 +1806,14 @@ export const patients = [
         telefono: '2299787035',
         codigoPostal: '94220',
         direccion: 'Calle Poniente #424, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '30/04/2025'
     },
     {
         clave: 'P050',
         nombre: 'Ana',
         apellidoPaterno: 'Fernández',
         apellidoMaterno: 'Ramírez',
-        fechaNacimiento: '25/6/1955',
+        fechaNacimiento: '25/06/1955',
         edad: 46,
         genero: 'Masculino',
         ocupacion: 'Profesor',
@@ -1783,14 +1821,14 @@ export const patients = [
         telefono: '2299987428',
         codigoPostal: '94321',
         direccion: 'Calle Oriente #480, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '12/02/2025'
     },
     {
         clave: 'P051',
         nombre: 'Andrea',
         apellidoPaterno: 'Ramírez',
         apellidoMaterno: 'Ruiz',
-        fechaNacimiento: '9/1/1941',
+        fechaNacimiento: '09/01/1941',
         edad: 27,
         genero: 'Femenino',
         ocupacion: 'Enfermera',
@@ -1798,14 +1836,14 @@ export const patients = [
         telefono: '2297102818',
         codigoPostal: '94353',
         direccion: 'Calle Oriente #878, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '07/01/2025'
     },
     {
         clave: 'P052',
         nombre: 'Fernando',
         apellidoPaterno: 'Castro',
         apellidoMaterno: 'López',
-        fechaNacimiento: '6/9/1951',
+        fechaNacimiento: '06/09/1951',
         edad: 52,
         genero: 'Femenino',
         ocupacion: 'Médico',
@@ -1813,14 +1851,14 @@ export const patients = [
         telefono: '2292884163',
         codigoPostal: '94359',
         direccion: 'Calle Sur #874, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '24/02/2025'
     },
     {
         clave: 'P053',
         nombre: 'Raúl',
         apellidoPaterno: 'Ramírez',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '26/4/1969',
+        fechaNacimiento: '26/04/1969',
         edad: 29,
         genero: 'Masculino',
         ocupacion: 'Enfermera',
@@ -1828,14 +1866,14 @@ export const patients = [
         telefono: '2296803895',
         codigoPostal: '94351',
         direccion: 'Calle Sur #152, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '16/03/2025'
     },
     {
         clave: 'P054',
         nombre: 'Carlos',
         apellidoPaterno: 'Pérez',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '24/3/1961',
+        fechaNacimiento: '24/03/1961',
         edad: 50,
         genero: 'Masculino',
         ocupacion: 'Ingeniero',
@@ -1843,14 +1881,14 @@ export const patients = [
         telefono: '2295124550',
         codigoPostal: '94159',
         direccion: 'Calle Oriente #355, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '19/03/2025'
     },
     {
         clave: 'P055',
         nombre: 'Rosa',
         apellidoPaterno: 'Fernández',
         apellidoMaterno: 'Gómez',
-        fechaNacimiento: '3/6/1958',
+        fechaNacimiento: '03/06/1958',
         edad: 39,
         genero: 'Masculino',
         ocupacion: 'Profesor',
@@ -1858,14 +1896,14 @@ export const patients = [
         telefono: '2292662698',
         codigoPostal: '94100',
         direccion: 'Calle Sur #970, Nogales',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '27/04/2025'
     },
     {
         clave: 'P056',
         nombre: 'Jorge',
         apellidoPaterno: 'Martínez',
         apellidoMaterno: 'López',
-        fechaNacimiento: '7/6/1962',
+        fechaNacimiento: '07/06/1962',
         edad: 33,
         genero: 'Femenino',
         ocupacion: 'Abogado',
@@ -1873,14 +1911,14 @@ export const patients = [
         telefono: '2292888977',
         codigoPostal: '94161',
         direccion: 'Calle Oriente #125, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '06/01/2025'
     },
     {
         clave: 'P057',
         nombre: 'Rosa',
         apellidoPaterno: 'Ramírez',
         apellidoMaterno: 'Gómez',
-        fechaNacimiento: '26/9/1964',
+        fechaNacimiento: '26/09/1964',
         edad: 28,
         genero: 'Femenino',
         ocupacion: 'Abogado',
@@ -1888,14 +1926,14 @@ export const patients = [
         telefono: '2293062225',
         codigoPostal: '94354',
         direccion: 'Calle Poniente #360, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '04/04/2025'
     },
     {
         clave: 'P058',
         nombre: 'Ana',
         apellidoPaterno: 'Castro',
         apellidoMaterno: 'Ramírez',
-        fechaNacimiento: '12/8/1943',
+        fechaNacimiento: '12/08/1943',
         edad: 28,
         genero: 'Femenino',
         ocupacion: 'Abogado',
@@ -1903,14 +1941,14 @@ export const patients = [
         telefono: '2297622723',
         codigoPostal: '94368',
         direccion: 'Calle Oriente #975, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '13/02/2025'
     },
     {
         clave: 'P059',
         nombre: 'Pedro',
         apellidoPaterno: 'Fernández',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '4/5/1964',
+        fechaNacimiento: '04/05/1964',
         edad: 41,
         genero: 'Masculino',
         ocupacion: 'Enfermera',
@@ -1918,14 +1956,14 @@ export const patients = [
         telefono: '2296743649',
         codigoPostal: '94266',
         direccion: 'Calle Sur #158, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '15/02/2025'
     },
     {
         clave: 'P060',
         nombre: 'Jorge',
         apellidoPaterno: 'Hernández',
         apellidoMaterno: 'Fernández',
-        fechaNacimiento: '7/8/1944',
+        fechaNacimiento: '07/08/1944',
         edad: 33,
         genero: 'Masculino',
         ocupacion: 'Profesor',
@@ -1933,14 +1971,14 @@ export const patients = [
         telefono: '2297324640',
         codigoPostal: '94318',
         direccion: 'Calle Sur #593, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '15/05/2025'
     },
     {
         clave: 'P061',
         nombre: 'Pedro',
         apellidoPaterno: 'Ramírez',
         apellidoMaterno: 'Pérez',
-        fechaNacimiento: '23/7/1948',
+        fechaNacimiento: '23/07/1948',
         edad: 31,
         genero: 'Masculino',
         ocupacion: 'Doctora',
@@ -1948,14 +1986,14 @@ export const patients = [
         telefono: '2297058084',
         codigoPostal: '94159',
         direccion: 'Calle Poniente #310, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '27/01/2025'
     },
     {
         clave: 'P062',
         nombre: 'Laura',
         apellidoPaterno: 'Hernández',
         apellidoMaterno: 'Ramírez',
-        fechaNacimiento: '8/11/1951',
+        fechaNacimiento: '08/11/1951',
         edad: 56,
         genero: 'Masculino',
         ocupacion: 'Médico',
@@ -1963,14 +2001,14 @@ export const patients = [
         telefono: '2297741213',
         codigoPostal: '94118',
         direccion: 'Calle Sur #852, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '14/02/2025'
     },
     {
         clave: 'P063',
         nombre: 'Raúl',
         apellidoPaterno: 'Fernández',
         apellidoMaterno: 'Fernández',
-        fechaNacimiento: '27/3/1970',
+        fechaNacimiento: '27/03/1970',
         edad: 38,
         genero: 'Femenino',
         ocupacion: 'Profesor',
@@ -1978,14 +2016,14 @@ export const patients = [
         telefono: '2298117437',
         codigoPostal: '94225',
         direccion: 'Calle Oriente #425, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '14/02/2025'
     },
     {
         clave: 'P064',
         nombre: 'Lucía',
         apellidoPaterno: 'Castro',
         apellidoMaterno: 'Martínez',
-        fechaNacimiento: '18/6/1956',
+        fechaNacimiento: '18/06/1956',
         edad: 36,
         genero: 'Femenino',
         ocupacion: 'Abogado',
@@ -1993,14 +2031,14 @@ export const patients = [
         telefono: '2296372017',
         codigoPostal: '94325',
         direccion: 'Calle Sur #254, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '04/03/2025'
     },
     {
         clave: 'P065',
         nombre: 'Laura',
         apellidoPaterno: 'Ruiz',
         apellidoMaterno: 'Torres',
-        fechaNacimiento: '3/9/1955',
+        fechaNacimiento: '03/09/1955',
         edad: 34,
         genero: 'Masculino',
         ocupacion: 'Profesor',
@@ -2008,14 +2046,14 @@ export const patients = [
         telefono: '2292933350',
         codigoPostal: '94264',
         direccion: 'Calle Poniente #761, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '12/04/2025'
     },
     {
         clave: 'P066',
         nombre: 'Jorge',
         apellidoPaterno: 'Ruiz',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '10/2/1945',
+        fechaNacimiento: '10/02/1945',
         edad: 31,
         genero: 'Femenino',
         ocupacion: 'Enfermera',
@@ -2023,14 +2061,14 @@ export const patients = [
         telefono: '2293941454',
         codigoPostal: '94372',
         direccion: 'Calle Oriente #576, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '15/04/2025'
     },
     {
         clave: 'P067',
         nombre: 'Pedro',
         apellidoPaterno: 'Ramírez',
         apellidoMaterno: 'Pérez',
-        fechaNacimiento: '17/3/1959',
+        fechaNacimiento: '17/03/1959',
         edad: 31,
         genero: 'Femenino',
         ocupacion: 'Profesor',
@@ -2038,14 +2076,14 @@ export const patients = [
         telefono: '2297672752',
         codigoPostal: '94330',
         direccion: 'Calle Reforma #234, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '18/04/2025'
     },
     {
         clave: 'P068',
         nombre: 'Pedro',
         apellidoPaterno: 'Martínez',
         apellidoMaterno: 'Ramírez',
-        fechaNacimiento: '9/5/1970',
+        fechaNacimiento: '09/05/1970',
         edad: 57,
         genero: 'Masculino',
         ocupacion: 'Médico',
@@ -2053,14 +2091,14 @@ export const patients = [
         telefono: '2294328651',
         codigoPostal: '94273',
         direccion: 'Calle Sur #249, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '22/04/2025'
     },
     {
         clave: 'P069',
         nombre: 'Carlos',
         apellidoPaterno: 'Pérez',
         apellidoMaterno: 'Hernández',
-        fechaNacimiento: '11/6/1960',
+        fechaNacimiento: '11/06/1960',
         edad: 30,
         genero: 'Femenino',
         ocupacion: 'Médico',
@@ -2068,14 +2106,14 @@ export const patients = [
         telefono: '2296676149',
         codigoPostal: '94267',
         direccion: 'Calle Poniente #471, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '01/05/2025'
     },
     {
         clave: 'P070',
         nombre: 'Fernando',
         apellidoPaterno: 'Fernández',
         apellidoMaterno: 'Martínez',
-        fechaNacimiento: '13/5/1946',
+        fechaNacimiento: '13/05/1946',
         edad: 53,
         genero: 'Masculino',
         ocupacion: 'Técnico',
@@ -2083,14 +2121,14 @@ export const patients = [
         telefono: '2291904413',
         codigoPostal: '94233',
         direccion: 'Calle Oriente #181, Río Blanco',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '03/05/2025'
     },
     {
         clave: 'P071',
         nombre: 'Andrea',
         apellidoPaterno: 'Torres',
         apellidoMaterno: 'Gómez',
-        fechaNacimiento: '1/3/1971',
+        fechaNacimiento: '01/03/1971',
         edad: 59,
         genero: 'Masculino',
         ocupacion: 'Contador',
@@ -2098,14 +2136,14 @@ export const patients = [
         telefono: '2298358327',
         codigoPostal: '94136',
         direccion: 'Calle Reforma #920, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '03/03/2025'
     },
     {
         clave: 'P072',
         nombre: 'Ana',
         apellidoPaterno: 'Ramírez',
         apellidoMaterno: 'López',
-        fechaNacimiento: '18/3/1951',
+        fechaNacimiento: '18/03/1951',
         edad: 24,
         genero: 'Femenino',
         ocupacion: 'Médico',
@@ -2113,14 +2151,14 @@ export const patients = [
         telefono: '2293215616',
         codigoPostal: '94371',
         direccion: 'Calle Oriente #951, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '07/03/2025'
     },
     {
         clave: 'P073',
         nombre: 'Jorge',
         apellidoPaterno: 'Gómez',
         apellidoMaterno: 'López',
-        fechaNacimiento: '7/5/1952',
+        fechaNacimiento: '07/05/1952',
         edad: 24,
         genero: 'Masculino',
         ocupacion: 'Médico',
@@ -2128,14 +2166,14 @@ export const patients = [
         telefono: '2299087851',
         codigoPostal: '94290',
         direccion: 'Calle Oriente #190, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '09/03/2025'
     },
     {
         clave: 'P074',
         nombre: 'Laura',
         apellidoPaterno: 'Ruiz',
         apellidoMaterno: 'Fernández',
-        fechaNacimiento: '7/10/1945',
+        fechaNacimiento: '07/10/1945',
         edad: 21,
         genero: 'Masculino',
         ocupacion: 'Técnico',
@@ -2143,7 +2181,7 @@ export const patients = [
         telefono: '2293135100',
         codigoPostal: '94134',
         direccion: 'Calle Poniente #494, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '12/03/2025'
     },
     {
         clave: 'P075',
@@ -2158,14 +2196,14 @@ export const patients = [
         telefono: '2297236854',
         codigoPostal: '94388',
         direccion: 'Calle Poniente #268, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '24/02/2025'
     },
     {
         clave: 'P076',
         nombre: 'Pedro',
         apellidoPaterno: 'Hernández',
         apellidoMaterno: 'López',
-        fechaNacimiento: '18/2/1950',
+        fechaNacimiento: '18/02/1950',
         edad: 56,
         genero: 'Masculino',
         ocupacion: 'Ingeniero',
@@ -2173,7 +2211,7 @@ export const patients = [
         telefono: '2295501332',
         codigoPostal: '94350',
         direccion: 'Calle Poniente #780, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '26/02/2025'
     },
     {
         clave: 'P077',
@@ -2188,14 +2226,14 @@ export const patients = [
         telefono: '2293032716',
         codigoPostal: '94131',
         direccion: 'Calle Sur #679, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '26/01/2025'
     },
     {
         clave: 'P078',
         nombre: 'Rosa',
         apellidoPaterno: 'Fernández',
         apellidoMaterno: 'Pérez',
-        fechaNacimiento: '12/9/1966',
+        fechaNacimiento: '12/09/1966',
         edad: 49,
         genero: 'Masculino',
         ocupacion: 'Técnico',
@@ -2203,7 +2241,7 @@ export const patients = [
         telefono: '2291208911',
         codigoPostal: '94100',
         direccion: 'Calle Reforma #644, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '21/01/2025'
     },
     {
         clave: 'P079',
@@ -2218,14 +2256,14 @@ export const patients = [
         telefono: '2298361511',
         codigoPostal: '94267',
         direccion: 'Calle Oriente #760, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '20/01/2025'
     },
     {
         clave: 'P080',
         nombre: 'Laura',
         apellidoPaterno: 'Torres',
         apellidoMaterno: 'Ramírez',
-        fechaNacimiento: '5/9/1940',
+        fechaNacimiento: '05/09/1940',
         edad: 59,
         genero: 'Femenino',
         ocupacion: 'Contador',
@@ -2233,7 +2271,7 @@ export const patients = [
         telefono: '2293680731',
         codigoPostal: '94251',
         direccion: 'Calle Reforma #447, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '18/01/2025'
     },
     {
         clave: 'P081',
@@ -2248,14 +2286,14 @@ export const patients = [
         telefono: '2291250952',
         codigoPostal: '94344',
         direccion: 'Calle Oriente #912, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '11/04/2025'
     },
     {
         clave: 'P082',
         nombre: 'Carlos',
         apellidoPaterno: 'Gómez',
         apellidoMaterno: 'Ramírez',
-        fechaNacimiento: '7/4/1957',
+        fechaNacimiento: '07/04/1957',
         edad: 21,
         genero: 'Femenino',
         ocupacion: 'Contador',
@@ -2263,14 +2301,14 @@ export const patients = [
         telefono: '2295708564',
         codigoPostal: '94322',
         direccion: 'Calle Reforma #709, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '18/04/2025'
     },
     {
         clave: 'P083',
         nombre: 'Rosa',
         apellidoPaterno: 'Fernández',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '23/8/1972',
+        fechaNacimiento: '23/08/1972',
         edad: 40,
         genero: 'Masculino',
         ocupacion: 'Contador',
@@ -2278,7 +2316,7 @@ export const patients = [
         telefono: '2293896244',
         codigoPostal: '94138',
         direccion: 'Calle Sur #135, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '12/04/2025'
     },
     {
         clave: 'P084',
@@ -2293,14 +2331,14 @@ export const patients = [
         telefono: '2298923723',
         codigoPostal: '94213',
         direccion: 'Calle Poniente #433, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '03/04/2025'
     },
     {
         clave: 'P085',
         nombre: 'Andrea',
         apellidoPaterno: 'Torres',
         apellidoMaterno: 'Fernández',
-        fechaNacimiento: '18/1/1969',
+        fechaNacimiento: '18/01/1969',
         edad: 53,
         genero: 'Femenino',
         ocupacion: 'Ingeniero',
@@ -2308,7 +2346,7 @@ export const patients = [
         telefono: '2297576112',
         codigoPostal: '94131',
         direccion: 'Calle Poniente #956, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '08/04/2025'
     },
     {
         clave: 'P086',
@@ -2323,14 +2361,14 @@ export const patients = [
         telefono: '2294950669',
         codigoPostal: '94154',
         direccion: 'Calle Sur #495, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '02/04/2025'
     },
     {
         clave: 'P087',
         nombre: 'Raúl',
         apellidoPaterno: 'Ruiz',
         apellidoMaterno: 'López',
-        fechaNacimiento: '2/11/1956',
+        fechaNacimiento: '02/11/1956',
         edad: 24,
         genero: 'Femenino',
         ocupacion: 'Abogado',
@@ -2338,14 +2376,14 @@ export const patients = [
         telefono: '2296662224',
         codigoPostal: '94102',
         direccion: 'Calle Oriente #823, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '02/05/2025'
     },
     {
         clave: 'P088',
         nombre: 'Jorge',
         apellidoPaterno: 'López',
         apellidoMaterno: 'Torres',
-        fechaNacimiento: '9/12/1941',
+        fechaNacimiento: '09/12/1941',
         edad: 33,
         genero: 'Masculino',
         ocupacion: 'Profesor',
@@ -2353,14 +2391,14 @@ export const patients = [
         telefono: '2296981941',
         codigoPostal: '94139',
         direccion: 'Calle Sur #275, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '01/05/2025'
     },
     {
         clave: 'P089',
         nombre: 'Andrea',
         apellidoPaterno: 'Ruiz',
         apellidoMaterno: 'Gómez',
-        fechaNacimiento: '1/4/1943',
+        fechaNacimiento: '01/04/1943',
         edad: 60,
         genero: 'Femenino',
         ocupacion: 'Abogado',
@@ -2368,7 +2406,7 @@ export const patients = [
         telefono: '2293703921',
         codigoPostal: '94306',
         direccion: 'Calle Sur #681, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '09/05/2025'
     },
     {
         clave: 'P090',
@@ -2383,14 +2421,14 @@ export const patients = [
         telefono: '2291197826',
         codigoPostal: '94128',
         direccion: 'Calle Poniente #913, Ixtaczoquitlán',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '01/05/2025'
     },
     {
         clave: 'P091',
         nombre: 'Fernando',
         apellidoPaterno: 'Hernández',
         apellidoMaterno: 'Martínez',
-        fechaNacimiento: '3/7/1950',
+        fechaNacimiento: '03/07/1950',
         edad: 46,
         genero: 'Femenino',
         ocupacion: 'Médico',
@@ -2398,14 +2436,14 @@ export const patients = [
         telefono: '2298550394',
         codigoPostal: '94197',
         direccion: 'Calle Sur #167, Jalapilla',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '01/05/2025'
     },
     {
         clave: 'P092',
         nombre: 'Pedro',
         apellidoPaterno: 'Castro',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '18/3/1942',
+        fechaNacimiento: '18/03/1942',
         edad: 48,
         genero: 'Masculino',
         ocupacion: 'Contador',
@@ -2413,14 +2451,14 @@ export const patients = [
         telefono: '2293297844',
         codigoPostal: '94241',
         direccion: 'Calle Reforma #218, Jalapilla',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '09/05/2025'
     },
     {
         clave: 'P093',
         nombre: 'Carlos',
         apellidoPaterno: 'Hernández',
         apellidoMaterno: 'Torres',
-        fechaNacimiento: '14/1/1975',
+        fechaNacimiento: '14/01/1975',
         edad: 56,
         genero: 'Femenino',
         ocupacion: 'Doctora',
@@ -2428,14 +2466,14 @@ export const patients = [
         telefono: '2298320022',
         codigoPostal: '94110',
         direccion: 'Calle Reforma #988, Jalapilla',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '03/05/2025'
     },
     {
         clave: 'P094',
         nombre: 'Laura',
         apellidoPaterno: 'Hernández',
         apellidoMaterno: 'Torres',
-        fechaNacimiento: '3/3/1967',
+        fechaNacimiento: '03/03/1967',
         edad: 37,
         genero: 'Masculino',
         ocupacion: 'Doctora',
@@ -2443,14 +2481,14 @@ export const patients = [
         telefono: '2297060664',
         codigoPostal: '94155',
         direccion: 'Calle Reforma #323, Jalapilla',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '03/02/2025'
     },
     {
         clave: 'P095',
         nombre: 'Andrea',
         apellidoPaterno: 'Hernández',
         apellidoMaterno: 'López',
-        fechaNacimiento: '27/4/1948',
+        fechaNacimiento: '27/04/1948',
         edad: 25,
         genero: 'Masculino',
         ocupacion: 'Abogado',
@@ -2458,14 +2496,14 @@ export const patients = [
         telefono: '2299678997',
         codigoPostal: '94188',
         direccion: 'Calle Sur #411, Jalapilla',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '06/02/2025'
     },
     {
         clave: 'P096',
         nombre: 'Laura',
         apellidoPaterno: 'Ruiz',
         apellidoMaterno: 'Pérez',
-        fechaNacimiento: '3/4/1960',
+        fechaNacimiento: '03/04/1960',
         edad: 28,
         genero: 'Masculino',
         ocupacion: 'Médico',
@@ -2473,14 +2511,14 @@ export const patients = [
         telefono: '2295843977',
         codigoPostal: '94250',
         direccion: 'Calle Poniente #353, Jalapilla',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '06/03/2025'
     },
     {
         clave: 'P097',
         nombre: 'Raúl',
         apellidoPaterno: 'Ramírez',
         apellidoMaterno: 'Martínez',
-        fechaNacimiento: '16/1/1951',
+        fechaNacimiento: '16/01/1951',
         edad: 23,
         genero: 'Masculino',
         ocupacion: 'Abogado',
@@ -2488,14 +2526,14 @@ export const patients = [
         telefono: '2296373302',
         codigoPostal: '94391',
         direccion: 'Calle Reforma #357, Jalapilla',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '06/04/2025'
     },
     {
         clave: 'P098',
         nombre: 'Andrea',
         apellidoPaterno: 'Torres',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '19/4/1947',
+        fechaNacimiento: '19/04/1947',
         edad: 39,
         genero: 'Masculino',
         ocupacion: 'Doctora',
@@ -2503,14 +2541,14 @@ export const patients = [
         telefono: '2294556330',
         codigoPostal: '94300',
         direccion: 'Calle Reforma #997, Jalapilla',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '10/01/2025'
     },
     {
         clave: 'P099',
         nombre: 'Lucía',
         apellidoPaterno: 'Castro',
         apellidoMaterno: 'Castro',
-        fechaNacimiento: '6/6/1975',
+        fechaNacimiento: '06/06/1975',
         edad: 59,
         genero: 'Masculino',
         ocupacion: 'Abogado',
@@ -2518,14 +2556,14 @@ export const patients = [
         telefono: '2294546440',
         codigoPostal: '94130',
         direccion: 'Calle Poniente #420, Jalapilla',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '10/01/2025'
     },
     {
         clave: 'P100',
         nombre: 'Rosa',
         apellidoPaterno: 'Fernández',
         apellidoMaterno: 'Ramírez',
-        fechaNacimiento: '12/3/1949',
+        fechaNacimiento: '12/03/1949',
         edad: 31,
         genero: 'Masculino',
         ocupacion: 'Contador',
@@ -2533,9 +2571,113 @@ export const patients = [
         telefono: '2296986256',
         codigoPostal: '94395',
         direccion: 'Calle Oriente #601, Jalapilla',
-        estado: 'Veracruz'
+        estado: 'Veracruz', fechaAlta: '10/01/2025'
     },
 ];
+
+export const patientsDates = [
+    { clave: 'P001', fechaAlta: '12/01/2025' },
+    { clave: 'P002', fechaAlta: '05/05/2025' },
+    { clave: 'P003', fechaAlta: '12/01/2025' },
+    { clave: 'P004', fechaAlta: '01/03/2025' },
+    { clave: 'P005', fechaAlta: '07/03/2025' },
+    { clave: 'P006', fechaAlta: '10/05/2025' },
+    { clave: 'P007', fechaAlta: '05/02/2025' },
+    { clave: 'P008', fechaAlta: '03/04/2025' },
+    { clave: 'P009', fechaAlta: '22/03/2025' },
+    { clave: 'P010', fechaAlta: '13/03/2025' },
+    { clave: 'P011', fechaAlta: '08/02/2025' },
+    { clave: 'P012', fechaAlta: '08/03/2025' },
+    { clave: 'P013', fechaAlta: '24/02/2025' },
+    { clave: 'P014', fechaAlta: '15/05/2025' },
+    { clave: 'P015', fechaAlta: '12/02/2025' },
+    { clave: 'P016', fechaAlta: '13/05/2025' },
+    { clave: 'P017', fechaAlta: '16/01/2025' },
+    { clave: 'P018', fechaAlta: '02/04/2025' },
+    { clave: 'P019', fechaAlta: '03/03/2025' },
+    { clave: 'P020', fechaAlta: '27/04/2025' },
+    { clave: 'P021', fechaAlta: '06/05/2025' },
+    { clave: 'P022', fechaAlta: '28/04/2025' },
+    { clave: 'P023', fechaAlta: '04/05/2025' },
+    { clave: 'P024', fechaAlta: '08/04/2025' },
+    { clave: 'P025', fechaAlta: '13/03/2025' },
+    { clave: 'P026', fechaAlta: '18/03/2025' },
+    { clave: 'P027', fechaAlta: '21/01/2025' },
+    { clave: 'P028', fechaAlta: '20/04/2025' },
+    { clave: 'P029', fechaAlta: '10/02/2025' },
+    { clave: 'P030', fechaAlta: '20/03/2025' },
+    { clave: 'P031', fechaAlta: '14/05/2025' },
+    { clave: 'P032', fechaAlta: '14/03/2025' },
+    { clave: 'P033', fechaAlta: '24/02/2025' },
+    { clave: 'P034', fechaAlta: '16/01/2025' },
+    { clave: 'P035', fechaAlta: '21/04/2025' },
+    { clave: 'P036', fechaAlta: '30/04/2025' },
+    { clave: 'P037', fechaAlta: '08/04/2025' },
+    { clave: 'P038', fechaAlta: '10/01/2025' },
+    { clave: 'P039', fechaAlta: '23/03/2025' },
+    { clave: 'P040', fechaAlta: '08/04/2025' },
+    { clave: 'P041', fechaAlta: '15/04/2025' },
+    { clave: 'P042', fechaAlta: '12/02/2025' },
+    { clave: 'P043', fechaAlta: '30/04/2025' },
+    { clave: 'P044', fechaAlta: '15/01/2025' },
+    { clave: 'P045', fechaAlta: '12/02/2025' },
+    { clave: 'P046', fechaAlta: '29/04/2025' },
+    { clave: 'P047', fechaAlta: '18/03/2025' },
+    { clave: 'P048', fechaAlta: '07/04/2025' },
+    { clave: 'P049', fechaAlta: '30/04/2025' },
+    { clave: 'P050', fechaAlta: '12/02/2025' },
+    { clave: 'P051', fechaAlta: '07/01/2025' },
+    { clave: 'P052', fechaAlta: '24/02/2025' },
+    { clave: 'P053', fechaAlta: '16/03/2025' },
+    { clave: 'P054', fechaAlta: '19/03/2025' },
+    { clave: 'P055', fechaAlta: '27/04/2025' },
+    { clave: 'P056', fechaAlta: '06/01/2025' },
+    { clave: 'P057', fechaAlta: '04/04/2025' },
+    { clave: 'P058', fechaAlta: '17/03/2025' },
+    { clave: 'P059', fechaAlta: '16/03/2025' },
+    { clave: 'P060', fechaAlta: '04/03/2025' },
+    { clave: 'P061', fechaAlta: '04/02/2025' },
+    { clave: 'P062', fechaAlta: '18/03/2025' },
+    { clave: 'P063', fechaAlta: '01/01/2025' },
+    { clave: 'P064', fechaAlta: '14/05/2025' },
+    { clave: 'P065', fechaAlta: '12/03/2025' },
+    { clave: 'P066', fechaAlta: '06/05/2025' },
+    { clave: 'P067', fechaAlta: '20/04/2025' },
+    { clave: 'P068', fechaAlta: '02/01/2025' },
+    { clave: 'P069', fechaAlta: '20/02/2025' },
+    { clave: 'P070', fechaAlta: '04/05/2025' },
+    { clave: 'P071', fechaAlta: '06/02/2025' },
+    { clave: 'P072', fechaAlta: '23/03/2025' },
+    { clave: 'P073', fechaAlta: '06/01/2025' },
+    { clave: 'P074', fechaAlta: '01/01/2025' },
+    { clave: 'P075', fechaAlta: '18/03/2025' },
+    { clave: 'P076', fechaAlta: '11/05/2025' },
+    { clave: 'P077', fechaAlta: '27/01/2025' },
+    { clave: 'P078', fechaAlta: '12/05/2025' },
+    { clave: 'P079', fechaAlta: '23/02/2025' },
+    { clave: 'P080', fechaAlta: '04/04/2025' },
+    { clave: 'P081', fechaAlta: '22/02/2025' },
+    { clave: 'P082', fechaAlta: '14/03/2025' },
+    { clave: 'P083', fechaAlta: '26/04/2025' },
+    { clave: 'P084', fechaAlta: '29/01/2025' },
+    { clave: 'P085', fechaAlta: '28/03/2025' },
+    { clave: 'P086', fechaAlta: '09/04/2025' },
+    { clave: 'P087', fechaAlta: '07/01/2025' },
+    { clave: 'P088', fechaAlta: '20/03/2025' },
+    { clave: 'P089', fechaAlta: '01/04/2025' },
+    { clave: 'P090', fechaAlta: '26/03/2025' },
+    { clave: 'P091', fechaAlta: '08/05/2025' },
+    { clave: 'P092', fechaAlta: '12/05/2025' },
+    { clave: 'P093', fechaAlta: '30/03/2025' },
+    { clave: 'P094', fechaAlta: '23/02/2025' },
+    { clave: 'P095', fechaAlta: '29/03/2025' },
+    { clave: 'P096', fechaAlta: '21/04/2025' },
+    { clave: 'P097', fechaAlta: '28/03/2025' },
+    { clave: 'P098', fechaAlta: '30/01/2025' },
+    { clave: 'P099', fechaAlta: '14/01/2025' },
+    { clave: 'P100', fechaAlta: '19/03/2025' },
+];
+
 
 export const inspecciones = [
     {
@@ -5542,4 +5684,8 @@ export const inspecciones = [
 
 export function findPatient(id: string): any {
     return patients.find((p: any) => p.clave === id);
+}
+
+export function findDate(id: string): any {
+    return patientsDates.find((p: any) => p.clave === id);
 }
