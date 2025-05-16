@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Button } from 'primeng/button';
 import { Calendar } from 'primeng/calendar';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
@@ -31,6 +31,9 @@ import autoTable from 'jspdf-autotable'
     styleUrl: './pacientes.component.scss'
 })
 export class PacientesComponent implements OnInit {
+
+    @ViewChild('filter') filter!: ElementRef;
+
     isUpdate = false;
     visible = false;
     labelPatient = 'paciente';
@@ -88,13 +91,12 @@ export class PacientesComponent implements OnInit {
 
     cerrarVentanaNotificacion() {
         this.visible = false;
-    }
-
-    async onRowSelect(event: any) {
+        this.limpiarCampos()
     }
 
     clear(table: Table) {
         table.clear();
+        this.filter.nativeElement.value = '';
     }
 
     onGlobalFilter(table: Table, event: Event) {
@@ -262,7 +264,8 @@ export class PacientesComponent implements OnInit {
         };
 
         this.patients.push(paciente);
-        this.pacientesFiltrados = this.patients
+
+        this.filtrarPacientes()
         this.cerrarVentanaNotificacion();
         this.limpiarCampos();
     }
@@ -316,9 +319,15 @@ export class PacientesComponent implements OnInit {
 
             // Actualizar el doctor en la lista
             this.patients[index] = pacienteActualizado;
+
+            const index2 = this.pacientesFiltrados.findIndex((d) => d.clave === this.clave);
+            this.pacientesFiltrados[index2] = pacienteActualizado;
+
             console.log('Paciente actualizado:', pacienteActualizado);
+            this.isUpdate = false
 
             // Cerrar el modal y limpiar los campos
+            this.filtrarPacientes()
             this.cerrarVentanaNotificacion();
             this.limpiarCampos();
         }
@@ -338,6 +347,7 @@ export class PacientesComponent implements OnInit {
             accept: () => {
                 this.patients = this.patients.filter((d) => d.clave !== clave);
                 this.pacientesFiltrados = this.patients;
+                this.filtrarPacientes()
             }
         });
     }
@@ -362,6 +372,7 @@ export class PacientesComponent implements OnInit {
 
                 this.messageService.add({ severity: 'success', summary: 'Eliminación Exitosa', detail: 'Doctores eliminados correctamente' });
                 this.selectedPacientes = [];
+                this.filtrarPacientes()
             },
             reject: () => {
                 this.messageService.add({ severity: 'info', summary: 'Cancelado', detail: 'Eliminación cancelada' });

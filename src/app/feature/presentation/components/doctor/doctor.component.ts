@@ -97,6 +97,8 @@ export class DoctorComponent implements OnInit {
         };
 
         this.doctores.push(doctor);
+
+        this.filtrarDoctores()
         this.cerrarVentanaNotificacion();
         this.limpiarCampos();
     }
@@ -151,9 +153,15 @@ export class DoctorComponent implements OnInit {
 
             // Actualizar el doctor en la lista
             this.doctores[index] = doctorActualizado;
+
+            const indexD = this.doctoresFiltrados.findIndex((d) => d.clave === this.claveDoctor);
+            this.doctoresFiltrados[indexD] = doctorActualizado;
+
             console.log('Doctor actualizado:', doctorActualizado);
+            this.isUpdate = false
 
             // Cerrar el modal y limpiar los campos
+            this.filtrarDoctores()
             this.cerrarVentanaNotificacion();
             this.limpiarCampos();
         }
@@ -173,6 +181,7 @@ export class DoctorComponent implements OnInit {
                 accept: () => {
                     this.doctores = this.doctores.filter((d) => d.clave !== clave);
                     this.doctoresFiltrados = this.doctores
+                    this.filtrarDoctores()
                 }
             });
         }
@@ -200,6 +209,7 @@ export class DoctorComponent implements OnInit {
                 });
                 this.messageService.add({ severity: 'success', summary: 'Eliminación Exitosa', detail: 'Doctores eliminados correctamente' });
                 this.selectedDoctores = [];
+                this.filtrarDoctores()
             },
             reject: () => {
                 this.messageService.add({ severity: 'info', summary: 'Cancelado', detail: 'Eliminación cancelada' });
@@ -225,6 +235,7 @@ export class DoctorComponent implements OnInit {
 
     cerrarVentanaNotificacion() {
         this.isVisible = false;
+        this.limpiarCampos()
     }
 
     clear(table: Table) {
