@@ -42,6 +42,8 @@
         [globalFilterFields]="['clave', 'nombre', 'apellidoPaterno', 'apellidoMaterno', 'fechaNacimiento', 'edad', 'genero', 'ocupacion', 'correo', 'telefono', 'codigoPostal', 'direccion', 'estado']"
         responsiveLayout="scroll"
         selectionMode="multiple"
+        [scrollable]="true"
+        scrollHeight="40rem"
         [(selection)]="selectedPacientes">
 
         <ng-template pTemplate="caption">
