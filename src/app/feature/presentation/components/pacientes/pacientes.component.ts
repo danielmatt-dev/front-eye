@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Button } from 'primeng/button';
-import { Calendar } from 'primeng/calendar';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
@@ -25,7 +24,7 @@ import autoTable from 'jspdf-autotable'
 @Component({
     standalone: true,
     selector: 'app-pacientes',
-    imports: [Button, Calendar, NgForOf, NgClass, FormsModule, InputText, PrimeTemplate, TableModule, Dialog, Select, TranslatePipe, IconField, InputIcon, OpcionesConsultaComponent, ConfirmDialog, Toast, NgIf],
+    imports: [Button, FormsModule, InputText, PrimeTemplate, TableModule, Dialog, Select, TranslatePipe, IconField, InputIcon, OpcionesConsultaComponent, ConfirmDialog, Toast, NgIf],
     providers: [MessageService, ConfirmationService],
     templateUrl: './pacientes.component.html',
     styleUrl: './pacientes.component.scss'

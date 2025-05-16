@@ -1,9 +1,5 @@
 import { AfterViewInit, Component, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import * as L from 'leaflet';
-import 'leaflet.featuregroup.subgroup';
-import 'leaflet.markercluster';
-import 'leaflet.control.layers.tree';
 import { dataPointsMocks, findPatient } from '../../../../shared/utils/mocks';
 import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
 import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-consulta/opciones-consulta-helper';
@@ -14,6 +10,10 @@ import { Toast } from 'primeng/toast';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import * as L from 'leaflet';
+import 'leaflet.featuregroup.subgroup';
+import 'leaflet.markercluster';
+import 'leaflet.control.layers.tree';
 
 @Component({
     selector: 'app-datos-geograficos',
