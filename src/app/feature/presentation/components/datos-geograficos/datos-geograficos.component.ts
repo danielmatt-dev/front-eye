@@ -287,7 +287,7 @@ export class DatosGeograficosComponent implements AfterViewInit {
                 shadowSize: [41, 41]
             });
 
-            const m = L.marker([p.lat, p.lng], { icon: markerIcon }).bindPopup(`<b>${p.name}</b><br>Resultado: ${p.resultado}<br>Afección: ${p.afeccion}`);
+            const m = L.marker([p.lat, p.lng], { icon: markerIcon }).bindPopup(`<b>${p.name}</b><br>Resultado: ${p.resultado}<br>Afección: ${p.afeccion}<br>Num. Inspecciones: ${p.numInspecciones}`);
             this.markerClusterGroup.addLayer(m);
         });
 

@@ -76,7 +76,14 @@
                             class="sm:w-64 lg:w-96"
                             type="text"
                             (input)="onGlobalFilter(dt, $event)"
-                            placeholder="{{ 'placeholders.search' | translate }}" />
+                            placeholder="{{ 'placeholders.search' | translate }}"
+                        />
+                        <p-inputicon
+                            (click)="clear(dt)"
+                            styleClass="pi pi-times"
+                            (keydown)="onKeyDown($event)"
+                            (keyup)="onKeyUp($event)"
+                        />
                     </p-iconfield>
                 </div>
             </div>
