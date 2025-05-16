@@ -1,52 +1,13 @@
+<p-confirmDialog/>
+<p-toast/>
+
 <!-- Opciones de consulta -->
-<div class="flex flex-col gap-8 mb-8">
-    <div class="card p-4">
-        <div class="flex flex-wrap items-center gap-4 lg:justify-between">
-
-            <div class="flex flex-wrap gap-4">
-
-                <!-- Chips -->
-                <div class="flex flex-col">
-                    <span class="font-bold mb-2">{{ 'labels.selectPeriod' | translate }}</span>
-                    <div class="flex flex-wrap gap-2">
-                        <div
-                            *ngFor="let categoria of categorias"
-                            class="px-4 py-2 rounded-full cursor-pointer transition-all"
-                            [ngClass]="{
-                            'bg-primary text-primary-contrast': categoria.selected,
-                            'bg-gray-100 text-color dark:bg-surface-700': !categoria.selected
-                        }"
-                            (click)="seleccionarChip(categoria)"
-                            (keydown.enter)="seleccionarChip(categoria)">
-                            {{ categoria.label }}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Rango de Fechas -->
-                <div class="flex flex-col gap-2">
-                    <label for="dateRange" class="font-bold">{{ 'labels.dateRange' | translate }}</label>
-                    <p-calendar
-                        id="dateRange"
-                        showIcon="true"
-                        [(ngModel)]="fechasSeleccionadas"
-                        selectionMode="range"
-                        placeholder="{{ 'placeholders.dateRange' | translate }}"
-                        class="w-full sm:w-[21rem] md:w-[18rem] lg:w-[18rem] xl:w-[18rem]"
-                        [style]="{width:' 100%' }"
-                        [disabled]="calendarDisabled"
-                    ></p-calendar>
-                </div>
-
-                <!-- Botón de consultar -->
-                <div class="flex flex-col self-end">
-                    <p-button label="{{ 'buttons.consult' | translate }}" class="w-full md:w-auto"/>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
+<div class="mb-8">
+    <app-opciones-consulta
+        (periodoSeleccionado)="onPeriodoSeleccionado($event)"
+        (rangoFechasSeleccionado)="onRangoFechasSeleccionado($event)"
+        (consultar)="filtrarPacientes()"
+    />
 </div>
 
 <!-- Tabla de pacientes -->
@@ -64,6 +25,7 @@
             <p-button
                 label="{{ 'buttons.delete' | translate: { items: labelPatients } }}"
                 severity="danger"
+                (onClick)="eliminarPacientesSeleccionados()"
                 icon="pi pi-trash">
             </p-button>
         </div>
@@ -71,15 +33,14 @@
 
     <p-table
         #dt
-        dataKey="id"
+        dataKey="clave"
         [rows]="50"
-        [value]="patients"
+        [value]="pacientesFiltrados"
         [loading]="false"
         [rowHover]="true"
         [paginator]="true"
-        [globalFilterFields]="['']"
+        [globalFilterFields]="['clave', 'nombre', 'apellidoPaterno', 'apellidoMaterno', 'fechaNacimiento', 'edad', 'genero', 'ocupacion', 'correo', 'telefono', 'codigoPostal', 'direccion', 'estado']"
         responsiveLayout="scroll"
-        (onRowSelect)="onRowSelect($event)"
         selectionMode="multiple"
         [(selection)]="selectedPacientes">
 
@@ -92,7 +53,7 @@
                         icon="pi pi-file-excel"
                         severity="success"
                         outlined="true"
-                        (click)="clear(dt)"
+                        (onClick)="exportExcel()"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     ></p-button>
@@ -101,6 +62,7 @@
                         label="{{ 'buttons.downloadPDFTable' | translate }}"
                         severity="danger"
                         outlined="true"
+                        (onClick)="exportPDF()"
                         icon="pi pi-file-pdf"
                     ></p-button>
                 </div>
@@ -138,7 +100,7 @@
                     {{ 'labels.lastname' | translate }}
                     <p-sortIcon field="apellidos"></p-sortIcon>
                 </th>
-                <th id="birthDate" pSortableColumn="fechaNacimiento" style="min-width: 14rem">
+                <th id="birthDate" pSortableColumn="fechaNacimiento" style="min-width: 14rem" (click)="sortByDate()" (keyup)="onKeyUp($event)" >
                     {{ 'labels.birthDate' | translate }}
                     <p-sortIcon field="fechaNacimiento"></p-sortIcon>
                 </th>
@@ -192,12 +154,14 @@
                         class="mx-1"
                         severity="info"
                         [rounded]="true"
+                        (onClick)="editarPaciente(patient.clave)"
                         [outlined]="true"
                     />
                     <p-button
                         icon="pi pi-trash"
                         class="mx-1"
                         severity="danger"
+                        (onClick)="eliminarPaciente(patient.clave)"
                         [rounded]="true"
                         [outlined]="true"
                     />
@@ -205,6 +169,7 @@
                         icon="pi pi-folder-plus"
                         class="mx-1"
                         severity="success"
+                        (onClick)="inspeccionar(patient.clave)"
                         [rounded]="true"
                         [outlined]="true"
                     />
@@ -237,29 +202,35 @@
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="nombre">{{ 'labels.name' | translate }}</label>
-            <input pInputText id="nombre" type="text" placeholder="{{ 'placeholders.name' | translate }}" />
+            <input
+                pInputText
+                id="nombre"
+                type="text"
+                [(ngModel)]="nombre"
+                placeholder="{{ 'placeholders.name' | translate }}"
+            />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="paterno">{{ 'labels.fatherLastName' | translate }}</label>
-            <input pInputText id="paterno" type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}" />
+            <input pInputText [(ngModel)]="apellidoPaterno" id="paterno" type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="materno">{{ 'labels.motherLastName' | translate }}</label>
-            <input pInputText id="materno" type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}" />
+            <input pInputText id="materno" [(ngModel)]="apellidoMaterno" type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}" />
         </div>
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="correo">{{ 'labels.email' | translate }}</label>
-            <input pInputText id="correo" type="text" placeholder="{{ 'placeholders.email' | translate }}" />
+            <input pInputText id="correo" [(ngModel)]="correo" type="text" placeholder="{{ 'placeholders.email' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="telefono">{{ 'labels.phone' | translate }}</label>
-            <input pInputText id="telefono" type="text" placeholder="{{ 'placeholders.phone' | translate }}" />
+            <input pInputText id="telefono" [(ngModel)]="telefono" type="text" placeholder="{{ 'placeholders.phone' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="ocupacion">{{ 'labels.occupation' | translate }}</label>
-            <input pInputText id="ocupacion" type="text" placeholder="{{ 'placeholders.occupation' | translate }}" />
+            <input pInputText id="ocupacion" [(ngModel)]="ocupacion" type="text" placeholder="{{ 'placeholders.occupation' | translate }}" />
         </div>
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
@@ -267,32 +238,32 @@
             <label for="genero">{{ 'labels.gender' | translate }}</label>
             <p-select
                 id="genero"
+                [(ngModel)]="genero"
+                [options]="generos"
                 placeholder="{{ 'placeholders.gender' | translate }}"
             ></p-select>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="nacimiento">{{ 'labels.birthDate' | translate }}</label>
-            <p-calendar
+            <input
+                pInputText
                 id="nacimiento"
-                showIcon="true"
-                class="w-full"
-                placeholder="{{ 'placeholders.birthDate' | translate }}"
-                [style]="{ width: '100%' }"
-            ></p-calendar>
+                [(ngModel)]="fechaNacimiento"
+                type="text" placeholder="{{ 'placeholders.birthDate' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="edad">{{ 'labels.age' | translate }}</label>
-            <input pInputText id="edad" type="text" [readonly]="true" placeholder="{{ 'placeholders.age' | translate }}" />
+            <input pInputText id="edad" type="text" readonly placeholder="{{ 'placeholders.age' | translate }}" />
         </div>
     </div>
     <div class="flex flex-wrap gap-6">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="direccion">{{ 'labels.address' | translate }}</label>
-            <input pInputText id="direccion" type="text" placeholder="{{ 'placeholders.address' | translate }}" />
+            <input pInputText id="direccion" [(ngModel)]="direccion" type="text" placeholder="{{ 'placeholders.address' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="cp">{{ 'labels.postalCode' | translate }}</label>
-            <input pInputText id="cp" type="text" placeholder="{{ 'placeholders.postalCode' | translate }}" />
+            <input pInputText id="cp" type="text" [(ngModel)]="codigoPostal" placeholder="{{ 'placeholders.postalCode' | translate }}" />
         </div>
     </div>
 
@@ -300,10 +271,17 @@
         <p-button
             severity="danger"
             (onClick)="cerrarVentanaNotificacion()"
-            label="Cancelar"
+            label="{{ 'buttons.cancel' | translate }}"
         ></p-button>
         <p-button
-            label="Guardar"
+            *ngIf="!isUpdate"
+            label="{{ 'buttons.register' | translate }}"
+            (onClick)="addPaciente()"
+        ></p-button>
+        <p-button
+            *ngIf="isUpdate"
+            label="{{ 'buttons.update' | translate }}"
+            (onClick)="actualizarPaciente()"
         ></p-button>
     </div>
 
