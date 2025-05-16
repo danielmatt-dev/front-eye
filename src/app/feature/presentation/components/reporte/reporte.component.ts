@@ -10,7 +10,7 @@ import { UIChart } from 'primeng/chart';
 import { LayoutService } from '../../layout/service/layout.service';
 import { debounceTime, Subscription } from 'rxjs';
 import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
-import { afecciones, reports, resultados } from '../../../../shared/utils/mocks';
+import { afecciones, findPatient, inspecciones, reports, resultados } from '../../../../shared/utils/mocks';
 import { NgIf } from '@angular/common';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -40,7 +40,7 @@ export class ReporteComponent implements OnInit {
 
     fechasSeleccionadas: Date[] = [];
 
-    reportes = reports;
+    reportes = inspecciones;
     reportesFiltrados = this.reportes;
 
     @ViewChild('filter') filter!: ElementRef;
@@ -96,6 +96,10 @@ export class ReporteComponent implements OnInit {
 
             return filtroAfeccion && filtroResultado && filtroFecha;
         });
+
+        this.barData = this.prepararDatosGraficaPorRangoEdad(this.reportesFiltrados)
+        this.pieData = this.prepararDatosGraficaPorGenero(this.reportesFiltrados)
+        this.lineData = this.prepareDynamicDetectionData(this.reportesFiltrados)
     }
 
     initCharts() {
@@ -104,36 +108,14 @@ export class ReporteComponent implements OnInit {
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-        const userRole = this.local.getRole()
-        let primaryColor = '--p-indigo-500'
-
-        if (userRole === 'DOCTOR') {
-            primaryColor = '--p-cyan-500'
-        }
-
-        this.barData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [
-                {
-                    label: 'My First dataset',
-                    backgroundColor: documentStyle.getPropertyValue(primaryColor),
-                    borderColor: documentStyle.getPropertyValue(primaryColor),
-                    data: [65, 59, 80, 81, 56, 55, 40]
-                },
-                {
-                    label: 'My Second dataset',
-                    backgroundColor: documentStyle.getPropertyValue('--p-indigo-200'),
-                    borderColor: documentStyle.getPropertyValue('--p-indigo-200'),
-                    data: [28, 48, 40, 19, 86, 27, 90]
-                }
-            ]
-        };
+        this.barData = this.agruparPorRangoEdad(this.reportesFiltrados)
 
         this.barOptions = {
             maintainAspectRatio: false,
             aspectRatio: 0.8,
             plugins: {
                 legend: {
+                    display: false,
                     labels: {
                         color: textColor
                     }
@@ -164,16 +146,7 @@ export class ReporteComponent implements OnInit {
             }
         };
 
-        this.pieData = {
-            labels: ['A', 'B', 'C'],
-            datasets: [
-                {
-                    data: [540, 325, 702],
-                    backgroundColor: [documentStyle.getPropertyValue(primaryColor), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-teal-500')],
-                    hoverBackgroundColor: [documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-teal-400')]
-                }
-            ]
-        };
+        this.pieData = this.prepararDatosGraficaPorGenero(this.reportesFiltrados)
 
         this.pieOptions = {
             responsive: true,
@@ -189,27 +162,7 @@ export class ReporteComponent implements OnInit {
             }
         };
 
-        this.lineData = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [
-                {
-                    label: 'First Dataset',
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    fill: false,
-                    backgroundColor: documentStyle.getPropertyValue(primaryColor),
-                    borderColor: documentStyle.getPropertyValue(primaryColor),
-                    tension: 0.4
-                },
-                {
-                    label: 'Second Dataset',
-                    data: [28, 48, 40, 19, 86, 27, 90],
-                    fill: false,
-                    backgroundColor: documentStyle.getPropertyValue('--p-indigo-200'),
-                    borderColor: documentStyle.getPropertyValue('--p-indigo-200'),
-                    tension: 0.4
-                }
-            ]
-        };
+        this.lineData = this.prepareDynamicDetectionData(this.reportesFiltrados)
 
         this.lineOptions = {
             maintainAspectRatio: false,
@@ -273,6 +226,177 @@ export class ReporteComponent implements OnInit {
 
     onKeyUp(event: KeyboardEvent) {
         console.log('Key Up:', event.key);
+    }
+
+    agruparPorRangoEdad(reports: any[]): any {
+        const categorias = ['Menos de 30', '30 a 45', 'Más de 45'];
+        const dataMap: Record<string, number> = {
+            'Menos de 30': 0,
+            '30 a 45': 0,
+            'Más de 45': 0
+        };
+
+        // Calcular la cantidad por rango de edad
+        reports.forEach(report => {
+            const edad = report.edad;
+            if (edad < 30) {
+                dataMap['Menos de 30']++;
+            } else if (edad >= 30 && edad <= 45) {
+                dataMap['30 a 45']++;
+            } else {
+                dataMap['Más de 45']++;
+            }
+        });
+
+        // Crear el objeto con el formato solicitado
+        return {
+            labels: categorias,
+            datasets: [
+                {
+                    label: 'Distribución por Rango de Edad',
+                    backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],  // Colores fijos
+                    borderColor: ['#1E88E5', '#43A047', '#FB8C00'],      // Bordes fijos
+                    data: [
+                        dataMap['Menos de 30'],
+                        dataMap['30 a 45'],
+                        dataMap['Más de 45']
+                    ]
+                }
+            ]
+        };
+    }
+
+    prepararDatosGraficaPorGenero(inspecciones: any[]) {
+        const generos = ['Masculino', 'Femenino'];
+
+        // Inicializar el mapa de datos
+        const dataMap: Record<string, number> = {
+            'Masculino': 0,
+            'Femenino': 0
+        };
+
+        // Recorrer las inspecciones y contar por género
+        inspecciones.forEach(ins => {
+            const paciente = findPatient(ins.paciente);
+
+            if (generos.includes(paciente.genero)) {
+                dataMap[paciente.genero]++;
+            }
+        });
+
+        return {
+            labels: generos,
+            datasets: [{
+                label: 'Detecciones por Género',
+                data: generos.map(gen => dataMap[gen]),
+                backgroundColor: ['#42A5F5', '#FF6384'],
+                borderColor: ['#1E88E5', '#FF6384'],
+                borderWidth: 1
+            }],
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: '#FFFFFF'
+                        }
+                    },
+                    datalabels: {
+                        display: true,
+                        color: '#FFFFFF',
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (value: number) => value.toString()
+                    }
+                }
+            }
+        };
+    }
+
+    prepararDatosGraficaPorRangoEdad(inspecciones: any[]) {
+        const rangosEdad = ['Menos de 30', 'De 30 a 45', 'Más de 45'];
+
+        // Inicializar el mapa de datos
+        const dataMap: Record<string, number> = {
+            'Menos de 30': 0,
+            'De 30 a 45': 0,
+            'Más de 45': 0
+        };
+
+        // Recorrer las inspecciones y contar por rango de edad
+        inspecciones.forEach(ins => {
+            if (ins.edad < 30) {
+                dataMap['Menos de 30']++;
+            } else if (ins.edad <= 45) {
+                dataMap['De 30 a 45']++;
+            } else {
+                dataMap['Más de 45']++;
+            }
+        });
+
+        return {
+            labels: rangosEdad,
+            datasets: [{
+                label: '',
+                data: rangosEdad.map(rango => dataMap[rango]),
+                backgroundColor: ['#66BB6A', '#FFA726', '#EF5350'],
+                borderColor: ['#43A047', '#FB8C00', '#E53935'],
+                borderWidth: 1
+            }]
+        };
+    }
+
+    prepareDynamicDetectionData(inspections: any[]) {
+        // Obtener los meses únicos presentes en el conjunto de datos
+        const monthsSet = new Set<number>();
+        inspections.forEach(ins => {
+            const [day, month, year] = ins.fecha.split('/').map((x: string) => parseInt(x, 10));
+            monthsSet.add(month);
+        });
+
+        // Convertir el conjunto en un arreglo ordenado
+        const months = Array.from(monthsSet).sort((a, b) => a - b);
+        const monthNames = [
+            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+            'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ];
+
+        // Crear los labels usando los nombres de los meses presentes
+        const labels = months.map(m => monthNames[m - 1]);
+        const categories = ['Proliferativo', 'Moderado', 'Leve', 'Sin Afección'];
+        let dataMap: Record<string, number[]> = {};
+        categories.forEach(cat => dataMap[cat] = new Array(labels.length).fill(0));
+
+        // Contar las ocurrencias por mes y resultado
+        inspections.forEach(ins => {
+            const [day, month, year] = ins.fecha.split('/').map((x: string) => parseInt(x, 10));
+            const monthIndex = months.indexOf(month);
+            if (categories.includes(ins.resultado) && monthIndex >= 0) {
+                dataMap[ins.resultado][monthIndex]++;
+            }
+        });
+
+        return {
+            labels,
+            datasets: categories.map(cat => ({
+                label: cat,
+                data: dataMap[cat],
+                fill: false,
+                backgroundColor: this.colorPorCategoria(cat),
+                borderColor: this.colorPorCategoria(cat),
+                tension: 0
+            }))
+        };
+    }
+
+    colorPorCategoria(cat: string) {
+        switch (cat) {
+            case 'Proliferativo': return '#f44336';
+            case 'Moderado': return '#ff9800';
+            case 'Leve': return '#2196f3';
+            case 'Sin Afección': return '#4caf50';
+            default: return '#9e9e9e';
+        }
     }
 
     exportExcel() {

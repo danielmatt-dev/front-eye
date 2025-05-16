@@ -27,7 +27,7 @@
         "ageRanges": "Rangos de edad",
         "detectionsByMonth": "Detecciones por mes 2025",
         "detectionsByAgeAndCondition": "Detecciones por rango de edad y afección",
-        "detectionsByAgeAndGender": "Detecciones por rango de edad y género",
+        "detectionsTrend": "Tendencia de Detecciones",
         "inspectionData": "Datos de la inspección",
         "additionalData": "Datos adicionales",
         "occurrenceProbability": "Probabilidad de Ocurrencia (IA)",

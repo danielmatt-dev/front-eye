@@ -4,7 +4,7 @@ export const resultados = [
 
 export const afecciones = [
     'Todas',
-    'DMAE Humeda',
+    'DMAE Húmeda',
     'DMAE Seca',
     'Retinopatía Diabética'
 ]
