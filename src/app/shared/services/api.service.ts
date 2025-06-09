@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
     BadCredencialsException,
     BadRequestException,
@@ -13,9 +13,7 @@ import { map } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class ApiService {
 
-    constructor(private readonly http: HttpClient) {}
-
-    protected sendRequest<T>(obs$: Observable<T>): Promise<Either<Error, T>> {
+    sendRequest<T>(obs$: Observable<T>): Promise<Either<Error, T>> {
         return firstValueFrom(
             obs$.pipe(
                 map(data => right(data)),
@@ -38,4 +36,3 @@ export class ApiService {
     }
 
 }
-
