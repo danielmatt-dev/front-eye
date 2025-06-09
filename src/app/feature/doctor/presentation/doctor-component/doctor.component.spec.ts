@@ -1,10 +1,10 @@
 /*
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DoctorComponent } from './doctor.component';
+import { DoctorComponent } from './doctor-component.doctor-component';
 
 describe('DoctorComponent', () => {
-  let component: DoctorComponent;
+  let doctor-component: DoctorComponent;
   let fixture: ComponentFixture<DoctorComponent>;
 
   beforeEach(async () => {
@@ -14,12 +14,12 @@ describe('DoctorComponent', () => {
     .compileComponents();
 
     fixture = TestBed.createComponent(DoctorComponent);
-    component = fixture.componentInstance;
+    doctor-component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(doctor-component).toBeTruthy();
   });
 });
  */

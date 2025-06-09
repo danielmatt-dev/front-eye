@@ -1,6 +1,6 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
 import { Subject } from 'rxjs';
-import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
+import { DatasourceLocalImpl } from '../../../authResponse/data/datasource/local/impl/datasource.local.impl';
 import { Theme } from '../../../../shared/enums/enums';
 
 export interface layoutConfig {

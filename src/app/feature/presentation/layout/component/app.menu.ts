@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
-import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
+import { DatasourceLocalImpl } from '../../../authResponse/data/datasource/local/impl/datasource.local.impl';
 import { CommonModule } from '@angular/common';
 
 @Component({

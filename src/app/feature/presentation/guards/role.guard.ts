@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { DatasourceLocalImpl } from '../../data/datasource/local/impl/datasource.local.impl';
+import { DatasourceLocalImpl } from '../../authResponse/data/datasource/local/impl/datasource.local.impl';
 
 @Injectable({
     providedIn: 'root'

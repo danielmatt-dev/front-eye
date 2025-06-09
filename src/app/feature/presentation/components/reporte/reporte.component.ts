@@ -9,7 +9,7 @@ import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
 import { LayoutService } from '../../layout/service/layout.service';
 import { debounceTime, Subscription } from 'rxjs';
-import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
+import { DatasourceLocalImpl } from '../../../authResponse/data/datasource/local/impl/datasource.local.impl';
 import { afecciones, findPatient, inspecciones, reports, resultados } from '../../../../shared/utils/mocks';
 import { NgIf } from '@angular/common';
 import { DatePicker } from 'primeng/datepicker';

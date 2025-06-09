@@ -6,7 +6,7 @@ import { PasswordModule } from 'primeng/password';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
-import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
+import { DatasourceLocalImpl } from '../../../authResponse/data/datasource/local/impl/datasource.local.impl';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 
