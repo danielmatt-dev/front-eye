@@ -9,8 +9,7 @@ import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
 import { LayoutService } from '../../layout/service/layout.service';
 import { debounceTime, Subscription } from 'rxjs';
-import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
-import { afecciones, findPatient, inspecciones, reports, resultados } from '../../../../shared/utils/mocks';
+import { afecciones, findPatient, inspecciones, resultados } from '../../../../shared/utils/mocks';
 import { NgIf } from '@angular/common';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -23,6 +22,7 @@ import { PrimeNG } from 'primeng/config';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'
+import { LocalStorageService } from '../../../authResponse/service/local.storage.service';
 
 @Component({
     selector: 'app-reporte',
@@ -64,7 +64,7 @@ export class ReporteComponent implements OnInit {
 
     constructor(
         private readonly layoutService: LayoutService,
-        private readonly local: DatasourceLocalImpl,
+        private readonly local: LocalStorageService,
         private readonly translateService: TranslateService,
         private readonly primeng: PrimeNG
     ) {

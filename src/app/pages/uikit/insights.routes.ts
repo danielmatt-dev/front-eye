@@ -8,7 +8,7 @@ import {
 } from '../../feature/presentation/components/ver-detalle-inspeccion/ver-detalle-inspeccion.component';
 import { PacientesComponent } from '../../feature/presentation/components/pacientes/pacientes.component';
 import { TodasInspeccionesComponent } from '../../feature/presentation/components/todas-inspecciones/todas-inspecciones.component';
-import { DoctorComponent } from '../../feature/presentation/components/doctor/doctor.component';
+import { DoctorComponent } from '../../feature/doctor/presentation/doctor-component/doctor.component';
 import { RoleGuard } from '../../feature/presentation/guards/role.guard';
 
 export default [

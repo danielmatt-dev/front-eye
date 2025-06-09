@@ -1,7 +1,7 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
 import { Subject } from 'rxjs';
-import { DatasourceLocalImpl } from '../../../data/datasource/local/impl/datasource.local.impl';
 import { Theme } from '../../../../shared/enums/enums';
+import { LocalStorageService } from '../../../authResponse/service/local.storage.service';
 
 export interface layoutConfig {
     preset?: string;
@@ -80,7 +80,7 @@ export class LayoutService {
 
     private initialized = false;
 
-    constructor(private readonly local: DatasourceLocalImpl) {
+    constructor(private readonly local: LocalStorageService) {
 
         this._config = {
             preset: 'Aura',

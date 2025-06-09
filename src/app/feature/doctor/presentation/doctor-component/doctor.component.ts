@@ -23,7 +23,7 @@ import autoTable from 'jspdf-autotable'
 
 @Component({
     standalone: true,
-    selector: 'app-doctor',
+    selector: 'app-doctor-component',
     imports: [FormsModule, ButtonModule, TableModule, DialogModule, SelectModule, InputText, DatePickerModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ConfirmDialogModule, NgIf, Toast],
     providers: [ConfirmationService, MessageService],
     templateUrl: './doctor.component.html',
@@ -108,7 +108,7 @@ export class DoctorComponent implements OnInit {
 
         const doctor = this.doctores.find((d) => d.clave === clave);
         if (doctor) {
-            // Asignar los datos del doctor a los campos correspondientes
+            // Asignar los datos del doctor-component a los campos correspondientes
             this.nombre = doctor.nombre;
             this.apellidoPaterno = doctor.apellidoPaterno;
             this.apellidoMaterno = doctor.apellidoMaterno;
@@ -129,13 +129,13 @@ export class DoctorComponent implements OnInit {
 
     actualizarDoctor(): void {
         if (!this.claveDoctor) {
-            console.warn('No hay un doctor seleccionado para actualizar.');
+            console.warn('No hay un doctor-component seleccionado para actualizar.');
             return;
         }
 
         const index = this.doctores.findIndex((d) => d.clave === this.claveDoctor);
         if (index !== -1) {
-            // Crear el objeto doctor actualizado
+            // Crear el objeto doctor-component actualizado
             const doctorActualizado = {
                 clave: this.claveDoctor,
                 nombre: this.nombre,
@@ -151,7 +151,7 @@ export class DoctorComponent implements OnInit {
                 fechaAlta: this.doctores[index].fechaAlta
             };
 
-            // Actualizar el doctor en la lista
+            // Actualizar el doctor-component en la lista
             this.doctores[index] = doctorActualizado;
 
             const indexD = this.doctoresFiltrados.findIndex((d) => d.clave === this.claveDoctor);
@@ -385,8 +385,8 @@ export class DoctorComponent implements OnInit {
 
         // Filtrar los datos a exportar (utilizando los datos de doctores)
         const tableRows = this.doctoresFiltrados.map((doctor) => [
-            doctor.clave,                        // Clave del doctor
-            doctor.nombre,                       // Nombre del doctor
+            doctor.clave,                        // Clave del doctor-component
+            doctor.nombre,                       // Nombre del doctor-component
             doctor.apellidoPaterno,              // Apellido Paterno
             doctor.apellidoMaterno,              // Apellido Materno
             doctor.fechaNacimiento,              // Fecha de Nacimiento

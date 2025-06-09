@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../feature/presentation/layout/component/app.floatingconfigurator';
-import { DatasourceLocalImpl } from '../../feature/data/datasource/local/impl/datasource.local.impl';
+import { LocalStorageService } from '../../feature/authResponse/service/local.storage.service';
 
 @Component({
     selector: 'app-login',
@@ -71,7 +71,7 @@ export class Login {
     checked: boolean = false;
 
     constructor(
-        private readonly local: DatasourceLocalImpl,
+        private readonly local: LocalStorageService,
         private readonly router: Router
     ) {}
 

@@ -1,6 +1,6 @@
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { DatasourceLocalImpl } from '../../data/datasource/local/impl/datasource.local.impl';
+import { LocalStorageService } from '../../authResponse/service/local.storage.service';
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +9,7 @@ export class RoleGuard implements CanActivate {
 
     constructor(
         private readonly router: Router,
-        private readonly local: DatasourceLocalImpl
+        private readonly local: LocalStorageService
     ) {}
 
     canActivate(
