@@ -2,7 +2,7 @@ import { DoctorResponseModel } from '../../data/models/doctor.response.model';
 
 export class DoctorResponseEntity extends DoctorResponseModel{
 
-    constructor(
+    constructor(options: {
         doctorId?: number,
         firstName?: string,
         lastFathName?: string,
@@ -19,24 +19,24 @@ export class DoctorResponseEntity extends DoctorResponseModel{
         clinicDescription?: string,
         createdAt?: Date,
         updatedAt?: Date
-    ) {
+    } = {}) {
         super({
-            doctorId: doctorId,
-            firstName: firstName,
-            lastFathName: lastFathName,
-            lastMontName: lastMontName,
-            email: email,
-            birthDate: birthDate,
-            age: age,
-            gender: gender,
-            address: address,
-            state: state,
-            postalCode: postalCode,
-            clinicId: clinicId,
-            clinic: clinic,
-            clinicDescription: clinicDescription,
-            createdAt: createdAt,
-            updatedAt: updatedAt
+            doctorId: options.doctorId,
+            firstName: options.firstName,
+            lastFathName: options.lastFathName,
+            lastMontName: options.lastMontName,
+            email: options.email,
+            birthDate: options.birthDate,
+            age: options.age,
+            gender: options.gender,
+            address: options.address,
+            state: options.state,
+            postalCode: options.postalCode,
+            clinicId: options.clinicId,
+            clinic: options.clinic,
+            clinicDescription: options.clinicDescription,
+            createdAt: options.createdAt,
+            updatedAt: options.updatedAt
         });
     }
 
