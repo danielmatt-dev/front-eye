@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 
 export class DoctorResponseModel {
 
@@ -17,6 +17,7 @@ export class DoctorResponseModel {
     email: string
 
     @Expose({ name: 'birth_date' })
+    @Type(() => Date)
     birthDate: Date
 
     age: number
@@ -39,9 +40,11 @@ export class DoctorResponseModel {
     clinicDescription: string
 
     @Expose({ name: 'created_at' })
+    @Type(() => Date)
     createdAt: Date
 
     @Expose({ name: 'updated_at' })
+    @Type(() => Date)
     updatedAt: Date
 
     constructor(options: {
