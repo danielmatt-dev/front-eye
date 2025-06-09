@@ -9,7 +9,7 @@ import Nora from '@primeng/themes/nora';
 import { PrimeNG } from 'primeng/config';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { LayoutService } from '../service/layout.service';
-import { DatasourceLocalImpl } from '../../../authResponse/data/datasource/local/impl/datasource.local.impl';
+import { LocalStorageService } from '../../../authResponse/service/local.storage.service';
 
 const presets = {
     Aura,
@@ -114,7 +114,7 @@ export class AppConfigurator {
     ];
 
     constructor(
-        private readonly local: DatasourceLocalImpl
+        private readonly local: LocalStorageService
     ) {
         const userRole = this.local.getRole();
         const primaryColor = userRole === 'DOCTOR' ? 'cyan' : 'indigo';

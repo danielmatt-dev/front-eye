@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
-import { DatasourceLocalImpl } from '../../../authResponse/data/datasource/local/impl/datasource.local.impl';
 import { CommonModule } from '@angular/common';
+import { LocalStorageService } from '../../../authResponse/service/local.storage.service';
 
 @Component({
     selector: 'app-menu',
@@ -20,7 +20,7 @@ export class AppMenu implements OnInit {
     model: MenuItem[] = [];
 
     constructor(
-        private readonly local: DatasourceLocalImpl,
+        private readonly local: LocalStorageService,
         private readonly router: Router
     ) {}
 

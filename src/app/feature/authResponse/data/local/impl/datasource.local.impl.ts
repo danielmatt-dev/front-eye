@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DatasourceLocal } from '../datasource.local';
-import { Theme } from '../../../../../../shared/enums/enums';
+import { Theme } from '../../../../../shared/enums/enums';
 
 @Injectable({
     providedIn: 'root'

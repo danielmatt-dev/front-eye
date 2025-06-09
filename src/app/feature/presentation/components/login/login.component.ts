@@ -6,9 +6,9 @@ import { PasswordModule } from 'primeng/password';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
-import { DatasourceLocalImpl } from '../../../authResponse/data/datasource/local/impl/datasource.local.impl';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
+import { LocalStorageService } from '../../../authResponse/service/local.storage.service';
 
 @Component({
     selector: 'app-login',
@@ -25,7 +25,7 @@ export class LoginComponent {
     checked: boolean = false;
 
     constructor(
-        private readonly local: DatasourceLocalImpl,
+        private readonly local: LocalStorageService,
         private readonly router: Router
     ) {}
 

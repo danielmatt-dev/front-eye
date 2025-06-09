@@ -1,4 +1,4 @@
-import { Theme } from '../../../../../shared/enums/enums';
+import { Theme } from '../../../../shared/enums/enums';
 
 export interface DatasourceLocal {
     setToken(token: string): void;
