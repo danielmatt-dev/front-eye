@@ -23,6 +23,7 @@
         "@ngx-translate/http-loader": "^16.0.1",
         "@primeng/themes": "^19.0.5",
         "chart.js": "4.4.2",
+        "class-transformer": "^0.5.1",
         "jspdf": "^3.0.1",
         "jspdf-autotable": "^5.0.2",
         "leaflet.control.layers.tree": "^1.1.1",
