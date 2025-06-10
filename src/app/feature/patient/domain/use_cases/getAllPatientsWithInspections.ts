@@ -12,5 +12,5 @@ export class GetAllPatientsWithInspections implements UseCase<PatientWithInspect
     call(_: NoParams): Promise<Either<Error, PatientWithInspectionsEntity[]>> {
         return this.remote.getAllPatientsWithInspections()
     }
-    
+
 }
