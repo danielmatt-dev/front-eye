@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
-import { LocalStorageService } from '../services/local.storage.service';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { LocalStorageService } from '../services/local.storage.service';
 
 export function authInterceptorFn(
     req: HttpRequest<any>,
