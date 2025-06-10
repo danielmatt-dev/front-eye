@@ -1,10 +1,14 @@
 import { DoctorResponseEntity } from '../../domain/entity/doctor.response.entity';
 import { DoctorResponseModel } from '../models/doctor.response.model';
 import { Injectable } from '@angular/core';
+import { DoctorRequestModel } from '../models/doctor.request.model';
+import { DoctorRequesEntity } from '../../domain/entity/doctor.reques.entity';
 
 export interface DoctorMapper {
 
     toDoctorResponse(model: DoctorResponseModel): DoctorResponseEntity
+
+    toDoctorRequestModel(entity: DoctorResponseEntity): DoctorRequestModel
 
     toListDoctorResponse(models: DoctorResponseModel[]): DoctorResponseEntity[]
 
@@ -12,6 +16,22 @@ export interface DoctorMapper {
 
 @Injectable({ providedIn: 'root' })
 export class DoctorMapperImpl implements DoctorMapper {
+
+    toDoctorRequestModel(entity: DoctorRequesEntity): DoctorRequestModel {
+        return new DoctorRequestModel({
+            clinicId: entity.clinicId,
+            firstName: entity.firstName,
+            lastFathName: entity.lastFathName,
+            lastMontName: entity.lastMontName,
+            email: entity.email,
+            birthDate: entity.birthDate,
+            gender: entity.gender,
+            address: entity.address,
+            state: entity.state,
+            postalCode: entity.postalCode,
+            password: entity.password
+        })
+    }
 
     toDoctorResponse(model: DoctorResponseModel): DoctorResponseEntity {
         return new DoctorResponseEntity({
