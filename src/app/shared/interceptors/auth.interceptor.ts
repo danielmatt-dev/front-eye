@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { HttpEvent, HttpHandlerFn, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { LocalStorageService } from '../services/local.storage.service';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -8,6 +8,10 @@ export function authInterceptorFn(
     req: HttpRequest<any>,
     next: HttpHandlerFn
 ): Observable<HttpEvent<any>> {
+
+    if (req.url.endsWith('/auth/login')) {
+        return next(req)
+    }
 
     const token = inject(LocalStorageService).getToken();
     const authReq = req.clone({
