@@ -1,6 +1,6 @@
 import { DoctorRequestModel } from '../../data/models/doctor.request.model';
 
-export class DoctorRequesEntity extends DoctorRequestModel{
+export class DoctorRequestEntity extends DoctorRequestModel{
 
     constructor(options: {
         clinicId?: number

@@ -2,7 +2,7 @@ import { DoctorResponseEntity } from '../../domain/entity/doctor.response.entity
 import { DoctorResponseModel } from '../models/doctor.response.model';
 import { Injectable } from '@angular/core';
 import { DoctorRequestModel } from '../models/doctor.request.model';
-import { DoctorRequesEntity } from '../../domain/entity/doctor.reques.entity';
+import { DoctorRequestEntity } from '../../domain/entity/doctorRequestEntity';
 
 export interface DoctorMapper {
 
@@ -17,7 +17,7 @@ export interface DoctorMapper {
 @Injectable({ providedIn: 'root' })
 export class DoctorMapperImpl implements DoctorMapper {
 
-    toDoctorRequestModel(entity: DoctorRequesEntity): DoctorRequestModel {
+    toDoctorRequestModel(entity: DoctorRequestEntity): DoctorRequestModel {
         return new DoctorRequestModel({
             clinicId: entity.clinicId,
             firstName: entity.firstName,
