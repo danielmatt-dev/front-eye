@@ -9,6 +9,10 @@ export interface DatasourceLocal {
 
     getRole(): string | null;
 
+    setExpiresAt(expiresAt: number): void
+
+    getExpiresAt(): number
+
     setTheme(theme: Theme): void
 
     getTheme(): Theme

@@ -8,10 +8,6 @@ export class LocalStorageService {
 
     constructor(private readonly local: DatasourceLocalImpl) {}
 
-    setToken(token: string) {
-        this.local.setToken(token)
-    }
-
     getToken(): string | null {
         return this.local.getToken()
     }
