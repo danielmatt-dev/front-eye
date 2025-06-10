@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { LocalStorageService } from '../../authResponse/service/local.storage.service';
+import { LocalStorageService } from '../../feature/authResponse/service/local.storage.service';
 
 @Injectable({
     providedIn: 'root'

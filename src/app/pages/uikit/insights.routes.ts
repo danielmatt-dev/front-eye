@@ -1,15 +1,15 @@
 import { Routes } from '@angular/router';
 import { ReporteComponent } from '../../feature/presentation/components/reporte/reporte.component';
 import { DatosGeograficosComponent } from '../../feature/presentation/components/datos-geograficos/datos-geograficos.component';
-import { DashboardComponent } from '../../feature/presentation/components/dashboard/dashboard.component';
-import { NuevaInspeccionComponent } from '../../feature/presentation/components/nueva-inspeccion/nueva-inspeccion.component';
+import { DashboardComponent } from '../../feature/inspection/presentation/dashboard/dashboard.component';
+import { NuevaInspeccionComponent } from '../../feature/inspection/presentation/nueva-inspeccion/nueva-inspeccion.component';
 import {
     VerDetalleInspeccionComponent
-} from '../../feature/presentation/components/ver-detalle-inspeccion/ver-detalle-inspeccion.component';
+} from '../../feature/inspection/presentation/ver-detalle-inspeccion/ver-detalle-inspeccion.component';
 import { PacientesComponent } from '../../feature/presentation/components/pacientes/pacientes.component';
-import { TodasInspeccionesComponent } from '../../feature/presentation/components/todas-inspecciones/todas-inspecciones.component';
+import { TodasInspeccionesComponent } from '../../feature/inspection/presentation/todas-inspecciones/todas-inspecciones.component';
 import { DoctorComponent } from '../../feature/doctor/presentation/doctor-component/doctor.component';
-import { RoleGuard } from '../../feature/presentation/guards/role.guard';
+import { RoleGuard } from '../../shared/guards/role.guard';
 
 export default [
     {
