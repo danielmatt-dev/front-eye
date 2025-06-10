@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { debounceTime, Subscription } from 'rxjs';
-import { LayoutService } from '../../layout/service/layout.service';
+import { LayoutService } from '../../../presentation/layout/service/layout.service';
 import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
 import { SelectButton } from 'primeng/selectbutton';
