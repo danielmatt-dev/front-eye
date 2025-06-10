@@ -7,7 +7,7 @@ import { DoctorDatasourceRemoteImpl } from '../../data/datasource/remote/impl/do
 
 // <>
 @Injectable({ providedIn: 'root' })
-export class CrearDoctor implements UseCase<DoctorResponseEntity, DoctorRequesEntity> {
+export class CreateDoctor implements UseCase<DoctorResponseEntity, DoctorRequesEntity> {
 
     constructor(private readonly remote: DoctorDatasourceRemoteImpl) {}
 
