@@ -3,7 +3,7 @@ import { DoctorResponseModel } from '../../../models/doctor.response.model';
 import { Either } from 'fp-ts/Either';
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../../../../../shared/services/api.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { plainToInstance } from 'class-transformer';
 import { DoctorEndpoints } from '../doctor.endpoints';
@@ -19,11 +19,7 @@ export class DoctorDatasourceRemoteImpl implements DoctorDatasourceRemote {
     getAllDoctors(): Promise<Either<Error, DoctorResponseModel[]>> {
         const url = DoctorEndpoints.PATH
         const obs$ = this.http
-            .get<DoctorResponseModel[]>(url,
-                { headers: new HttpHeaders({
-                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJ1c2VySWQiOjEwLCJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE3NDkyODIxNjMsImV4cCI6MTc2NzQyNjE2M30.62smU3pf28vN1GSXd2cad4JndOjict4abF5AIu5t4u4',
-                        'Content-Type':  'application/json'
-                    })})
+            .get<DoctorResponseModel[]>(url)
             .pipe(
                 map(response =>
                     response.map(json =>
