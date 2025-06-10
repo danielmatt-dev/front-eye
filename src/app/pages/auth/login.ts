@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../feature/presentation/layout/component/app.floatingconfigurator';
-import { LocalStorageService } from '../../feature/authResponse/service/local.storage.service';
+import { LocalStorageService } from '../../shared/services/local.storage.service';
 
 @Component({
     selector: 'app-login',

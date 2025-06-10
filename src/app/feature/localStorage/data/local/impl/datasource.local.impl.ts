@@ -23,8 +23,23 @@ export class DatasourceLocalImpl implements DatasourceLocal {
         return localStorage.getItem('role');
     }
 
+    setExpiresAt(expiresAt: number): void {
+        localStorage.setItem('expiresAt', expiresAt.toString())
+    }
+
+    getExpiresAt(): number {
+        const raw = localStorage.getItem('expiresAt');
+        if (raw === null) {
+            // si no existe, devolvemos 0
+            return 0;
+        }
+        const parsed = Number(raw);
+        // si no es un número válido, también devolvemos 0
+        return isNaN(parsed) ? 0 : parsed;
+    }
+
     clear(): void {
-        localStorage.clear()
+        localStorage.clear();
     }
 
     getTheme(): Theme {
@@ -35,5 +50,4 @@ export class DatasourceLocalImpl implements DatasourceLocal {
     setTheme(theme: Theme): void {
         localStorage.setItem('theme', theme);
     }
-
 }

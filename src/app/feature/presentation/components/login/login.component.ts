@@ -8,7 +8,7 @@ import { Router, RouterModule } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
-import { LocalStorageService } from '../../../authResponse/service/local.storage.service';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     selector: 'app-login',

@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Theme } from '../../../shared/enums/enums';
-import { DatasourceLocalImpl } from '../data/local/impl/datasource.local.impl';
+import { Theme } from '../enums/enums';
+import { DatasourceLocalImpl } from '../../feature/localStorage/data/local/impl/datasource.local.impl';
 
 // <>
 @Injectable({ providedIn: 'root' })
 export class LocalStorageService {
 
     constructor(private readonly local: DatasourceLocalImpl) {}
-
-    setToken(token: string) {
-        this.local.setToken(token)
-    }
 
     getToken(): string | null {
         return this.local.getToken()

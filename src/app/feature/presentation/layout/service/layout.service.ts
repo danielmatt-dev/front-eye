@@ -1,7 +1,7 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Theme } from '../../../../shared/enums/enums';
-import { LocalStorageService } from '../../../authResponse/service/local.storage.service';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 export interface layoutConfig {
     preset?: string;

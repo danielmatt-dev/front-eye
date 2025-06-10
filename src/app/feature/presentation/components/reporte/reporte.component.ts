@@ -22,7 +22,7 @@ import { PrimeNG } from 'primeng/config';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'
-import { LocalStorageService } from '../../../authResponse/service/local.storage.service';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     selector: 'app-reporte',
