@@ -9,8 +9,8 @@ export class GetAllClinics implements UseCase<ClinicEntity[], NoParams> {
 
     constructor(private readonly remote: ClinicDatasourceRemoteImpl) {}
 
-    call(_: NoParams): Promise<Either<Error, ClinicEntity[]>> {
-        return this.remote.getAllClinics()
+    async call(_: NoParams): Promise<Either<Error, ClinicEntity[]>> {
+        return await this.remote.getAllClinics()
     }
 
 }

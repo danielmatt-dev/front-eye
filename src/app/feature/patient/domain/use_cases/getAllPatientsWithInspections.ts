@@ -9,8 +9,8 @@ export class GetAllPatientsWithInspections implements UseCase<PatientWithInspect
 
     constructor(private readonly remote: PatientDatasourceRemoteImpl) {}
 
-    call(_: NoParams): Promise<Either<Error, PatientWithInspectionsEntity[]>> {
-        return this.remote.getAllPatientsWithInspections()
+    async call(_: NoParams): Promise<Either<Error, PatientWithInspectionsEntity[]>> {
+        return await this.remote.getAllPatientsWithInspections()
     }
 
 }
