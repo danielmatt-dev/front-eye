@@ -7,7 +7,7 @@ import { InputText } from 'primeng/inputtext';
 import { Select } from 'primeng/select';
 import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
-import { LayoutService } from '../../layout/service/layout.service';
+import { LayoutService } from '../../../layout/service/layout.service';
 import { debounceTime, Subscription } from 'rxjs';
 import { afecciones, findPatient, inspecciones, resultados } from '../../../../shared/utils/mocks';
 import { NgIf } from '@angular/common';

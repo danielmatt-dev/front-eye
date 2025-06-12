@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { AppFloatingConfigurator } from '../../feature/presentation/layout/component/app.floatingconfigurator';
+import { AppFloatingConfigurator } from '../../feature/layout/component/app.floatingconfigurator';
 
 @Component({
     selector: 'app-notfound',

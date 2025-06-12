@@ -9,7 +9,7 @@ import Nora from '@primeng/themes/nora';
 import { PrimeNG } from 'primeng/config';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { LayoutService } from '../service/layout.service';
-import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { LocalStorageService } from '../../../shared/services/local.storage.service';
 
 const presets = {
     Aura,
