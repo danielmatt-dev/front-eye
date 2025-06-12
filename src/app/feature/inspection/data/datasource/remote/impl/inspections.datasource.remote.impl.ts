@@ -6,7 +6,9 @@ import { HttpClient } from '@angular/common/http';
 import { ApiService } from '../../../../../../shared/services/api.service';
 import { InspectionsEndpoints } from '../inspections.endpoints';
 import { map } from 'rxjs/operators';
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { InspectionDetailsModel } from '../../../models/inspection.details.model';
+import { InspectionRequestModel } from '../../../models/inspection.request.model';
 
 // <>
 @Injectable({ providedIn: 'root' })
@@ -17,16 +19,31 @@ export class InspectionsDatasourceRemoteImpl implements InspectionDatasourceRemo
         private readonly apiService: ApiService
     ) {}
 
-    getAllInspections(): Promise<Either<Error, InspectionReponseModel[]>> {
+    postInspection(request: InspectionRequestModel): Promise<Either<Error, boolean>> {
         const url = InspectionsEndpoints.PATH
         const obs$ = this.http
-            .get<InspectionReponseModel[]>(url)
+            .post<boolean>(url, instanceToPlain(request))
             .pipe(
-                map(response =>
-                    response.map(json =>
-                        plainToInstance(InspectionReponseModel, json))))
+                map(() => true))
 
         return this.apiService.sendRequest(obs$)
     }
 
+    getInspectionByInspectionId(inspectionId: number): Promise<Either<Error, InspectionDetailsModel>> {
+        const url = `${InspectionsEndpoints.PATH}/${inspectionId}`
+        const obs$ = this.http
+            .get<InspectionDetailsModel>(url)
+            .pipe(
+                map(response =>
+                    plainToInstance(InspectionDetailsModel, response)))
+
+        return this.apiService.sendRequest(obs$)
+    }
+
+    getAllInspections(): Promise<Either<Error, InspectionReponseModel[]>> {
+        const url = InspectionsEndpoints.PATH;
+        const obs$ = this.http.get<InspectionReponseModel[]>(url).pipe(map((response) => response.map((json) => plainToInstance(InspectionReponseModel, json))));
+
+        return this.apiService.sendRequest(obs$);
+    }
 }
