@@ -30,6 +30,8 @@ export class InspectionReponseModel {
 
     result: string
 
+    notes: string
+
     @Expose({ name: 'created_at' })
     createdAt: Date
 
@@ -44,6 +46,7 @@ export class InspectionReponseModel {
         disease?: string
         model?: string
         result?: string
+        notes?: string
         createdAt?: Date
     } = {}) {
         this.inspectionId = options.inspectionId ?? 0;
@@ -56,6 +59,7 @@ export class InspectionReponseModel {
         this.disease = options.disease ?? '';
         this.model = options.model ?? '';
         this.result = options.result ?? '';
+        this.notes = options.notes ?? ''
         this.createdAt = options.createdAt ?? new Date();
     }
 
