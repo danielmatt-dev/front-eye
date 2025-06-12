@@ -60,7 +60,7 @@ export class DoctorComponent implements OnInit {
     /* Lista de doctores y filtrado */
     allDoctors: DoctorResponseEntity[] = [];
     filteredDoctors = this.allDoctors;
-    selectedDoctores: any[] = [];
+    selectedDoctores: DoctorResponseEntity[] = [];
 
     /* Campos de doctor */
     doctorId?: number
@@ -228,30 +228,26 @@ export class DoctorComponent implements OnInit {
         this.closeModal()
     }
 
-    eliminarDoctor(clave: string): void {
-        /*
-        const doctor = this.doctores.find((d) => d.clave === clave);
-        if (doctor) {
-            this.confirmationService.confirm({
-                message: `¿Estás seguro de eliminar al doctor ${doctor.nombre} ${doctor.apellidoPaterno} ${doctor.apellidoMaterno}?`,
-                header: 'Confirmación de Eliminación',
-                icon: 'pi pi-exclamation-triangle',
-                acceptLabel: 'Sí',
-                rejectLabel: 'No',
-                acceptButtonStyleClass: 'p-button-danger',
-                rejectButtonStyleClass: 'p-button-secondary',
-                accept: () => {
-                    this.doctores = this.doctores.filter((d) => d.clave !== clave);
-                    this.doctoresFiltrados = this.doctores
-                    this.filtrarDoctores()
-                }
-            });
-        }
-         */
+    eliminarDoctor(doctor: DoctorResponseEntity): void {
+
+        this.confirmationService.confirm({
+            message: `¿Estás seguro de eliminar al doctor ${doctor.firstName} ${doctor.lastFathName}?`,
+            header: 'Confirmación de Eliminación',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí',
+            rejectLabel: 'No',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button-secondary',
+            accept: async () => {
+                this.selectedDoctores.push(doctor)
+                await this.deleteAllDoctors()
+            }
+        });
+
     }
 
-    eliminarDoctoresSeleccionados(): void {
-        /*
+    eliminarDoctoresSeleccionados() {
+
         if (this.selectedDoctores.length === 0) {
             this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: 'No hay doctores seleccionados' });
             return;
@@ -263,23 +259,35 @@ export class DoctorComponent implements OnInit {
             icon: 'pi pi-exclamation-triangle',
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button-secondary',
-            accept: () => {
-                this.selectedDoctores.forEach((doctor) => {
-                    const index = this.doctores.findIndex((d) => d.clave === doctor.clave);
-                    if (index !== -1) {
-                        this.doctores.splice(index, 1);
-                        this.doctoresFiltrados = this.doctores
-                    }
-                });
-                this.messageService.add({ severity: 'success', summary: 'Eliminación Exitosa', detail: 'Doctores eliminados correctamente' });
-                this.selectedDoctores = [];
-                this.filtrarDoctores()
+            accept: async () => {
+                await this.deleteAllDoctors()
             },
-            reject: () => {
-                this.messageService.add({ severity: 'info', summary: 'Cancelado', detail: 'Eliminación cancelada' });
-            }
-        });
-         */
+        })
+    }
+
+    async deleteAllDoctors() {
+
+        const ids = this.selectedDoctores.map(d => d.doctorId)
+        if (ids.length === 0) {
+            return
+        }
+
+        const resultUseCase = await this.deleteDoctors.call(ids)
+
+        if (resultUseCase._tag === 'Left') {
+
+        }
+
+        if (resultUseCase._tag === 'Right') {
+
+            this.allDoctors = this.allDoctors.filter(
+                doctor => !ids.includes(doctor.doctorId))
+
+            this.selectedDoctores = []
+            this.filteredDoctors = this.allDoctors
+            // Mensaje de éxito
+        }
+
     }
 
     limpiarCampos() {

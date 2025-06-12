@@ -55,8 +55,9 @@ export class DoctorDatasourceRemoteImpl implements DoctorDatasourceRemote {
 
     deleteDoctors(doctorIds: DoctorIdRequestModel[]): Promise<Either<Error, boolean>> {
         const url = DoctorEndpoints.PATH
+        const body = instanceToPlain(doctorIds)
         const obs$ = this.http
-            .delete(url, instanceToPlain(doctorIds))
+            .delete(url, { body })
             .pipe(
                 map(() => true))
 

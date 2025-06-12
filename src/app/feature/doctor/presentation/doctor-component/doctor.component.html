@@ -25,6 +25,7 @@
             <p-button
                 label="{{ 'buttons.delete' | translate: { items: labelDoctors } }}"
                 severity="danger"
+                [disabled]="selectedDoctores.length === 0"
                 (onClick)="eliminarDoctoresSeleccionados()"
                 icon="pi pi-trash">
             </p-button>
@@ -33,7 +34,7 @@
 
     <p-table
         #dt1
-        dataKey="clave"
+        dataKey="doctorId"
         [rows]="50"
         [loading]="false"
         [rowHover]="true"
@@ -182,7 +183,7 @@
                         severity="danger"
                         [rounded]="true"
                         [outlined]="true"
-                        (click)="eliminarDoctor(doctor.doctorId)"
+                        (click)="eliminarDoctor(doctor)"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     />
