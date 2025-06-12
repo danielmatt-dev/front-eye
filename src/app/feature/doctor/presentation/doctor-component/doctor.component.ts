@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { InputText } from 'primeng/inputtext';
-import { generos } from '../../../../shared/utils/mocks';
+import { estadosMexico, generos } from '../../../../shared/utils/mocks';
 import { PrimeNG } from 'primeng/config';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
@@ -51,7 +51,8 @@ export class DoctorComponent implements OnInit {
     fechasSeleccionadas: Date[] = [];
 
     /* Catálogo de opciones */
-    generos = generos;
+    genders = generos;
+    states = estadosMexico
     clinics: ClinicEntity[] = []
 
     /* Lista de doctores y filtrado */
@@ -67,11 +68,11 @@ export class DoctorComponent implements OnInit {
     lastMotherName = '';
     birthDate = new Date();
     gender = '';
+    phone = '';
+    email = '';
     address = '';
     state = '';
-    phone = '';
     postalCode = '';
-    email = '';
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
@@ -294,8 +295,9 @@ export class DoctorComponent implements OnInit {
         this.postalCode = '';
     }
 
-    abrirModal() {
+    async abrirModal() {
         this.isVisible = true;
+        await this.getClinics()
     }
 
     cerrarVentanaNotificacion() {

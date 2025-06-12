@@ -98,13 +98,15 @@
         "birthDate": "01/01/1990",
         "address": "Av. Principal #456, Col. Jardines",
         "postalCode": "12345",
+        "state": "Seleccione el estado",
         "search": "Buscar...",
         "dateRange": "Desde - Hasta",
         "age": "40 años",
         "occupation": "Ej: Ingeniero, Médico, Estudiante",
         "disease": "Seleccione la enfermedad",
         "model": "Seleccione el modelo",
-        "patients": "Seleccione un paciente"
+        "patients": "Seleccione un paciente",
+        "clinic": "Seleccione una clínica"
     },
     "buttons": {
         "save": "Guardar",

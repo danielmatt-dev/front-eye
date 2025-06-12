@@ -205,7 +205,7 @@
 </div>
 
 <p-dialog
-    header="{{ 'doctor-component.titleModal' | translate }}"
+    header="{{ 'doctor.titleModal' | translate }}"
     class="font-bold"
     [modal]="true"
     [(visible)]="isVisible"
@@ -240,6 +240,16 @@
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
+            <label for="clinicModal">{{ 'labels.clinic' | translate }}</label>
+            <p-select
+                id="clinicModal"
+                [options]="clinics"
+                optionLabel="name"
+                [(ngModel)]="clinicSelected"
+                placeholder="{{ 'placeholders.clinic' | translate }}"
+            ></p-select>
+        </div>
+        <div class="flex flex-col grow basis-0 gap-2">
             <label for="correo">{{ 'labels.email' | translate }}</label>
             <input
                 pInputText
@@ -255,7 +265,6 @@
                 [(ngModel)]="phone"
                 type="text" placeholder="{{ 'placeholders.phone' | translate }}" />
         </div>
-
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
@@ -273,13 +282,21 @@
             <label for="genero">{{ 'labels.gender' | translate }}</label>
             <p-select
                 id="genero"
-                [options]="generos"
+                [options]="genders"
                 [(ngModel)]="gender"
                 placeholder="{{ 'placeholders.gender' | translate }}"
             ></p-select>
         </div>
     </div>
     <div class="flex flex-wrap gap-6">
+        <div class="flex flex-col grow basis-0 gap-2">
+            <label for="cp">{{ 'labels.postalCode' | translate }}</label>
+            <input
+                pInputText
+                id="cp"
+                [(ngModel)]="postalCode"
+                type="text" placeholder="{{ 'placeholders.postalCode' | translate }}" />
+        </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="direccion">{{ 'labels.address' | translate }}</label>
             <input
@@ -291,12 +308,13 @@
             />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
-            <label for="cp">{{ 'labels.postalCode' | translate }}</label>
-            <input
-                pInputText
-                id="cp"
-                [(ngModel)]="postalCode"
-                type="text" placeholder="{{ 'placeholders.postalCode' | translate }}" />
+            <label for="stateModal">{{ 'labels.state' | translate }}</label>
+            <p-select
+                id="stateModal"
+                [options]="states"
+                [(ngModel)]="state"
+                placeholder="{{ 'placeholders.state' | translate }}"
+            ></p-select>
         </div>
     </div>
     <div class="flex flex-wrap justify-end gap-6 mt-6">
