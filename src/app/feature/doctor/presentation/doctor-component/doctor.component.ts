@@ -29,6 +29,7 @@ import { GetAllClinics } from '../../../clinic/domain/use_cases/getAllClinics';
 import { ClinicEntity } from '../../../clinic/domain/entity/clinic.entity';
 import { CalendarModule } from 'primeng/calendar';
 import { NoParams } from '../../../../shared/utils/usecase';
+import { DoctorComponentHelper } from './validation/doctor.component.helper';
 
 @Component({
     standalone: true,
@@ -77,6 +78,7 @@ export class DoctorComponent implements OnInit {
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
     localeTextProvider: LocaleTextProvider;
+    doctorComponentHelper: DoctorComponentHelper
 
     /* Labels */
     labelDoctor = 'doctor';
@@ -95,6 +97,7 @@ export class DoctorComponent implements OnInit {
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(messageService, translateService, primeng);
         this.localeTextProvider = LocaleTextProvider.getInstance(this.translateService, this.primeng);
+        this.doctorComponentHelper = DoctorComponentHelper.getInstance(messageService, translateService, primeng)
     }
 
     async ngOnInit() {
