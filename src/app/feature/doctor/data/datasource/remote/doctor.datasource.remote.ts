@@ -1,6 +1,7 @@
 import { Either } from 'fp-ts/Either';
 import { DoctorResponseModel } from '../../models/doctor.response.model';
 import { DoctorRequestModel } from '../../models/doctor.request.model';
+import { DoctorIdRequestModel } from '../../models/doctor.id.request.model';
 
 // <>
 export interface DoctorDatasourceRemote {
@@ -11,6 +12,6 @@ export interface DoctorDatasourceRemote {
 
     getAllDoctors(): Promise<Either<Error, DoctorResponseModel[]>>
 
-    deleteDoctor(doctorId: number): Promise<Either<Error, boolean>>
+    deleteDoctors(doctorIds: DoctorIdRequestModel[]): Promise<Either<Error, boolean>>
 
 }

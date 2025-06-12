@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { DoctorEndpoints } from '../doctor.endpoints';
 import { DoctorRequestModel } from '../../../models/doctor.request.model';
+import { DoctorIdRequestModel } from '../../../models/doctor.id.request.model';
 
 // <>
 @Injectable({ providedIn: 'root' })
@@ -52,10 +53,10 @@ export class DoctorDatasourceRemoteImpl implements DoctorDatasourceRemote {
         return this.apiService.sendRequest<DoctorResponseModel[]>(obs$)
     }
 
-    deleteDoctor(doctorId: number): Promise<Either<Error, boolean>> {
-        const url = `${DoctorEndpoints.PATH}/${doctorId}`
+    deleteDoctors(doctorIds: DoctorIdRequestModel[]): Promise<Either<Error, boolean>> {
+        const url = DoctorEndpoints.PATH
         const obs$ = this.http
-            .delete(url)
+            .delete(url, instanceToPlain(doctorIds))
             .pipe(
                 map(() => true))
 
