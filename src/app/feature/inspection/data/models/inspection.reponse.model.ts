@@ -46,17 +46,17 @@ export class InspectionReponseModel {
         result?: string
         createdAt?: Date
     } = {}) {
-        this.inspectionId = options.inspectionId || 0
-        this.patientId = options.patientId || 0
-        this.patientBirthDate = options.patientBirthDate || new Date()
-        this.patientGender = options.patientGender || ''
-        this.inspectionDate = options.inspectionDate || new Date()
-        this.inspectionTime = options.inspectionTime || ''
-        this.eye = options.eye || ''
-        this.disease = options.disease || ''
-        this.model = options.model || ''
-        this.result = options.result || ''
-        this.createdAt = options.createdAt || new Date()
+        this.inspectionId = options.inspectionId ?? 0;
+        this.patientId = options.patientId ?? 0;
+        this.patientBirthDate = options.patientBirthDate ?? new Date();
+        this.patientGender = options.patientGender ?? '';
+        this.inspectionDate = options.inspectionDate ?? new Date();
+        this.inspectionTime = options.inspectionTime ?? '';
+        this.eye = options.eye ?? '';
+        this.disease = options.disease ?? '';
+        this.model = options.model ?? '';
+        this.result = options.result ?? '';
+        this.createdAt = options.createdAt ?? new Date();
     }
 
 }
