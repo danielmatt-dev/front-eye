@@ -84,7 +84,8 @@
         "disease": "Enfermedad",
         "model": "Modelo",
         "actions": "Acciones",
-        "years": "años"
+        "years": "años",
+        "clinic": "Clínica"
     },
     "placeholders": {
         "email": "ejemplo@correo.com",

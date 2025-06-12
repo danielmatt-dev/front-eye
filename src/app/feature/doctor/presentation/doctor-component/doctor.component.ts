@@ -5,8 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { InputText } from 'primeng/inputtext';
-import { doctores, generos } from '../../../../shared/utils/mocks';
-import { DatePickerModule } from 'primeng/datepicker';
+import { generos } from '../../../../shared/utils/mocks';
 import { PrimeNG } from 'primeng/config';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
@@ -14,64 +13,90 @@ import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { NgIf } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-consulta/opciones-consulta-helper';
 import { Toast } from 'primeng/toast';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'
+import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
+import { CreateDoctor } from '../../domain/use_cases/createDoctor';
+import { GetAllDoctors } from '../../domain/use_cases/getAllDoctors';
+import { UpdateDoctor } from '../../domain/use_cases/updateDoctor';
+import { DeleteDoctors } from '../../domain/use_cases/deleteDoctors';
+import { DoctorResponseEntity } from '../../domain/entity/doctor.response.entity';
+import { GetAllClinics } from '../../../clinic/domain/use_cases/getAllClinics';
+import { ClinicEntity } from '../../../clinic/domain/entity/clinic.entity';
+import { CalendarModule } from 'primeng/calendar';
+import { NoParams } from '../../../../shared/utils/usecase';
 
 @Component({
     standalone: true,
     selector: 'app-doctor-component',
-    imports: [FormsModule, ButtonModule, TableModule, DialogModule, SelectModule, InputText, DatePickerModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ConfirmDialogModule, NgIf, Toast],
+    imports: [FormsModule, ButtonModule, TableModule, DialogModule, SelectModule, InputText, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ConfirmDialogModule, NgIf, Toast, CalendarModule, DatePipe],
     providers: [ConfirmationService, MessageService],
     templateUrl: './doctor.component.html',
     styleUrl: './doctor.component.scss'
 })
 export class DoctorComponent implements OnInit {
+
     @ViewChild('filter') filter!: ElementRef;
 
+    /* Opciones de dialog */
     isUpdate = false;
     isVisible = false;
 
+    /* Variables para opciones de consulta */
     periodoSeleccionado = '';
     fechasSeleccionadas: Date[] = [];
 
+    /* Catálogo de opciones */
+    generos = generos;
+    clinics: ClinicEntity[] = []
+
+    /* Lista de doctores y filtrado */
+    allDoctors: DoctorResponseEntity[] = [];
+    filteredDoctors = this.allDoctors;
     selectedDoctores: any[] = [];
 
-    doctores = doctores;
-    doctoresFiltrados = this.doctores;
+    /* Campos de doctor */
+    doctorId = 0;
+    clinicSelected?: ClinicEntity;
+    firstName = '';
+    lastFatherName = '';
+    lastMotherName = '';
+    birthDate = new Date();
+    gender = '';
+    address = '';
+    state = '';
+    phone = '';
+    postalCode = '';
+    email = '';
 
+    /* Providers */
+    opcionesConsultaHelper: OpcionesConsultaHelper;
+    localeTextProvider: LocaleTextProvider;
+
+    /* Labels */
     labelDoctor = 'doctor';
     labelDoctors = 'doctores';
-
-    claveDoctor = '';
-    nombre = '';
-    apellidoPaterno = '';
-    apellidoMaterno = '';
-    correo = '';
-    telefono = '';
-    genero = '';
-    fechaNacimiento = '';
-    direccion = '';
-    codigoPostal = '';
-
-    opcionesConsultaHelper: OpcionesConsultaHelper;
 
     constructor(
         private readonly primeng: PrimeNG,
         private readonly translateService: TranslateService,
         private readonly confirmationService: ConfirmationService,
-        private readonly messageService: MessageService
+        private readonly messageService: MessageService,
+        private readonly createDoctor: CreateDoctor,
+        private readonly getAllDoctors: GetAllDoctors,
+        private readonly updateDoctor: UpdateDoctor,
+        private readonly deleteDoctors: DeleteDoctors,
+        private readonly getAllClinis: GetAllClinics
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(messageService, translateService, primeng);
+        this.localeTextProvider = LocaleTextProvider.getInstance(this.translateService, this.primeng);
     }
 
-    ngOnInit() {
-        this.translateService.use('es');
-        this.translateService.get('primeng').subscribe((res) => this.primeng.setTranslation(res));
-
+    async ngOnInit() {
         this.translateService.get('doctor.singular').subscribe((res: string) => {
             this.labelDoctor = res.toLowerCase();
         });
@@ -79,9 +104,39 @@ export class DoctorComponent implements OnInit {
         this.translateService.get('doctor.plural').subscribe((res: string) => {
             this.labelDoctors = res.toLowerCase();
         });
+
+        await this.getDoctors();
+    }
+
+    async getDoctors() {
+        const resultUseCase = await this.getAllDoctors.call(new NoParams());
+
+        if (resultUseCase._tag === 'Left') {
+
+        }
+
+        if (resultUseCase._tag === 'Right') {
+            this.allDoctors = resultUseCase.right;
+            this.filteredDoctors = this.allDoctors;
+        }
+    }
+
+    async getClinics() {
+
+        const resultUseCase = await this.getAllClinis.call(new NoParams())
+
+        if (resultUseCase._tag === 'Left') {
+
+        }
+
+        if (resultUseCase._tag === 'Right'){
+            this.clinics = resultUseCase.right
+        }
+
     }
 
     addDoctor() {
+        /*
         const doctor = {
             clave: `D${(doctores.length + 1).toString().padStart(3, '0')}`,
             nombre: this.nombre,
@@ -101,12 +156,15 @@ export class DoctorComponent implements OnInit {
         this.filtrarDoctores()
         this.cerrarVentanaNotificacion();
         this.limpiarCampos();
+         */
     }
 
     editarDoctor(clave: string): void {
         this.isUpdate = true;
 
+        /*
         const doctor = this.doctores.find((d) => d.clave === clave);
+
         if (doctor) {
             // Asignar los datos del doctor-component a los campos correspondientes
             this.nombre = doctor.nombre;
@@ -125,9 +183,11 @@ export class DoctorComponent implements OnInit {
             // Mostrar el modal
             this.abrirModal();
         }
+         */
     }
 
     actualizarDoctor(): void {
+        /*
         if (!this.claveDoctor) {
             console.warn('No hay un doctor-component seleccionado para actualizar.');
             return;
@@ -165,9 +225,11 @@ export class DoctorComponent implements OnInit {
             this.cerrarVentanaNotificacion();
             this.limpiarCampos();
         }
+         */
     }
 
     eliminarDoctor(clave: string): void {
+        /*
         const doctor = this.doctores.find((d) => d.clave === clave);
         if (doctor) {
             this.confirmationService.confirm({
@@ -185,9 +247,11 @@ export class DoctorComponent implements OnInit {
                 }
             });
         }
+         */
     }
 
     eliminarDoctoresSeleccionados(): void {
+        /*
         if (this.selectedDoctores.length === 0) {
             this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: 'No hay doctores seleccionados' });
             return;
@@ -215,18 +279,19 @@ export class DoctorComponent implements OnInit {
                 this.messageService.add({ severity: 'info', summary: 'Cancelado', detail: 'Eliminación cancelada' });
             }
         });
+         */
     }
 
     limpiarCampos() {
-        this.nombre = '';
-        this.apellidoPaterno = '';
-        this.apellidoMaterno = '';
-        this.correo = '';
-        this.telefono = '';
-        this.genero = '';
-        this.fechaNacimiento = '';
-        this.direccion = '';
-        this.codigoPostal = '';
+        this.firstName = '';
+        this.lastFatherName = '';
+        this.lastMotherName = '';
+        this.email = '';
+        this.phone = '';
+        this.gender = '';
+        this.birthDate = new Date();
+        this.address = '';
+        this.postalCode = '';
     }
 
     abrirModal() {
@@ -235,7 +300,7 @@ export class DoctorComponent implements OnInit {
 
     cerrarVentanaNotificacion() {
         this.isVisible = false;
-        this.limpiarCampos()
+        this.limpiarCampos();
     }
 
     clear(table: Table) {
@@ -264,7 +329,7 @@ export class DoctorComponent implements OnInit {
     }
 
     filtrarDoctores(): void {
-
+        /*
         if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.periodoSeleccionado, this.fechasSeleccionadas)) {
             return;
         }
@@ -314,9 +379,11 @@ export class DoctorComponent implements OnInit {
         });
 
         console.log('Doctores Filtrados:', this.doctoresFiltrados);
+        */
     }
 
     exportExcel() {
+        /*
         // Obtener los encabezados (keys) en mayúscula inicial
         const tableColumn = ['Clave', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Fecha de Nacimiento', 'Teléfono', 'Género', 'Código Postal', 'Dirección', 'Estado'];
 
@@ -374,9 +441,11 @@ export class DoctorComponent implements OnInit {
 
         // Descargar el archivo Excel
         XLSX.writeFile(wb, 'doctores.xlsx');
+        */
     }
 
     exportPDF() {
+        /*
         const doc = new jsPDF();
         doc.text('Doctores', 10, 10);
 
@@ -415,7 +484,7 @@ export class DoctorComponent implements OnInit {
 
         // Guardar el archivo PDF
         doc.save('doctores.pdf');
+         */
     }
 
-    protected readonly generos = generos;
 }

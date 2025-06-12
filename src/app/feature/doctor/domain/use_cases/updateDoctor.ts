@@ -1,7 +1,7 @@
 import { Either } from 'fp-ts/lib/Either';
 import { UseCase } from '../../../../shared/utils/usecase';
 import { DoctorResponseEntity } from '../entity/doctor.response.entity';
-import { DoctorRequestEntity } from '../entity/doctorRequestEntity';
+import { DoctorRequestEntity } from '../entity/doctor.request.entity';
 import { DoctorDatasourceRemoteImpl } from '../../data/datasource/remote/impl/doctor.datasource.remote.impl';
 import { Injectable } from '@angular/core';
 

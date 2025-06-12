@@ -38,8 +38,20 @@
         [loading]="false"
         [rowHover]="true"
         [paginator]="true"
-        [globalFilterFields]="['clave', 'nombre', 'apellidos', 'fechaNacimiento', 'fechaAlta', 'genero', 'codigoPostal', 'direccion', 'estado']"
-        [value]="doctoresFiltrados"
+        [globalFilterFields]="[
+            'doctorId',
+            'firstName',
+            'lastFathName',
+            'lastMontName',
+            'email',
+            'birthDate',
+            'age',
+            'gender',
+            'postalCode',
+            'address',
+            'clinic',
+            'state']"
+        [value]="filteredDoctors"
         responsiveLayout="scroll"
         selectionMode="multiple"
         [scrollable]="true"
@@ -74,6 +86,7 @@
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search" />
                         <input
+                            #filter
                             pInputText
                             class="sm:w-64 lg:w-96"
                             type="text"
@@ -99,35 +112,39 @@
                 </th>
                 <th id="key" pSortableColumn="clave" style="min-width: 6rem">
                     {{ 'labels.key' | translate }}
-                    <p-sortIcon field="clave"></p-sortIcon>
+                    <p-sortIcon field="key"></p-sortIcon>
                 </th>
                 <th id="name" pSortableColumn="nombre" style="min-width: 10rem">
                     {{ 'labels.name' | translate }}
-                    <p-sortIcon field="nombre"></p-sortIcon>
+                    <p-sortIcon field="firstName"></p-sortIcon>
                 </th>
                 <th id="lastname" pSortableColumn="apellidos" style="min-width: 12rem">
                     {{ 'labels.lastname' | translate }}
-                    <p-sortIcon field="apellidos"></p-sortIcon>
+                    <p-sortIcon field="lastName"></p-sortIcon>
                 </th>
-                <th id="birthDate" pSortableColumn="fechaNacimiento" style="min-width: 8rem">
+                <th id="clinic" pSortableColumn="apellidos" style="min-width: 10rem">
+                    {{ 'labels.clinic' | translate }}
+                    <p-sortIcon field="clinic"></p-sortIcon>
+                </th>
+                <th id="birthDate" pSortableColumn="fechaNacimiento" style="min-width: 10rem">
                     {{ 'labels.birthDate' | translate }}
-                    <p-sortIcon field="fechaNacimiento"></p-sortIcon>
+                    <p-sortIcon field="birthDate"></p-sortIcon>
                 </th>
                 <th id="gender" pSortableColumn="genero" style="min-width: 8rem">
                     {{ 'labels.gender' | translate }}
-                    <p-sortIcon field="genero"></p-sortIcon>
+                    <p-sortIcon field="gender"></p-sortIcon>
                 </th>
                 <th id="postalCode" pSortableColumn="codigoPostal" style="min-width: 6rem">
                     {{ 'labels.postalCode' | translate }}
-                    <p-sortIcon field="codigoPostal"></p-sortIcon>
+                    <p-sortIcon field="postalCode"></p-sortIcon>
                 </th>
                 <th id="address" pSortableColumn="direccion" style="min-width: 18rem">
                     {{ 'labels.address' | translate }}
-                    <p-sortIcon field="direccion"></p-sortIcon>
+                    <p-sortIcon field="address"></p-sortIcon>
                 </th>
                 <th id="state" pSortableColumn="estado" style="min-width: 8rem">
                     {{ 'labels.state' | translate }}
-                    <p-sortIcon field="estado"></p-sortIcon>
+                    <p-sortIcon field="state"></p-sortIcon>
                 </th>
                 <th scope="col" style="min-width: 12rem">{{ 'labels.actions' | translate }}</th>
             </tr>
@@ -139,14 +156,15 @@
                 <td>
                     <p-tableCheckbox [value]="doctor"></p-tableCheckbox>
                 </td>
-                <td>{{ doctor.clave }}</td>
-                <td>{{ doctor.nombre }}</td>
-                <td>{{ doctor.apellidoPaterno }} {{ doctor.apellidoMaterno }} </td>
-                <td>{{ doctor.fechaNacimiento }}</td>
-                <td>{{ doctor.genero }}</td>
-                <td>{{ doctor.codigoPostal }}</td>
-                <td>{{ doctor.direccion }}</td>
-                <td>{{ doctor.estado }}</td>
+                <td>{{ doctor.doctorId }}</td>
+                <td>{{ doctor.firstName }}</td>
+                <td>{{ doctor.lastFathName }} {{ doctor.lastMontName }} </td>
+                <td>{{ doctor.clinic }}</td>
+                <td>{{ doctor.birthDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ doctor.gender }}</td>
+                <td>{{ doctor.postalCode }}</td>
+                <td>{{ doctor.address }}</td>
+                <td>{{ doctor.state }}</td>
                 <td>
                     <p-button
                         icon="pi pi-pencil"
@@ -200,7 +218,7 @@
             <input
                 pInputText
                 id="nombre"
-                [(ngModel)]="nombre"
+                [(ngModel)]="firstName"
                 type="text" placeholder="{{ 'placeholders.name' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
@@ -208,7 +226,7 @@
             <input
                 pInputText
                 id="paterno"
-                [(ngModel)]="apellidoPaterno"
+                [(ngModel)]="lastFatherName"
                 type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
@@ -216,7 +234,7 @@
             <input
                 pInputText
                 id="materno"
-                [(ngModel)]="apellidoMaterno"
+                [(ngModel)]="lastMotherName"
                 type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}" />
         </div>
     </div>
@@ -226,7 +244,7 @@
             <input
                 pInputText
                 id="correo"
-                [(ngModel)]="correo"
+                [(ngModel)]="email"
                 type="text" placeholder="{{ 'placeholders.email' | translate }}" />
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
@@ -234,7 +252,7 @@
             <input
                 pInputText
                 id="telefono"
-                [(ngModel)]="telefono"
+                [(ngModel)]="phone"
                 type="text" placeholder="{{ 'placeholders.phone' | translate }}" />
         </div>
 
@@ -242,28 +260,21 @@
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="nacimiento">{{ 'labels.birthDate' | translate }}</label>
-            <input
-                pInputText
-                id="nacimiento"
-                [(ngModel)]="fechaNacimiento"
-                type="text" placeholder="{{ 'placeholders.birthDate' | translate }}" />
-            <!--
-            <p-date-picker
+            <p-calendar
                 id="nacimiento"
                 showIcon="true"
                 class="w-full"
-                [ngModel]="fechaNacimiento"
+                [ngModel]="birthDate"
                 [style]="{ width: '100%' }"
                 placeholder="{{ 'placeholders.birthDate' | translate }}"
-            ></p-date-picker>
-            -->
+            ></p-calendar>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="genero">{{ 'labels.gender' | translate }}</label>
             <p-select
                 id="genero"
                 [options]="generos"
-                [(ngModel)]="genero"
+                [(ngModel)]="gender"
                 placeholder="{{ 'placeholders.gender' | translate }}"
             ></p-select>
         </div>
@@ -274,7 +285,7 @@
             <input
                 pInputText
                 id="direccion"
-                [(ngModel)]="direccion"
+                [(ngModel)]="address"
                 type="text"
                 placeholder="{{ 'placeholders.address' | translate }}"
             />
@@ -284,7 +295,7 @@
             <input
                 pInputText
                 id="cp"
-                [(ngModel)]="codigoPostal"
+                [(ngModel)]="postalCode"
                 type="text" placeholder="{{ 'placeholders.postalCode' | translate }}" />
         </div>
     </div>
