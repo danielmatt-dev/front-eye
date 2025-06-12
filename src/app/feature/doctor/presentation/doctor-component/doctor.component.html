@@ -18,7 +18,7 @@
         <div class="flex gap-4">
             <p-button
                 label="{{ 'buttons.new' | translate: { item: labelDoctor } }}"
-                (onClick)="abrirModal()"
+                (onClick)="openModal()"
                 icon="pi pi-plus"
             ></p-button>
 
@@ -172,7 +172,7 @@
                         severity="info"
                         [rounded]="true"
                         [outlined]="true"
-                        (click)="editarDoctor(doctor.clave)"
+                        (click)="editDoctor(doctor)"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     />
@@ -182,7 +182,7 @@
                         severity="danger"
                         [rounded]="true"
                         [outlined]="true"
-                        (click)="eliminarDoctor(doctor.clave)"
+                        (click)="eliminarDoctor(doctor.doctorId)"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     />
@@ -210,7 +210,7 @@
     [modal]="true"
     [(visible)]="isVisible"
     [style]="{ width: '70rem', 'min-width': '30rem', 'max-width': '70rem', 'overflow-x': 'hidden', 'padding': '0.5rem' }"
-    (onHide)="cerrarVentanaNotificacion()">
+    (onHide)="closeModal()">
 
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
@@ -320,7 +320,7 @@
     <div class="flex flex-wrap justify-end gap-6 mt-6">
         <p-button
             severity="danger"
-            (onClick)="cerrarVentanaNotificacion()"
+            (onClick)="closeModal()"
             label="{{ 'buttons.cancel' | translate }}"
         ></p-button>
         <p-button
@@ -331,7 +331,7 @@
         <p-button
             *ngIf="isUpdate"
             label="{{ 'buttons.update' | translate }}"
-            (onClick)="actualizarDoctor()"
+            (onClick)="updateDoctorRequest()"
         ></p-button>
     </div>
 

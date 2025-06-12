@@ -16,7 +16,7 @@ export class UpdateDoctor implements UseCase<DoctorResponseEntity, UpdateDoctorP
 
 }
 
-class UpdateDoctorParams {
+export class UpdateDoctorParams {
 
     request: DoctorRequestEntity
     doctorId: number

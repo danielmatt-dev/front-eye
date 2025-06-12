@@ -22,7 +22,7 @@ import autoTable from 'jspdf-autotable'
 import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
 import { CreateDoctor } from '../../domain/use_cases/createDoctor';
 import { GetAllDoctors } from '../../domain/use_cases/getAllDoctors';
-import { UpdateDoctor } from '../../domain/use_cases/updateDoctor';
+import { UpdateDoctor, UpdateDoctorParams } from '../../domain/use_cases/updateDoctor';
 import { DeleteDoctors } from '../../domain/use_cases/deleteDoctors';
 import { DoctorResponseEntity } from '../../domain/entity/doctor.response.entity';
 import { GetAllClinics } from '../../../clinic/domain/use_cases/getAllClinics';
@@ -63,18 +63,18 @@ export class DoctorComponent implements OnInit {
     selectedDoctores: any[] = [];
 
     /* Campos de doctor */
-    doctorId = 0;
-    clinicSelected?: ClinicEntity;
-    firstName = '';
-    lastFatherName = '';
-    lastMotherName = '';
-    birthDate = new Date();
-    gender = '';
-    phone = '';
-    email = '';
-    address = '';
-    state = '';
-    postalCode = '';
+    doctorId?: number
+    clinicSelected?: ClinicEntity
+    firstName = ''
+    lastFatherName = ''
+    lastMotherName = ''
+    birthDate?: Date
+    gender = ''
+    phone = ''
+    email = ''
+    address = ''
+    state = ''
+    postalCode = ''
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
@@ -111,6 +111,7 @@ export class DoctorComponent implements OnInit {
         });
 
         await this.getDoctors();
+        await this.getClinics()
     }
 
     async getDoctors() {
@@ -142,9 +143,29 @@ export class DoctorComponent implements OnInit {
 
     async addDoctor() {
 
+        const doctor = this.getDoctorRequest()
+
+        const resultCreateDoctor = await this.createDoctor.call(doctor)
+
+        if (resultCreateDoctor._tag === 'Left') {
+
+        }
+
+        if (resultCreateDoctor._tag === 'Right') {
+            // Mensage de éxito
+            this.allDoctors.push(resultCreateDoctor.right)
+        }
+
+        this.closeModal();
+        this.limpiarCampos();
+    }
+
+    getDoctorRequest(): DoctorRequestEntity {
+
         /* Validar campos */
 
-        const doctor = new DoctorRequestEntity({
+
+        return new DoctorRequestEntity({
             clinicId: this.clinicSelected?.clinicId,
             firstName: this.firstName,
             lastFathName: this.lastFatherName,
@@ -156,89 +177,55 @@ export class DoctorComponent implements OnInit {
             state: this.state,
             postalCode: this.postalCode
         })
-
-        const resultCreateDoctor = await this.createDoctor.call(doctor)
-
-        if (resultCreateDoctor._tag === 'Left') {
-            
-        }
-
-        if (resultCreateDoctor._tag === 'Right') {
-            // Mensage de éxito
-            this.allDoctors.push(resultCreateDoctor.right)
-        }
-
-        this.cerrarVentanaNotificacion();
-        this.limpiarCampos();
     }
 
-    editarDoctor(clave: string): void {
+    async editDoctor(doctor: DoctorResponseEntity) {
         this.isUpdate = true;
 
-        /*
-        const doctor = this.doctores.find((d) => d.clave === clave);
+        this.doctorId = doctor.doctorId
+        this.clinicSelected = this.clinics.find((c) => c.clinicId === doctor.clinicId)
+        this.firstName = doctor.firstName
+        this.lastFatherName = doctor.lastFathName
+        this.lastMotherName = doctor.lastMontName
+        this.birthDate = doctor.birthDate
+        this.gender = doctor.gender
+        //this.phone = doctor.phone
+        this.email = doctor.email
+        this.address = doctor.address
+        this.state = doctor.state
+        this.postalCode = doctor.postalCode
 
-        if (doctor) {
-            // Asignar los datos del doctor-component a los campos correspondientes
-            this.nombre = doctor.nombre;
-            this.apellidoPaterno = doctor.apellidoPaterno;
-            this.apellidoMaterno = doctor.apellidoMaterno;
-            this.correo = `${doctor.nombre.toLowerCase()}.${this.apellidoPaterno.toLowerCase()}@hospital.com`;
-            this.genero = doctor.genero;
-            this.telefono = doctor.telefono;
-            this.fechaNacimiento = doctor.fechaNacimiento;
-            this.direccion = doctor.direccion;
-            this.codigoPostal = doctor.codigoPostal;
-
-            // Guardar la clave para la actualización posterior
-            this.claveDoctor = clave;
-
-            // Mostrar el modal
-            this.abrirModal();
-        }
-         */
+        await this.openModal()
     }
 
-    actualizarDoctor(): void {
-        /*
-        if (!this.claveDoctor) {
-            console.warn('No hay un doctor-component seleccionado para actualizar.');
-            return;
+    async updateDoctorRequest() {
+
+        const doctor = this.getDoctorRequest()
+
+        if (!this.doctorId) {
+            return
         }
 
-        const index = this.doctores.findIndex((d) => d.clave === this.claveDoctor);
-        if (index !== -1) {
-            // Crear el objeto doctor-component actualizado
-            const doctorActualizado = {
-                clave: this.claveDoctor,
-                nombre: this.nombre,
-                apellidoPaterno: this.apellidoPaterno,
-                apellidoMaterno: this.apellidoMaterno,
-                correo: this.correo,
-                telefono: this.telefono,
-                genero: this.genero,
-                fechaNacimiento: this.fechaNacimiento,
-                direccion: this.direccion,
-                codigoPostal: this.codigoPostal,
-                estado: 'Veracruz',
-                fechaAlta: this.doctores[index].fechaAlta
-            };
+        const updateResult = await this.updateDoctor.call(
+            new UpdateDoctorParams(doctor, this.doctorId))
 
-            // Actualizar el doctor-component en la lista
-            this.doctores[index] = doctorActualizado;
+        if (updateResult._tag === 'Left') {
 
-            const indexD = this.doctoresFiltrados.findIndex((d) => d.clave === this.claveDoctor);
-            this.doctoresFiltrados[indexD] = doctorActualizado;
-
-            console.log('Doctor actualizado:', doctorActualizado);
-            this.isUpdate = false
-
-            // Cerrar el modal y limpiar los campos
-            this.filtrarDoctores()
-            this.cerrarVentanaNotificacion();
-            this.limpiarCampos();
         }
-         */
+
+        if (updateResult._tag === 'Right') {
+            // Mensaje de éxito
+            const doctorUpdated = updateResult.right
+
+            const idx = this.allDoctors.findIndex(d => d.doctorId === doctorUpdated.doctorId)
+
+            if (idx !== -1) {
+                this.allDoctors[idx] = doctorUpdated
+            }
+
+        }
+
+        this.closeModal()
     }
 
     eliminarDoctor(clave: string): void {
@@ -303,18 +290,17 @@ export class DoctorComponent implements OnInit {
         this.email = '';
         this.phone = '';
         this.gender = '';
-        this.birthDate = new Date();
+        this.birthDate = undefined
         this.address = '';
         this.postalCode = '';
         this.state = ''
     }
 
-    async abrirModal() {
-        this.isVisible = true;
-        await this.getClinics()
+    async openModal() {
+        this.isVisible = true
     }
 
-    cerrarVentanaNotificacion() {
+    closeModal() {
         this.isVisible = false;
         this.limpiarCampos();
     }
