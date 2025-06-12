@@ -30,6 +30,7 @@ import { ClinicEntity } from '../../../clinic/domain/entity/clinic.entity';
 import { CalendarModule } from 'primeng/calendar';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { DoctorComponentHelper } from './validation/doctor.component.helper';
+import { DoctorRequestEntity } from '../../domain/entity/doctor.request.entity';
 
 @Component({
     standalone: true,
@@ -139,28 +140,36 @@ export class DoctorComponent implements OnInit {
 
     }
 
-    addDoctor() {
-        /*
-        const doctor = {
-            clave: `D${(doctores.length + 1).toString().padStart(3, '0')}`,
-            nombre: this.nombre,
-            apellidoPaterno: this.apellidoPaterno,
-            apellidoMaterno: this.apellidoMaterno,
-            fechaNacimiento: this.fechaNacimiento,
-            telefono: this.telefono,
-            fechaAlta: '12/05/2025',
-            genero: this.genero,
-            codigoPostal: this.codigoPostal,
-            direccion: this.direccion,
-            estado: 'Veracruz'
-        };
+    async addDoctor() {
 
-        this.doctores.push(doctor);
+        /* Validar campos */
 
-        this.filtrarDoctores()
+        const doctor = new DoctorRequestEntity({
+            clinicId: this.clinicSelected?.clinicId,
+            firstName: this.firstName,
+            lastFathName: this.lastFatherName,
+            lastMontName: this.lastMotherName,
+            email: this.email,
+            birthDate: this.birthDate,
+            gender: this.gender,
+            address: this.address,
+            state: this.state,
+            postalCode: this.postalCode
+        })
+
+        const resultCreateDoctor = await this.createDoctor.call(doctor)
+
+        if (resultCreateDoctor._tag === 'Left') {
+            
+        }
+
+        if (resultCreateDoctor._tag === 'Right') {
+            // Mensage de éxito
+            this.allDoctors.push(resultCreateDoctor.right)
+        }
+
         this.cerrarVentanaNotificacion();
         this.limpiarCampos();
-         */
     }
 
     editarDoctor(clave: string): void {
@@ -287,6 +296,7 @@ export class DoctorComponent implements OnInit {
     }
 
     limpiarCampos() {
+        this.clinicSelected = undefined
         this.firstName = '';
         this.lastFatherName = '';
         this.lastMotherName = '';
@@ -296,6 +306,7 @@ export class DoctorComponent implements OnInit {
         this.birthDate = new Date();
         this.address = '';
         this.postalCode = '';
+        this.state = ''
     }
 
     async abrirModal() {
