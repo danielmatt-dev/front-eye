@@ -3,7 +3,7 @@ import { Expose, Type } from 'class-transformer';
 export class DoctorRequestModel {
 
     @Expose({ name: 'clinic_id' })
-    clinicId: number
+    clinicId?: number
 
     @Expose({ name: 'first_name' })
     firstName: string
@@ -29,8 +29,6 @@ export class DoctorRequestModel {
 
     email: string
 
-    password?: string
-
     constructor(options: {
         clinicId?: number
         firstName?: string
@@ -42,18 +40,16 @@ export class DoctorRequestModel {
         state?: string
         postalCode?: string
         email?: string
-        password?: string
     } = {}) {
-        this.clinicId = options.clinicId || 1
-        this.firstName = options.firstName || ''
-        this.lastFathName = options.lastFathName || ''
-        this.lastMontName = options.lastMontName || ''
-        this.birthDate = options.birthDate  || new Date()
-        this.gender = options.gender || ''
-        this.address = options.address || ''
-        this.state = options.state || ''
-        this.postalCode = options.postalCode || ''
-        this.email = options.email || ''
-        this.password = options.password || ''
+        this.clinicId = options.clinicId
+        this.firstName = options.firstName ?? ''
+        this.lastFathName = options.lastFathName ?? ''
+        this.lastMontName = options.lastMontName ?? ''
+        this.birthDate = options.birthDate ?? new Date()
+        this.gender = options.gender ?? ''
+        this.address = options.address ?? ''
+        this.state = options.state ?? ''
+        this.postalCode = options.postalCode ?? ''
+        this.email = options.email ?? ''
     }
 }
