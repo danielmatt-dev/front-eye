@@ -41,7 +41,7 @@ export class DoctorResponseModel {
 
     @Expose({ name: 'created_at' })
     @Type(() => Date)
-    createdAt?: Date
+    createdAt: Date = new Date()
 
     @Expose({ name: 'updated_at' })
     @Type(() => Date)
