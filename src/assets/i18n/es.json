@@ -125,6 +125,20 @@
         "update": "Actualizar"
     },
     "toast": {
+        "success": {
+            "titles": {
+                "createDoctor": "Éxito",
+                "updateDoctor": "Datos actualizados",
+                "deleteDoctor": "Eliminación exitosa",
+                "deleteDoctors": "Eliminación exitosa"
+            },
+            "messages": {
+                "createDoctor": "Doctor @ registrado exitosamente",
+                "updateDoctor": "Los datos del doctor @ se actualizaron con éxito",
+                "deleteDoctor": "El doctor @ ha sido eliminado correctamente",
+                "deleteDoctors": "Se eliminaron @ doctores exitosamente"
+            }
+        },
         "warn": {
             "titles": {
                 "dateRangeNotSelected": "Rango de fechas no seleccionado",
@@ -210,5 +224,37 @@
         "passwordPrompt": "Ingrese una contraseña",
         "emptyMessage": "No se encontraron resultados",
         "emptyFilterMessage": "No se encontraron resultados"
+    },
+    "exceptions": {
+        "titles": {
+            "network": "Fallo de red",
+            "badCredentials": "Credenciales incorrectas.",
+            "resourceNotFound": "Recurso no encontrado",
+            "badRequest": "Solicitud no válida.",
+            "internalServer": "Se produjo un error interno en el servidor.",
+            "timeout": "Se agotó el tiempo de espera de la solicitud.",
+            "forbidden": "Acceso denegado",
+            "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo."
+        },
+        "messages": {
+            "network": "No se pudo conectar con el servidor. Por favor intenta más tarde.",
+            "badCredentials": "Verifica tu usuario y contraseña.",
+            "resourceNotFound": "No se encontró el recurso solicitado.",
+            "badRequest": "Por favor revisa los datos e inténtalo de nuevo.",
+            "internalServer": "Por favor vuelve a intentarlo más tarde.",
+            "timeout": "Inténtalo de nuevo más tarde.",
+            "forbidden": "No tienes permisos para realizar esta acción.",
+            "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo."
+        }
+    },
+    "confirmations": {
+        "deleteDoctor": {
+            "message": "¿Estás seguro de eliminar al doctor {0}?",
+            "header": "Confirmar eliminación"
+        },
+        "deleteSelectedDoctors": {
+            "message": "¿Estás seguro de que deseas eliminar los doctores seleccionados?",
+            "header": "Confirmar eliminación"
+        }
     }
 }
