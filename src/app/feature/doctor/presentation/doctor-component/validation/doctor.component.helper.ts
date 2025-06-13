@@ -20,4 +20,10 @@ export class DoctorComponentHelper extends ValidatorHelper {
         return DoctorComponentHelper.instance
     }
 
+    sendToastMessageSuccess(type: 'createDoctor' | 'updateDoctor' | 'deleteDoctor' | 'deleteDoctors', param: string) {
+        const title = this.getText(`toast.success.titles.${type}`)
+        const message = this.getText(`toast.success.messages.${type}`).replace('@', param)
+        this.sendToastMessage({title: title, message: message, type: 'success'})
+    }
+
 }
