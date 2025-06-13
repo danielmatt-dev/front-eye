@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
     BadCredencialsException,
     BadRequestException,
-    ForbiddenException, InternalServerException,
+    ForbiddenException, InternalServerException, NetworkException,
     ResourceNotFoundException, TimeoutException
 } from '../exceptions/exceptions';
 import { catchError, firstValueFrom, Observable, of } from 'rxjs';
@@ -25,6 +25,7 @@ export class ApiService {
 
     private mapException(error: HttpErrorResponse): Error {
         switch (error.status) {
+            case 0: return new NetworkException(error.message);
             case 400: return new BadRequestException(error.message);
             case 401: return new BadCredencialsException(error.message);
             case 403: return new ForbiddenException(error.message);

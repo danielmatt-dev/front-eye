@@ -9,3 +9,5 @@ export class InternalServerException extends Error {}
 export class TimeoutException extends Error {}
 
 export class ForbiddenException extends Error {}
+
+export class NetworkException extends Error {}
