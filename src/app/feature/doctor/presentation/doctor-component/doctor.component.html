@@ -18,13 +18,14 @@
         <div class="flex gap-4">
             <p-button
                 label="{{ 'buttons.new' | translate: { item: labelDoctor } }}"
-                (onClick)="abrirModal()"
+                (onClick)="openModal()"
                 icon="pi pi-plus"
             ></p-button>
 
             <p-button
                 label="{{ 'buttons.delete' | translate: { items: labelDoctors } }}"
                 severity="danger"
+                [disabled]="selectedDoctores.length === 0"
                 (onClick)="eliminarDoctoresSeleccionados()"
                 icon="pi pi-trash">
             </p-button>
@@ -33,13 +34,25 @@
 
     <p-table
         #dt1
-        dataKey="clave"
+        dataKey="doctorId"
         [rows]="50"
         [loading]="false"
         [rowHover]="true"
         [paginator]="true"
-        [globalFilterFields]="['clave', 'nombre', 'apellidos', 'fechaNacimiento', 'fechaAlta', 'genero', 'codigoPostal', 'direccion', 'estado']"
-        [value]="doctoresFiltrados"
+        [globalFilterFields]="[
+            'doctorId',
+            'firstName',
+            'lastFathName',
+            'lastMontName',
+            'email',
+            'birthDate',
+            'age',
+            'gender',
+            'postalCode',
+            'address',
+            'clinic',
+            'state']"
+        [value]="filteredDoctors"
         responsiveLayout="scroll"
         selectionMode="multiple"
         [scrollable]="true"
@@ -55,7 +68,6 @@
                         icon="pi pi-file-excel"
                         severity="success"
                         outlined="true"
-                        (onClick)="exportExcel()"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     ></p-button>
@@ -64,7 +76,6 @@
                         label="{{ 'buttons.downloadPDFTable' | translate }}"
                         severity="danger"
                         outlined="true"
-                        (onClick)="exportPDF()"
                         icon="pi pi-file-pdf"
                     ></p-button>
                 </div>
@@ -74,6 +85,7 @@
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search" />
                         <input
+                            #filter
                             pInputText
                             class="sm:w-64 lg:w-96"
                             type="text"
@@ -97,37 +109,41 @@
                 <th id="check" style="width: 3em">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th id="key" pSortableColumn="clave" style="min-width: 6rem">
+                <th id="key" pSortableColumn="doctorId" style="min-width: 6rem">
                     {{ 'labels.key' | translate }}
-                    <p-sortIcon field="clave"></p-sortIcon>
+                    <p-sortIcon field="key"></p-sortIcon>
                 </th>
-                <th id="name" pSortableColumn="nombre" style="min-width: 10rem">
+                <th id="name" pSortableColumn="firstName" style="min-width: 10rem">
                     {{ 'labels.name' | translate }}
-                    <p-sortIcon field="nombre"></p-sortIcon>
+                    <p-sortIcon field="firstName"></p-sortIcon>
                 </th>
-                <th id="lastname" pSortableColumn="apellidos" style="min-width: 12rem">
+                <th id="lastname" pSortableColumn="lastFathName" style="min-width: 12rem">
                     {{ 'labels.lastname' | translate }}
-                    <p-sortIcon field="apellidos"></p-sortIcon>
+                    <p-sortIcon field="lastName"></p-sortIcon>
                 </th>
-                <th id="birthDate" pSortableColumn="fechaNacimiento" style="min-width: 8rem">
+                <th id="clinic" pSortableColumn="clinic" style="min-width: 10rem">
+                    {{ 'labels.clinic' | translate }}
+                    <p-sortIcon field="clinic"></p-sortIcon>
+                </th>
+                <th id="birthDate" pSortableColumn="birthDate" style="min-width: 10rem">
                     {{ 'labels.birthDate' | translate }}
-                    <p-sortIcon field="fechaNacimiento"></p-sortIcon>
+                    <p-sortIcon field="birthDate"></p-sortIcon>
                 </th>
-                <th id="gender" pSortableColumn="genero" style="min-width: 8rem">
+                <th id="gender" pSortableColumn="gender" style="min-width: 8rem">
                     {{ 'labels.gender' | translate }}
-                    <p-sortIcon field="genero"></p-sortIcon>
+                    <p-sortIcon field="gender"></p-sortIcon>
                 </th>
-                <th id="postalCode" pSortableColumn="codigoPostal" style="min-width: 6rem">
+                <th id="postalCode" pSortableColumn="postalCode" style="min-width: 6rem">
                     {{ 'labels.postalCode' | translate }}
-                    <p-sortIcon field="codigoPostal"></p-sortIcon>
+                    <p-sortIcon field="postalCode"></p-sortIcon>
                 </th>
-                <th id="address" pSortableColumn="direccion" style="min-width: 18rem">
+                <th id="address" pSortableColumn="address" style="min-width: 18rem">
                     {{ 'labels.address' | translate }}
-                    <p-sortIcon field="direccion"></p-sortIcon>
+                    <p-sortIcon field="address"></p-sortIcon>
                 </th>
-                <th id="state" pSortableColumn="estado" style="min-width: 8rem">
+                <th id="state" pSortableColumn="state" style="min-width: 8rem">
                     {{ 'labels.state' | translate }}
-                    <p-sortIcon field="estado"></p-sortIcon>
+                    <p-sortIcon field="state"></p-sortIcon>
                 </th>
                 <th scope="col" style="min-width: 12rem">{{ 'labels.actions' | translate }}</th>
             </tr>
@@ -139,14 +155,15 @@
                 <td>
                     <p-tableCheckbox [value]="doctor"></p-tableCheckbox>
                 </td>
-                <td>{{ doctor.clave }}</td>
-                <td>{{ doctor.nombre }}</td>
-                <td>{{ doctor.apellidoPaterno }} {{ doctor.apellidoMaterno }} </td>
-                <td>{{ doctor.fechaNacimiento }}</td>
-                <td>{{ doctor.genero }}</td>
-                <td>{{ doctor.codigoPostal }}</td>
-                <td>{{ doctor.direccion }}</td>
-                <td>{{ doctor.estado }}</td>
+                <td>{{ doctor.doctorId }}</td>
+                <td>{{ doctor.firstName }}</td>
+                <td>{{ doctor.lastFathName }} {{ doctor.lastMontName }} </td>
+                <td>{{ doctor.clinic }}</td>
+                <td>{{ doctor.birthDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ doctor.gender }}</td>
+                <td>{{ doctor.postalCode }}</td>
+                <td>{{ doctor.address }}</td>
+                <td>{{ doctor.state }}</td>
                 <td>
                     <p-button
                         icon="pi pi-pencil"
@@ -154,7 +171,7 @@
                         severity="info"
                         [rounded]="true"
                         [outlined]="true"
-                        (click)="editarDoctor(doctor.clave)"
+                        (click)="editDoctor(doctor)"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     />
@@ -164,7 +181,7 @@
                         severity="danger"
                         [rounded]="true"
                         [outlined]="true"
-                        (click)="eliminarDoctor(doctor.clave)"
+                        (click)="eliminarDoctor(doctor)"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     />
@@ -187,111 +204,227 @@
 </div>
 
 <p-dialog
-    header="{{ 'doctor-component.titleModal' | translate }}"
+    header="{{ 'doctor.titleModal' | translate }}"
     class="font-bold"
     [modal]="true"
     [(visible)]="isVisible"
     [style]="{ width: '70rem', 'min-width': '30rem', 'max-width': '70rem', 'overflow-x': 'hidden', 'padding': '0.5rem' }"
-    (onHide)="cerrarVentanaNotificacion()">
-
+    [draggable]="false"
+    [resizable]="false"
+    [contentStyle]="{ 'overflow': 'visible' }"
+    (onHide)="closeModal()"
+>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="nombre">{{ 'labels.name' | translate }}</label>
             <input
                 pInputText
                 id="nombre"
-                [(ngModel)]="nombre"
-                type="text" placeholder="{{ 'placeholders.name' | translate }}" />
+                [(ngModel)]="firstName"
+                (ngModelChange)="onFirstNameChange()"
+                [ngClass]="{
+                    'ng-dirty': firstNameError,
+                    'ng-invalid': firstNameError
+                }"
+                type="text" placeholder="{{ 'placeholders.name' | translate }}"
+                maxlength="100"
+            />
+            <small
+                *ngIf="firstNameError"
+                class="text-red-500"
+            >{{ firstNameError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="paterno">{{ 'labels.fatherLastName' | translate }}</label>
             <input
                 pInputText
                 id="paterno"
-                [(ngModel)]="apellidoPaterno"
-                type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}" />
+                [(ngModel)]="lastFatherName"
+                (ngModelChange)="onLastFatherNameChange()"
+                [ngClass]="{
+                    'ng-dirty': lastFatherNameError,
+                    'ng-invalid': lastFatherNameError
+                }"
+                type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}"
+                maxlength="100"
+            />
+            <small
+                *ngIf="lastFatherNameError"
+                class="text-red-500"
+            >{{ lastFatherNameError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="materno">{{ 'labels.motherLastName' | translate }}</label>
             <input
                 pInputText
                 id="materno"
-                [(ngModel)]="apellidoMaterno"
-                type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}" />
+                [(ngModel)]="lastMotherName"
+                (ngModelChange)="onLastMotherNameChange()"
+                [ngClass]="{
+                    'ng-dirty': lastMotherNameError,
+                    'ng-invalid': lastMotherNameError
+                }"
+                type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}"
+                maxlength="100"
+            />
+            <small
+                *ngIf="lastMotherNameError"
+                class="text-red-500"
+            >{{ lastMotherNameError }}</small>
         </div>
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
+        <div class="flex flex-col grow basis-0 gap-2">
+            <label for="clinicModal">{{ 'labels.clinic' | translate }}</label>
+            <p-select
+                id="clinicModal"
+                [options]="clinics"
+                optionLabel="name"
+                [(ngModel)]="clinicSelected"
+                (ngModelChange)="onClinicChange()"
+                [ngClass]="{
+                    'ng-dirty': clinicError,
+                    'ng-invalid': clinicError
+                }"
+                placeholder="{{ 'placeholders.clinic' | translate }}"
+            ></p-select>
+            <small
+                *ngIf="clinicError"
+                class="text-red-500"
+            >{{ clinicError }}</small>
+        </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="correo">{{ 'labels.email' | translate }}</label>
             <input
                 pInputText
                 id="correo"
-                [(ngModel)]="correo"
-                type="text" placeholder="{{ 'placeholders.email' | translate }}" />
+                [(ngModel)]="email"
+                (ngModelChange)="onEmailChange()"
+                [ngClass]="{
+                    'ng-dirty': emailError,
+                    'ng-invalid': emailError
+                }"
+                type="text" placeholder="{{ 'placeholders.email' | translate }}"
+                maxlength="100"
+            />
+            <small
+                *ngIf="emailError"
+                class="text-red-500"
+            >{{ emailError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="telefono">{{ 'labels.phone' | translate }}</label>
             <input
                 pInputText
                 id="telefono"
-                [(ngModel)]="telefono"
-                type="text" placeholder="{{ 'placeholders.phone' | translate }}" />
+                [(ngModel)]="phone"
+                type="text" placeholder="{{ 'placeholders.phone' | translate }}"
+                maxlength="10"
+            />
         </div>
-
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="nacimiento">{{ 'labels.birthDate' | translate }}</label>
-            <input
-                pInputText
-                id="nacimiento"
-                [(ngModel)]="fechaNacimiento"
-                type="text" placeholder="{{ 'placeholders.birthDate' | translate }}" />
-            <!--
-            <p-date-picker
+            <p-calendar
                 id="nacimiento"
                 showIcon="true"
                 class="w-full"
-                [ngModel]="fechaNacimiento"
+                [(ngModel)]="birthDate"
+                (ngModelChange)="onBirtDateChange()"
+                [ngClass]="{
+                    'ng-dirty': birthDateError,
+                    'ng-invalid': birthDateError
+                }"
                 [style]="{ width: '100%' }"
                 placeholder="{{ 'placeholders.birthDate' | translate }}"
-            ></p-date-picker>
-            -->
+            ></p-calendar>
+            <small
+                *ngIf="birthDateError"
+                class="text-red-500"
+            >{{ birthDateError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="genero">{{ 'labels.gender' | translate }}</label>
             <p-select
                 id="genero"
-                [options]="generos"
-                [(ngModel)]="genero"
+                [options]="genders"
+                [(ngModel)]="gender"
+                [ngClass]="{
+                    'ng-dirty': genderError,
+                    'ng-invalid': genderError
+                }"
                 placeholder="{{ 'placeholders.gender' | translate }}"
             ></p-select>
+            <small
+                *ngIf="genderError"
+                class="text-red-500"
+            >{{ genderError }}</small>
         </div>
     </div>
     <div class="flex flex-wrap gap-6">
-        <div class="flex flex-col grow basis-0 gap-2">
-            <label for="direccion">{{ 'labels.address' | translate }}</label>
-            <input
-                pInputText
-                id="direccion"
-                [(ngModel)]="direccion"
-                type="text"
-                placeholder="{{ 'placeholders.address' | translate }}"
-            />
-        </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="cp">{{ 'labels.postalCode' | translate }}</label>
             <input
                 pInputText
                 id="cp"
-                [(ngModel)]="codigoPostal"
-                type="text" placeholder="{{ 'placeholders.postalCode' | translate }}" />
+                [(ngModel)]="postalCode"
+                (ngModelChange)="onPostalCodeChange()"
+                [ngClass]="{
+                    'ng-dirty': postalCodeError,
+                    'ng-invalid': postalCodeError
+                }"
+                type="text"
+                placeholder="{{ 'placeholders.postalCode' | translate }}"
+                maxlength="10"
+            />
+            <small
+                *ngIf="postalCodeError"
+                class="text-red-500"
+            >{{ postalCodeError }}</small>
+        </div>
+        <div class="flex flex-col grow basis-0 gap-2">
+            <label for="direccion">{{ 'labels.address' | translate }}</label>
+            <input
+                pInputText
+                id="direccion"
+                [(ngModel)]="address"
+                (ngModelChange)="onAddressChange()"
+                [ngClass]="{
+                    'ng-dirty': addressError,
+                    'ng-invalid': addressError
+                }"
+                placeholder="{{ 'placeholders.address' | translate }}"
+                maxlength="250"
+            />
+            <small
+                *ngIf="addressError"
+                class="text-red-500"
+            >{{ addressError }}</small>
+        </div>
+        <div class="flex flex-col grow basis-0 gap-2">
+            <label for="stateModal">{{ 'labels.state' | translate }}</label>
+            <p-select
+                id="stateModal"
+                [options]="states"
+                [(ngModel)]="state"
+                [ngClass]="{
+                    'ng-dirty': stateError,
+                    'ng-invalid': stateError
+                }"
+                appendTo="body"
+                placeholder="{{ 'placeholders.state' | translate }}"
+            ></p-select>
+            <small
+                *ngIf="stateError"
+                class="text-red-500"
+            >{{ stateError }}</small>
         </div>
     </div>
     <div class="flex flex-wrap justify-end gap-6 mt-6">
         <p-button
             severity="danger"
-            (onClick)="cerrarVentanaNotificacion()"
+            (onClick)="closeModal()"
             label="{{ 'buttons.cancel' | translate }}"
         ></p-button>
         <p-button
@@ -302,7 +435,7 @@
         <p-button
             *ngIf="isUpdate"
             label="{{ 'buttons.update' | translate }}"
-            (onClick)="actualizarDoctor()"
+            (onClick)="updateDoctorRequest()"
         ></p-button>
     </div>
 

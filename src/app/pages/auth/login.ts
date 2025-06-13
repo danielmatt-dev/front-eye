@@ -6,7 +6,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
-import { AppFloatingConfigurator } from '../../feature/presentation/layout/component/app.floatingconfigurator';
+import { AppFloatingConfigurator } from '../../feature/layout/component/app.floatingconfigurator';
 import { LocalStorageService } from '../../shared/services/local.storage.service';
 
 @Component({

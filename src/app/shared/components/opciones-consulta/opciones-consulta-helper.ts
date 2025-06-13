@@ -20,14 +20,6 @@ export class OpcionesConsultaHelper extends ValidatorHelper {
         return OpcionesConsultaHelper.instance
     }
 
-    constructor(
-        messageService: MessageService,
-        translateService: TranslateService,
-        primeng: PrimeNG
-    ) {
-        super(messageService, translateService, primeng);
-    }
-
     validarRangoSeleccionado(rango: string, fechas: Date[]) {
 
         if (rango === 'Personalizado' && fechas.length === 0) {

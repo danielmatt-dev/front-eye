@@ -1,7 +1,7 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Theme } from '../../../../shared/enums/enums';
-import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { Theme } from '../../../shared/enums/enums';
+import { LocalStorageService } from '../../../shared/services/local.storage.service';
 
 export interface layoutConfig {
     preset?: string;
@@ -37,7 +37,7 @@ export class LayoutService {
     };
 
     _state: LayoutState = {
-        staticMenuDesktopInactive: false,
+        staticMenuDesktopInactive: true,
         overlayMenuActive: false,
         configSidebarVisible: false,
         staticMenuMobileActive: false,

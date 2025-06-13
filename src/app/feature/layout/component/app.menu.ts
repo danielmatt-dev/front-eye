@@ -3,7 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { CommonModule } from '@angular/common';
-import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { LocalStorageService } from '../../../shared/services/local.storage.service';
 
 @Component({
     selector: 'app-menu',

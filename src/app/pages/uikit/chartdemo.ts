@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import { FluidModule } from 'primeng/fluid';
 import { debounceTime, Subscription } from 'rxjs';
-import { LayoutService } from '../../feature/presentation/layout/service/layout.service';
+import { LayoutService } from '../../feature/layout/service/layout.service';
 
 @Component({
     selector: 'app-chart-demo',
