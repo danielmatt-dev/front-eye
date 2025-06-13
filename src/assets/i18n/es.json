@@ -141,10 +141,12 @@
         },
         "warn": {
             "titles": {
+                "invalidForm": "Formulario no válido",
                 "dateRangeNotSelected": "Rango de fechas no seleccionado",
                 "dateFinalNotSelected": "Fecha final no seleccionada"
             },
             "messages": {
+                "invalidForm": "Por favor, revisa los campos marcados en rojo",
                 "dateRangeNotSelected": "Por favor, selecciona la fecha de inicio y la fecha final para realizar la consulta",
                 "dateFinalNotSelected": "Por favor, selecciona la fecha final para realizar la consulta"
             }
@@ -256,5 +258,16 @@
             "message": "¿Estás seguro de que deseas eliminar los doctores seleccionados?",
             "header": "Confirmar eliminación"
         }
+    },
+    "validations": {
+        "required": "Campo obligatorio",
+        "maxLength": "No superar {1} caracteres",
+        "pattern": "Solo letras y espacios",
+        "noNumbers": "No se permiten números",
+        "onlyNumbers": "Solo dígitos numéricos",
+        "noSpecialChars": "Sin caracteres especiales",
+        "selectionRequired": "Debes seleccionar una opción",
+        "email": "Formato de correo electrónico incorrecto",
+        "birthDateAdult": "Debe ser mayor de edad"
     }
 }
