@@ -68,7 +68,6 @@
                         icon="pi pi-file-excel"
                         severity="success"
                         outlined="true"
-                        (onClick)="exportExcel()"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     ></p-button>
@@ -77,7 +76,6 @@
                         label="{{ 'buttons.downloadPDFTable' | translate }}"
                         severity="danger"
                         outlined="true"
-                        (onClick)="exportPDF()"
                         icon="pi pi-file-pdf"
                     ></p-button>
                 </div>
@@ -211,8 +209,11 @@
     [modal]="true"
     [(visible)]="isVisible"
     [style]="{ width: '70rem', 'min-width': '30rem', 'max-width': '70rem', 'overflow-x': 'hidden', 'padding': '0.5rem' }"
-    (onHide)="closeModal()">
-
+    [draggable]="false"
+    [resizable]="false"
+    [contentStyle]="{ 'overflow': 'visible' }"
+    (onHide)="closeModal()"
+>
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="nombre">{{ 'labels.name' | translate }}</label>
@@ -220,7 +221,18 @@
                 pInputText
                 id="nombre"
                 [(ngModel)]="firstName"
-                type="text" placeholder="{{ 'placeholders.name' | translate }}" />
+                (ngModelChange)="onFirstNameChange()"
+                [ngClass]="{
+                    'ng-dirty': firstNameError,
+                    'ng-invalid': firstNameError
+                }"
+                type="text" placeholder="{{ 'placeholders.name' | translate }}"
+                maxlength="100"
+            />
+            <small
+                *ngIf="firstNameError"
+                class="text-red-500"
+            >{{ firstNameError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="paterno">{{ 'labels.fatherLastName' | translate }}</label>
@@ -228,7 +240,18 @@
                 pInputText
                 id="paterno"
                 [(ngModel)]="lastFatherName"
-                type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}" />
+                (ngModelChange)="onLastFatherNameChange()"
+                [ngClass]="{
+                    'ng-dirty': lastFatherNameError,
+                    'ng-invalid': lastFatherNameError
+                }"
+                type="text" placeholder="{{ 'placeholders.fatherLastName' | translate }}"
+                maxlength="100"
+            />
+            <small
+                *ngIf="lastFatherNameError"
+                class="text-red-500"
+            >{{ lastFatherNameError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="materno">{{ 'labels.motherLastName' | translate }}</label>
@@ -236,7 +259,18 @@
                 pInputText
                 id="materno"
                 [(ngModel)]="lastMotherName"
-                type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}" />
+                (ngModelChange)="onLastMotherNameChange()"
+                [ngClass]="{
+                    'ng-dirty': lastMotherNameError,
+                    'ng-invalid': lastMotherNameError
+                }"
+                type="text" placeholder="{{ 'placeholders.motherLastName' | translate }}"
+                maxlength="100"
+            />
+            <small
+                *ngIf="lastMotherNameError"
+                class="text-red-500"
+            >{{ lastMotherNameError }}</small>
         </div>
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
@@ -247,8 +281,17 @@
                 [options]="clinics"
                 optionLabel="name"
                 [(ngModel)]="clinicSelected"
+                (ngModelChange)="onClinicChange()"
+                [ngClass]="{
+                    'ng-dirty': clinicError,
+                    'ng-invalid': clinicError
+                }"
                 placeholder="{{ 'placeholders.clinic' | translate }}"
             ></p-select>
+            <small
+                *ngIf="clinicError"
+                class="text-red-500"
+            >{{ clinicError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="correo">{{ 'labels.email' | translate }}</label>
@@ -256,7 +299,18 @@
                 pInputText
                 id="correo"
                 [(ngModel)]="email"
-                type="text" placeholder="{{ 'placeholders.email' | translate }}" />
+                (ngModelChange)="onEmailChange()"
+                [ngClass]="{
+                    'ng-dirty': emailError,
+                    'ng-invalid': emailError
+                }"
+                type="text" placeholder="{{ 'placeholders.email' | translate }}"
+                maxlength="100"
+            />
+            <small
+                *ngIf="emailError"
+                class="text-red-500"
+            >{{ emailError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="telefono">{{ 'labels.phone' | translate }}</label>
@@ -264,7 +318,9 @@
                 pInputText
                 id="telefono"
                 [(ngModel)]="phone"
-                type="text" placeholder="{{ 'placeholders.phone' | translate }}" />
+                type="text" placeholder="{{ 'placeholders.phone' | translate }}"
+                maxlength="10"
+            />
         </div>
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
@@ -275,9 +331,18 @@
                 showIcon="true"
                 class="w-full"
                 [(ngModel)]="birthDate"
+                (ngModelChange)="onBirtDateChange()"
+                [ngClass]="{
+                    'ng-dirty': birthDateError,
+                    'ng-invalid': birthDateError
+                }"
                 [style]="{ width: '100%' }"
                 placeholder="{{ 'placeholders.birthDate' | translate }}"
             ></p-calendar>
+            <small
+                *ngIf="birthDateError"
+                class="text-red-500"
+            >{{ birthDateError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="genero">{{ 'labels.gender' | translate }}</label>
@@ -285,8 +350,16 @@
                 id="genero"
                 [options]="genders"
                 [(ngModel)]="gender"
+                [ngClass]="{
+                    'ng-dirty': genderError,
+                    'ng-invalid': genderError
+                }"
                 placeholder="{{ 'placeholders.gender' | translate }}"
             ></p-select>
+            <small
+                *ngIf="genderError"
+                class="text-red-500"
+            >{{ genderError }}</small>
         </div>
     </div>
     <div class="flex flex-wrap gap-6">
@@ -296,7 +369,19 @@
                 pInputText
                 id="cp"
                 [(ngModel)]="postalCode"
-                type="text" placeholder="{{ 'placeholders.postalCode' | translate }}" />
+                (ngModelChange)="onPostalCodeChange()"
+                [ngClass]="{
+                    'ng-dirty': postalCodeError,
+                    'ng-invalid': postalCodeError
+                }"
+                type="text"
+                placeholder="{{ 'placeholders.postalCode' | translate }}"
+                maxlength="10"
+            />
+            <small
+                *ngIf="postalCodeError"
+                class="text-red-500"
+            >{{ postalCodeError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="direccion">{{ 'labels.address' | translate }}</label>
@@ -304,9 +389,18 @@
                 pInputText
                 id="direccion"
                 [(ngModel)]="address"
-                type="text"
+                (ngModelChange)="onAddressChange()"
+                [ngClass]="{
+                    'ng-dirty': addressError,
+                    'ng-invalid': addressError
+                }"
                 placeholder="{{ 'placeholders.address' | translate }}"
+                maxlength="250"
             />
+            <small
+                *ngIf="addressError"
+                class="text-red-500"
+            >{{ addressError }}</small>
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="stateModal">{{ 'labels.state' | translate }}</label>
@@ -314,8 +408,17 @@
                 id="stateModal"
                 [options]="states"
                 [(ngModel)]="state"
+                [ngClass]="{
+                    'ng-dirty': stateError,
+                    'ng-invalid': stateError
+                }"
+                appendTo="body"
                 placeholder="{{ 'placeholders.state' | translate }}"
             ></p-select>
+            <small
+                *ngIf="stateError"
+                class="text-red-500"
+            >{{ stateError }}</small>
         </div>
     </div>
     <div class="flex flex-wrap justify-end gap-6 mt-6">
