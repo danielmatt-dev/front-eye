@@ -2,6 +2,7 @@ import { ValidatorHelper } from '../../../../../shared/utils/validator.helper';
 import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimeNG } from 'primeng/config';
+import { ClinicEntity } from '../../../../clinic/domain/entity/clinic.entity';
 
 export class DoctorComponentHelper extends ValidatorHelper {
 
@@ -24,6 +25,15 @@ export class DoctorComponentHelper extends ValidatorHelper {
         const title = this.getText(`toast.success.titles.${type}`)
         const message = this.getText(`toast.success.messages.${type}`).replace('@', param)
         this.sendToastMessage({title: title, message: message, type: 'success'})
+    }
+
+    validateSelectedClinic(clinic?: ClinicEntity): string | undefined {
+
+        if (!clinic) {
+            return this.getText(this.validationsKey + 'selectionRequired')
+        }
+
+        return undefined
     }
 
 }
