@@ -19,7 +19,6 @@ import { Toast } from 'primeng/toast';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'
-import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
 import { CreateDoctor } from '../../domain/use_cases/createDoctor';
 import { GetAllDoctors } from '../../domain/use_cases/getAllDoctors';
 import { UpdateDoctor, UpdateDoctorParams } from '../../domain/use_cases/updateDoctor';
@@ -78,7 +77,6 @@ export class DoctorComponent implements OnInit {
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
-    localeTextProvider: LocaleTextProvider;
     doctorComponentHelper: DoctorComponentHelper
 
     /* Labels */
@@ -96,9 +94,8 @@ export class DoctorComponent implements OnInit {
         private readonly deleteDoctors: DeleteDoctors,
         private readonly getAllClinis: GetAllClinics
     ) {
-        this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(messageService, translateService, primeng);
-        this.localeTextProvider = LocaleTextProvider.getInstance(this.translateService, this.primeng);
-        this.doctorComponentHelper = DoctorComponentHelper.getInstance(messageService, translateService, primeng)
+        this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.doctorComponentHelper = DoctorComponentHelper.getInstance(this.messageService, this.translateService, this.primeng)
     }
 
     async ngOnInit() {
@@ -118,13 +115,15 @@ export class DoctorComponent implements OnInit {
         const resultUseCase = await this.getAllDoctors.call(new NoParams());
 
         if (resultUseCase._tag === 'Left') {
-
+            this.doctorComponentHelper.getToastException(resultUseCase.left)
+            return
         }
 
         if (resultUseCase._tag === 'Right') {
-            this.allDoctors = resultUseCase.right;
-            this.filteredDoctors = this.allDoctors;
+            this.allDoctors = resultUseCase.right
+            this.filteredDoctors = this.allDoctors
         }
+
     }
 
     async getClinics() {
@@ -132,10 +131,11 @@ export class DoctorComponent implements OnInit {
         const resultUseCase = await this.getAllClinis.call(new NoParams())
 
         if (resultUseCase._tag === 'Left') {
-
+            this.doctorComponentHelper.getToastException(resultUseCase.left)
+            return
         }
 
-        if (resultUseCase._tag === 'Right'){
+        if (resultUseCase._tag === 'Right') {
             this.clinics = resultUseCase.right
         }
 
@@ -148,12 +148,14 @@ export class DoctorComponent implements OnInit {
         const resultCreateDoctor = await this.createDoctor.call(doctor)
 
         if (resultCreateDoctor._tag === 'Left') {
-
+            this.doctorComponentHelper.getToastException(resultCreateDoctor.left)
+            return
         }
 
         if (resultCreateDoctor._tag === 'Right') {
-            // Mensage de éxito
-            this.allDoctors.push(resultCreateDoctor.right)
+            const doctorSuccess = resultCreateDoctor.right
+            this.doctorComponentHelper.sendToastMessageSuccess('createDoctor', `${doctorSuccess.firstName} ${doctorSuccess.lastFathName}`)
+            this.allDoctors.push(doctorSuccess)
         }
 
         this.closeModal();
@@ -210,12 +212,13 @@ export class DoctorComponent implements OnInit {
             new UpdateDoctorParams(doctor, this.doctorId))
 
         if (updateResult._tag === 'Left') {
-
+            this.doctorComponentHelper.getToastException(updateResult.left)
+            return
         }
 
         if (updateResult._tag === 'Right') {
-            // Mensaje de éxito
             const doctorUpdated = updateResult.right
+            this.doctorComponentHelper.sendToastMessageSuccess('updateDoctor', `${doctorUpdated.firstName} ${doctorUpdated.lastFathName}`)
 
             const idx = this.allDoctors.findIndex(d => d.doctorId === doctorUpdated.doctorId)
 
@@ -230,12 +233,13 @@ export class DoctorComponent implements OnInit {
 
     eliminarDoctor(doctor: DoctorResponseEntity): void {
 
+        const message = this.doctorComponentHelper.getText("confirmations.deleteDoctor.message")
+        const header = this.doctorComponentHelper.getText("confirmations.deleteDoctor.message")
+
         this.confirmationService.confirm({
-            message: `¿Estás seguro de eliminar al doctor ${doctor.firstName} ${doctor.lastFathName}?`,
-            header: 'Confirmación de Eliminación',
+            message: message.replace('{0}', `${doctor.firstName} ${doctor.lastFathName}`),
+            header: header,
             icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Sí',
-            rejectLabel: 'No',
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button-secondary',
             accept: async () => {
@@ -248,14 +252,12 @@ export class DoctorComponent implements OnInit {
 
     eliminarDoctoresSeleccionados() {
 
-        if (this.selectedDoctores.length === 0) {
-            this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: 'No hay doctores seleccionados' });
-            return;
-        }
+        const message = this.doctorComponentHelper.getText("confirmations.deleteSelectedDoctors.message")
+        const header = this.doctorComponentHelper.getText("confirmations.deleteSelectedDoctors.message")
 
         this.confirmationService.confirm({
-            message: `¿Estás seguro de que deseas eliminar a los doctores seleccionados?`,
-            header: 'Confirmación de Eliminación',
+            message: message,
+            header: header,
             icon: 'pi pi-exclamation-triangle',
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button-secondary',
@@ -275,17 +277,23 @@ export class DoctorComponent implements OnInit {
         const resultUseCase = await this.deleteDoctors.call(ids)
 
         if (resultUseCase._tag === 'Left') {
-
+            this.doctorComponentHelper.getToastException(resultUseCase.left)
+            return
         }
 
         if (resultUseCase._tag === 'Right') {
+
+            if (this.selectedDoctores.length === 1) {
+                this.doctorComponentHelper.sendToastMessageSuccess('deleteDoctor', `${this.selectedDoctores[0].firstName} ${this.selectedDoctores[0].lastFathName}`)
+            } else {
+                this.doctorComponentHelper.sendToastMessageSuccess('deleteDoctors', `${ids.length}`)
+            }
 
             this.allDoctors = this.allDoctors.filter(
                 doctor => !ids.includes(doctor.doctorId))
 
             this.selectedDoctores = []
             this.filteredDoctors = this.allDoctors
-            // Mensaje de éxito
         }
 
     }
@@ -306,6 +314,9 @@ export class DoctorComponent implements OnInit {
 
     async openModal() {
         this.isVisible = true
+        if (this.clinics.length === 0) {
+            await this.getClinics()
+        }
     }
 
     closeModal() {
@@ -339,13 +350,12 @@ export class DoctorComponent implements OnInit {
     }
 
     filtrarDoctores(): void {
-        /*
         if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.periodoSeleccionado, this.fechasSeleccionadas)) {
             return;
         }
 
         if (this.fechasSeleccionadas.length === 0 || this.periodoSeleccionado === '') {
-            this.doctoresFiltrados = this.doctores;
+            this.filteredDoctors = this.allDoctors;
         }
 
         let fechaInicio: Date;
@@ -383,13 +393,15 @@ export class DoctorComponent implements OnInit {
         const formatoFecha = (fecha: Date) => fecha.toISOString().split('T')[0];
 
         // Filtrar doctores en base a la fechaAlta
-        this.doctoresFiltrados = this.doctores.filter((doctor) => {
-            const fechaAlta = new Date(doctor.fechaAlta.split('/').reverse().join('-')); // Convertir dd/MM/yyyy a yyyy-MM-dd
-            return formatoFecha(fechaAlta) >= formatoFecha(fechaInicio) && formatoFecha(fechaAlta) <= formatoFecha(fechaFin);
+        this.filteredDoctors = this.allDoctors.filter((doctor) => {
+            const fechaAlta = doctor.createdAt // Convertir dd/MM/yyyy a yyyy-MM-dd
+            if (fechaAlta) {
+                return formatoFecha(fechaAlta) >= formatoFecha(fechaInicio) && formatoFecha(fechaAlta) <= formatoFecha(fechaFin);
+            } else {
+                return false
+            }
         });
 
-        console.log('Doctores Filtrados:', this.doctoresFiltrados);
-        */
     }
 
     exportExcel() {
