@@ -4,8 +4,8 @@
 <!-- Opciones de consulta -->
 <div class="mb-8">
     <app-opciones-consulta
-        (periodoSeleccionado)="onPeriodoSeleccionado($event)"
-        (rangoFechasSeleccionado)="onRangoFechasSeleccionado($event)"
+        (periodoSeleccionado)="onPeriodSelected($event)"
+        (rangoFechasSeleccionado)="onDateRangeSelected($event)"
         (consultar)="filtrarDoctores()"
     />
 </div>

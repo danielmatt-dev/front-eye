@@ -27,6 +27,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { DoctorComponentHelper } from './validation/doctor.component.helper';
 import { DoctorRequestEntity } from '../../domain/entity/doctor.request.entity';
+import { FilterService } from '../../../../shared/services/filter.service';
 
 @Component({
     standalone: true,
@@ -102,7 +103,8 @@ export class DoctorComponent implements OnInit {
         private readonly getAllDoctors: GetAllDoctors,
         private readonly updateDoctor: UpdateDoctor,
         private readonly deleteDoctors: DeleteDoctors,
-        private readonly getAllClinis: GetAllClinics
+        private readonly getAllClinis: GetAllClinics,
+        private readonly filterService: FilterService
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
         this.doctorComponentHelper = DoctorComponentHelper.getInstance(this.messageService, this.translateService, this.primeng);
@@ -121,6 +123,7 @@ export class DoctorComponent implements OnInit {
         await this.getClinics();
     }
 
+    /* Llamadas a casos de uso */
     async getDoctors() {
         const resultUseCase = await this.getAllDoctors.call(new NoParams());
 
@@ -171,46 +174,66 @@ export class DoctorComponent implements OnInit {
         this.limpiarCampos();
     }
 
-    onFirstNameChange() {
-        this.firstNameError = this.doctorComponentHelper.validateName(this.firstName);
+    async updateDoctorRequest() {
+        const doctor = this.getDoctorRequest();
+
+        if (!doctor) {
+            return;
+        }
+
+        if (!this.doctorId) {
+            return;
+        }
+
+        const updateResult = await this.updateDoctor.call(new UpdateDoctorParams(doctor, this.doctorId));
+
+        if (updateResult._tag === 'Left') {
+            this.doctorComponentHelper.getToastException(updateResult.left);
+            return;
+        }
+
+        if (updateResult._tag === 'Right') {
+            const doctorUpdated = updateResult.right;
+            this.doctorComponentHelper.sendToastMessageSuccess('updateDoctor', `${doctorUpdated.firstName} ${doctorUpdated.lastFathName}`);
+
+            const idx = this.allDoctors.findIndex((d) => d.doctorId === doctorUpdated.doctorId);
+
+            if (idx !== -1) {
+                this.allDoctors[idx] = doctorUpdated;
+            }
+        }
+
+        this.closeModal();
     }
 
-    onLastFatherNameChange() {
-        this.lastFatherNameError = this.doctorComponentHelper.validateName(this.lastFatherName);
+    async deleteAllDoctors() {
+        const ids = this.selectedDoctores.map((d) => d.doctorId);
+        if (ids.length === 0) {
+            return;
+        }
+
+        const resultUseCase = await this.deleteDoctors.call(ids);
+
+        if (resultUseCase._tag === 'Left') {
+            this.doctorComponentHelper.getToastException(resultUseCase.left);
+            return;
+        }
+
+        if (resultUseCase._tag === 'Right') {
+            if (this.selectedDoctores.length === 1) {
+                this.doctorComponentHelper.sendToastMessageSuccess('deleteDoctor', `${this.selectedDoctores[0].firstName} ${this.selectedDoctores[0].lastFathName}`);
+            } else {
+                this.doctorComponentHelper.sendToastMessageSuccess('deleteDoctors', `${ids.length}`);
+            }
+
+            this.allDoctors = this.allDoctors.filter((doctor) => !ids.includes(doctor.doctorId));
+
+            this.selectedDoctores = [];
+            this.filteredDoctors = this.allDoctors;
+        }
     }
 
-    onLastMotherNameChange() {
-        this.lastMotherNameError = this.doctorComponentHelper.validateName(this.lastMotherName);
-    }
-
-    onClinicChange() {
-        this.clinicError = this.doctorComponentHelper.validateSelectedClinic(this.clinicSelected);
-    }
-
-    onGenderChange() {
-        this.genderError = this.doctorComponentHelper.validateSelected(this.gender)
-    }
-
-    onEmailChange() {
-        this.emailError = this.doctorComponentHelper.validateEmail(this.email)
-    }
-
-    onBirtDateChange() {
-        this.birthDateError = this.doctorComponentHelper.validateBirthDate(this.birthDate)
-    }
-
-    onAddressChange() {
-        this.addressError = this.doctorComponentHelper.validateField(this.address);
-    }
-
-    onPostalCodeChange() {
-        this.postalCodeError = this.doctorComponentHelper.validatePostalCode(this.postalCode)
-    }
-
-    onStateChange() {
-        this.stateError = this.doctorComponentHelper.validateSelected(this.state)
-    }
-
+    /* Preparación de datos para los casos de uso */
     getDoctorRequest(): DoctorRequestEntity | undefined {
         /* Validar campos */
         if (!this.isFormValid()) {
@@ -252,38 +275,6 @@ export class DoctorComponent implements OnInit {
         await this.openModal();
     }
 
-    async updateDoctorRequest() {
-        const doctor = this.getDoctorRequest();
-
-        if (!doctor) {
-            return;
-        }
-
-        if (!this.doctorId) {
-            return;
-        }
-
-        const updateResult = await this.updateDoctor.call(new UpdateDoctorParams(doctor, this.doctorId));
-
-        if (updateResult._tag === 'Left') {
-            this.doctorComponentHelper.getToastException(updateResult.left);
-            return;
-        }
-
-        if (updateResult._tag === 'Right') {
-            const doctorUpdated = updateResult.right;
-            this.doctorComponentHelper.sendToastMessageSuccess('updateDoctor', `${doctorUpdated.firstName} ${doctorUpdated.lastFathName}`);
-
-            const idx = this.allDoctors.findIndex((d) => d.doctorId === doctorUpdated.doctorId);
-
-            if (idx !== -1) {
-                this.allDoctors[idx] = doctorUpdated;
-            }
-        }
-
-        this.closeModal();
-    }
-
     eliminarDoctor(doctor: DoctorResponseEntity): void {
         const message = this.doctorComponentHelper.getText('confirmations.deleteDoctor.message');
         const header = this.doctorComponentHelper.getText('confirmations.deleteDoctor.message');
@@ -317,33 +308,98 @@ export class DoctorComponent implements OnInit {
         });
     }
 
-    async deleteAllDoctors() {
-        const ids = this.selectedDoctores.map((d) => d.doctorId);
-        if (ids.length === 0) {
+    /* Filtrado de lista de doctores */
+    filtrarDoctores(): void {
+        if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.periodoSeleccionado, this.fechasSeleccionadas)) {
             return;
         }
 
-        const resultUseCase = await this.deleteDoctors.call(ids);
-
-        if (resultUseCase._tag === 'Left') {
-            this.doctorComponentHelper.getToastException(resultUseCase.left);
-            return;
-        }
-
-        if (resultUseCase._tag === 'Right') {
-            if (this.selectedDoctores.length === 1) {
-                this.doctorComponentHelper.sendToastMessageSuccess('deleteDoctor', `${this.selectedDoctores[0].firstName} ${this.selectedDoctores[0].lastFathName}`);
-            } else {
-                this.doctorComponentHelper.sendToastMessageSuccess('deleteDoctors', `${ids.length}`);
-            }
-
-            this.allDoctors = this.allDoctors.filter((doctor) => !ids.includes(doctor.doctorId));
-
-            this.selectedDoctores = [];
-            this.filteredDoctors = this.allDoctors;
-        }
+        this.filteredDoctors = this.filterService.filterByPeriodo<DoctorResponseEntity>(
+            this.allDoctors,
+            doc => doc.createdAt,
+            this.periodoSeleccionado,
+            this.fechasSeleccionadas,
+        )
     }
 
+    /* Funciones de validación del formulario del doctor */
+    isFormValid(): boolean {
+        this.onFormChange()
+        return !(
+            this.firstNameError ??
+            this.lastFatherNameError ??
+            this.lastMotherNameError ??
+            this.clinicError ??
+            this.birthDateError ??
+            this.emailError ??
+            this.genderError ??
+            this.addressError ??
+            this.postalCodeError ??
+            this.stateError);
+    }
+
+    onFormChange() {
+        this.onFirstNameChange()
+        this.onLastFatherNameChange()
+        this.onLastMotherNameChange()
+        this.onClinicChange()
+        this.onBirtDateChange()
+        this.onEmailChange()
+        this.onGenderChange()
+        this.onAddressChange()
+        this.onPostalCodeChange()
+        this.onStateChange()
+    }
+
+    onFirstNameChange() {
+        this.firstNameError = this.doctorComponentHelper.validateName(this.firstName);
+    }
+
+    onLastFatherNameChange() {
+        this.lastFatherNameError = this.doctorComponentHelper.validateName(this.lastFatherName);
+    }
+
+    onLastMotherNameChange() {
+        this.lastMotherNameError = this.doctorComponentHelper.validateName(this.lastMotherName);
+    }
+
+    onClinicChange() {
+        this.clinicError = this.doctorComponentHelper.validateSelectedClinic(this.clinicSelected);
+    }
+
+    onGenderChange() {
+        this.genderError = this.doctorComponentHelper.validateSelected(this.gender)
+    }
+
+    onEmailChange() {
+        this.emailError = this.doctorComponentHelper.validateEmail(this.email)
+    }
+
+    onBirtDateChange() {
+        this.birthDateError = this.doctorComponentHelper.validateBirthDate(this.birthDate)
+    }
+
+    onAddressChange() {
+        this.addressError = this.doctorComponentHelper.validateField(this.address);
+    }
+
+    onPostalCodeChange() {
+        this.postalCodeError = this.doctorComponentHelper.validatePostalCode(this.postalCode)
+    }
+
+    onStateChange() {
+        this.stateError = this.doctorComponentHelper.validateSelected(this.state)
+    }
+
+    onPeriodSelected(periodo: string) {
+        this.periodoSeleccionado = periodo;
+    }
+
+    onDateRangeSelected(fechas: Date[]) {
+        this.fechasSeleccionadas = fechas;
+    }
+
+    /*  Funciones de iteración con html */
     limpiarCampos() {
         this.clinicSelected = undefined;
         this.firstName = '';
@@ -400,96 +456,6 @@ export class DoctorComponent implements OnInit {
 
     onKeyUp(event: KeyboardEvent) {
         console.log('Key Up:', event.key);
-    }
-
-    onPeriodoSeleccionado(periodo: string) {
-        this.periodoSeleccionado = periodo;
-    }
-
-    onRangoFechasSeleccionado(fechas: Date[]) {
-        this.fechasSeleccionadas = fechas;
-    }
-
-    isFormValid(): boolean {
-        this.onFormChange()
-        return !(
-            this.firstNameError ??
-            this.lastFatherNameError ??
-            this.lastMotherNameError ??
-            this.clinicError ??
-            this.birthDateError ??
-            this.emailError ??
-            this.genderError ??
-            this.addressError ??
-            this.postalCodeError ??
-            this.stateError);
-    }
-
-    onFormChange() {
-        this.onFirstNameChange()
-        this.onLastFatherNameChange()
-        this.onLastMotherNameChange()
-        this.onClinicChange()
-        this.onBirtDateChange()
-        this.onEmailChange()
-        this.onGenderChange()
-        this.onAddressChange()
-        this.onPostalCodeChange()
-        this.onStateChange()
-    }
-
-    filtrarDoctores(): void {
-        if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.periodoSeleccionado, this.fechasSeleccionadas)) {
-            return;
-        }
-
-        if (this.fechasSeleccionadas.length === 0 || this.periodoSeleccionado === '') {
-            this.filteredDoctors = this.allDoctors;
-        }
-
-        let fechaInicio: Date;
-        let fechaFin: Date = new Date(); // Fecha de hoy
-
-        switch (this.periodoSeleccionado) {
-            case 'Mes actual':
-                // Primer día del mes actual hasta hoy
-                fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth(), 1);
-                break;
-            case '2 meses':
-                // Primer día de hace dos meses hasta hoy
-                fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth() - 1, 1);
-                break;
-            case '3 meses':
-                // Primer día de hace tres meses hasta hoy
-                fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth() - 2, 1);
-                break;
-            case 'Personalizado':
-                if (this.fechasSeleccionadas.length === 2) {
-                    fechaInicio = new Date(this.fechasSeleccionadas[0]);
-                    fechaFin = new Date(this.fechasSeleccionadas[1]);
-                }
-
-                if (this.fechasSeleccionadas[1] === null) {
-                    fechaInicio = new Date(this.fechasSeleccionadas[0]);
-                    fechaFin = new Date(this.fechasSeleccionadas[0]);
-                }
-                break;
-            default:
-                return;
-        }
-
-        // Formato de las fechas para comparar
-        const formatoFecha = (fecha: Date) => fecha.toISOString().split('T')[0];
-
-        // Filtrar doctores en base a la fechaAlta
-        this.filteredDoctors = this.allDoctors.filter((doctor) => {
-            const fechaAlta = doctor.createdAt; // Convertir dd/MM/yyyy a yyyy-MM-dd
-            if (fechaAlta) {
-                return formatoFecha(fechaAlta) >= formatoFecha(fechaInicio) && formatoFecha(fechaAlta) <= formatoFecha(fechaFin);
-            } else {
-                return false;
-            }
-        });
     }
 
 }
