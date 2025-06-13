@@ -135,6 +135,7 @@ export class DoctorComponent implements OnInit {
         if (resultUseCase._tag === 'Right') {
             this.allDoctors = resultUseCase.right;
             this.filteredDoctors = this.allDoctors;
+            this.filterDoctors()
         }
     }
 
@@ -168,10 +169,11 @@ export class DoctorComponent implements OnInit {
             const doctorSuccess = resultCreateDoctor.right;
             this.doctorComponentHelper.sendToastMessageSuccess('createDoctor', `${doctorSuccess.firstName} ${doctorSuccess.lastFathName}`);
             this.allDoctors.push(doctorSuccess);
+            this.filterDoctors()
         }
 
         this.closeModal();
-        this.limpiarCampos();
+        this.clearFields();
     }
 
     async updateDoctorRequest() {
@@ -201,6 +203,7 @@ export class DoctorComponent implements OnInit {
             if (idx !== -1) {
                 this.allDoctors[idx] = doctorUpdated;
             }
+            this.filterDoctors()
         }
 
         this.closeModal();
@@ -229,7 +232,7 @@ export class DoctorComponent implements OnInit {
             this.allDoctors = this.allDoctors.filter((doctor) => !ids.includes(doctor.doctorId));
 
             this.selectedDoctores = [];
-            this.filteredDoctors = this.allDoctors;
+            this.filterDoctors()
         }
     }
 
@@ -275,9 +278,9 @@ export class DoctorComponent implements OnInit {
         await this.openModal();
     }
 
-    eliminarDoctor(doctor: DoctorResponseEntity): void {
+    deleteDoctorConfirmation(doctor: DoctorResponseEntity): void {
+        const header = this.doctorComponentHelper.getText('confirmations.deleteDoctor.header');
         const message = this.doctorComponentHelper.getText('confirmations.deleteDoctor.message');
-        const header = this.doctorComponentHelper.getText('confirmations.deleteDoctor.message');
 
         this.confirmationService.confirm({
             message: message.replace('{0}', `${doctor.firstName} ${doctor.lastFathName}`),
@@ -292,7 +295,7 @@ export class DoctorComponent implements OnInit {
         });
     }
 
-    eliminarDoctoresSeleccionados() {
+    deleteDoctorsConfirmation() {
         const message = this.doctorComponentHelper.getText('confirmations.deleteSelectedDoctors.message');
         const header = this.doctorComponentHelper.getText('confirmations.deleteSelectedDoctors.message');
 
@@ -309,7 +312,7 @@ export class DoctorComponent implements OnInit {
     }
 
     /* Filtrado de lista de doctores */
-    filtrarDoctores(): void {
+    filterDoctors(): void {
         if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.periodoSeleccionado, this.fechasSeleccionadas)) {
             return;
         }
@@ -400,7 +403,7 @@ export class DoctorComponent implements OnInit {
     }
 
     /*  Funciones de iteración con html */
-    limpiarCampos() {
+    clearFields() {
         this.clinicSelected = undefined;
         this.firstName = '';
         this.lastFatherName = '';
@@ -438,7 +441,7 @@ export class DoctorComponent implements OnInit {
             this.isUpdate = false
         }
         this.isVisible = false;
-        this.limpiarCampos();
+        this.clearFields();
     }
 
     clear(table: Table) {

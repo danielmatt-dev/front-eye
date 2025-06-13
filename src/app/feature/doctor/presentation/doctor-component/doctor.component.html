@@ -6,7 +6,7 @@
     <app-opciones-consulta
         (periodoSeleccionado)="onPeriodSelected($event)"
         (rangoFechasSeleccionado)="onDateRangeSelected($event)"
-        (consultar)="filtrarDoctores()"
+        (consultar)="filterDoctors()"
     />
 </div>
 
@@ -26,7 +26,7 @@
                 label="{{ 'buttons.delete' | translate: { items: labelDoctors } }}"
                 severity="danger"
                 [disabled]="selectedDoctores.length === 0"
-                (onClick)="eliminarDoctoresSeleccionados()"
+                (onClick)="deleteDoctorsConfirmation()"
                 icon="pi pi-trash">
             </p-button>
         </div>
@@ -181,7 +181,7 @@
                         severity="danger"
                         [rounded]="true"
                         [outlined]="true"
-                        (click)="eliminarDoctor(doctor)"
+                        (click)="deleteDoctorConfirmation(doctor)"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     />
