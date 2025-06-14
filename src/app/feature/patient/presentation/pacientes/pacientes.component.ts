@@ -138,7 +138,7 @@ export class PacientesComponent implements OnInit {
 
         if (resultUseCase._tag === 'Right') {
             this.allPatients = resultUseCase.right;
-            this.filteredPatients = this.allPatients;
+            //this.filteredPatients = this.allPatients;
             this.filterPatients();
         }
     }
