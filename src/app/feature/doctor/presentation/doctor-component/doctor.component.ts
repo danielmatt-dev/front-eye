@@ -139,7 +139,7 @@ export class DoctorComponent implements OnInit {
 
         if (resultUseCase._tag === 'Right') {
             this.allDoctors = resultUseCase.right;
-            this.filteredDoctors = this.allDoctors;
+            //this.filteredDoctors = this.allDoctors;
             this.filterDoctors()
         }
     }

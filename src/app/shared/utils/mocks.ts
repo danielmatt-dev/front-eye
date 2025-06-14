@@ -1,3 +1,5 @@
+import { PatientWithInspectionsModel } from '../../feature/patient/data/models/patient.with.inspections.model';
+
 export const resultados = [
     'Todos', 'Proliferativo', 'Moderado', 'Leve', 'Sin Afección'
 ]
@@ -868,6 +870,20 @@ export const dataPointsMocks = [
         fechaCreacion: new Date('2025-04-23')
     },
 ];
+
+export const patientWithInspectionsMocks: PatientWithInspectionsModel[] =
+    dataPointsMocks.map(dp => new PatientWithInspectionsModel({
+        patientId:        Number(dp.id.replace(/^P/, '')),
+        fullName:         dp.name,
+        latitude:         dp.lat,
+        longitude:        dp.lng,
+        patientCreatedAt: dp.fechaCreacion,
+        lastInspectionId: Number(dp.id.replace(/^P/, '')),
+        lastResult:       dp.resultado,
+        lastDisease:      dp.afeccion,
+        lastInspectionDate: dp.fechaCreacion,
+        inspectionCount:  dp.numInspecciones,
+    }));
 
 export const doctores = [
     {
