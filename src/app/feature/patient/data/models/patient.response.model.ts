@@ -3,7 +3,7 @@ import { Expose, Type } from 'class-transformer';
 export class PatientResponseModel {
 
     @Expose({ name: 'patient_id' })
-    patientId?: number
+    patientId: number = 0
 
     @Expose({ name: 'first_name' })
     firstName: string = ''

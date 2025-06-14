@@ -9,7 +9,6 @@ import {
     InternalServerException, NetworkException,
     ResourceNotFoundException, TimeoutException
 } from '../exceptions/exceptions';
-import validator from 'validator';
 
 export abstract class ValidatorHelper {
     protected sendMessage: SendMessage;
@@ -90,44 +89,6 @@ export abstract class ValidatorHelper {
         this.showMessage({key: key, type: type, typeToast: 'ex'})
     }
 
-    validateName(firstName: string): string | undefined {
-
-        const message = this.validateField(firstName)
-        if (message) {
-            return message
-        }
-
-        const hasNumber = /\d/.test(firstName);
-        if (hasNumber) {
-            return this.getText(this.validationsKey + 'noNumbers');
-        }
-
-        const invalidChar = /[^A-Za-zÀ-ÿ ]/.test(firstName);
-        if (invalidChar) {
-            return this.getText(this.validationsKey + 'noSpecialChars');
-        }
-
-        return undefined
-    }
-
-    validatePostalCode(postalCode: string): string | undefined {
-        const message = this.validateField(postalCode, 10)
-        if (message) {
-            return message
-        }
-
-        const invalidChar = /[^A-Za-zÀ-ÿ ]/.test(postalCode);
-        if (!invalidChar) {
-            return this.getText(this.validationsKey + 'noSpecialChars');
-        }
-
-        if (!/^\d+$/.test(postalCode)) {
-            return this.getText(this.validationsKey + 'onlyNumbers');
-        }
-
-        return undefined
-    }
-
     validateSelected(value?: string): string | undefined {
 
         if (!value || value.trim().length === 0) {
@@ -145,43 +106,6 @@ export abstract class ValidatorHelper {
 
         if (value.length > maxLength) {
             return this.getText(this.validationsKey + 'maxLength').replace('{1}', `${maxLength}}`)
-        }
-
-        return undefined
-    }
-
-    validateEmail(email: string) {
-        const message = this.validateField(email)
-        if (message) {
-            return message
-        }
-
-        if (!validator.isEmail(email)) {
-            return this.getText(this.validationsKey + 'email')
-        }
-
-        return undefined
-    }
-
-    validateBirthDate(date?: Date) {
-        if (!date) {
-            return this.getText(this.validationsKey + 'required')
-        }
-
-        const today = new Date()
-
-        let age = today.getFullYear() - date.getFullYear();
-        const monthDiff = today.getMonth() - date.getMonth();
-        const dayDiff = today.getDate() - date.getDate();
-
-        // Ajustar si aún no ha cumplido años este año
-        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-            age--;
-        }
-
-        // 2. Verificar que tenga al menos 18 años
-        if (age < 18) {
-            return this.getText(this.validationsKey + 'birthDateAdult')
         }
 
         return undefined

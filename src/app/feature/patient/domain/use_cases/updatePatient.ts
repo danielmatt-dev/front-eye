@@ -16,7 +16,7 @@ export class UpdatePatient implements UseCase<PatientResponseEntity, PutPatientP
 
 }
 
-class PutPatientParams {
+export class PutPatientParams {
 
     request: PatientRequestEntity
     patientId: number
