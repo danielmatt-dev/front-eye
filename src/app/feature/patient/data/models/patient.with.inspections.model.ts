@@ -3,57 +3,37 @@ import { Expose, Type } from 'class-transformer';
 export class PatientWithInspectionsModel {
 
     @Expose({ name: 'patient_id' })
-    patientId: number
+    patientId: number = 0
 
     @Expose({ name: 'full_name' })
-    fullName: string
+    fullName: string = ''
 
-    latitude: number
+    latitude: number = 0.0
 
-    longitude: number
+    longitude: number = 0.0
 
     @Expose({ name: 'patient_created_at' })
     @Type(() => Date)
-    patientCreatedAt: Date
+    patientCreatedAt: Date = new Date()
 
     @Expose({ name: 'last_inspection_id' })
-    lastInspectionId: number
+    lastInspectionId: number = 0
 
     @Expose({ name: 'last_result' })
-    lastResult: string
+    lastResult: string = ''
 
     @Expose({ name: 'last_disease' })
-    lastDisease: string
+    lastDisease: string = ''
 
     @Expose({ name: 'last_inspection_date' })
     @Type(() => Date)
-    lastInspectionDate: Date
+    lastInspectionDate: Date = new Date()
 
     @Expose({ name: 'inspection_count' })
-    inspectionCount: number
+    inspectionCount: number = 0
 
-    constructor(options: {
-        patientId?: number
-        fullName?: string
-        latitude?: number
-        longitude?: number
-        patientCreatedAt?: Date
-        lastInspectionId?: number
-        lastResult?: string
-        lastDisease?: string
-        lastInspectionDate?: Date
-        inspectionCount?: number
-    } = {}) {
-        this.patientId = options.patientId || 0
-        this.fullName = options.fullName || ''
-        this.latitude = options.latitude || 0.0
-        this.longitude = options.longitude || 0.0
-        this.patientCreatedAt = options.patientCreatedAt || new Date()
-        this.lastInspectionId = options.lastInspectionId || 0
-        this.lastResult = options.lastResult || ''
-        this.lastDisease = options.lastDisease || ''
-        this.lastInspectionDate = options.lastInspectionDate || new Date()
-        this.inspectionCount = options.inspectionCount || 0
+    constructor(partial?: Partial<PatientWithInspectionsModel>) {
+        Object.assign(this, partial)
     }
 
 }
