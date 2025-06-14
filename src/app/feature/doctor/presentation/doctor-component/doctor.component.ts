@@ -25,7 +25,7 @@ import { GetAllClinics } from '../../../clinic/domain/use_cases/getAllClinics';
 import { ClinicEntity } from '../../../clinic/domain/entity/clinic.entity';
 import { CalendarModule } from 'primeng/calendar';
 import { NoParams } from '../../../../shared/utils/usecase';
-import { DoctorComponentHelper } from './validation/doctor.component.helper';
+import { PersonValidationHelper } from './validation/personValidationHelper';
 import { DoctorRequestEntity } from '../../domain/entity/doctor.request.entity';
 import { FilterService } from '../../../../shared/services/filter.service';
 
@@ -41,13 +41,16 @@ export class DoctorComponent implements OnInit {
 
     @ViewChild('filter') filter!: ElementRef;
 
+    /* Opciones de la tabla*/
+    isLoading = true
+
     /* Opciones de dialog */
     isUpdate = false;
     isVisible = false;
 
     /* Variables para opciones de consulta */
-    periodoSeleccionado = '';
-    fechasSeleccionadas: Date[] = [];
+    selectedPeriod = '';
+    selectedDates: Date[] = [];
 
     /* Catálogo de opciones */
     genders = generos;
@@ -57,7 +60,7 @@ export class DoctorComponent implements OnInit {
     /* Lista de doctores y filtrado */
     allDoctors: DoctorResponseEntity[] = [];
     filteredDoctors = this.allDoctors;
-    selectedDoctores: DoctorResponseEntity[] = [];
+    selectedDoctors: DoctorResponseEntity[] = [];
 
     /* Campos de doctor */
     doctorId?: number;
@@ -88,7 +91,7 @@ export class DoctorComponent implements OnInit {
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
-    doctorComponentHelper: DoctorComponentHelper;
+    validationHelper: PersonValidationHelper;
 
     /* Labels */
     labelDoctor = 'doctor';
@@ -107,7 +110,7 @@ export class DoctorComponent implements OnInit {
         private readonly filterService: FilterService
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
-        this.doctorComponentHelper = DoctorComponentHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validationHelper = PersonValidationHelper.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
     async ngOnInit() {
@@ -119,16 +122,18 @@ export class DoctorComponent implements OnInit {
             this.labelDoctors = res.toLowerCase();
         });
 
-        await this.getDoctors();
-        await this.getClinics();
+        await this.callGetAllDoctors();
+        await this.callGetAllClinics();
     }
 
     /* Llamadas a casos de uso */
-    async getDoctors() {
+    async callGetAllDoctors() {
+        this.isLoading = true
         const resultUseCase = await this.getAllDoctors.call(new NoParams());
+        this.isLoading = false
 
         if (resultUseCase._tag === 'Left') {
-            this.doctorComponentHelper.getToastException(resultUseCase.left);
+            this.validationHelper.getToastException(resultUseCase.left);
             return;
         }
 
@@ -139,11 +144,11 @@ export class DoctorComponent implements OnInit {
         }
     }
 
-    async getClinics() {
+    async callGetAllClinics() {
         const resultUseCase = await this.getAllClinis.call(new NoParams());
 
         if (resultUseCase._tag === 'Left') {
-            this.doctorComponentHelper.getToastException(resultUseCase.left);
+            this.validationHelper.getToastException(resultUseCase.left);
             return;
         }
 
@@ -152,7 +157,7 @@ export class DoctorComponent implements OnInit {
         }
     }
 
-    async addDoctor() {
+    async callCreateDoctor() {
         const doctor = this.getDoctorRequest();
         if (!doctor) {
             return;
@@ -161,13 +166,13 @@ export class DoctorComponent implements OnInit {
         const resultCreateDoctor = await this.createDoctor.call(doctor);
 
         if (resultCreateDoctor._tag === 'Left') {
-            this.doctorComponentHelper.getToastException(resultCreateDoctor.left);
+            this.validationHelper.getToastException(resultCreateDoctor.left);
             return;
         }
 
         if (resultCreateDoctor._tag === 'Right') {
             const doctorSuccess = resultCreateDoctor.right;
-            this.doctorComponentHelper.sendToastMessageSuccess('createDoctor', `${doctorSuccess.firstName} ${doctorSuccess.lastFathName}`);
+            this.validationHelper.sendToastMessageSuccess('createDoctor', `${doctorSuccess.firstName} ${doctorSuccess.lastFathName}`);
             this.allDoctors.push(doctorSuccess);
             this.filterDoctors()
         }
@@ -176,7 +181,7 @@ export class DoctorComponent implements OnInit {
         this.clearFields();
     }
 
-    async updateDoctorRequest() {
+    async callUpdateDoctor() {
         const doctor = this.getDoctorRequest();
 
         if (!doctor) {
@@ -190,13 +195,13 @@ export class DoctorComponent implements OnInit {
         const updateResult = await this.updateDoctor.call(new UpdateDoctorParams(doctor, this.doctorId));
 
         if (updateResult._tag === 'Left') {
-            this.doctorComponentHelper.getToastException(updateResult.left);
+            this.validationHelper.getToastException(updateResult.left);
             return;
         }
 
         if (updateResult._tag === 'Right') {
             const doctorUpdated = updateResult.right;
-            this.doctorComponentHelper.sendToastMessageSuccess('updateDoctor', `${doctorUpdated.firstName} ${doctorUpdated.lastFathName}`);
+            this.validationHelper.sendToastMessageSuccess('updateDoctor', `${doctorUpdated.firstName} ${doctorUpdated.lastFathName}`);
 
             const idx = this.allDoctors.findIndex((d) => d.doctorId === doctorUpdated.doctorId);
 
@@ -209,8 +214,8 @@ export class DoctorComponent implements OnInit {
         this.closeModal();
     }
 
-    async deleteAllDoctors() {
-        const ids = this.selectedDoctores.map((d) => d.doctorId);
+    async callDeleteAllDoctors() {
+        const ids = this.selectedDoctors.map((d) => d.doctorId);
         if (ids.length === 0) {
             return;
         }
@@ -218,20 +223,20 @@ export class DoctorComponent implements OnInit {
         const resultUseCase = await this.deleteDoctors.call(ids);
 
         if (resultUseCase._tag === 'Left') {
-            this.doctorComponentHelper.getToastException(resultUseCase.left);
+            this.validationHelper.getToastException(resultUseCase.left);
             return;
         }
 
         if (resultUseCase._tag === 'Right') {
-            if (this.selectedDoctores.length === 1) {
-                this.doctorComponentHelper.sendToastMessageSuccess('deleteDoctor', `${this.selectedDoctores[0].firstName} ${this.selectedDoctores[0].lastFathName}`);
+            if (this.selectedDoctors.length === 1) {
+                this.validationHelper.sendToastMessageSuccess('deleteDoctor', `${this.selectedDoctors[0].firstName} ${this.selectedDoctors[0].lastFathName}`);
             } else {
-                this.doctorComponentHelper.sendToastMessageSuccess('deleteDoctors', `${ids.length}`);
+                this.validationHelper.sendToastMessageSuccess('deleteDoctors', `${ids.length}`);
             }
 
             this.allDoctors = this.allDoctors.filter((doctor) => !ids.includes(doctor.doctorId));
 
-            this.selectedDoctores = [];
+            this.selectedDoctors = [];
             this.filterDoctors()
         }
     }
@@ -240,7 +245,7 @@ export class DoctorComponent implements OnInit {
     getDoctorRequest(): DoctorRequestEntity | undefined {
         /* Validar campos */
         if (!this.isFormValid()) {
-            this.doctorComponentHelper.showMessage({key: 'invalidForm'})
+            this.validationHelper.showMessage({key: 'invalidForm'})
             return undefined
         }
 
@@ -279,8 +284,8 @@ export class DoctorComponent implements OnInit {
     }
 
     deleteDoctorConfirmation(doctor: DoctorResponseEntity): void {
-        const header = this.doctorComponentHelper.getText('confirmations.deleteDoctor.header');
-        const message = this.doctorComponentHelper.getText('confirmations.deleteDoctor.message');
+        const header = this.validationHelper.getText('confirmations.deleteDoctor.header');
+        const message = this.validationHelper.getText('confirmations.deleteDoctor.message');
 
         this.confirmationService.confirm({
             message: message.replace('{0}', `${doctor.firstName} ${doctor.lastFathName}`),
@@ -289,15 +294,15 @@ export class DoctorComponent implements OnInit {
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button-secondary',
             accept: async () => {
-                this.selectedDoctores.push(doctor);
-                await this.deleteAllDoctors();
+                this.selectedDoctors.push(doctor);
+                await this.callDeleteAllDoctors();
             }
         });
     }
 
     deleteDoctorsConfirmation() {
-        const message = this.doctorComponentHelper.getText('confirmations.deleteSelectedDoctors.message');
-        const header = this.doctorComponentHelper.getText('confirmations.deleteSelectedDoctors.message');
+        const message = this.validationHelper.getText('confirmations.deleteSelectedDoctors.message');
+        const header = this.validationHelper.getText('confirmations.deleteSelectedDoctors.message');
 
         this.confirmationService.confirm({
             message: message,
@@ -306,22 +311,22 @@ export class DoctorComponent implements OnInit {
             acceptButtonStyleClass: 'p-button-danger',
             rejectButtonStyleClass: 'p-button-secondary',
             accept: async () => {
-                await this.deleteAllDoctors();
+                await this.callDeleteAllDoctors();
             }
         });
     }
 
     /* Filtrado de lista de doctores */
     filterDoctors(): void {
-        if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.periodoSeleccionado, this.fechasSeleccionadas)) {
+        if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.selectedPeriod, this.selectedDates)) {
             return;
         }
 
         this.filteredDoctors = this.filterService.filterByPeriodo<DoctorResponseEntity>(
             this.allDoctors,
             doc => doc.createdAt,
-            this.periodoSeleccionado,
-            this.fechasSeleccionadas,
+            this.selectedPeriod,
+            this.selectedDates,
         )
     }
 
@@ -355,56 +360,57 @@ export class DoctorComponent implements OnInit {
     }
 
     onFirstNameChange() {
-        this.firstNameError = this.doctorComponentHelper.validateName(this.firstName);
+        this.firstNameError = this.validationHelper.validateName(this.firstName);
     }
 
     onLastFatherNameChange() {
-        this.lastFatherNameError = this.doctorComponentHelper.validateName(this.lastFatherName);
+        this.lastFatherNameError = this.validationHelper.validateName(this.lastFatherName);
     }
 
     onLastMotherNameChange() {
-        this.lastMotherNameError = this.doctorComponentHelper.validateName(this.lastMotherName);
+        this.lastMotherNameError = this.validationHelper.validateName(this.lastMotherName);
     }
 
     onClinicChange() {
-        this.clinicError = this.doctorComponentHelper.validateSelectedClinic(this.clinicSelected);
+        this.clinicError = this.validationHelper.validateSelectedClinic(this.clinicSelected);
     }
 
     onGenderChange() {
-        this.genderError = this.doctorComponentHelper.validateSelected(this.gender)
+        this.genderError = this.validationHelper.validateSelected(this.gender)
     }
 
     onEmailChange() {
-        this.emailError = this.doctorComponentHelper.validateEmail(this.email)
+        this.emailError = this.validationHelper.validateEmail(this.email)
     }
 
     onBirtDateChange() {
-        this.birthDateError = this.doctorComponentHelper.validateBirthDate(this.birthDate)
+        this.birthDateError = this.validationHelper.validateBirthDate(this.birthDate)
     }
 
     onAddressChange() {
-        this.addressError = this.doctorComponentHelper.validateField(this.address);
+        this.addressError = this.validationHelper.validateField(this.address);
     }
 
     onPostalCodeChange() {
-        this.postalCodeError = this.doctorComponentHelper.validatePostalCode(this.postalCode)
+        this.postalCodeError = this.validationHelper.validateFieldNumber(this.postalCode, 10)
     }
 
     onStateChange() {
-        this.stateError = this.doctorComponentHelper.validateSelected(this.state)
+        this.stateError = this.validationHelper.validateSelected(this.state)
     }
 
     onPeriodSelected(periodo: string) {
-        this.periodoSeleccionado = periodo;
+        this.selectedPeriod = periodo;
     }
 
     onDateRangeSelected(fechas: Date[]) {
-        this.fechasSeleccionadas = fechas;
+        this.selectedDates = fechas;
     }
 
     /*  Funciones de iteración con html */
     clearFields() {
         this.clinicSelected = undefined;
+        this.doctorId = undefined
         this.firstName = '';
         this.lastFatherName = '';
         this.lastMotherName = '';
@@ -432,7 +438,7 @@ export class DoctorComponent implements OnInit {
     async openModal() {
         this.isVisible = true;
         if (this.clinics.length === 0) {
-            await this.getClinics();
+            await this.callGetAllClinics();
         }
     }
 
