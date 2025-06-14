@@ -8,6 +8,14 @@ export class PatientWithInspectionsModel {
     @Expose({ name: 'full_name' })
     fullName: string = ''
 
+    @Expose({ name: 'birth_date' })
+    @Type(() => Date)
+    birthDate: Date = new Date()
+
+    age: number = 0
+
+    gender: string = ''
+
     latitude: number = 0.0
 
     longitude: number = 0.0
