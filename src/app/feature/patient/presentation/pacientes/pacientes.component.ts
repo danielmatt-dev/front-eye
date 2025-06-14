@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Button } from 'primeng/button';
-import { NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
@@ -8,7 +8,7 @@ import { Table, TableModule } from 'primeng/table';
 import { Dialog } from 'primeng/dialog';
 import { Select } from 'primeng/select';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { findPatient, generos, patients } from '../../../../shared/utils/mocks';
+import { estadosMexico, generos } from '../../../../shared/utils/mocks';
 import { PrimeNG } from 'primeng/config';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -17,64 +17,104 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Toast } from 'primeng/toast';
 import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-consulta/opciones-consulta-helper';
 import { Router } from '@angular/router';
-import * as XLSX from 'xlsx';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable'
+import { PatientResponseModel } from '../../data/models/patient.response.model';
+import {
+    PersonValidationHelper
+} from '../../../doctor/presentation/doctor-component/validation/personValidationHelper';
+import { CreatePatient } from '../../domain/use_cases/createPatient';
+import { GetAllPatients } from '../../domain/use_cases/getAllPatients';
+import { PutPatientParams, UpdatePatient } from '../../domain/use_cases/updatePatient';
+import { DeletePatients } from '../../domain/use_cases/deletePatients';
+import { FilterService } from '../../../../shared/services/filter.service';
+import { NoParams } from '../../../../shared/utils/usecase';
+import { PatientRequestEntity } from '../../domain/entity/patient.request.entity';
+import { PatientResponseEntity } from '../../domain/entity/patient.response.entity';
+import { Calendar } from 'primeng/calendar';
+import { calculateAge } from '../../../../shared/utils/functions/functions';
 
 @Component({
     standalone: true,
     selector: 'app-pacientes',
-    imports: [Button, FormsModule, InputText, PrimeTemplate, TableModule, Dialog, Select, TranslatePipe, IconField, InputIcon, OpcionesConsultaComponent, ConfirmDialog, Toast, NgIf],
+    imports: [Button, FormsModule, InputText, PrimeTemplate, TableModule, Dialog, Select, TranslatePipe, IconField, InputIcon, OpcionesConsultaComponent, ConfirmDialog, Toast, NgIf, DatePipe, NgClass, Calendar],
     providers: [MessageService, ConfirmationService],
     templateUrl: './pacientes.component.html',
     styleUrl: './pacientes.component.scss'
 })
 export class PacientesComponent implements OnInit {
-
+    /* Opciones de la tabla*/
     @ViewChild('filter') filter!: ElementRef;
+    isLoading = true;
 
+    /* Opciones de dialog */
     isUpdate = false;
     visible = false;
+
+    /* Labels */
     labelPatient = 'paciente';
     labelPatients = 'pacientes';
 
-    periodoSeleccionado = '';
-    fechasSeleccionadas: Date[] = [];
+    /* Variables para opciones de consulta */
+    selectedPeriod = '';
+    selectedDates: Date[] = [];
 
-    selectedPacientes = [];
+    /* Catálogo de opciones */
+    genders = generos;
+    states = estadosMexico;
 
-    patients = patients;
-    pacientesFiltrados = this.patients;
+    /* Lista de pacientes y filtrado */
+    allPatients: PatientResponseEntity[] = [];
+    filteredPatients = this.allPatients;
+    selectedPatients: PatientResponseModel[] = [];
 
-    clave = '';
-    nombre = '';
-    apellidoPaterno = '';
-    apellidoMaterno = '';
-    correo = '';
-    telefono = '';
-    genero = '';
-    fechaNacimiento = '';
-    direccion = '';
-    codigoPostal = '';
-    ocupacion = '';
-    estado = '';
+    /* Campos del paciente */
+    patientId?: number;
+    firstName = '';
+    lastFatherName = '';
+    lastMotherName = '';
+    email = '';
+    phone = '';
+    gender = '';
+    birthDate?: Date;
+    age = 0
+    address = '';
+    postalCode = '';
+    occupation = '';
+    state = '';
 
+    /* Campos de validación */
+    firstNameError?: string;
+    lastFatherNameError?: string;
+    lastMotherNameError?: string;
+    birthDateError?: string;
+    genderError?: string;
+    phoneError?: string;
+    emailError?: string;
+    addressError?: string;
+    postalCodeError?: string;
+    stateError?: string;
+    occupationError?: string;
+
+    /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
+    validationHelper: PersonValidationHelper;
 
     constructor(
         private readonly primeng: PrimeNG,
         private readonly translateService: TranslateService,
         private readonly confirmationService: ConfirmationService,
         private readonly messageService: MessageService,
-        private readonly router: Router
+        private readonly router: Router,
+        private readonly createPatient: CreatePatient,
+        private readonly getAllPatients: GetAllPatients,
+        private readonly updatePatient: UpdatePatient,
+        private readonly deletePatients: DeletePatients,
+        private readonly filterService: FilterService
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validationHelper = PersonValidationHelper.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
-    ngOnInit() {
-        this.translateService.use('es');
-        this.translateService.get('primeng').subscribe((res) => this.primeng.setTranslation(res));
-
+    async ngOnInit() {
         this.translateService.get('patient.singular').subscribe((res: string) => {
             this.labelPatient = res.toLowerCase();
         });
@@ -82,15 +122,324 @@ export class PacientesComponent implements OnInit {
         this.translateService.get('patient.plural').subscribe((res: string) => {
             this.labelPatients = res.toLowerCase();
         });
+        await this.callGetAllPatients()
     }
 
-    abrirModal() {
+    /* Llamadas a casos de uso */
+    async callGetAllPatients() {
+        this.isLoading = true;
+        const resultUseCase = await this.getAllPatients.call(new NoParams());
+        this.isLoading = false;
+
+        if (resultUseCase._tag === 'Left') {
+            this.validationHelper.getToastException(resultUseCase.left);
+            return;
+        }
+
+        if (resultUseCase._tag === 'Right') {
+            this.allPatients = resultUseCase.right;
+            this.filteredPatients = this.allPatients;
+            this.filterPatients();
+        }
+    }
+
+    async callCreatePatient() {
+        const patient = this.getPatientRequest();
+        if (!patient) {
+            return;
+        }
+
+        const resultCreatePatient = await this.createPatient.call(patient);
+
+        if (resultCreatePatient._tag === 'Left') {
+            this.validationHelper.getToastException(resultCreatePatient.left);
+            return;
+        }
+
+        if (resultCreatePatient._tag === 'Right') {
+            const doctorSuccess = resultCreatePatient.right;
+            this.validationHelper.sendToastMessageSuccess('createDoctor', `${doctorSuccess.firstName} ${doctorSuccess.lastFathName}`);
+            this.allPatients.push(doctorSuccess);
+            this.filterPatients();
+        }
+
+        this.closeModal();
+        this.clearFields();
+    }
+
+    async callUpdatePatient() {
+        const patient = this.getPatientRequest();
+        if (!patient) {
+            return;
+        }
+
+        if (!this.patientId) {
+            return;
+        }
+
+        const resultCallUpdatePatient = await this.updatePatient.call(new PutPatientParams(patient, this.patientId));
+
+        if (resultCallUpdatePatient._tag === 'Left') {
+            this.validationHelper.getToastException(resultCallUpdatePatient.left);
+            return;
+        }
+
+        if (resultCallUpdatePatient._tag === 'Right') {
+            const patientUpdate = resultCallUpdatePatient.right;
+            this.validationHelper.sendToastMessageSuccess('updateDoctor', `${patientUpdate.firstName} ${patientUpdate.lastFathName}`);
+
+            const idx = this.allPatients.findIndex((p) => p.patientId === patientUpdate.patientId);
+
+            if (idx !== -1) {
+                this.allPatients[idx] = patientUpdate;
+            }
+            this.filterPatients();
+        }
+
+        this.closeModal();
+    }
+
+    async callDeletePatients() {
+        const ids = this.selectedPatients.map((p) => p.patientId);
+        if (ids.length === 0) {
+            return;
+        }
+
+        const resultCallDeletePatients = await this.deletePatients.call(ids);
+
+        if (resultCallDeletePatients._tag === 'Left') {
+            this.validationHelper.getToastException(resultCallDeletePatients.left);
+            return;
+        }
+
+        if (resultCallDeletePatients._tag === 'Right') {
+            if (this.selectedPatients.length === 1) {
+                this.validationHelper.sendToastMessageSuccess('deleteDoctor', `${this.selectedPatients[0].firstName} ${this.selectedPatients[0].lastFathName}`);
+            } else {
+                this.validationHelper.sendToastMessageSuccess('deleteDoctors', `${ids.length}`);
+            }
+
+            this.allPatients = this.allPatients.filter((patient) => !ids.includes(patient.patientId));
+
+            this.selectedPatients = [];
+            this.filterPatients();
+        }
+    }
+
+    /* Preparación de datos para los casos de uso */
+    getPatientRequest(): PatientRequestEntity | undefined {
+        /* Validar campos */
+        if (!this.isFormValid()) {
+            this.validationHelper.showMessage({ key: 'invalidForm' });
+            return undefined;
+        }
+
+        return new PatientRequestEntity({
+            firstName: this.firstName,
+            lastFathName: this.lastFatherName,
+            lastMontName: this.lastMotherName,
+            email: this.email,
+            phone: this.phone,
+            birthDate: this.birthDate,
+            gender: this.gender,
+            occupation: this.occupation,
+            address: this.address,
+            state: this.state,
+            postalCode: this.postalCode
+        });
+    }
+
+    editPatient(patient: PatientResponseEntity) {
+        this.isUpdate = true;
+
+        this.patientId = patient.patientId;
+        this.firstName = patient.firstName;
+        this.lastFatherName = patient.lastFathName;
+        this.lastMotherName = patient.lastMontName;
+        this.birthDate = patient.birthDate;
+        this.gender = patient.gender;
+        this.phone = patient.phone;
+        this.email = patient.email;
+        this.occupation = patient.occupation;
+        this.address = patient.address;
+        this.state = patient.state;
+        this.postalCode = patient.postalCode;
+
+        this.onFormChange()
+        this.openModal();
+    }
+
+    deletePatientConfirmation(patient: PatientResponseEntity) {
+        const header = this.validationHelper.getText('confirmations.deleteDoctor.header');
+        const message = this.validationHelper.getText('confirmations.deleteDoctor.message');
+
+        this.confirmationService.confirm({
+            message: message.replace('{0}', `${patient.firstName} ${patient.lastFathName}`),
+            header: header,
+            icon: 'pi pi-exclamation-triangle',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button-secondary',
+            accept: async () => {
+                this.selectedPatients.push(patient);
+                await this.callDeletePatients();
+            }
+        });
+    }
+
+    deletePatientsConfirmation() {
+        const message = this.validationHelper.getText('confirmations.deleteSelectedDoctors.message');
+        const header = this.validationHelper.getText('confirmations.deleteSelectedDoctors.message');
+
+        this.confirmationService.confirm({
+            message: message,
+            header: header,
+            icon: 'pi pi-exclamation-triangle',
+            acceptButtonStyleClass: 'p-button-danger',
+            rejectButtonStyleClass: 'p-button-secondary',
+            accept: async () => {
+                await this.callDeletePatients();
+            }
+        });
+    }
+
+    /* Filtrado de lista de doctores */
+    filterPatients() {
+        if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.selectedPeriod, this.selectedDates)) {
+            return;
+        }
+
+        this.filteredPatients = this.filterService.filterByPeriodo<PatientResponseEntity>(
+            this.allPatients,
+            (pat) => pat.createdAt,
+            this.selectedPeriod,
+            this.selectedDates
+        );
+    }
+
+    /* Funciones de validación del formulario del doctor */
+    isFormValid(): boolean {
+        this.onFormChange();
+        return !(
+            this.firstNameError ??
+            this.lastFatherNameError ??
+            this.lastMotherNameError ??
+            this.occupationError ??
+            this.birthDateError ??
+            this.emailError ??
+            this.phoneError ??
+            this.genderError ??
+            this.addressError ??
+            this.postalCodeError ??
+            this.stateError
+        );
+    }
+
+    onFormChange() {
+        this.onFirstNameChange();
+        this.onLastFatherNameChange();
+        this.onLastMotherNameChange();
+        this.onPhoneChange();
+        this.onBirtDateChange();
+        this.onEmailChange();
+        this.onGenderChange();
+        this.onOccupationChange();
+        this.onAddressChange();
+        this.onPostalCodeChange();
+        this.onStateChange();
+    }
+
+    onFirstNameChange() {
+        this.firstNameError = this.validationHelper.validateName(this.firstName);
+    }
+
+    onLastFatherNameChange() {
+        this.lastFatherNameError = this.validationHelper.validateName(this.lastFatherName);
+    }
+
+    onLastMotherNameChange() {
+        this.lastMotherNameError = this.validationHelper.validateName(this.lastMotherName);
+    }
+
+    onGenderChange() {
+        this.genderError = this.validationHelper.validateSelected(this.gender);
+    }
+
+    onEmailChange() {
+        this.emailError = this.validationHelper.validateEmail(this.email);
+    }
+
+    onPhoneChange() {
+        this.phoneError = this.validationHelper.validateFieldNumber(this.phone, 20);
+    }
+
+    onBirtDateChange() {
+        this.birthDateError = this.validationHelper.validateBirthDate(this.birthDate);
+        if (!this.birthDateError && this.birthDate) {
+            this.age = calculateAge(this.birthDate)
+        }
+    }
+
+    onOccupationChange() {
+        this.occupationError = this.validationHelper.validateField(this.occupation);
+    }
+
+    onAddressChange() {
+        this.addressError = this.validationHelper.validateField(this.address);
+    }
+
+    onPostalCodeChange() {
+        this.postalCodeError = this.validationHelper.validateFieldNumber(this.postalCode, 10);
+    }
+
+    onStateChange() {
+        this.stateError = this.validationHelper.validateSelected(this.state);
+    }
+
+    onPeriodSelected(periodo: string) {
+        this.selectedPeriod = periodo;
+    }
+
+    onDateRangeSelected(fechas: Date[]) {
+        this.selectedDates = fechas;
+    }
+
+    /*  Funciones de iteración con html */
+    clearFields() {
+        this.patientId = undefined;
+        this.firstName = '';
+        this.lastFatherName = '';
+        this.lastMotherName = '';
+        this.address = '';
+        this.postalCode = '';
+        this.state = '';
+        this.email = '';
+        this.phone = '';
+        this.gender = '';
+        this.birthDate = undefined;
+
+        this.firstNameError = undefined;
+        this.lastFatherNameError = undefined;
+        this.lastMotherNameError = undefined;
+        this.emailError = undefined;
+        this.phoneError = undefined;
+        this.occupationError = undefined;
+        this.genderError = undefined;
+        this.birthDateError = undefined;
+        this.addressError = undefined;
+        this.postalCodeError = undefined;
+        this.stateError = undefined;
+    }
+
+    openModal() {
         this.visible = true;
     }
 
-    cerrarVentanaNotificacion() {
+    closeModal() {
+        if (this.isUpdate) {
+            this.isUpdate = false;
+        }
         this.visible = false;
-        this.limpiarCampos()
+        this.clearFields();
     }
 
     clear(table: Table) {
@@ -110,314 +459,11 @@ export class PacientesComponent implements OnInit {
         console.log('Key Up:', event.key);
     }
 
-    exportExcel() {
-        // Encabezados en mayúscula inicial
-        const tableColumn = ['Clave', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Fecha de Nacimiento', 'Teléfono', 'Género', 'Código Postal', 'Dirección', 'Estado'];
-
-        // Crear filas de la tabla
-        const tableRows = this.pacientesFiltrados.map((patient) => [
-            patient.clave,
-            patient.nombre,
-            patient.apellidoPaterno,
-            patient.apellidoMaterno,
-            patient.fechaNacimiento,
-            patient.telefono,
-            patient.genero,
-            patient.codigoPostal,
-            patient.direccion,
-            patient.estado
-        ]);
-
-        // Combinar encabezados y filas
-        const data = [tableColumn, ...tableRows];
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
-
-        // Ajustar el ancho de columnas y el alto de filas
-        ws['!cols'] = tableColumn.map(() => ({ wch: 20 }));
-        ws['!rows'] = data.map(() => ({ hpt: 20 }));
-
-        // Crear el libro de trabajo
-        const wb: XLSX.WorkBook = { Sheets: { 'Pacientes': ws }, SheetNames: ['Pacientes'] };
-        XLSX.writeFile(wb, 'pacientes.xlsx');
+    async natigateToNewInspection(patient: PatientResponseEntity) {
+        await this.router.navigate(
+            ['/insights/nueva-inspeccion'],
+            { state: { patient } }
+        );
     }
 
-    exportPDF() {
-        const doc = new jsPDF();
-        doc.text('Pacientes', 10, 10);
-
-        // Encabezados
-        const tableColumn = ['Clave', 'Nombre', 'Apellido Paterno', 'Apellido Materno', 'Fecha de Nacimiento', 'Teléfono', 'Género', 'Código Postal', 'Dirección', 'Estado'];
-
-        // Crear filas de la tabla
-        const tableRows = this.pacientesFiltrados.map((patient) => [
-            patient.clave,
-            patient.nombre,
-            patient.apellidoPaterno,
-            patient.apellidoMaterno,
-            patient.fechaNacimiento,
-            patient.telefono,
-            patient.genero,
-            patient.codigoPostal,
-            patient.direccion,
-            patient.estado
-        ]);
-
-        // Configuración de la tabla PDF
-        autoTable(doc, {
-            head: [tableColumn],
-            body: tableRows,
-            startY: 20,
-            headStyles: {
-                fillColor: [211, 211, 211],
-                textColor: [0, 0, 0],
-                fontStyle: 'bold',
-                halign: 'center'
-            },
-            styles: {
-                fontSize: 10,
-                cellPadding: 1
-            }
-        });
-
-        // Descargar PDF
-        doc.save('pacientes.pdf');
-    }
-
-    onPeriodoSeleccionado(periodo: string) {
-        this.periodoSeleccionado = periodo;
-    }
-
-    onRangoFechasSeleccionado(fechas: Date[]) {
-        this.fechasSeleccionadas = fechas;
-    }
-
-    filtrarPacientes() {
-
-        if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.periodoSeleccionado, this.fechasSeleccionadas)) {
-            return;
-        }
-
-        if (this.fechasSeleccionadas.length === 0 || this.periodoSeleccionado === '') {
-            this.pacientesFiltrados = this.patients;
-        }
-
-        let fechaInicio: Date;
-        let fechaFin: Date = new Date(); // Fecha de hoy
-
-        switch (this.periodoSeleccionado) {
-            case 'Mes actual':
-                // Primer día del mes actual hasta hoy
-                fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth(), 1);
-                break;
-            case '2 meses':
-                // Primer día de hace dos meses hasta hoy
-                fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth() - 1, 1);
-                break;
-            case '3 meses':
-                // Primer día de hace tres meses hasta hoy
-                fechaInicio = new Date(fechaFin.getFullYear(), fechaFin.getMonth() - 2, 1);
-                break;
-            case 'Personalizado':
-                if (this.fechasSeleccionadas.length === 2) {
-                    fechaInicio = new Date(this.fechasSeleccionadas[0]);
-                    fechaFin = new Date(this.fechasSeleccionadas[1]);
-                }
-
-                if (this.fechasSeleccionadas[1] === null) {
-                    fechaInicio = new Date(this.fechasSeleccionadas[0]);
-                    fechaFin = new Date(this.fechasSeleccionadas[0]);
-                }
-                break;
-            default:
-                return;
-        }
-
-        // Formato de las fechas para comparar
-        const formatoFecha = (fecha: Date) => fecha.toISOString().split('T')[0];
-
-        // Filtrar doctores en base a la fechaAlta
-        this.pacientesFiltrados = this.patients.filter((paciente) => {
-            const fechaAlta = new Date(paciente.fechaAlta.split('/').reverse().join('-')); // Convertir dd/MM/yyyy a yyyy-MM-dd
-            return formatoFecha(fechaAlta) >= formatoFecha(fechaInicio) && formatoFecha(fechaAlta) <= formatoFecha(fechaFin);
-        });
-
-        console.log('Doctores Filtrados:', this.pacientesFiltrados);
-    }
-
-    addPaciente() {
-        const paciente = {
-            clave: `P${(patients.length + 1).toString().padStart(3, '0')}`,
-            nombre: this.nombre,
-            apellidoPaterno: this.apellidoPaterno,
-            apellidoMaterno: this.apellidoMaterno,
-            fechaNacimiento: this.fechaNacimiento,
-            correo: this.correo,
-            telefono: this.telefono,
-            fechaAlta: '12/05/2025',
-            ocupacion: this.ocupacion,
-            genero: this.genero,
-            codigoPostal: this.codigoPostal,
-            direccion: this.direccion,
-            estado: 'Veracruz',
-            edad: this.calcularEdad(this.fechaNacimiento)
-        };
-
-        this.patients.push(paciente);
-
-        this.filtrarPacientes()
-        this.cerrarVentanaNotificacion();
-        this.limpiarCampos();
-    }
-
-    editarPaciente(clave: string) {
-        this.isUpdate = true;
-
-        const paciente = findPatient(clave);
-        if (paciente) {
-            // Asignar los datos del paciente a los campos correspondientes
-            this.nombre = paciente.nombre;
-            this.apellidoPaterno = paciente.apellidoPaterno;
-            this.apellidoMaterno = paciente.apellidoMaterno;
-            this.correo = `${paciente.nombre.toLowerCase()}.${this.apellidoPaterno.toLowerCase()}@hospital.com`;
-            this.genero = paciente.genero;
-            this.telefono = paciente.telefono;
-            this.fechaNacimiento = paciente.fechaNacimiento;
-            this.direccion = paciente.direccion;
-            this.codigoPostal = paciente.codigoPostal;
-            this.clave = clave;
-            // Mostrar el modal
-            this.abrirModal();
-        }
-    }
-
-    actualizarPaciente(): void {
-        if (!this.clave) {
-            console.warn('No hay un doctor seleccionado para actualizar.');
-            return;
-        }
-
-        const index = this.patients.findIndex((d) => d.clave === this.clave);
-        if (index !== -1) {
-            // Crear el objeto doctor actualizado
-            const pacienteActualizado = {
-                clave: this.clave,
-                nombre: this.nombre,
-                apellidoPaterno: this.apellidoPaterno,
-                apellidoMaterno: this.apellidoMaterno,
-                correo: this.correo,
-                telefono: this.telefono,
-                genero: this.genero,
-                fechaNacimiento: this.fechaNacimiento,
-                direccion: this.direccion,
-                codigoPostal: this.codigoPostal,
-                estado: 'Veracruz',
-                fechaAlta: this.patients[index].fechaAlta,
-                ocupacion: this.ocupacion,
-                edad: this.calcularEdad(this.fechaNacimiento)
-            };
-
-            // Actualizar el doctor en la lista
-            this.patients[index] = pacienteActualizado;
-
-            const index2 = this.pacientesFiltrados.findIndex((d) => d.clave === this.clave);
-            this.pacientesFiltrados[index2] = pacienteActualizado;
-
-            console.log('Paciente actualizado:', pacienteActualizado);
-            this.isUpdate = false
-
-            // Cerrar el modal y limpiar los campos
-            this.filtrarPacientes()
-            this.cerrarVentanaNotificacion();
-            this.limpiarCampos();
-        }
-    }
-
-    eliminarPaciente(clave: string): void {
-        const paciente = findPatient(clave);
-
-        this.confirmationService.confirm({
-            message: `¿Estás seguro de eliminar al doctor ${paciente.nombre} ${paciente.apellidoPaterno} ${paciente.apellidoMaterno}?`,
-            header: 'Confirmación de Eliminación',
-            icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Sí',
-            rejectLabel: 'No',
-            acceptButtonStyleClass: 'p-button-danger',
-            rejectButtonStyleClass: 'p-button-secondary',
-            accept: () => {
-                this.patients = this.patients.filter((d) => d.clave !== clave);
-                this.pacientesFiltrados = this.patients;
-                this.filtrarPacientes()
-            }
-        });
-    }
-
-    eliminarPacientesSeleccionados(): void {
-        if (this.selectedPacientes.length === 0) {
-            this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: 'No hay doctores seleccionados' });
-            return;
-        }
-
-        this.confirmationService.confirm({
-            message: `¿Estás seguro de que deseas eliminar a los doctores seleccionados?`,
-            header: 'Confirmación de Eliminación',
-            icon: 'pi pi-exclamation-triangle',
-            acceptButtonStyleClass: 'p-button-danger',
-            rejectButtonStyleClass: 'p-button-secondary',
-            accept: () => {
-                this.selectedPacientes.forEach((paciente: any) => {
-                    this.patients = this.patients.filter((d) => d.clave !== paciente.clave);
-                    this.pacientesFiltrados = this.patients;
-                });
-
-                this.messageService.add({ severity: 'success', summary: 'Eliminación Exitosa', detail: 'Doctores eliminados correctamente' });
-                this.selectedPacientes = [];
-                this.filtrarPacientes()
-            },
-            reject: () => {
-                this.messageService.add({ severity: 'info', summary: 'Cancelado', detail: 'Eliminación cancelada' });
-            }
-        });
-    }
-
-    limpiarCampos() {
-        this.nombre = '';
-        this.apellidoPaterno = '';
-        this.apellidoMaterno = '';
-        this.ocupacion = '';
-        this.correo = '';
-        this.telefono = '';
-        this.genero = '';
-        this.fechaNacimiento = '';
-        this.direccion = '';
-        this.codigoPostal = '';
-        this.estado = '';
-    }
-
-    async inspeccionar(clave: string) {
-        await this.router.navigate(['/insights/nueva-inspeccion'])
-    }
-
-    calcularEdad(fechaNacimiento: string): number {
-        const [dia, mes, anio] = fechaNacimiento.split('/').map(Number);
-        const fechaNac = new Date(anio, mes - 1, dia);
-        const hoy = new Date();
-        let edad = hoy.getFullYear() - fechaNac.getFullYear();
-        const mesDiferencia = hoy.getMonth() - fechaNac.getMonth();
-
-        // Ajustar si el cumpleaños aún no ha pasado este año
-        if (mesDiferencia < 0 || (mesDiferencia === 0 && hoy.getDate() < fechaNac.getDate())) {
-            edad--;
-        }
-        return edad;
-    }
-
-    sortByDate() {
-        this.pacientesFiltrados.sort((a, b) => {
-            const fechaA = new Date(a.fechaNacimiento.split('/').reverse().join('-')).getTime();
-            const fechaB = new Date(b.fechaNacimiento.split('/').reverse().join('-')).getTime();
-            return fechaA - fechaB;
-        });
-    }
-
-    protected readonly generos = generos;
 }

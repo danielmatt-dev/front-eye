@@ -25,7 +25,7 @@
             <p-button
                 label="{{ 'buttons.delete' | translate: { items: labelDoctors } }}"
                 severity="danger"
-                [disabled]="selectedDoctores.length === 0"
+                [disabled]="selectedDoctors.length === 0"
                 (onClick)="deleteDoctorsConfirmation()"
                 icon="pi pi-trash">
             </p-button>
@@ -36,7 +36,7 @@
         #dt1
         dataKey="doctorId"
         [rows]="50"
-        [loading]="false"
+        [loading]="isLoading"
         [rowHover]="true"
         [paginator]="true"
         [globalFilterFields]="[
@@ -57,7 +57,7 @@
         selectionMode="multiple"
         [scrollable]="true"
         scrollHeight="40rem"
-        [(selection)]="selectedDoctores">
+        [(selection)]="selectedDoctors">
 
         <ng-template pTemplate="caption" class="m-0 p-0">
             <div class="flex justify-between flex-col sm:flex-row items-center gap-4 w-full">
@@ -430,12 +430,12 @@
         <p-button
             *ngIf="!isUpdate"
             label="{{ 'buttons.register' | translate }}"
-            (onClick)="addDoctor()"
+            (onClick)="callCreateDoctor()"
         ></p-button>
         <p-button
             *ngIf="isUpdate"
             label="{{ 'buttons.update' | translate }}"
-            (onClick)="updateDoctorRequest()"
+            (onClick)="callUpdateDoctor()"
         ></p-button>
     </div>
 
