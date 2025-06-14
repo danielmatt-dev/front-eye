@@ -18,6 +18,7 @@ import {
 } from '../../../doctor/presentation/doctor-component/validation/personValidationHelper';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { patientWithInspectionsMocks } from '../../../../shared/utils/mocks';
+import { calculateAge } from '../../../../shared/utils/functions/functions';
 
 @Component({
     selector: 'app-datos-geograficos',
@@ -30,7 +31,6 @@ import { patientWithInspectionsMocks } from '../../../../shared/utils/mocks';
 export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     /* Variables de leaflet */
-    private readonly leafletMap!: L.Map;
     map!: L.Map;
     markerClusterGroup!: L.MarkerClusterGroup;
 
@@ -44,6 +44,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     /* Lista de pacientes y filtrado */
     allPatientsCoordinates: PatientWithInspectionsEntity[] = patientWithInspectionsMocks
     filteredPatientsCoordinates = this.allPatientsCoordinates
+    displayedPatients = this.filteredPatientsCoordinates
 
     /* Opciones de filtrado en el mapa */
     filters = {
@@ -76,14 +77,14 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
                 label: 'Clasificación de afección',
                 children: [
                     { label: 'Leve', layer: L.layerGroup() },
-                    { label: 'Moderada', layer: L.layerGroup() },
-                    { label: 'Proliferativa', layer: L.layerGroup() }
+                    { label: 'Moderado', layer: L.layerGroup() },
+                    { label: 'Proliferativo', layer: L.layerGroup() }
                 ]
             }
         ]
     };
-
-    filtrosSeleccionados: string[] = []
+    selectedFilters: string[] = []
+    leafFilters!: { label: string; layer: L.Layer }[];
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
@@ -108,6 +109,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         this.map = L.map('map').setView([18.8498, -97.1039], 13);
         this.setupBaseLayer();
         this.updateMarkersOnMap();
+        this.buildLeafFilters();
         this.setupMapControls();
     }
 
@@ -126,6 +128,15 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     }
 
+    /** Aplana filters.children[].children en un sólo array */
+    private buildLeafFilters() {
+        this.leafFilters = this.filters.children
+            .flatMap(group => group.children
+                // sólo label y layer nos importan aquí
+                .map(child => ({ label: child.label, layer: child.layer }))
+            );
+    }
+
     /* Funciones para dibujar el mapa */
     private setupBaseLayer() {
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -135,14 +146,14 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     }
 
     /* Crear un MarkerClusterGroup con todos los marcadores */
-    createClusterGroup(): L.MarkerClusterGroup {
+    private createClusterGroup(): L.MarkerClusterGroup {
         const group = L.markerClusterGroup({
             spiderfyOnMaxZoom: true,
             showCoverageOnHover: false,
             zoomToBoundsOnClick: false
         });
 
-        this.filteredPatientsCoordinates.forEach(p => {
+        this.displayedPatients.forEach(p => {
             let iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png';
             if (p.lastDisease === 'DMAE Seca') iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png';
             if (p.lastDisease === 'Retinopatía Diabética') iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png';
@@ -197,13 +208,78 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         const treeControl = (L.control as any).layers.tree(null, this.filters, { collapsed: true });
         treeControl.addTo(this.map);
 
-        this.map.on('overlayadd',  e => console.log('Filtro añadido:', e.name));
-        this.map.on('overlayremove', e => console.log('Filtro quitado:', e.name));
+        this.map.on('overlayadd', (e: any) => {
+            const idx = parseInt(e.name, 10);
+            const filtro = this.leafFilters[idx]?.label;
+            if (filtro) {
+                this.selectedFilters.push(filtro);
+                this.applyFilters();
+            }
+        });
+
+        this.map.on('overlayremove', (e: any) => {
+            const idx = parseInt(e.name, 10);
+            const filtro = this.leafFilters[idx]?.label;
+            if (filtro) {
+                this.selectedFilters = this.selectedFilters.filter(f => f !== filtro);
+                this.applyFilters();
+            }
+        });
+    }
+
+    /** Filtra y redibuja los marcadores */
+    private applyFilters(): void {
+        this.displayedPatients = this.filteredPatientsCoordinates.filter(p =>
+            this.matchesDisease(p) &&
+            this.matchesAge(p)     &&
+            this.matchesGender(p)  &&
+            this.matchesResult(p)
+        );
+        this.updateMarkersOnMap();
+    }
+
+    private matchesDisease(p: PatientWithInspectionsEntity): boolean {
+        const sel = this.selectedFilters.filter(f =>
+            ['DMAE Seca', 'DMAE Húmeda', 'Retinopatía Diabética'].includes(f)
+        );
+        return !sel.length || sel.includes(p.lastDisease);
+    }
+
+    private matchesAge(p: PatientWithInspectionsEntity): boolean {
+        const age = p.age
+        const sel = this.selectedFilters.filter(f =>
+            ['Menos de 30','De 30 a 45','Mas de 45'].includes(f)
+        );
+        if (!sel.length) return true;
+        return sel.some(f =>
+            (f === 'Menos de 30'     && age < 30) ||
+            (f === 'De 30 a 45'      && age >= 30 && age <= 45) ||
+            (f === 'Mas de 45'       && age > 45)
+        );
+    }
+
+    private matchesGender(p: PatientWithInspectionsEntity): boolean {
+        const sel = this.selectedFilters.filter(f => ['Hombre','Mujer'].includes(f));
+        if (!sel.length) {
+            return true;
+        }
+        return sel.some(f =>
+            (f === 'Hombre' && p.gender.toLowerCase() === 'masculino') ||
+            (f === 'Mujer'  && p.gender.toLowerCase() === 'femenino')
+        );
+    }
+
+    private matchesResult(p: PatientWithInspectionsEntity): boolean {
+        const sel = this.selectedFilters.filter(f =>
+            ['Leve','Moderado','Proliferativo'].includes(f)
+        );
+        if (!sel.length) return true;
+        return sel.includes(p.lastResult);
     }
 
     @HostListener('window:resize')
     onWindowResize(): void {
-        this.leafletMap.invalidateSize();
+        this.map.invalidateSize();
     }
 
     /* Filtrado de lista de doctores */
@@ -218,6 +294,8 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             this.selectedPeriod,
             this.selectedDates
         )
+        this.displayedPatients = this.filteredPatientsCoordinates
+        this.applyFilters()
         this.updateMarkersOnMap()
     }
 
