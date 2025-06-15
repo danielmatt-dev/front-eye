@@ -18,7 +18,7 @@ import {
 } from '../../../doctor/presentation/doctor-component/validation/personValidationHelper';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { patientWithInspectionsMocks } from '../../../../shared/utils/mocks';
-import { calculateAge } from '../../../../shared/utils/functions/functions';
+import { ageRanges, diseases, results } from '../../../../shared/utils/data';
 
 @Component({
     selector: 'app-datos-geograficos',
@@ -63,7 +63,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
                 children: [
                     { label: 'Menos de 30', layer: L.layerGroup() },
                     { label: 'De 30 a 45', layer: L.layerGroup() },
-                    { label: 'Mas de 45', layer: L.layerGroup() }
+                    { label: 'Más de 45', layer: L.layerGroup() }
                 ]
             },
             {
@@ -78,7 +78,8 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
                 children: [
                     { label: 'Leve', layer: L.layerGroup() },
                     { label: 'Moderado', layer: L.layerGroup() },
-                    { label: 'Proliferativo', layer: L.layerGroup() }
+                    { label: 'Proliferativo', layer: L.layerGroup() },
+                    { label: 'Sin Afección', layer: L.layerGroup() }
                 ]
             }
         ]
@@ -154,17 +155,24 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         });
 
         this.displayedPatients.forEach(p => {
-            let iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png';
-            if (p.lastDisease === 'DMAE Seca') iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png';
-            if (p.lastDisease === 'Retinopatía Diabética') iconUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png';
+            const iconBase = 'assets/leaflet/images/';
+
+            let iconFile = 'marker-icon-2x-green.png';
+            if (p.lastDisease === 'DMAE Seca') {
+                iconFile = 'marker-icon-2x-gold.png';
+            }
+
+            if (p.lastDisease === 'Retinopatía Diabética') {
+                iconFile = 'marker-icon-2x-violet.png';
+            }
 
             const markerIcon = new L.Icon({
-                iconUrl,
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
+                iconUrl:  `${iconBase}${iconFile}`,
+                shadowUrl:`${iconBase}marker-shadow.png`,
+                iconSize:  [25, 41],
+                iconAnchor:[12, 41],
+                popupAnchor:[1, -34],
+                shadowSize:[41, 41]
             });
 
             const marker = L.marker([p.latitude, p.longitude], { icon: markerIcon })
@@ -240,7 +248,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     private matchesDisease(p: PatientWithInspectionsEntity): boolean {
         const sel = this.selectedFilters.filter(f =>
-            ['DMAE Seca', 'DMAE Húmeda', 'Retinopatía Diabética'].includes(f)
+            diseases.includes(f)
         );
         return !sel.length || sel.includes(p.lastDisease);
     }
@@ -248,13 +256,13 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     private matchesAge(p: PatientWithInspectionsEntity): boolean {
         const age = p.age
         const sel = this.selectedFilters.filter(f =>
-            ['Menos de 30','De 30 a 45','Mas de 45'].includes(f)
+            ageRanges.includes(f)
         );
         if (!sel.length) return true;
         return sel.some(f =>
             (f === 'Menos de 30'     && age < 30) ||
             (f === 'De 30 a 45'      && age >= 30 && age <= 45) ||
-            (f === 'Mas de 45'       && age > 45)
+            (f === 'Más de 45'       && age > 45)
         );
     }
 
@@ -271,7 +279,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     private matchesResult(p: PatientWithInspectionsEntity): boolean {
         const sel = this.selectedFilters.filter(f =>
-            ['Leve','Moderado','Proliferativo'].includes(f)
+            results.includes(f)
         );
         if (!sel.length) return true;
         return sel.includes(p.lastResult);

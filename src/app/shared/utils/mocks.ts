@@ -1,4 +1,6 @@
 import { PatientWithInspectionsModel } from '../../feature/patient/data/models/patient.with.inspections.model';
+import { InspectionResponseEntity } from '../../feature/inspection/domain/entity/inspection.response.entity';
+import { InspectionReponseModel } from '../../feature/inspection/data/models/inspection.reponse.model';
 
 export const resultados = [
     'Todos', 'Proliferativo', 'Moderado', 'Leve', 'Sin Afección'
@@ -5734,6 +5736,32 @@ export const inspecciones = [
         paciente: 'P014'
     }
 ];
+
+export function parseDateDDMMYYYY(dateStr: string): Date {
+    const [day, month, year] = dateStr.split('/').map(n => parseInt(n, 10));
+    return new Date(year, month - 1, day);
+}
+
+export const inspectionResponseMocks: InspectionReponseModel[] =
+    inspecciones.map(raw => new InspectionReponseModel({
+        inspectionId:        Number(raw.id.replace(/^I/, '')),
+        patientId:           Number(raw.paciente.replace(/^P/, '')),
+        // Si quisieras calcular una fecha de nacimiento a partir de edad:
+        patientBirthDate: new Date(new Date().getFullYear() - raw.edad, 0, 1),
+        //patientBirthDate:    new Date(),                     // deja el default si no tienes birthDate
+        patientGender:       raw.ojo === 'Derecho'           // asumiendo ojo ≠ género, aquí podrías usar raw.genero
+            ? 'masculino'
+            : 'femenino',
+        patientAge: raw.edad,
+        inspectionDate:      parseDateDDMMYYYY(raw.fecha),
+        inspectionTime:      raw.hora,
+        eye:                 raw.ojo,
+        disease:             raw.afeccion,
+        model:               '',                             // sin dato en el mock
+        result:              raw.resultado,
+        notes:               '',                             // sin dato en el mock
+        createdAt:           new Date()                      // o parseDateDDMMYYYY(raw.fecha) si prefieres
+    }));
 
 export function findPatient(id: string): any {
     return patients.find((p: any) => p.clave === id);

@@ -1,3 +1,5 @@
+import { diseaseColor, genderColor, resultColor } from '../../../core/theme/colors';
+
 /**
  * Calcula la edad en años completos a partir de una fecha de nacimiento.
  *
@@ -18,3 +20,28 @@ export function calculateAge(birthDate: Date): number {
 
     return age;
 }
+
+export function colorByResult(result: string) {
+    switch (result) {
+        case 'Proliferativo': return resultColor.proliferative
+        case 'Moderado': return resultColor.moderate
+        case 'Leve': return resultColor.mild
+        default: return resultColor.nocondition
+    }
+}
+
+export function colorByGender(gender: string) {
+    if (gender === 'Femenino') {
+        return genderColor.female
+    }
+    return genderColor.male
+}
+
+export function colorByDisease(disease: string) {
+    switch (disease) {
+        case 'DMAE Seca': return diseaseColor.dryAmd
+        case 'DMAE Húmeda': return diseaseColor.wetAmd
+        default: return diseaseColor.diabeticRetinopathy
+    }
+}
+
