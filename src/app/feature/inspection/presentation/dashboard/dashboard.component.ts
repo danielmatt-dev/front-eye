@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { debounceTime, Subscription } from 'rxjs';
-import { LayoutService } from '../../../layout/service/layout.service';
 import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
 import { SelectButton } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DatePicker } from 'primeng/datepicker';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { inspectionResponseMocks } from '../../../../shared/utils/mocks';
 import { GetAllInspections } from '../../domain/use_cases/getAllInspections';
 import { NoParams } from '../../../../shared/utils/usecase';
@@ -15,17 +13,22 @@ import { InspectionResponseEntity } from '../../domain/entity/inspection.respons
 import { colorByDisease } from '../../../../shared/utils/functions/functions';
 import { ageRanges, diseases } from '../../../../shared/utils/data';
 import {
-    AllFilter,
+    AllFilter, RangeDaysFilter,
     InspectionsFilterStrategy,
     OneDayFilter, OneMonthFilter,
     OneWeekFilter, ThreeMonthsFilter
 } from '../../domain/filters/inspections.filter';
 import { InspectionsFilterContext } from '../../domain/filters/inspections.filter.context';
+import { ValidatorHelper } from '../../../../shared/utils/validator.helper';
+import { DashboardValidationHelper } from './validation/dashboard.validation.helper';
+import { MessageService } from 'primeng/api';
+import { PrimeNG } from 'primeng/config';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
     imports: [Fluid, UIChart, SelectButton, FormsModule, CalendarModule, DatePicker, TranslatePipe],
+    providers: [MessageService],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss'
 })
@@ -71,18 +74,26 @@ export class DashboardComponent implements OnInit {
     detectionTrendData: any;
     detectionTrendOptions: any;
 
-    options = ['1 Día', '1 Semana', '1 Mes', '3 Meses', 'Todo'];
+    /* Opciones para consultar */
+    options = ['1 Día', '1 Semana', '1 Mes', '3 Meses', 'Todo', 'Rango'];
     optionSelected: string = 'Todo';
+    selectedDates: Date[] = [];
+    calendarDisabled = true
 
     /* Lista de inspecciones y filtrado */
     allInspections: InspectionResponseEntity[] = inspectionResponseMocks
 
-    //subscription: Subscription;
+    /* Providers */
+    validator: ValidatorHelper
 
     constructor(
-        private readonly layoutService: LayoutService,
+        private readonly messageService: MessageService,
+        private readonly translateService: TranslateService,
+        private readonly primeng: PrimeNG,
         private readonly getAllInpections: GetAllInspections
-    ) {}
+    ) {
+        this.validator = DashboardValidationHelper.getInstance(this.messageService, this.translateService, this.primeng)
+    }
 
     async ngOnInit() {
         await this.callGetAllInspections()
@@ -217,7 +228,7 @@ export class DashboardComponent implements OnInit {
         const resultGetAllInspections = await this.getAllInpections.call(new NoParams())
 
         if (resultGetAllInspections._tag === 'Left') {
-
+            this.validator.getToastException(resultGetAllInspections.left)
         }
 
         if (resultGetAllInspections._tag === 'Right') {
@@ -226,8 +237,16 @@ export class DashboardComponent implements OnInit {
 
     }
 
+    /* Funciones para filtrar los datos para las gráficas */
     filterInspections() {
 
+        if (this.optionSelected === 'Rango') {
+            this.calendarDisabled = false
+            return
+        }
+
+        this.calendarDisabled = true
+        this.selectedDates = []
         let strategy: InspectionsFilterStrategy = new AllFilter();
 
         switch (this.optionSelected) {
@@ -242,11 +261,11 @@ export class DashboardComponent implements OnInit {
                 break
             case '3 Meses':
                 strategy = new ThreeMonthsFilter()
+                break
         }
         this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections)
     }
 
-    /* Funciones para filtrar los datos para las gráficas */
     getDetectionsByAgeRangeAndDisease() {
 
         // Inicializar contadores para cada combo rango + afección
@@ -359,6 +378,61 @@ export class DashboardComponent implements OnInit {
             ? Math.round((this.over45Count / totalPatients) * 100)
             : 0;
 
+    }
+
+    onSelectedDates(dates: Date[]) {
+        this.selectedDates = dates
+
+        if (this.selectedDates.length === 0 || this.selectedDates.length === 1) {
+            return
+        }
+
+        let strategy: InspectionsFilterStrategy = new AllFilter();
+
+        if (this.selectedDates[1] === null) {
+            strategy = new OneDayFilter()
+            strategy.startDate = this.selectedDates[0]
+            strategy.endDate = this.selectedDates[0]
+            this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections)
+            return
+        }
+
+        const startDate = this.selectedDates[0]
+        const endDate = this.selectedDates[1]
+
+        const msInDay = 1000 * 60 * 60 * 24;
+        const diffMs   = endDate.getTime() - startDate.getTime();
+        const diffDays = diffMs / msInDay;
+
+        if (diffDays <= 1) {
+            // 0–1 días → “1 día”
+            strategy = new OneDayFilter()
+        }
+
+        // 2–7 días → “1 semana”
+        if (diffDays > 1 && diffDays <= 7) {
+            strategy = new OneWeekFilter()
+        }
+
+        // 8–15 días → “15 días”
+        if (diffDays > 7 && diffDays <= 22) {
+            strategy = new RangeDaysFilter()
+        }
+
+        // 15–30 días → “1 mes”
+        if (diffDays > 22 && diffDays <= 30) {
+            strategy = new OneMonthFilter()
+        }
+
+        // 31–90 días → “3 meses”
+        if (diffDays > 30 && diffDays <= 90) {
+            strategy = new ThreeMonthsFilter()
+        }
+
+        strategy.startDate = startDate
+        strategy.endDate = endDate
+
+        this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections)
     }
 
     /*
