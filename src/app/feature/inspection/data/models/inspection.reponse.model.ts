@@ -3,64 +3,42 @@ import { Expose, Type } from 'class-transformer';
 export class InspectionReponseModel {
 
     @Expose({ name: 'inspection_id' })
-    inspectionId: number
+    inspectionId: number = 0
 
     @Expose({ name: 'patient_id' })
-    patientId: number
+    patientId: number = 0
 
     @Expose({ name: 'patient_birth_date' })
     @Type(() => Date)
-    patientBirthDate: Date
+    patientBirthDate: Date = new Date()
 
     @Expose({ name: 'patient_gender' })
-    patientGender: string
+    patientGender: string = ''
+
+    patientAge: number = 0
 
     @Expose({ name: 'inspection_date' })
     @Type(() => Date)
-    inspectionDate: Date
+    inspectionDate: Date = new Date()
 
     @Expose({ name: 'inspection_time' })
-    inspectionTime: string
+    inspectionTime: string = ''
 
-    eye: string
+    eye: string = ''
 
-    disease: string
+    disease: string = ''
 
-    model: string
+    model: string = ''
 
-    result: string
+    result: string = ''
 
-    notes: string
+    notes: string = ''
 
     @Expose({ name: 'created_at' })
-    createdAt: Date
+    createdAt: Date = new Date()
 
-    constructor(options: {
-        inspectionId?: number
-        patientId?: number
-        patientBirthDate?: Date
-        patientGender?: string
-        inspectionDate?: Date
-        inspectionTime?: string
-        eye?: string
-        disease?: string
-        model?: string
-        result?: string
-        notes?: string
-        createdAt?: Date
-    } = {}) {
-        this.inspectionId = options.inspectionId ?? 0;
-        this.patientId = options.patientId ?? 0;
-        this.patientBirthDate = options.patientBirthDate ?? new Date();
-        this.patientGender = options.patientGender ?? '';
-        this.inspectionDate = options.inspectionDate ?? new Date();
-        this.inspectionTime = options.inspectionTime ?? '';
-        this.eye = options.eye ?? '';
-        this.disease = options.disease ?? '';
-        this.model = options.model ?? '';
-        this.result = options.result ?? '';
-        this.notes = options.notes ?? ''
-        this.createdAt = options.createdAt ?? new Date();
+    constructor(partial?: Partial<InspectionReponseModel>) {
+        Object.assign(this, partial)
     }
 
 }
