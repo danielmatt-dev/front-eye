@@ -5,7 +5,8 @@ import { ChartData } from 'chart.js';
 
 export abstract class InspectionsFilterStrategy {
 
-    today = new Date()
+    endDate = new Date()
+    startDate?: Date = undefined
     labels: string[] = []
     dataMap: Record<string, number[]> = {}
 
@@ -19,23 +20,31 @@ export abstract class InspectionsFilterStrategy {
         results.forEach((cat) => (this.dataMap[cat] = []));
     }
 
-    filter(data: InspectionResponseEntity[], finalDate?: Date): InspectionResponseEntity[] {
-        if (!finalDate) {
+    filter(data: InspectionResponseEntity[], startDate?: Date): InspectionResponseEntity[] {
+        if (!startDate) {
             return data
         }
 
-        return data.filter((ins) =>
-            ins.inspectionDate >= finalDate);
+        const startOfDay = new Date(this.startDate!);
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date(this.endDate);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        return data.filter(ins =>
+            ins.inspectionDate >= startDate &&
+            ins.inspectionDate <= endOfDay
+        );
     }
 
     abstract getDataMap(filteredData: InspectionResponseEntity[]): void
 
-    abstract getFinalDate(): Date | undefined
+    abstract getStartDate(): Date | undefined
 
     getChartData(data: InspectionResponseEntity[]): ChartData {
 
-        const finalDate = this.getFinalDate()
-        const filteredData =  this.filter(data, finalDate)
+        this.startDate = this.getStartDate()
+        const filteredData = this.filter(data, this.startDate)
         this.getDataMap(filteredData)
 
         return {
@@ -81,8 +90,8 @@ export class AllFilter extends InspectionsFilterStrategy {
         });
     }
 
-    override getFinalDate(): Date | undefined {
-        return undefined
+    override getStartDate(): Date | undefined {
+        return this.startDate
     }
 
 }
@@ -92,7 +101,7 @@ export class ThreeMonthsFilter extends InspectionsFilterStrategy {
     override getDataMap(filteredData: InspectionResponseEntity[]): void {
         this.initData()
 
-        const threeMonthsAgo = new Date(this.today)
+        const threeMonthsAgo = new Date(this.endDate)
         threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3)
         threeMonthsAgo.setHours(0, 0, 0, 0)
 
@@ -129,8 +138,8 @@ export class ThreeMonthsFilter extends InspectionsFilterStrategy {
 
     }
 
-    override getFinalDate(): Date | undefined {
-        return new Date(this.today.getMonth() - 3)
+    override getStartDate(): Date | undefined {
+        return this.startDate ?? new Date(this.endDate.getMonth() - 3)
     }
 
 }
@@ -142,12 +151,12 @@ export class OneMonthFilter extends InspectionsFilterStrategy {
 
         const n = 4
 
-        const oneMonthAgo = new Date(this.today)
+        const oneMonthAgo = new Date(this.endDate)
         oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
         oneMonthAgo.setHours(0, 0, 0, 0)
 
         // Calcular duración total en ms
-        const diffMs = this.today.getTime() - oneMonthAgo.getTime();
+        const diffMs = this.endDate.getTime() - oneMonthAgo.getTime();
         const intervalsMs = diffMs / n; // 4 semanas (aprox)
 
         // Función para formatear fechas dd MMM
@@ -162,7 +171,7 @@ export class OneMonthFilter extends InspectionsFilterStrategy {
         for (let i = 0; i < n; i++) {
 
             const initial = new Date(oneMonthAgo.getTime() + i * intervalsMs)
-            const final = new Date(oneMonthAgo.getTime() + (i + 1) * intervalsMs - 1)
+            const final = new Date(oneMonthAgo.getTime() + (i + 1) * intervalsMs)
 
             rangeWeek.push({ initial, final })
             this.labels.push(`${formatDate(initial)} - ${formatDate(final)}`)
@@ -183,10 +192,69 @@ export class OneMonthFilter extends InspectionsFilterStrategy {
         });
     }
 
-    override getFinalDate(): Date | undefined {
-        return new Date(this.today.getMonth() - 1)
+    override getStartDate(): Date | undefined {
+        return this.startDate ?? new Date(this.endDate.getMonth() - 1)
     }
 
+}
+
+export class RangeDaysFilter extends InspectionsFilterStrategy {
+    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+        this.initData();
+
+        const start = new Date(this.startDate ?? this.endDate);
+        const end   = new Date(this.endDate);
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
+
+        // 2) Calculamos cuántos días hay entre ambas fechas
+        const msInDay  = 1000 * 60 * 60 * 24;
+        const diffDays = Math.floor((end.getTime() - start.getTime()) / msInDay);
+
+        // Generamos un array con cada día desde hace 15 días hasta hoy (inclusive)
+        const rangeDays: Date[] = [];
+        for (let i = 0; i <= diffDays; i++) {
+            const day = new Date(start);
+            day.setDate(start.getDate() + i);
+            rangeDays.push(day);
+        }
+
+        // Nombres cortos de días en español
+        const labelsDays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+
+        // Preparamos las etiquetas: ejemplo "Lun 12"
+        this.labels = rangeDays.map(d =>
+            `${labelsDays[d.getDay()]} ${d.getDate().toString().padStart(2, '0')}`
+        );
+
+        // Inicializamos el mapa de datos
+        results.forEach(cat => {
+            this.dataMap[cat] = new Array(this.labels.length).fill(0);
+        });
+
+        // Recorremos las inspecciones y las contamos en su día correspondiente
+        filteredData.forEach(inspection => {
+            if (!results.includes(inspection.result)) return;
+            const fecha = inspection.inspectionDate;
+            for (let i = 0; i < rangeDays.length; i++) {
+                const day = rangeDays[i];
+                if (
+                    fecha.getFullYear() === day.getFullYear() &&
+                    fecha.getMonth() === day.getMonth() &&
+                    fecha.getDate() === day.getDate()
+                ) {
+                    this.dataMap[inspection.result][i]++;
+                    return;
+                }
+            }
+        });
+    }
+
+    override getStartDate(): Date | undefined {
+        // Si no hay startDate explícito, usamos endDate - 15 días
+        return this.startDate ??
+            new Date(this.endDate.getTime() - 15 * 24 * 60 * 60 * 1000);
+    }
 }
 
 export class OneWeekFilter extends InspectionsFilterStrategy {
@@ -194,13 +262,13 @@ export class OneWeekFilter extends InspectionsFilterStrategy {
     override getDataMap(filteredData: InspectionResponseEntity[]): void {
         this.initData()
 
-        const oneWeekAgo = new Date(this.today); // Incluye hoy + 6 días atrás = 7 días total
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 6)
+        const oneWeekAgo = new Date(this.endDate); // Incluye hoy + 6 días atrás = 7 días total
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
         oneWeekAgo.setHours(0, 0, 0, 0)
 
         // Generar arreglo con cada día en el rango de hace una semana hasta ahora
         const rangeDays: Date[] = [];
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 8; i++) {
             const day = new Date(oneWeekAgo);
             day.setDate(oneWeekAgo.getDate() + i)
             rangeDays.push(day);
@@ -233,8 +301,8 @@ export class OneWeekFilter extends InspectionsFilterStrategy {
 
     }
 
-    override getFinalDate(): Date | undefined {
-        return new Date(this.today.getTime() - 7 * 24 * 60 * 60 * 1000)
+    override getStartDate(): Date | undefined {
+        return this.startDate ?? new Date(this.endDate.getTime() - 7 * 24 * 60 * 60 * 1000)
     }
 
 }
@@ -245,11 +313,11 @@ export class OneDayFilter extends InspectionsFilterStrategy {
 
         this.initData()
 
-        const initDate = new Date();
+        const initDate = new Date(this.endDate);
         initDate.setHours(0, 0, 0, 0); // medianoche de hoy
 
         // Calcular cuantos intervalos de 4 horas existen desde la fecha de inicio hasta ahora
-        const diffMs = this.today.getTime() - initDate.getTime();
+        const diffMs = this.endDate.getTime() - initDate.getTime();
         const intervalsMs = 4 * 60 * 60 * 1000; // 4 horas en ms
         const intervals = Math.ceil(diffMs / intervalsMs);
 
@@ -259,8 +327,8 @@ export class OneDayFilter extends InspectionsFilterStrategy {
             const initial = new Date(initDate.getTime() + i * intervalsMs);
             let fin = new Date(initial.getTime() + intervalsMs - 1);
 
-            if (fin > this.today) {
-                fin = new Date(this.today);
+            if (fin > this.endDate) {
+                fin = new Date(this.endDate);
             }
 
             // Formatear horas hh:mm
@@ -286,8 +354,8 @@ export class OneDayFilter extends InspectionsFilterStrategy {
 
     }
 
-    override getFinalDate(): Date | undefined {
-        return new Date(this.today.getTime() - 24 * 60 * 60 * 1000)
+    override getStartDate(): Date | undefined {
+        return this.startDate ?? new Date(this.endDate.getTime() - 24 * 60 * 60 * 1000)
     }
 
 }
