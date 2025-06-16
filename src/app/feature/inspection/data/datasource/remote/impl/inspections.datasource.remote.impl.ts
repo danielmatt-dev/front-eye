@@ -1,5 +1,5 @@
 import { Either } from 'fp-ts/lib/Either';
-import { InspectionReponseModel } from '../../../models/inspection.reponse.model';
+import { InspectionResponseModel } from '../../../models/inspectionResponseModel';
 import { InspectionDatasourceRemote } from '../inspection.datasource.remote';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -40,9 +40,9 @@ export class InspectionsDatasourceRemoteImpl implements InspectionDatasourceRemo
         return this.apiService.sendRequest(obs$)
     }
 
-    getAllInspections(): Promise<Either<Error, InspectionReponseModel[]>> {
+    getAllInspections(): Promise<Either<Error, InspectionResponseModel[]>> {
         const url = InspectionsEndpoints.PATH;
-        const obs$ = this.http.get<InspectionReponseModel[]>(url).pipe(map((response) => response.map((json) => plainToInstance(InspectionReponseModel, json))));
+        const obs$ = this.http.get<InspectionResponseModel[]>(url).pipe(map((response) => response.map((json) => plainToInstance(InspectionResponseModel, json))));
 
         return this.apiService.sendRequest(obs$);
     }
