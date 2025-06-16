@@ -25,16 +25,16 @@ export abstract class InspectionsFilterStrategy {
             return data
         }
 
-        const startOfDay = new Date(this.startDate!);
+        const startOfDay = new Date(startDate);
         startOfDay.setHours(0, 0, 0, 0);
 
         const endOfDay = new Date(this.endDate);
         endOfDay.setHours(23, 59, 59, 999);
 
         return data.filter(ins =>
-            ins.inspectionDate >= startDate &&
-            ins.inspectionDate <= endOfDay
-        );
+                ins.inspectionDateTime >= startOfDay &&
+                ins.inspectionDateTime <= endOfDay
+            );
     }
 
     abstract getDataMap(filteredData: InspectionResponseEntity[]): void
@@ -123,13 +123,13 @@ export class ThreeMonthsFilter extends InspectionsFilterStrategy {
 
         filteredData.forEach(inspection => {
             if (!results.includes(inspection.result)) return;
-            const fecha = inspection.inspectionDate;
+            const date = inspection.inspectionDate;
 
             for (let i = 0; i < rangeMonths.length; i++) {
                 const initialMonth = rangeMonths[i];
                 const finalMonth = new Date(initialMonth.getFullYear(), initialMonth.getMonth() + 1, 0); // último día mes
 
-                if (fecha >= initialMonth && fecha <= finalMonth) {
+                if (date >= initialMonth && date <= finalMonth) {
                     this.dataMap[inspection.result][i]++;
                     return;
                 }
@@ -142,6 +142,135 @@ export class ThreeMonthsFilter extends InspectionsFilterStrategy {
         return this.startDate ?? new Date(this.endDate.getMonth() - 3)
     }
 
+}
+
+export class DynamicRangeFilter extends InspectionsFilterStrategy {
+    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+        this.initData();
+
+        // 1) Normalizamos startDate y endDate a medianoche
+        const start = new Date(this.startDate ?? this.endDate);
+        const end   = new Date(this.endDate);
+        start.setHours(0, 0, 0, 0);
+        end.setHours(23, 59, 59, 999);
+
+        // 2) Calculamos la diferencia en milisegundos y días
+        const msInDay  = 1000 * 60 * 60 * 24;
+        const diffMs   = end.getTime() - start.getTime();
+        const diffDays = Math.floor(diffMs / msInDay);
+
+        // 3) Calculamos el número de intervalos de ~1 semana, Hasta un máximo de 8
+        let n = Math.ceil(diffDays / 7);
+        n = Math.max(1, Math.min(n, 8));
+
+        // 4) Tamaño de cada intervalo en ms
+        const intervalMs = diffMs / n;
+
+        // 5) Generamos el array de fechas y etiquetas
+        const monthNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        this.labels = Array.from({ length: n }, (_, i) => {
+            const from = new Date(start.getTime() + i * intervalMs);
+            const to   = new Date(start.getTime() + (i + 1) * intervalMs);
+            const fmt = (d: Date) =>
+                `${d.getDate().toString().padStart(2, '0')} ${monthNames[d.getMonth()]}`;
+            return `${fmt(from)} – ${fmt(to)}`;
+        });
+
+        // 6) Inicializamos contadores
+        results.forEach(res => {
+            this.dataMap[res] = new Array(n).fill(0);
+        });
+
+        // 7) Contamos cada inspección en su intervalo
+        filteredData.forEach(ins => {
+            if (!results.includes(ins.result)) return;
+            const dt = new Date(ins.inspectionDate);
+            dt.setHours(0, 0, 0, 0);
+            const idx = Math.floor((dt.getTime() - start.getTime()) / intervalMs);
+            if (idx >= 0 && idx < n) {
+                this.dataMap[ins.result][idx]++;
+            }
+        });
+    }
+
+    override getStartDate(): Date | undefined {
+        // Si se pasó startDate se respeta, si no, restamos 2 meses
+        if (this.startDate) {
+            const d = new Date(this.startDate);
+            d.setHours(0, 0, 0, 0);
+            return d;
+        }
+        const d = new Date(this.endDate);
+        d.setMonth(d.getMonth() - 2);
+        d.setHours(0, 0, 0, 0);
+        return d;
+    }
+}
+
+export class TwoMonthsFilter extends InspectionsFilterStrategy {
+    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+        this.initData();
+
+        const n = 8; // 8 intervalos (semanas aproximadas)
+
+        // 1) Fecha de inicio: 2 meses atrás desde endDate, a medianoche
+        const twoMonthsAgo = new Date(this.endDate);
+        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+        twoMonthsAgo.setHours(0, 0, 0, 0);
+
+        // 2) Calculamos la duración total y el tamaño de cada intervalo
+        const diffMs      = this.endDate.getTime() - twoMonthsAgo.getTime();
+        const intervalMs  = diffMs / n;
+
+        // 3) Helper para formatear "dd MMM"
+        const monthNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        const formatDate = (d: Date) => {
+            const day = d.getDate().toString().padStart(2, '0');
+            const mon = monthNames[d.getMonth()];
+            return `${day} ${mon}`;
+        };
+
+        // 4) Generamos los 8 rangos semanales y sus etiquetas
+        const rangeWeeks: { initial: Date; final: Date }[] = [];
+        for (let i = 0; i < n; i++) {
+            const initial = new Date(twoMonthsAgo.getTime() + i       * intervalMs);
+            const final   = new Date(twoMonthsAgo.getTime() + (i+1) * intervalMs);
+            rangeWeeks.push({ initial, final });
+            this.labels.push(
+                `${formatDate(initial)} – ${formatDate(final)}`
+            );
+        }
+
+        // 5) Inicializamos contadores por cada resultado
+        results.forEach(res => {
+            this.dataMap[res] = new Array(this.labels.length).fill(0);
+        });
+
+        // 6) Recorremos inspecciones y asignamos al intervalo correspondiente
+        filteredData.forEach(ins => {
+            if (!results.includes(ins.result)) return;
+            const date = ins.inspectionDate;
+            for (let i = 0; i < rangeWeeks.length; i++) {
+                const { initial, final } = rangeWeeks[i];
+                if (date >= initial && date <= final) {
+                    this.dataMap[ins.result][i]++;
+                    return;
+                }
+            }
+        });
+    }
+
+    override getStartDate(): Date | undefined {
+        // Si se proporcionó un startDate custom, úsalo
+        if (this.startDate) {
+            return this.startDate;
+        }
+        // Sino, calculamos endDate - 2 meses
+        const d = new Date(this.endDate);
+        d.setMonth(d.getMonth() - 2);
+        d.setHours(0, 0, 0, 0);
+        return d;
+    }
 }
 
 export class OneMonthFilter extends InspectionsFilterStrategy {
@@ -180,11 +309,11 @@ export class OneMonthFilter extends InspectionsFilterStrategy {
         results.forEach(cat => this.dataMap[cat] = new Array(this.labels.length).fill(0));
         filteredData.forEach(inspection => {
             if (!results.includes(inspection.result)) return;
-            const fecha = inspection.inspectionDate;
+            const date = inspection.inspectionDate;
 
             for (let i = 0; i < rangeWeek.length; i++) {
                 const { initial, final } = rangeWeek[i];
-                if (fecha >= initial && fecha <= final) {
+                if (date >= initial && date <= final) {
                     this.dataMap[inspection.result][i]++;
                     return
                 }
@@ -345,7 +474,7 @@ export class OneDayFilter extends InspectionsFilterStrategy {
 
             for (let i = 0; i < rangeIntervals.length; i++) {
                 const { initial, fin } = rangeIntervals[i];
-                if (inspection.inspectionDate >= initial && inspection.inspectionDate <= fin) {
+                if (inspection.inspectionDateTime >= initial && inspection.inspectionDateTime <= fin) {
                     this.dataMap[inspection.result][i]++;
                     return;
                 }
