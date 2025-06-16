@@ -16,7 +16,7 @@ import {
     AllFilter, RangeDaysFilter,
     InspectionsFilterStrategy,
     OneDayFilter, OneMonthFilter,
-    OneWeekFilter, ThreeMonthsFilter, TwoMonthsFilter, DynamicRangeFilter
+    OneWeekFilter, DynamicRangeFilter
 } from '../../domain/filters/inspections.filter';
 import { InspectionsFilterContext } from '../../domain/filters/inspections.filter.context';
 import { ValidatorHelper } from '../../../../shared/utils/validator.helper';
