@@ -326,7 +326,7 @@
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="nacimiento">{{ 'labels.birthDate' | translate }}</label>
-            <p-calendar
+            <p-date-picker
                 id="nacimiento"
                 showIcon="true"
                 class="w-full"
@@ -337,8 +337,9 @@
                     'ng-invalid': birthDateError
                 }"
                 [style]="{ width: '100%' }"
+                appendTo="body"
                 placeholder="{{ 'placeholders.birthDate' | translate }}"
-            ></p-calendar>
+            ></p-date-picker>
             <small
                 *ngIf="birthDateError"
                 class="text-red-500"
