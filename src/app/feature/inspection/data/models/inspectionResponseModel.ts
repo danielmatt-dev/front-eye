@@ -1,6 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 
-export class InspectionReponseModel {
+export class InspectionResponseModel {
 
     @Expose({ name: 'inspection_id' })
     inspectionId: number = 0
@@ -37,7 +37,7 @@ export class InspectionReponseModel {
     @Expose({ name: 'created_at' })
     createdAt: Date = new Date()
 
-    constructor(partial?: Partial<InspectionReponseModel>) {
+    constructor(partial?: Partial<InspectionResponseModel>) {
         Object.assign(this, partial)
     }
 

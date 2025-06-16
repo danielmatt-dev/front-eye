@@ -1,12 +1,12 @@
-import { InspectionReponseModel } from './inspection.reponse.model';
+import { InspectionResponseModel } from './inspectionResponseModel';
 import { Expose, Type } from 'class-transformer';
 import { DiagnosticProbabilityModel } from './inspection.request.model';
 import { PatientResponseModel } from '../../../patient/data/models/patient.response.model';
 
 export class InspectionDetailsModel {
 
-    @Type(() => InspectionReponseModel)
-    inspection: InspectionReponseModel = new InspectionReponseModel()
+    @Type(() => InspectionResponseModel)
+    inspection: InspectionResponseModel = new InspectionResponseModel()
 
     patient: PatientResponseModel = new PatientResponseModel()
 
@@ -14,7 +14,7 @@ export class InspectionDetailsModel {
 
     probabilities: DiagnosticProbabilityModel[] = []
 
-    inspectionHistory: InspectionReponseModel[] = []
+    inspectionHistory: InspectionResponseModel[] = []
 
     constructor(partial?: Partial<InspectionDetailsModel>) {
         Object.assign(this, partial)
@@ -29,6 +29,8 @@ export class InspectionImageModel {
 
     @Expose({ name: 'image_url' })
     imageUrl: string = ''
+
+    title: string = ''
 
     constructor(partial?: Partial<InspectionImageModel>) {
         Object.assign(this, partial)

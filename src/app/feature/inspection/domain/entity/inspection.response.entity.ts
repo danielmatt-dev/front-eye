@@ -1,3 +1,3 @@
-import { InspectionReponseModel } from '../../data/models/inspection.reponse.model';
+import { InspectionResponseModel } from '../../data/models/inspectionResponseModel';
 
-export class InspectionResponseEntity extends InspectionReponseModel {}
+export class InspectionResponseEntity extends InspectionResponseModel {}
