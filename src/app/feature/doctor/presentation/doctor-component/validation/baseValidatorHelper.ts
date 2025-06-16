@@ -28,6 +28,12 @@ export class BaseValidatorHelper extends ValidatorHelper {
         this.sendToastMessage({title: title, message: message, type: 'success'})
     }
 
+    sendToastMessageSuccessPatient(type: 'createPatient' | 'updatePatient' | 'deletePatient' | 'deletePatients', param: string) {
+        const title = this.getText(`toast.success.titles.${type}`)
+        const message = this.getText(`toast.success.messages.${type}`).replace('@', param)
+        this.sendToastMessage({title: title, message: message, type: 'success'})
+    }
+
     validateSelectedClinic(clinic?: ClinicEntity): string | undefined {
 
         if (!clinic) {

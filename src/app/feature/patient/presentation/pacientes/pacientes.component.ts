@@ -157,9 +157,9 @@ export class PacientesComponent implements OnInit {
         }
 
         if (resultCreatePatient._tag === 'Right') {
-            const doctorSuccess = resultCreatePatient.right;
-            this.validationHelper.sendToastMessageSuccess('createDoctor', `${doctorSuccess.firstName} ${doctorSuccess.lastFathName}`);
-            this.allPatients.push(doctorSuccess);
+            const patientSuccess = resultCreatePatient.right;
+            this.validationHelper.sendToastMessageSuccessPatient('createPatient', `${patientSuccess.firstName} ${patientSuccess.lastFathName}`);
+            this.allPatients.push(patientSuccess);
             this.filterPatients();
         }
 
@@ -186,7 +186,7 @@ export class PacientesComponent implements OnInit {
 
         if (resultCallUpdatePatient._tag === 'Right') {
             const patientUpdate = resultCallUpdatePatient.right;
-            this.validationHelper.sendToastMessageSuccess('updateDoctor', `${patientUpdate.firstName} ${patientUpdate.lastFathName}`);
+            this.validationHelper.sendToastMessageSuccessPatient('updatePatient', `${patientUpdate.firstName} ${patientUpdate.lastFathName}`);
 
             const idx = this.allPatients.findIndex((p) => p.patientId === patientUpdate.patientId);
 
@@ -214,9 +214,9 @@ export class PacientesComponent implements OnInit {
 
         if (resultCallDeletePatients._tag === 'Right') {
             if (this.selectedPatients.length === 1) {
-                this.validationHelper.sendToastMessageSuccess('deleteDoctor', `${this.selectedPatients[0].firstName} ${this.selectedPatients[0].lastFathName}`);
+                this.validationHelper.sendToastMessageSuccessPatient('deletePatient', `${this.selectedPatients[0].firstName} ${this.selectedPatients[0].lastFathName}`);
             } else {
-                this.validationHelper.sendToastMessageSuccess('deleteDoctors', `${ids.length}`);
+                this.validationHelper.sendToastMessageSuccessPatient('deletePatients', `${ids.length}`);
             }
 
             this.allPatients = this.allPatients.filter((patient) => !ids.includes(patient.patientId));
@@ -270,8 +270,8 @@ export class PacientesComponent implements OnInit {
     }
 
     deletePatientConfirmation(patient: PatientResponseEntity) {
-        const header = this.validationHelper.getText('confirmations.deleteDoctor.header');
-        const message = this.validationHelper.getText('confirmations.deleteDoctor.message');
+        const header = this.validationHelper.getText('confirmations.deletePatient.header');
+        const message = this.validationHelper.getText('confirmations.deletePatient.message');
 
         this.confirmationService.confirm({
             message: message.replace('{0}', `${patient.firstName} ${patient.lastFathName}`),
@@ -287,8 +287,8 @@ export class PacientesComponent implements OnInit {
     }
 
     deletePatientsConfirmation() {
-        const message = this.validationHelper.getText('confirmations.deleteSelectedDoctors.message');
-        const header = this.validationHelper.getText('confirmations.deleteSelectedDoctors.message');
+        const message = this.validationHelper.getText('confirmations.deleteSelectedPatients.message');
+        const header = this.validationHelper.getText('confirmations.deleteSelectedPatients.message');
 
         this.confirmationService.confirm({
             message: message,
@@ -302,7 +302,7 @@ export class PacientesComponent implements OnInit {
         });
     }
 
-    /* Filtrado de lista de doctores */
+    /* Filtrado de lista de Patientes */
     filterPatients() {
         if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.selectedPeriod, this.selectedDates)) {
             return;
@@ -311,7 +311,7 @@ export class PacientesComponent implements OnInit {
         this.filteredPatients = this.filterService.filterByPeriodo<PatientResponseEntity>(this.allPatients, (pat) => pat.createdAt, this.selectedPeriod, this.selectedDates);
     }
 
-    /* Funciones de validación del formulario del doctor */
+    /* Funciones de validación del formulario del Patient */
     isFormValid(): boolean {
         this.onFormChange();
         return !(
