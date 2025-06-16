@@ -5,32 +5,42 @@
         <div class="card">
             <div class="flex justify-between mb-4">
                 <div class="font-semibold text-xl mb-4"> {{ 'patient.titleModal'| translate }} </div>
-                <p-dropdown
-                    class="w-80 mb-2"
-                    [options]="patientOptions"
-                    optionLabel="fullName"
-                    placeholder="{{ 'placeholders.patients' | translate }}"
-                    [filter]="true"
-                    [filterBy]="filterFields"
-                    [(ngModel)]="selectedPatient"
-                    (onChange)="onPatientSelect($event)"
-                    appendTo="body">
-                    <ng-template let-item pTemplate="item">
+                <div class="flex flex-col">
+                    <p-select
+                        class="w-80 mb-2"
+                        [options]="patientOptions"
+                        optionLabel="fullName"
+                        placeholder="{{ 'placeholders.patients' | translate }}"
+                        [filter]="true"
+                        [filterBy]="filterFields"
+                        [(ngModel)]="selectedPatient"
+                        (onChange)="onPatientSelect($event)"
+                        [ngClass]="{
+                            'ng-dirty': patientError,
+                            'ng-invalid': patientError
+                        }"
+                        appendTo="body">
+                        <ng-template let-item pTemplate="item">
                         <span
                             class="w-72"
                             tooltipStyleClass="width: 100rem"
                             pTooltip="{{ getTooltip(item) }}"
                             tooltipPosition="top">{{ item.fullName }}
                         </span>
-                    </ng-template>
-                </p-dropdown>
+                        </ng-template>
+                    </p-select>
+                    <small
+                        *ngIf="patientError"
+                        class="text-red-500"
+                    >{{ patientError }}</small>
+                </div>
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="nombre">{{ 'labels.name'| translate }}</label>
                     <input
                         pInputText
-                        [(ngModel)]="nombre"
+                        [(ngModel)]="firstName"
                         readonly
                         id="nombre"
                         type="text"
@@ -42,7 +52,7 @@
                     <input
                         pInputText
                         readonly
-                        [(ngModel)]="paterno"
+                        [(ngModel)]="lastFatherName"
                         id="paterno"
                         type="text"
                         placeholder="{{ 'placeholders.fatherLastName'| translate }}"
@@ -55,7 +65,7 @@
                         readonly
                         id="materno"
                         type="text"
-                        [(ngModel)]="materno"
+                        [(ngModel)]="lastMotherName"
                         placeholder="{{ 'placeholders.motherLastName'| translate }}"
                     />
                 </div>
@@ -68,7 +78,7 @@
                         readonly
                         id="correo"
                         type="text"
-                        [(ngModel)]="correo"
+                        [(ngModel)]="email"
                         placeholder="{{ 'placeholders.email'| translate }}"
                     />
                 </div>
@@ -79,7 +89,7 @@
                         readonly
                         id="telefono"
                         type="text"
-                        [(ngModel)]="telefono"
+                        [(ngModel)]="phone"
                         placeholder="{{ 'placeholders.phone'| translate }}"
                     />
                 </div>
@@ -90,7 +100,7 @@
                         readonly
                         id="ocupacion"
                         type="text"
-                        [(ngModel)]="ocupacion"
+                        [(ngModel)]="occupation"
                         placeholder="{{ 'placeholders.occupation'| translate }}"
                     />
                 </div>
@@ -103,7 +113,7 @@
                         readonly
                         id="genero"
                         type="text"
-                        [(ngModel)]="genero"
+                        [(ngModel)]="gender"
                         placeholder="{{ 'placeholders.gender'| translate }}"
                     />
                 </div>
@@ -114,7 +124,7 @@
                         readonly
                         id="nacimiento"
                         type="text"
-                        [(ngModel)]="fechaNacimiento"
+                        [(ngModel)]="birthDate"
                         placeholder="{{ 'placeholders.birthDate'| translate }}"
                     />
                 </div>
@@ -125,7 +135,7 @@
                         readonly
                         id="edad"
                         type="text"
-                        [(ngModel)]="edad"
+                        [(ngModel)]="age"
                         placeholder="{{ 'placeholders.age'| translate }}"
                     />
                 </div>
@@ -138,7 +148,7 @@
                         readonly
                         id="direccion"
                         type="text"
-                        [(ngModel)]="direccion"
+                        [(ngModel)]="address"
                         placeholder="{{ 'placeholders.address'| translate }}"
                     />
                 </div>
@@ -149,7 +159,7 @@
                         readonly
                         id="cp"
                         type="text"
-                        [(ngModel)]="codigoPostal"
+                        [(ngModel)]="postalCode"
                         placeholder="{{ 'placeholders.postalCode'| translate }}"
                     />
                 </div>
@@ -159,46 +169,63 @@
 
     <div class="col-span-1 order-1 xl:order-2">
         <div class="card h-full">
-            <div class="font-semibold text-xl mb-4">{{ 'labels.image'| translate }}</div>
-            <p-fileupload
-                name="demo[]"
-                (onUpload)="onUpload($event)"
-                [multiple]="false"
-                accept="image/*"
-                maxFileSize="4194304"
-                chooseLabel="{{ 'buttons.choose'| translate }}"
-                uploadLabel="{{ 'buttons.upload'| translate }}"
-                cancelLabel="{{ 'buttons.cancel'| translate }}"
-                [style]="{ height: '90%', width: '100%' }"
-                mode="advanced"
-                url="https://www.primefaces.org/cdn/api/upload.php">
+            <div class="font-semibold text-xl">{{ 'labels.image'| translate }}</div>
+            <small
+                *ngIf="imageError"
+                class="text-red-500"
+            >{{ imageError }}</small>
+            <div class="h-full mt-4">
+                <p-fileupload
+                    name="demo[]"
+                    (onSelect)="onSelect($event)"
+                    [multiple]="false"
+                    accept="image/*"
+                    maxFileSize="4194304"
+                    chooseLabel="{{ 'buttons.choose'| translate }}"
+                    cancelLabel="{{ 'buttons.cancel'| translate }}"
+                    [style]="{ height: '88%', width: '100%' }"
+                    mode="advanced"
+                    [auto]="true">
 
-                <!-- Plantilla vacía -->
-                <ng-template #empty>
-                    <div class="flex items-center justify-center h-full flex-col">
-                        <i class="pi pi-cloud-upload !border-2 !rounded-full !px-4 !py-4 !text-4xl !text-muted-color"></i>
-                        <p class="mt-6 text-center">
-                            {{ 'messages.imageSizeLimit'| translate }} <strong>{{ 'messages.4mb'| translate }}</strong>.
-                        </p>
-                    </div>
-                </ng-template>
+                    <!-- Plantilla vacía -->
+                    <ng-template #empty>
+                        <div class="flex items-center justify-center h-full flex-col">
+                            <i class="pi pi-cloud-upload !border-2 !rounded-full !px-4 !py-4 !text-4xl !text-muted-color"></i>
+                            <p class="mt-6 text-center">
+                                {{ 'messages.imageSizeLimit'| translate }} <strong>{{ 'messages.4mb'| translate }}</strong>.
+                            </p>
+                        </div>
+                    </ng-template>
 
-                <!-- Plantilla de los botones -->
-                <ng-template #header let-files let-chooseCallback="chooseCallback" let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
-                    <div class="flex flex-wrap gap-2">
-                        <p-button (onClick)="choose($event, chooseCallback)" icon="pi pi-images" [rounded]="true" [outlined]="true"></p-button>
-                        <p-button (onClick)="clearCallback()" icon="pi pi-times" [rounded]="true" [outlined]="true" severity="danger" [disabled]="!files || files.length === 0"></p-button>
-                    </div>
-                </ng-template>
+                    <!-- Plantilla de los botones -->
+                    <ng-template #header let-files let-chooseCallback="chooseCallback" let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
+                        <div class="flex flex-wrap gap-2">
+                            <p-button
+                                (onClick)="chooseCallback()"
+                                icon="pi pi-images"
+                                [rounded]="true"
+                                [outlined]="true">
+                            </p-button>
+                            <p-button
+                                (onClick)="clearFiles(clearCallback)"
+                                icon="pi pi-times"
+                                [rounded]="true"
+                                [outlined]="true"
+                                severity="danger"
+                                [disabled]="!files || files.length === 0">
+                            </p-button>
+                        </div>
+                    </ng-template>
 
-                <!-- Plantilla con el contenido de los archivos -->
-                <ng-template #content>
-                    <ul *ngIf="uploadedFiles.length">
-                        <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
-                    </ul>
-                </ng-template>
+                    <!-- Plantilla con el contenido de los archivos -->
+                    <ng-template #content>
+                        <ul *ngIf="images.length">
+                            <li *ngFor="let file of images"></li>
+                        </ul>
+                    </ng-template>
 
-            </p-fileupload>
+                </p-fileupload>
+            </div>
         </div>
     </div>
 </div>
@@ -212,7 +239,7 @@
                     {{ 'links.viewDetail'| translate }}
                 </a>
             </div>
-            <div class="flex flex-wrap gap-6 mb-4">
+            <div class="col-span-1 gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="doctor">{{ 'doctor.singular'| translate }}</label>
                     <input
@@ -225,35 +252,64 @@
                     />
                 </div>
             </div>
-            <div class="flex flex-wrap gap-6 mb-6">
-                <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="ojo">{{ 'labels.eye'| translate }}</label>
-                    <p-select-button
-                        id="ojo"
-                        [(ngModel)]="selectedEye"
-                        [options]="options"
-                    />
-                </div>
-                <div class="flex flex-col grow basis-16 gap-2">
-                    <label for="enfermedad">{{ 'labels.disease'| translate }}</label>
-                    <p-select
-                        id="enfermedad"
-                        [options]="afecciones"
-                        [(ngModel)]="selectedAfeccion"
-                        placeholder="{{ 'placeholders.disease'| translate }}"
-                    ></p-select>
-                </div>
-                <div class="flex flex-col grow basis-16 gap-2">
-                    <label for="modelo">{{ 'labels.model'| translate }}</label>
-                    <p-select
-                        id="modelo"
-                        [options]="models"
-                        [(ngModel)]="selectedModel"
-                        placeholder="{{ 'placeholders.model'| translate }}"
-                    ></p-select>
+            <div class="col-span-2 gap-6 mb-6">
+                <div class="grid grid-cols-5 gap-12">
+                    <div class="col-span-1 flex flex-col grow basis-16 gap-2">
+                        <label for="ojo">{{ 'labels.eye'| translate }}</label>
+                        <p-select-button
+                            id="ojo"
+                            [(ngModel)]="selectedEye"
+                            [options]="eyes"
+                            (ngModelChange)="onEyeChange()"
+                            [ngClass]="{
+                            'ng-dirty': eyeError,
+                            'ng-invalid': eyeError
+                        }"
+                        />
+                        <small
+                            *ngIf="eyeError"
+                            class="text-red-500"
+                        >{{ eyeError }}</small>
+                    </div>
+                    <div class="col-span-2 flex flex-col grow basis-16 gap-2">
+                        <label for="enfermedad">{{ 'labels.disease'| translate }}</label>
+                        <p-select
+                            id="enfermedad"
+                            [options]="afecciones"
+                            [(ngModel)]="selectedDisease"
+                            (ngModelChange)="onDiseaseChange()"
+                            [ngClass]="{
+                            'ng-dirty': diseaseError,
+                            'ng-invalid': diseaseError
+                        }"
+                            placeholder="{{ 'placeholders.disease'| translate }}"
+                        ></p-select>
+                        <small
+                            *ngIf="diseaseError"
+                            class="text-red-500"
+                        >{{ diseaseError }}</small>
+                    </div>
+                    <div class="col-span-2 flex flex-col grow basis-16 gap-2">
+                        <label for="modelo">{{ 'labels.model'| translate }}</label>
+                        <p-select
+                            id="modelo"
+                            [options]="models"
+                            [(ngModel)]="selectedModel"
+                            [ngClass]="{
+                            'ng-dirty': modelError,
+                            'ng-invalid': modelError
+                        }"
+                            (ngModelChange)="onModelChange()"
+                            placeholder="{{ 'placeholders.model'| translate }}"
+                        ></p-select>
+                        <small
+                            *ngIf="modelError"
+                            class="text-red-500"
+                        >{{ modelError }}</small>
+                    </div>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-6">
+            <div class="col-span-2 gap-6">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <div class="flex flex-col grow basis-0 gap-2">
                         <div *ngIf="state === State.loading" class="flex justify-end items-center gap-4 w-full">
@@ -262,9 +318,9 @@
                         <div *ngIf="state === State.success" class="flex justify-end items-center gap-4 w-full">
                             <div class="font-semibold text-xl">{{ 'labels.result'| translate }}:</div>
                             <p-button
-                                [label]="resultado"
+                                [label]="result"
                                 [disabled]="true"
-                                [style]="{ opacity: '3', backgroundColor: color, 'border-color': color }"
+                                [style]="{ opacity: '3', backgroundColor: colorResult, 'border-color': colorResult }"
                             ></p-button>
                         </div>
                     </div>
@@ -279,6 +335,7 @@
                 <textarea
                     pTextarea
                     rows="10"
+                    [(ngModel)]="notes"
                     style="width: 100%; resize: none; padding-bottom: 0; margin-bottom: 0"
                 ></textarea>
             </div>
@@ -292,7 +349,7 @@
         label="{{ 'buttons.cancel'| translate }}"
     ></p-button>
     <p-button
-        (onClick)="inspeccionar()"
+        (onClick)="callCreateInspection()"
         label="{{ 'buttons.inspect'| translate }}"
     ></p-button>
 </div>

@@ -1,3 +1,8 @@
+export const eyes = [
+    'Derecho',
+    'Izquierdo'
+]
+
 export const diseases = [
     'DMAE Seca',
     'DMAE Húmeda',

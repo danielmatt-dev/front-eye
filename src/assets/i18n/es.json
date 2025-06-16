@@ -29,7 +29,7 @@
         "detectionsByAgeAndCondition": "Detecciones por rango de edad y afección",
         "detectionsTrend": "Tendencia de Detecciones",
         "inspectionData": "Datos de la inspección",
-        "additionalData": "Datos adicionales",
+        "additionalData": "Datos adicionales (Opcional)",
         "occurrenceProbability": "Probabilidad de Ocurrencia (IA)",
         "completedInspections": "Inspecciones realizadas"
     },
@@ -135,7 +135,8 @@
                 "createPatient": "Éxito",
                 "updatePatient": "Datos actualizados",
                 "deletePatient": "Eliminación exitosa",
-                "deletePatients": "Eliminación exitosa"
+                "deletePatients": "Eliminación exitosa",
+                "createInspection": "Inspección completada"
             },
             "messages": {
                 "createDoctor": "Doctor @ registrado exitosamente",
@@ -145,7 +146,8 @@
                 "createPatient": "Paciente @ registrado exitosamente",
                 "updatePatient": "Los datos del paciente @ se actualizaron con éxito",
                 "deletePatient": "El paciente @ ha sido eliminado correctamente",
-                "deletePatients": "Se eliminaron @ pacientes exitosamente"
+                "deletePatients": "Se eliminaron @ pacientes exitosamente",
+                "createInspection": "La inspección se ha registrado exitosamente"
             }
         },
         "warn": {
@@ -276,7 +278,9 @@
         "onlyNumbers": "Solo dígitos numéricos",
         "noSpecialChars": "Sin caracteres especiales",
         "selectionRequired": "Debes seleccionar una opción",
+        "selectionPatientRequired": "Debes seleccionar un paciente",
         "email": "Formato de correo electrónico incorrecto",
-        "birthDateAdult": "Debe ser mayor de edad"
+        "birthDateAdult": "Debe ser mayor de edad",
+        "selectionImageRequired": "Por favor, selecciona o añade una imagen para continuar"
     }
 }

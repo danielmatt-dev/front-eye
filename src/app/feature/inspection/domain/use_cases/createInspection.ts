@@ -5,7 +5,7 @@ import { InspectionsDatasourceRemoteImpl } from '../../data/datasource/remote/im
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
-export class PostInspection implements UseCase<boolean, InspectionRequestEntity> {
+export class CreateInspection implements UseCase<boolean, InspectionRequestEntity> {
 
     constructor(private readonly remote: InspectionsDatasourceRemoteImpl) {}
 
