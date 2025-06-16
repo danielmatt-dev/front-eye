@@ -335,6 +335,7 @@
                 <textarea
                     pTextarea
                     rows="10"
+                    [(ngModel)]="notes"
                     style="width: 100%; resize: none; padding-bottom: 0; margin-bottom: 0"
                 ></textarea>
             </div>
@@ -348,7 +349,7 @@
         label="{{ 'buttons.cancel'| translate }}"
     ></p-button>
     <p-button
-        (onClick)="inspect()"
+        (onClick)="callCreateInspection()"
         label="{{ 'buttons.inspect'| translate }}"
     ></p-button>
 </div>

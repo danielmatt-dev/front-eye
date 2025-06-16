@@ -18,11 +18,15 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { PatientResponseEntity } from '../../../patient/domain/entity/patient.response.entity';
-import { colorByResult, formatDateToDDMMYYYY } from '../../../../shared/utils/functions/functions';
+import { formatDateToDDMMYYYY } from '../../../../shared/utils/functions/functions';
 import { diseases, eyes, results } from '../../../../shared/utils/data';
 import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
 import { Image } from 'primeng/image';
+import { GetAllPatients } from '../../../patient/domain/use_cases/getAllPatients';
+import { CreateInspection } from '../../domain/use_cases/createInspection';
+import { NoParams } from '../../../../shared/utils/usecase';
+import { InspectionRequestEntity } from '../../domain/entity/inspection.request.entity';
 
 @Component({
     selector: 'app-nueva-inspeccion',
@@ -44,6 +48,8 @@ export class NuevaInspeccionComponent implements OnInit {
 
     models = models;
     selectedModel?: string;
+
+    notes = ''
 
     /* Variables del paciente */
     allPatients: PatientResponseEntity[] = patientsResponseMocks;
@@ -84,18 +90,28 @@ export class NuevaInspeccionComponent implements OnInit {
     modelError?: string;
     imageError?: string;
 
+    /* Variables de carga */
+    isLoadingCreateInspection = false
+    isLoadingGetPatients = false
+    isLoadingGetModels = false
+
     /* Providers */
     validator: NewInspectionValidator;
 
     constructor(
         private readonly translateService: TranslateService,
         private readonly primeng: PrimeNG,
-        private readonly messageService: MessageService
+        private readonly messageService: MessageService,
+        private readonly getAllPatient: GetAllPatients,
+        private readonly createInspection: CreateInspection
     ) {
         this.validator = NewInspectionValidator.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
-    ngOnInit() {
+    async ngOnInit() {
+
+        await this.callGetAllPatients()
+
         this.patientOptions = this.allPatients.map((patient) => ({
             ...patient,
             fullName: `${patient.firstName} ${patient.lastFathName} ${patient.lastMontName}`
@@ -103,20 +119,53 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     // Llamadas a casos de uso
-    inspect() {
+    async callGetAllPatients() {
+
+        this.isLoadingGetPatients = true
+        const resultGetAllPatients = await this.getAllPatient.call(new NoParams())
+        this.isLoadingGetPatients = false
+
+        if (resultGetAllPatients._tag === 'Left') {
+            this.validator.getToastException(resultGetAllPatients.left)
+        }
+
+        if (resultGetAllPatients._tag === 'Right') {
+            this.allPatients = resultGetAllPatients.right
+        }
+
+    }
+
+    async callCreateInspection() {
+
         if (!this.isFormaValid()) {
             this.validator.showMessage({ key: 'invalidForm' });
             return;
         }
 
         this.state = State.loading;
-        setTimeout(() => {
-            // Generar un resultado aleatorio, excluyendo "Todos"
-            const randomResult = this.results[Math.floor(Math.random() * (this.results.length - 1)) + 1];
-            this.result = randomResult;
-            this.colorResult = colorByResult(randomResult);
-            this.state = State.success;
-        }, 5000); // Simulación de 5 segundos
+        const resultCreateInspection = await this.createInspection.call(
+            new InspectionRequestEntity({
+                patientId: this.patientId,
+                diseaseId: 0,
+                modelId: 0,
+                images: [],
+                eye: this.selectedEye,
+                result: this.result,
+                probabilities: [],
+                notes: this.notes
+            })
+        )
+        this.state = State.success;
+
+        if (resultCreateInspection._tag === 'Left') {
+            this.validator.getToastException(resultCreateInspection.left)
+        }
+
+        if (resultCreateInspection._tag === 'Right') {
+            this.validator.showMessage({ key: 'createInspection', type: 'success' })
+            this.clearFields()
+        }
+
     }
 
     // Función de validación
