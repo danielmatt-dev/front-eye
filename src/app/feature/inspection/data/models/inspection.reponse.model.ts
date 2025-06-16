@@ -41,4 +41,16 @@ export class InspectionReponseModel {
         Object.assign(this, partial)
     }
 
+    get inspectionDateTime(): Date {
+        // Copiamos la fecha para no mutar inspectionDate original
+        const dt = new Date(this.inspectionDate);
+        if (this.inspectionTime) {
+            const [h, m, s] = this.inspectionTime
+                .split(':')
+                .map(part => parseInt(part, 10));
+            dt.setHours(h, m, s);
+        }
+        return dt;
+    }
+
 }
