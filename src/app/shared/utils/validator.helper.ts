@@ -35,18 +35,8 @@ export abstract class ValidatorHelper {
     showMessage({ key, type = 'warn', typeToast = 'toast', life = 4000 }:
                               { key: string, type?: string; typeToast?: string; life?: number }) {
 
-        let titleMessage = ''
-        let descriptionMessage = ''
-
-        if (typeToast === 'toast') {
-            titleMessage = this.getText(`toast.${type}.titles.${key}`)
-            descriptionMessage = this.getText(`toast.${type}.messages.${key}`)
-        }
-
-        if (typeToast === 'ex') {
-            titleMessage = this.getText(`exceptions.titles.${key}`)
-            descriptionMessage = this.getText(`exceptions.messages.${key}`)
-        }
+        const titleMessage = this.getText(`${typeToast}.${type}.titles.${key}`)
+        const descriptionMessage = this.getText(`${typeToast}.${type}.messages.${key}`)
 
         this.sendMessage.execute({ title: titleMessage, message: descriptionMessage, type: type, life: life });
     }
@@ -86,7 +76,7 @@ export abstract class ValidatorHelper {
             key = 'forbidden'
         }
 
-        this.showMessage({key: key, type: type, typeToast: 'ex'})
+        this.showMessage({key: key, type: type, typeToast: 'exception'})
     }
 
     validateSelected(value?: string): string | undefined {
