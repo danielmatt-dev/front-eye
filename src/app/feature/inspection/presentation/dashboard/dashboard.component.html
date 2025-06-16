@@ -131,16 +131,17 @@
 
 <div class="card mt-8">
     <div class="font-semibold text-xl mb-4">{{ 'titles.detectionsTrend' | translate }}</div>
-    <div class="flex justify-between my-6 mr-5">
+    <div class="flex flex-col md:flex-row sm:justify-between gap-4 my-6 mr-5">
         <p-select-button
             id="ojo"
             [options]="options"
             [(ngModel)]="optionSelected"
             [allowEmpty]="false"
             (ngModelChange)="filterInspections()"
-        />
+        ></p-select-button>
+
         <p-date-picker
-            [style]="{ 'width': '16rem' }"
+            [style]="{width:' 100%' }"
             [(ngModel)]="selectedDates"
             selectionMode="range"
             placeholder="{{ 'placeholders.dateRange' | translate }}"
@@ -148,7 +149,9 @@
             showIcon="true"
             [disabled]="calendarDisabled"
             (onSelect)="onSelectedDates(selectedDates)"
-        />
+            class="mt-4 md:mt-0 w-full sm:w-[30rem] md:w-[18rem] lg:w-[18rem] xl:w-[18rem]"
+            [readonlyInput]="true"
+        ></p-date-picker>
     </div>
     <p-chart
         type="line"

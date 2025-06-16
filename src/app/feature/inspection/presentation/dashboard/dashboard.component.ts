@@ -16,7 +16,7 @@ import {
     AllFilter, RangeDaysFilter,
     InspectionsFilterStrategy,
     OneDayFilter, OneMonthFilter,
-    OneWeekFilter, ThreeMonthsFilter
+    OneWeekFilter, ThreeMonthsFilter, TwoMonthsFilter, DynamicRangeFilter
 } from '../../domain/filters/inspections.filter';
 import { InspectionsFilterContext } from '../../domain/filters/inspections.filter.context';
 import { ValidatorHelper } from '../../../../shared/utils/validator.helper';
@@ -97,7 +97,7 @@ export class DashboardComponent implements OnInit {
 
     async ngOnInit() {
         await this.callGetAllInspections()
-        this.calculateStatistics()
+        this.calculateDetectionStatistics()
         this.initCharts();
     }
 
@@ -260,7 +260,7 @@ export class DashboardComponent implements OnInit {
                 strategy = new OneMonthFilter()
                 break
             case '3 Meses':
-                strategy = new ThreeMonthsFilter()
+                strategy = new DynamicRangeFilter()
                 break
         }
         this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections)
@@ -312,8 +312,7 @@ export class DashboardComponent implements OnInit {
     }
 
     /* Cálculo de estadísticas de las inspecciones */
-    calculateStatistics() {
-
+    calculateDetectionStatistics() {
         this.totalDetections = this.allInspections.length
         const patientsDetected = new Set<number>();
 
@@ -339,9 +338,13 @@ export class DashboardComponent implements OnInit {
 
             patientsDetected.add(inspection.patientId);
         }
+        this.computeDemographicDistribution(patientsDetected)
+    }
+
+    computeDemographicDistribution(patientdIds: Set<number>) {
 
         // Procesar pacientes detectados para género y edad
-        for (const patientId of patientsDetected) {
+        for (const patientId of patientdIds) {
 
             const patient = this.allInspections
                 .find(p => p.patientId === patientId)
@@ -380,6 +383,7 @@ export class DashboardComponent implements OnInit {
 
     }
 
+    /* Función que se ejecuta al selecionar una fecha */
     onSelectedDates(dates: Date[]) {
         this.selectedDates = dates
 
@@ -387,46 +391,35 @@ export class DashboardComponent implements OnInit {
             return
         }
 
-        let strategy: InspectionsFilterStrategy = new AllFilter();
-
-        if (this.selectedDates[1] === null) {
-            strategy = new OneDayFilter()
-            strategy.startDate = this.selectedDates[0]
-            strategy.endDate = this.selectedDates[0]
-            this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections)
-            return
-        }
+        let strategy: InspectionsFilterStrategy = new OneDayFilter()
 
         const startDate = this.selectedDates[0]
-        const endDate = this.selectedDates[1]
+        let endDate = this.selectedDates[0]
+        startDate.setHours(0, 0, 0, 0)
+        endDate.setHours(23, 59, 59, 999)
 
-        const msInDay = 1000 * 60 * 60 * 24;
-        const diffMs   = endDate.getTime() - startDate.getTime();
-        const diffDays = diffMs / msInDay;
+        if (this.selectedDates[1] !== null) {
+            endDate = this.selectedDates[1]
+            endDate.setHours(23, 59, 59, 999)
 
-        if (diffDays <= 1) {
-            // 0–1 días → “1 día”
-            strategy = new OneDayFilter()
-        }
+            const msInDay = 1000 * 60 * 60 * 24;
+            const diffMs   = endDate.getTime() - startDate.getTime();
+            const diffDays = Math.floor(diffMs / msInDay);
 
-        // 2–7 días → “1 semana”
-        if (diffDays > 1 && diffDays <= 7) {
-            strategy = new OneWeekFilter()
-        }
+            // 0–22 días → “22 días”
+            if (diffDays <= 29) {
+                strategy = new RangeDaysFilter();
+            }
 
-        // 8–15 días → “15 días”
-        if (diffDays > 7 && diffDays <= 22) {
-            strategy = new RangeDaysFilter()
-        }
+            // 29–120 días → “3 meses”
+            if (diffDays > 30 && diffDays <= 120) {
+                strategy = new DynamicRangeFilter()
+            }
 
-        // 15–30 días → “1 mes”
-        if (diffDays > 22 && diffDays <= 30) {
-            strategy = new OneMonthFilter()
-        }
+            if (diffDays > 120) {
+                strategy = new AllFilter()
+            }
 
-        // 31–90 días → “3 meses”
-        if (diffDays > 30 && diffDays <= 90) {
-            strategy = new ThreeMonthsFilter()
         }
 
         strategy.startDate = startDate

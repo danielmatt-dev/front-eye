@@ -5754,7 +5754,7 @@ export const inspectionResponseMocks: InspectionReponseModel[] =
             : 'femenino',
         patientAge: raw.edad,
         inspectionDate:      parseDateDDMMYYYY(raw.fecha),
-        inspectionTime:      raw.hora,
+        inspectionTime:      `${raw.hora}:00`,
         eye:                 raw.ojo,
         disease:             raw.afeccion,
         model:               '',                             // sin dato en el mock
