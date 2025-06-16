@@ -98,15 +98,57 @@
     <!-- Imagen -->
     <div class="col-span-1">
         <div class="card h-full">
-            <div class="font-semibold text-xl mb-4">{{ 'labels.image' | translate }}</div>
-            <p-image
-                src="assets/images/fondo_ojo.jpg"
-                alt="Fondo Ojo"
-                preview="true"
-                class="flex justify-center items-center object-contain rounded-md"
-                height="220px"
-                width="220px"
-            ></p-image>
+            <!-- Título -->
+            <div class="font-semibold text-xl mb-4">
+                {{ 'labels.image' | translate }}
+            </div>
+
+            <!-- Carrusel -->
+            <p-galleria
+                #galleria
+                [value]="images"
+                [(activeIndex)]="activeIndex"
+                [numVisible]="3"
+                [responsiveOptions]="responsiveOptions"
+                [showThumbnails]="showThumbnails"
+                [showItemNavigators]="true"
+                [showItemNavigatorsOnHover]="true"
+                [circular]="true"
+                [containerStyle]="{ 'max-width': '640px' }"
+                [containerClass]="galleriaClass()"
+            >
+                <ng-template pTemplate="item" let-item>
+                    <p-image
+                        [src]="item.itemImageSrc"
+                        [preview]="true"
+                        [ngStyle]="{ 'width': '45%', 'margin': '0 auto' }"
+                        class="rounded-md"
+                    />
+                </ng-template>
+
+                <ng-template pTemplate="thumbnail" let-item>
+                    <div class="flex justify-center items-center p-1">
+                        <p-image
+                            [src]="item.thumbnailImageSrc"
+                            class="object-contain rounded-sm"
+                        />
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="footer" let-item>
+                    <div class="custom-galleria-footer flex items-center bg-black/50 text-white p-2">
+                        <span class="ml-4 text-sm">
+                            {{ activeIndex + 1 }}/{{ images.length }}
+                            <strong class="ml-2">{{ images[activeIndex].title }}</strong>
+                        </span>
+                        <p-button
+                            [icon]="fullScreenIcon()"
+                            class="ml-auto text-white"
+                            (onClick)="toggleFullScreen()"
+                        ></p-button>
+                    </div>
+                </ng-template>
+            </p-galleria>
         </div>
     </div>
 
@@ -166,7 +208,6 @@
                 [scrollable]="true"
                 [globalFilterFields]="['']"
                 responsiveLayout="scroll"
-                (onRowSelect)="onRowSelect($event)"
                 selectionMode="single"
                 scrollHeight="14rem"
                 class="w-full"
