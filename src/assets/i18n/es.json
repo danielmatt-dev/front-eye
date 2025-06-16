@@ -29,7 +29,7 @@
         "detectionsByAgeAndCondition": "Detecciones por rango de edad y afección",
         "detectionsTrend": "Tendencia de Detecciones",
         "inspectionData": "Datos de la inspección",
-        "additionalData": "Datos adicionales",
+        "additionalData": "Datos adicionales (Opcional)",
         "occurrenceProbability": "Probabilidad de Ocurrencia (IA)",
         "completedInspections": "Inspecciones realizadas"
     },
@@ -276,7 +276,9 @@
         "onlyNumbers": "Solo dígitos numéricos",
         "noSpecialChars": "Sin caracteres especiales",
         "selectionRequired": "Debes seleccionar una opción",
+        "selectionPatientRequired": "Debes seleccionar un paciente",
         "email": "Formato de correo electrónico incorrecto",
-        "birthDateAdult": "Debe ser mayor de edad"
+        "birthDateAdult": "Debe ser mayor de edad",
+        "selectionImageRequired": "Por favor, selecciona o añade una imagen para continuar"
     }
 }
