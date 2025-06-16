@@ -24,7 +24,7 @@ import { DoctorResponseEntity } from '../../domain/entity/doctor.response.entity
 import { GetAllClinics } from '../../../clinic/domain/use_cases/getAllClinics';
 import { ClinicEntity } from '../../../clinic/domain/entity/clinic.entity';
 import { NoParams } from '../../../../shared/utils/usecase';
-import { PersonValidationHelper } from './validation/personValidationHelper';
+import { BaseValidatorHelper } from './validation/baseValidatorHelper';
 import { DoctorRequestEntity } from '../../domain/entity/doctor.request.entity';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -90,7 +90,7 @@ export class DoctorComponent implements OnInit {
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
-    validationHelper: PersonValidationHelper;
+    validationHelper: BaseValidatorHelper;
 
     /* Labels */
     labelDoctor = 'doctor';
@@ -109,7 +109,7 @@ export class DoctorComponent implements OnInit {
         private readonly filterService: FilterService
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
-        this.validationHelper = PersonValidationHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
     async ngOnInit() {

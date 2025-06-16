@@ -19,8 +19,8 @@ import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-c
 import { Router } from '@angular/router';
 import { PatientResponseModel } from '../../data/models/patient.response.model';
 import {
-    PersonValidationHelper
-} from '../../../doctor/presentation/doctor-component/validation/personValidationHelper';
+    BaseValidatorHelper
+} from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { CreatePatient } from '../../domain/use_cases/createPatient';
 import { GetAllPatients } from '../../domain/use_cases/getAllPatients';
 import { PutPatientParams, UpdatePatient } from '../../domain/use_cases/updatePatient';
@@ -96,7 +96,7 @@ export class PacientesComponent implements OnInit {
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
-    validationHelper: PersonValidationHelper;
+    validationHelper: BaseValidatorHelper;
 
     constructor(
         private readonly primeng: PrimeNG,
@@ -111,7 +111,7 @@ export class PacientesComponent implements OnInit {
         private readonly filterService: FilterService
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
-        this.validationHelper = PersonValidationHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
     async ngOnInit() {

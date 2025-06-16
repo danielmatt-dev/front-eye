@@ -20,8 +20,8 @@ import { InspectionResponseEntity } from '../../domain/entity/inspection.respons
 import { FilterService } from '../../../../shared/services/filter.service';
 import { DatePipe } from '@angular/common';
 import {
-    PersonValidationHelper
-} from '../../../doctor/presentation/doctor-component/validation/personValidationHelper';
+    BaseValidatorHelper
+} from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 
 @Component({
     standalone: true,
@@ -51,7 +51,7 @@ export class TodasInspeccionesComponent implements OnInit {
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
-    validationHelper: PersonValidationHelper
+    validationHelper: BaseValidatorHelper
 
     constructor(
         private readonly primeng: PrimeNG,
@@ -62,7 +62,7 @@ export class TodasInspeccionesComponent implements OnInit {
         private readonly filterService: FilterService
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
-        this.validationHelper = PersonValidationHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
     async ngOnInit() {

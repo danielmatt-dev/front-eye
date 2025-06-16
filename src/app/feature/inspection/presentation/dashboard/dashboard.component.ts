@@ -20,9 +20,9 @@ import {
 } from '../../domain/filters/inspections.filter';
 import { InspectionsFilterContext } from '../../domain/filters/inspections.filter.context';
 import { ValidatorHelper } from '../../../../shared/utils/validator.helper';
-import { DashboardValidationHelper } from './validation/dashboard.validation.helper';
 import { MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
+import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 
 @Component({
     selector: 'app-dashboard',
@@ -92,7 +92,7 @@ export class DashboardComponent implements OnInit {
         private readonly primeng: PrimeNG,
         private readonly getAllInpections: GetAllInspections
     ) {
-        this.validator = DashboardValidationHelper.getInstance(this.messageService, this.translateService, this.primeng)
+        this.validator = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng)
     }
 
     async ngOnInit() {

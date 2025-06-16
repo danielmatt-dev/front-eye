@@ -5,21 +5,21 @@ import { PrimeNG } from 'primeng/config';
 import { ClinicEntity } from '../../../../clinic/domain/entity/clinic.entity';
 import validator from 'validator';
 
-export class PersonValidationHelper extends ValidatorHelper {
+export class BaseValidatorHelper extends ValidatorHelper {
 
-    private static instance: PersonValidationHelper
+    private static instance: BaseValidatorHelper
 
     static getInstance(
         messageService: MessageService,
         translateService: TranslateService,
         primeng: PrimeNG
-    ): PersonValidationHelper {
+    ): BaseValidatorHelper {
 
-        if (!PersonValidationHelper.instance) {
-            PersonValidationHelper.instance = new PersonValidationHelper(messageService, translateService, primeng)
+        if (!BaseValidatorHelper.instance) {
+            BaseValidatorHelper.instance = new BaseValidatorHelper(messageService, translateService, primeng)
         }
 
-        return PersonValidationHelper.instance
+        return BaseValidatorHelper.instance
     }
 
     sendToastMessageSuccess(type: 'createDoctor' | 'updateDoctor' | 'deleteDoctor' | 'deleteDoctors', param: string) {
