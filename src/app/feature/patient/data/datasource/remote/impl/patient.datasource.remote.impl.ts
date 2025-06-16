@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { PatientRequestModel } from '../../../models/patient.request.model';
 import { PatientResponseModel } from '../../../models/patient.response.model';
+import { PatientIdRequestModel } from '../../../models/patient.id.request.model';
 
 // <>
 @Injectable({ providedIn: 'root' })
@@ -64,10 +65,10 @@ export class PatientDatasourceRemoteImpl implements PatientDatasourceRemote {
         return this.apiService.sendRequest(obs$)
     }
 
-    deletePatients(patientIds: number[]): Promise<Either<Error, boolean>> {
+    deletePatients(patientIds: PatientIdRequestModel[]): Promise<Either<Error, boolean>> {
         const url = PatientEndpoints.PATH
-        const body = patientIds.map(id => ({ patientId: id }))
-
+        const body = instanceToPlain(patientIds)
+        
         const obs$ = this.http
             .delete<boolean>(url, { body })
             .pipe(

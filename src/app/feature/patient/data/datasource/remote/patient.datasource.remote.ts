@@ -2,6 +2,7 @@ import { Either } from 'fp-ts/Either';
 import { PatientWithInspectionsModel } from '../../models/patient.with.inspections.model';
 import { PatientRequestModel } from '../../models/patient.request.model';
 import { PatientResponseModel } from '../../models/patient.response.model';
+import { PatientIdRequestModel } from '../../models/patient.id.request.model';
 
 // <>
 export interface PatientDatasourceRemote {
@@ -14,7 +15,7 @@ export interface PatientDatasourceRemote {
 
     getAllPatients(): Promise<Either<Error, PatientResponseModel[]>>
 
-    deletePatients(patientIds: number[]): Promise<Either<Error, boolean>>
+    deletePatients(patientIds: PatientIdRequestModel[]): Promise<Either<Error, boolean>>
 
     getAllPatientsWithInspections(): Promise<Either<Error, PatientWithInspectionsModel[]>>
 
