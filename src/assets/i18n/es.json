@@ -135,7 +135,8 @@
                 "createPatient": "Éxito",
                 "updatePatient": "Datos actualizados",
                 "deletePatient": "Eliminación exitosa",
-                "deletePatients": "Eliminación exitosa"
+                "deletePatients": "Eliminación exitosa",
+                "createInspection": "Inspección completada"
             },
             "messages": {
                 "createDoctor": "Doctor @ registrado exitosamente",
@@ -145,7 +146,8 @@
                 "createPatient": "Paciente @ registrado exitosamente",
                 "updatePatient": "Los datos del paciente @ se actualizaron con éxito",
                 "deletePatient": "El paciente @ ha sido eliminado correctamente",
-                "deletePatients": "Se eliminaron @ pacientes exitosamente"
+                "deletePatients": "Se eliminaron @ pacientes exitosamente",
+                "createInspection": "La inspección se ha registrado exitosamente"
             }
         },
         "warn": {
