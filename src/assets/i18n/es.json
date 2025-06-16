@@ -131,13 +131,21 @@
                 "createDoctor": "Éxito",
                 "updateDoctor": "Datos actualizados",
                 "deleteDoctor": "Eliminación exitosa",
-                "deleteDoctors": "Eliminación exitosa"
+                "deleteDoctors": "Eliminación exitosa",
+                "createPatient": "Éxito",
+                "updatePatient": "Datos actualizados",
+                "deletePatient": "Eliminación exitosa",
+                "deletePatients": "Eliminación exitosa"
             },
             "messages": {
                 "createDoctor": "Doctor @ registrado exitosamente",
                 "updateDoctor": "Los datos del doctor @ se actualizaron con éxito",
                 "deleteDoctor": "El doctor @ ha sido eliminado correctamente",
-                "deleteDoctors": "Se eliminaron @ doctores exitosamente"
+                "deleteDoctors": "Se eliminaron @ doctores exitosamente",
+                "createPatient": "Paciente @ registrado exitosamente",
+                "updatePatient": "Los datos del paciente @ se actualizaron con éxito",
+                "deletePatient": "El paciente @ ha sido eliminado correctamente",
+                "deletePatients": "Se eliminaron @ pacientes exitosamente"
             }
         },
         "warn": {
