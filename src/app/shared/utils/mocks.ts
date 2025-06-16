@@ -2642,6 +2642,29 @@ export const patients = [
     },
 ];
 
+function parseDDMMYYYYToDate(dateStr: string): Date {
+    const [day, month, year] = dateStr.split('/').map(Number);
+    return new Date(year, month - 1, day); // Meses van de 0 a 11
+}
+
+export const patientsResponseMocks = patients.map(patient =>
+    new PatientResponseEntity({
+        patientId:        Number(patient.clave.replace(/^P/, '')),
+        firstName: patient.nombre,
+        lastFathName: patient.apellidoPaterno,
+        lastMontName: patient.apellidoMaterno,
+        birthDate: parseDDMMYYYYToDate(patient.fechaNacimiento),
+        age: patient.edad,
+        gender: patient.genero,
+        occupation: patient.ocupacion,
+        email: patient.correo,
+        phone: patient.telefono,
+        postalCode: patient.codigoPostal,
+        address: patient.direccion,
+        state: patient.estado
+    })
+)
+
 export const patientsDates = [
     { clave: 'P001', fechaAlta: '12/01/2025' },
     { clave: 'P002', fechaAlta: '05/05/2025' },
