@@ -8,19 +8,19 @@
                 <div class="font-semibold text-xl mb-4">{{ 'titles.inspectionData' | translate }}</div>
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'labels.date' | translate }}:</div>
-                    <div class="font-bold col-span-2">25 de mayo del 2024</div>
+                    <div class="font-bold col-span-2">{{ formatDateToSpanishMexico(inspection?.inspectionDate) }}</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'labels.time' | translate }}:</div>
-                    <div class="font-bold col-span-2">16:31:20</div>
+                    <div class="font-bold col-span-2">{{ inspection?.inspectionTime }}</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'labels.eye' | translate }}:</div>
-                    <div class="font-bold col-span-2">Derecho</div>
+                    <div class="font-bold col-span-2">{{ inspection?.eye }}</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'labels.disease' | translate }}:</div>
-                    <div class="font-bold col-span-2">DMAE Húmeda</div>
+                    <div class="font-bold col-span-2">{{ inspection?.disease }}</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'doctor.singular' | translate }}:</div>
@@ -29,9 +29,9 @@
                 <div class="flex justify-end items-center gap-4">
                     <div class="font-semibold text-xl">{{ 'labels.result' | translate }}:</div>
                     <p-button
-                        label="Proliferativo"
+                        label="{{ inspection?.result }}"
                         disabled="true"
-                        [style]="{opacity: '3', background: red, border: red}"
+                        [style]="{opacity: '3', background: colorResult, border: colorResult}"
                     ></p-button>
                 </div>
             </div>
@@ -43,56 +43,22 @@
                 <div class="font-semibold text-xl mb-8">{{ 'titles.occurrenceProbability' | translate }}</div>
                 <!-- Usamos grid-rows-[repeat(4,1fr)] para que las 4 filas se repartan el 100% del alto -->
                 <div class="grid grid-rows-5 h-full">
-                    <div class="row-span-1 grid grid-cols-3">
-                        <div class="col-span-1">{{ 'afflictions.proliferative' | translate }}</div>
-                        <p-progressBar
-                            [value]="89.21"
-                            class="col-span-2"
-                            [color]="red"
-                            [showValue]="false">
-                            <ng-template pTemplate="value">
-                                {{ 0.8921 }}
-                            </ng-template>
-                        </p-progressBar>
-                    </div>
-                    <div class="row-span-1 grid grid-cols-3">
-                        <div class="col-span-1">{{ 'afflictions.moderate' | translate }}</div>
-                        <p-progressBar
-                            [value]="44.10"
-                            class="col-span-2"
-                            [color]="amber"
-                            [showValue]="false">
-                            <ng-template pTemplate="value">
-                                {{ 0.4410 }}
-                            </ng-template>
-                        </p-progressBar>
-                    </div>
-                    <div class="row-span-1 grid grid-cols-3">
-                        <div class="col-span-1">{{ 'afflictions.mild' | translate }}</div>
-                        <p-progressBar
-                            [value]="26.3"
-                            class="col-span-2"
-                            [color]="blue"
-                            [showValue]="false">
-                            <ng-template pTemplate="value">
-                                {{ 0.263 }}
-                            </ng-template>
-                        </p-progressBar>
-                    </div>
-                    <div class="row-span-1 grid grid-cols-3">
-                        <div class="col-span-1">{{ 'afflictions.none' | translate }}</div>
-                        <p-progressBar
-                            [value]="15"
-                            class="col-span-2"
-                            [color]="green"
-                            [showValue]="false">
-                            <ng-template pTemplate="value">
-                                {{ 0.15 }}
-                            </ng-template>
-                        </p-progressBar>
-                    </div>
+                    <ng-container *ngFor="let prob of probabilities">
+                        <div class="row-span-1 grid grid-cols-3">
+                            <div class="col-span-1">{{ prob.resultCategory }} ({{prob.probability * 100}}%) </div>
+                            <p-progress-bar
+                                class="col-span-2"
+                                [value]="prob.probability * 100"
+                                [color]="colorByResult(prob.resultCategory)"
+                                showValue="false">
+                                <ng-template pTemplate="value">
+                                    {{ prob.probability }}
+                                </ng-template>
+                            </p-progress-bar>
+                        </div>
+                    </ng-container>
                 </div>
-            </div>
+                </div>
         </div>
 
     <!-- Imagen -->
@@ -100,13 +66,13 @@
         <div class="card h-full">
             <!-- Título -->
             <div class="font-semibold text-xl mb-4">
-                {{ 'labels.image' | translate }}
+                {{ 'labels.images' | translate }}
             </div>
 
             <!-- Carrusel -->
             <p-galleria
                 #galleria
-                [value]="images"
+                [value]="imagesResponse"
                 [(activeIndex)]="activeIndex"
                 [numVisible]="3"
                 [responsiveOptions]="responsiveOptions"
@@ -119,7 +85,7 @@
             >
                 <ng-template pTemplate="item" let-item>
                     <p-image
-                        [src]="item.itemImageSrc"
+                        [src]="item.imageUrl"
                         [preview]="true"
                         [ngStyle]="{ 'width': '45%', 'margin': '0 auto' }"
                         class="rounded-md"
@@ -129,7 +95,7 @@
                 <ng-template pTemplate="thumbnail" let-item>
                     <div class="flex justify-center items-center p-1">
                         <p-image
-                            [src]="item.thumbnailImageSrc"
+                            [src]="item.imageUrl"
                             class="object-contain rounded-sm"
                         />
                     </div>
@@ -138,8 +104,8 @@
                 <ng-template pTemplate="footer" let-item>
                     <div class="custom-galleria-footer flex items-center bg-black/50 text-white p-2">
                         <span class="ml-4 text-sm">
-                            {{ activeIndex + 1 }}/{{ images.length }}
-                            <strong class="ml-2">{{ images[activeIndex].title }}</strong>
+                            {{ activeIndex + 1 }}/{{ imagesResponse.length }}
+                            <strong class="ml-2">{{ imagesResponse[activeIndex].title }}</strong>
                         </span>
                         <p-button
                             [icon]="fullScreenIcon()"
@@ -158,27 +124,27 @@
             <div class="font-semibold text-xl mb-4">{{ 'patient.titleModal' | translate }}</div>
             <div class="grid grid-cols-2 my-6">
                 <div class="col-span-1">{{ 'patient.singular' | translate }}:</div>
-                <div class="font-bold col-span-1">Jose Luis Sanchez Cervantes</div>
+                <div class="font-bold col-span-1">{{ patient?.firstName + " " + patient?.lastFathName + " " + patient?.lastMontName }}</div>
             </div>
             <div class="grid grid-cols-2 my-6">
                 <div class="col-span-1">{{ 'labels.birthDate' | translate }}:</div>
-                <div class="font-bold col-span-1">15 de marzo de 1984</div>
+                <div class="font-bold col-span-1">{{ patient?.birthDate | date:'dd/MM/yyyy' }}</div>
             </div>
             <div class="grid grid-cols-2 my-6">
                 <div class="col-span-1">{{ 'labels.age' | translate }}:</div>
-                <div class="font-bold col-span-1">40 años</div>
+                <div class="font-bold col-span-1">{{ patient?.age }} años</div>
             </div>
             <div class="grid grid-cols-2 my-6">
                 <div class="col-span-1">{{ 'labels.gender' | translate }}:</div>
-                <div class="font-bold col-span-1">Masculino</div>
+                <div class="font-bold col-span-1">{{ patient?.gender }}</div>
             </div>
             <div class="grid grid-cols-2 my-6">
                 <div class="col-span-1">{{ 'labels.phone' | translate }}:</div>
-                <div class="font-bold col-span-1">558-202-2345</div>
+                <div class="font-bold col-span-1">{{ patient?.phone }}</div>
             </div>
             <div class="grid grid-cols-2 mt-6">
                 <div class="col-span-1">{{ 'labels.email' | translate }}:</div>
-                <span class="font-bold col-span-1">jose.luis&#64;correo.com</span>
+                <span class="font-bold col-span-1">{{ patient?.email }}</span>
             </div>
         </div>
     </div>
@@ -187,10 +153,7 @@
     <div class="col-span-1">
         <div class="card h-full">
             <div class="font-semibold text-xl mb-4">{{ 'titles.additionalData' | translate }}</div>
-            <div class="text-justify">
-                Paciente de 41 años que presenta síntomas consistentes con la Degeneración Macular Asociada a la Edad (DMAE). Durante la evaluación inicial, se observan cambios en la visión central y posibles distorsiones visuales.<br><br>
-                Es importante revisar el historial médico del paciente para identificar factores de riesgo adicionales, como antecedentes familiares de DMAE, tabaquismo, hipertensión y colesterol alto.
-            </div>
+            <div class="text-justify">{{ inspection?.notes }}</div>
         </div>
     </div>
 
@@ -199,14 +162,15 @@
         <div class="card h-full overflow-auto" style="padding-bottom: 0">
             <div class="font-semibold text-xl mb-4">{{ 'titles.completedInspections' | translate }}</div>
             <p-table
-                dataKey="id"
+                dataKey="inspectionId"
                 [rows]="10"
-                [value]="inspecciones"
+                [value]="allInspections"
                 [loading]="false"
                 [rowHover]="true"
                 [paginator]="true"
                 [scrollable]="true"
                 [globalFilterFields]="['']"
+                (onRowSelect)="onRowSelect($event)"
                 responsiveLayout="scroll"
                 selectionMode="single"
                 scrollHeight="14rem"
@@ -221,12 +185,12 @@
                     </tr>
                 </ng-template>
 
-                <ng-template pTemplate="body" let-inspeccion>
-                    <tr [pSelectableRow]="inspeccion">
-                        <td>{{ inspeccion.id }}</td>
-                        <td>{{ inspeccion.fecha }}</td>
-                        <td>{{ inspeccion.ojo }}</td>
-                        <td>{{ inspeccion.resultado }}</td>
+                <ng-template pTemplate="body" let-inspection>
+                    <tr [pSelectableRow]="inspection">
+                        <td>{{ inspection.inspectionId }}</td>
+                        <td>{{ inspection.inspectionDate | date: 'dd/MM/yyyy' }}</td>
+                        <td>{{ inspection.eye }}</td>
+                        <td>{{ inspection.result }}</td>
                     </tr>
                 </ng-template>
 
