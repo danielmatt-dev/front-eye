@@ -3,9 +3,9 @@
 <!-- Opciones de consulta -->
 <div class="mb-8">
     <app-opciones-consulta
-        (periodoSeleccionado)="onPeriodoSeleccionado($event)"
-        (rangoFechasSeleccionado)="onRangoFechasSeleccionado($event)"
-        (consultar)="filtrarInspecciones()"
+        (periodoSeleccionado)="onPeriodSelected($event)"
+        (rangoFechasSeleccionado)="onDateRangeSelected($event)"
+        (consultar)="filterInspections()"
     />
 </div>
 
@@ -17,7 +17,7 @@
         <div class="flex gap-2">
             <p-button
                 label="Nueva Inspección"
-                (onClick)="nuevaInspeccion()"
+                (onClick)="natigateToNewInspection()"
                 icon="pi pi-plus"
             ></p-button>
         </div>
@@ -25,19 +25,26 @@
 
     <p-table
         #dt1
-        dataKey="id"
+        dataKey="inspectionId"
         [rows]="50"
         [loading]="false"
-        [value]="inspeccionesFiltradas"
+        [value]="filteredInspections"
         [rowHover]="true"
         [paginator]="true"
-        [globalFilterFields]="['id', 'fecha', 'hora', 'edad', 'afeccion', 'ojo', 'resultado']"
+        [globalFilterFields]="[
+            'inspectionId',
+            'inspectionDate',
+            'inspectionTime',
+            'patientAge',
+            'disease',
+            'eye',
+            'result'
+        ]"
         responsiveLayout="scroll"
-        (onRowSelect)="onRowSelect($event)"
         selectionMode="single"
         scrollHeight="40rem"
         scrollable="true"
-        [(selection)]="selectedInspecciones">
+        [(selection)]="selectedInspections">
 
         <ng-template pTemplate="caption">
             <div class="flex justify-between flex-col sm:flex-row items-center gap-4 w-full">
@@ -48,7 +55,6 @@
                         icon="pi pi-file-excel"
                         severity="success"
                         outlined="true"
-                        (onClick)="exportExcel()"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"
                     ></p-button>
@@ -57,7 +63,6 @@
                         label="{{ 'buttons.downloadPDFTable' | translate }}"
                         severity="danger"
                         outlined="true"
-                        (onClick)="exportPDF()"
                         icon="pi pi-file-pdf"
                     ></p-button>
                 </div>
@@ -86,47 +91,58 @@
 
         <ng-template pTemplate="header">
             <tr>
-                <th id="id" pSortableColumn="id" style="min-width: 6rem; font-weight: bold">
+                <th id="id" pSortableColumn="inspectionId" style="min-width: 6rem; font-weight: bold">
                     {{ 'labels.id' | translate }}
-                    <p-sortIcon field="id"></p-sortIcon>
+                    <p-sortIcon field="inspectionId"></p-sortIcon>
                 </th>
                 <!-- Columna de Fecha con Ordenación Correcta -->
-                <th id="date" pSortableColumn="fecha" style="min-width: 10rem; font-weight: bold" (click)="sortByDate()" (keyup)="onKeyUp($event)" >
+                <th id="date" pSortableColumn="inspectionDate" style="min-width: 10rem; font-weight: bold" (keyup)="onKeyUp($event)" >
                     {{ 'labels.date' | translate }}
-                    <p-sortIcon field="fecha"></p-sortIcon>
+                    <p-sortIcon field="inspectionDate"></p-sortIcon>
                 </th>
-                <th id="time" pSortableColumn="hora" style="min-width: 8rem; font-weight: bold" (click)="sortByHour()" (keyup)="onKeyUp($event)" (keydown)="onKeyDown($event)" >
+                <th id="time" pSortableColumn="inspectionTime" style="min-width: 8rem; font-weight: bold" (keyup)="onKeyUp($event)" (keydown)="onKeyDown($event)" >
                     {{ 'labels.time' | translate }}
-                    <p-sortIcon field="hora"></p-sortIcon>
+                    <p-sortIcon field="inspectionTime"></p-sortIcon>
                 </th>
-                <th id="age" pSortableColumn="edad" style="min-width: 8rem; font-weight: bold">
+                <th id="age" pSortableColumn="patientAge" style="min-width: 8rem; font-weight: bold">
                     {{ 'labels.age' | translate }}
-                    <p-sortIcon field="edad"></p-sortIcon>
+                    <p-sortIcon field="patientAge"></p-sortIcon>
                 </th>
-                <th id="condition" pSortableColumn="afeccion" style="min-width: 8rem; font-weight: bold">
+                <th id="condition" pSortableColumn="disease" style="min-width: 8rem; font-weight: bold">
                     {{ 'labels.condition' | translate }}
-                    <p-sortIcon field="afeccion"></p-sortIcon>
+                    <p-sortIcon field="disease"></p-sortIcon>
                 </th>
-                <th id="eye" pSortableColumn="ojo" style="min-width: 8rem; font-weight: bold">
+                <th id="eye" pSortableColumn="eye" style="min-width: 8rem; font-weight: bold">
                     {{ 'labels.eye' | translate }}
-                    <p-sortIcon field="ojo"></p-sortIcon>
+                    <p-sortIcon field="eye"></p-sortIcon>
                 </th>
-                <th id="result" pSortableColumn="resultado" style="min-width: 8rem; font-weight: bold">
+                <th id="result" pSortableColumn="result" style="min-width: 8rem; font-weight: bold">
                     {{ 'labels.result' | translate }}
-                    <p-sortIcon field="resultado"></p-sortIcon>
+                    <p-sortIcon field="result"></p-sortIcon>
                 </th>
+                <th scope="col" style="min-width: 6rem">{{ 'labels.actions' | translate }}</th>
             </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-inspeccion>
             <tr [pSelectableRow]="inspeccion">
-                <td>{{ inspeccion.id }}</td>
-                <td>{{ inspeccion.fecha }}</td>
-                <td>{{ inspeccion.hora }}</td>
-                <td>{{ inspeccion.edad }} {{ 'labels.years' | translate }} </td>
-                <td>{{ inspeccion.afeccion }}</td>
-                <td>{{ inspeccion.ojo }}</td>
-                <td>{{ inspeccion.resultado }}</td>
+                <td>{{ inspeccion.inspectionId }}</td>
+                <td>{{ inspeccion.inspectionDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ inspeccion.inspectionTime }}</td>
+                <td>{{ inspeccion.patientAge }} {{ 'labels.years' | translate }} </td>
+                <td>{{ inspeccion.disease }}</td>
+                <td>{{ inspeccion.eye }}</td>
+                <td>{{ inspeccion.result }}</td>
+                <td>
+                    <p-button
+                        icon="pi pi-folder-plus"
+                        class="mx-1"
+                        severity="success"
+                        (onClick)="navigateToInspectionDetails(inspeccion.inspectionId)"
+                        [rounded]="true"
+                        [outlined]="true"
+                    />
+                </td>
             </tr>
         </ng-template>
 

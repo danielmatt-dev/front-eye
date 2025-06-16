@@ -19,8 +19,8 @@ import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-c
 import { Router } from '@angular/router';
 import { PatientResponseModel } from '../../data/models/patient.response.model';
 import {
-    PersonValidationHelper
-} from '../../../doctor/presentation/doctor-component/validation/personValidationHelper';
+    BaseValidatorHelper
+} from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { CreatePatient } from '../../domain/use_cases/createPatient';
 import { GetAllPatients } from '../../domain/use_cases/getAllPatients';
 import { PutPatientParams, UpdatePatient } from '../../domain/use_cases/updatePatient';
@@ -29,13 +29,13 @@ import { FilterService } from '../../../../shared/services/filter.service';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { PatientRequestEntity } from '../../domain/entity/patient.request.entity';
 import { PatientResponseEntity } from '../../domain/entity/patient.response.entity';
-import { Calendar } from 'primeng/calendar';
 import { calculateAge } from '../../../../shared/utils/functions/functions';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     standalone: true,
     selector: 'app-pacientes',
-    imports: [Button, FormsModule, InputText, PrimeTemplate, TableModule, Dialog, Select, TranslatePipe, IconField, InputIcon, OpcionesConsultaComponent, ConfirmDialog, Toast, NgIf, DatePipe, NgClass, Calendar],
+    imports: [Button, FormsModule, InputText, PrimeTemplate, TableModule, Dialog, Select, TranslatePipe, IconField, InputIcon, OpcionesConsultaComponent, ConfirmDialog, Toast, NgIf, DatePipe, NgClass, DatePickerModule],
     providers: [MessageService, ConfirmationService],
     templateUrl: './pacientes.component.html',
     styleUrl: './pacientes.component.scss'
@@ -75,7 +75,7 @@ export class PacientesComponent implements OnInit {
     phone = '';
     gender = '';
     birthDate?: Date;
-    age = 0
+    age = 0;
     address = '';
     postalCode = '';
     occupation = '';
@@ -96,7 +96,7 @@ export class PacientesComponent implements OnInit {
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
-    validationHelper: PersonValidationHelper;
+    validationHelper: BaseValidatorHelper;
 
     constructor(
         private readonly primeng: PrimeNG,
@@ -111,7 +111,7 @@ export class PacientesComponent implements OnInit {
         private readonly filterService: FilterService
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
-        this.validationHelper = PersonValidationHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
     async ngOnInit() {
@@ -122,7 +122,7 @@ export class PacientesComponent implements OnInit {
         this.translateService.get('patient.plural').subscribe((res: string) => {
             this.labelPatients = res.toLowerCase();
         });
-        await this.callGetAllPatients()
+        await this.callGetAllPatients();
     }
 
     /* Llamadas a casos de uso */
@@ -265,7 +265,7 @@ export class PacientesComponent implements OnInit {
         this.state = patient.state;
         this.postalCode = patient.postalCode;
 
-        this.onFormChange()
+        this.onFormChange();
         this.openModal();
     }
 
@@ -308,12 +308,7 @@ export class PacientesComponent implements OnInit {
             return;
         }
 
-        this.filteredPatients = this.filterService.filterByPeriodo<PatientResponseEntity>(
-            this.allPatients,
-            (pat) => pat.createdAt,
-            this.selectedPeriod,
-            this.selectedDates
-        );
+        this.filteredPatients = this.filterService.filterByPeriodo<PatientResponseEntity>(this.allPatients, (pat) => pat.createdAt, this.selectedPeriod, this.selectedDates);
     }
 
     /* Funciones de validación del formulario del doctor */
@@ -375,7 +370,7 @@ export class PacientesComponent implements OnInit {
     onBirtDateChange() {
         this.birthDateError = this.validationHelper.validateBirthDate(this.birthDate);
         if (!this.birthDateError && this.birthDate) {
-            this.age = calculateAge(this.birthDate)
+            this.age = calculateAge(this.birthDate);
         }
     }
 
@@ -460,10 +455,6 @@ export class PacientesComponent implements OnInit {
     }
 
     async natigateToNewInspection(patient: PatientResponseEntity) {
-        await this.router.navigate(
-            ['/insights/nueva-inspeccion'],
-            { state: { patient } }
-        );
+        await this.router.navigate(['/insights/nueva-inspeccion'], { state: { patient } });
     }
-
 }

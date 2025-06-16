@@ -14,8 +14,8 @@ import { GetAllPatientsWithInspections } from '../../domain/use_cases/getAllPati
 import { PatientWithInspectionsEntity } from '../../domain/entity/patient.with.inspections.entity';
 import { NoParams } from '../../../../shared/utils/usecase';
 import {
-    PersonValidationHelper
-} from '../../../doctor/presentation/doctor-component/validation/personValidationHelper';
+    BaseValidatorHelper
+} from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { patientWithInspectionsMocks } from '../../../../shared/utils/mocks';
 import { ageRanges, diseases, results } from '../../../../shared/utils/data';
@@ -89,7 +89,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
-    validationHelper: PersonValidationHelper;
+    validationHelper: BaseValidatorHelper;
 
     constructor(
         private readonly primeng: PrimeNG,
@@ -99,7 +99,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         private readonly getAllPatientsWithInspections: GetAllPatientsWithInspections
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
-        this.validationHelper = PersonValidationHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
     async ngOnInit() {

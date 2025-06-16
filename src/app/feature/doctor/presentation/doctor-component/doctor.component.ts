@@ -23,26 +23,25 @@ import { DeleteDoctors } from '../../domain/use_cases/deleteDoctors';
 import { DoctorResponseEntity } from '../../domain/entity/doctor.response.entity';
 import { GetAllClinics } from '../../../clinic/domain/use_cases/getAllClinics';
 import { ClinicEntity } from '../../../clinic/domain/entity/clinic.entity';
-import { CalendarModule } from 'primeng/calendar';
 import { NoParams } from '../../../../shared/utils/usecase';
-import { PersonValidationHelper } from './validation/personValidationHelper';
+import { BaseValidatorHelper } from './validation/baseValidatorHelper';
 import { DoctorRequestEntity } from '../../domain/entity/doctor.request.entity';
 import { FilterService } from '../../../../shared/services/filter.service';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
     standalone: true,
     selector: 'app-doctor-component',
-    imports: [FormsModule, ButtonModule, TableModule, DialogModule, SelectModule, InputText, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ConfirmDialogModule, NgIf, Toast, CalendarModule, DatePipe, NgClass],
+    imports: [FormsModule, ButtonModule, TableModule, DialogModule, SelectModule, InputText, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ConfirmDialogModule, NgIf, Toast, DatePipe, NgClass, DatePickerModule],
     providers: [ConfirmationService, MessageService],
     templateUrl: './doctor.component.html',
     styleUrl: './doctor.component.scss'
 })
 export class DoctorComponent implements OnInit {
-
     @ViewChild('filter') filter!: ElementRef;
 
     /* Opciones de la tabla*/
-    isLoading = true
+    isLoading = true;
 
     /* Opciones de dialog */
     isUpdate = false;
@@ -64,7 +63,7 @@ export class DoctorComponent implements OnInit {
 
     /* Campos de doctor */
     doctorId?: number;
-    clinicSelected?: ClinicEntity = undefined
+    clinicSelected?: ClinicEntity = undefined;
     firstName = '';
     lastFatherName = '';
     lastMotherName = '';
@@ -73,12 +72,12 @@ export class DoctorComponent implements OnInit {
     phone = '';
     email = '';
     address = '';
-    state?: string = undefined
+    state?: string = undefined;
     postalCode = '';
 
     /* Campos de validación */
-    firstNameError?: string
-    clinicError?: string
+    firstNameError?: string;
+    clinicError?: string;
     lastFatherNameError?: string;
     lastMotherNameError?: string;
     birthDateError?: string;
@@ -87,11 +86,11 @@ export class DoctorComponent implements OnInit {
     emailError?: string;
     addressError?: string;
     postalCodeError?: string;
-    stateError?: string
+    stateError?: string;
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
-    validationHelper: PersonValidationHelper;
+    validationHelper: BaseValidatorHelper;
 
     /* Labels */
     labelDoctor = 'doctor';
@@ -110,7 +109,7 @@ export class DoctorComponent implements OnInit {
         private readonly filterService: FilterService
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
-        this.validationHelper = PersonValidationHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
     async ngOnInit() {
@@ -128,9 +127,9 @@ export class DoctorComponent implements OnInit {
 
     /* Llamadas a casos de uso */
     async callGetAllDoctors() {
-        this.isLoading = true
+        this.isLoading = true;
         const resultUseCase = await this.getAllDoctors.call(new NoParams());
-        this.isLoading = false
+        this.isLoading = false;
 
         if (resultUseCase._tag === 'Left') {
             this.validationHelper.getToastException(resultUseCase.left);
@@ -140,7 +139,7 @@ export class DoctorComponent implements OnInit {
         if (resultUseCase._tag === 'Right') {
             this.allDoctors = resultUseCase.right;
             //this.filteredDoctors = this.allDoctors;
-            this.filterDoctors()
+            this.filterDoctors();
         }
     }
 
@@ -174,7 +173,7 @@ export class DoctorComponent implements OnInit {
             const doctorSuccess = resultCreateDoctor.right;
             this.validationHelper.sendToastMessageSuccess('createDoctor', `${doctorSuccess.firstName} ${doctorSuccess.lastFathName}`);
             this.allDoctors.push(doctorSuccess);
-            this.filterDoctors()
+            this.filterDoctors();
         }
 
         this.closeModal();
@@ -208,7 +207,7 @@ export class DoctorComponent implements OnInit {
             if (idx !== -1) {
                 this.allDoctors[idx] = doctorUpdated;
             }
-            this.filterDoctors()
+            this.filterDoctors();
         }
 
         this.closeModal();
@@ -237,7 +236,7 @@ export class DoctorComponent implements OnInit {
             this.allDoctors = this.allDoctors.filter((doctor) => !ids.includes(doctor.doctorId));
 
             this.selectedDoctors = [];
-            this.filterDoctors()
+            this.filterDoctors();
         }
     }
 
@@ -245,8 +244,8 @@ export class DoctorComponent implements OnInit {
     getDoctorRequest(): DoctorRequestEntity | undefined {
         /* Validar campos */
         if (!this.isFormValid()) {
-            this.validationHelper.showMessage({key: 'invalidForm'})
-            return undefined
+            this.validationHelper.showMessage({ key: 'invalidForm' });
+            return undefined;
         }
 
         return new DoctorRequestEntity({
@@ -279,7 +278,7 @@ export class DoctorComponent implements OnInit {
         this.state = doctor.state;
         this.postalCode = doctor.postalCode;
 
-        this.onFormChange()
+        this.onFormChange();
         await this.openModal();
     }
 
@@ -322,41 +321,26 @@ export class DoctorComponent implements OnInit {
             return;
         }
 
-        this.filteredDoctors = this.filterService.filterByPeriodo<DoctorResponseEntity>(
-            this.allDoctors,
-            doc => doc.createdAt,
-            this.selectedPeriod,
-            this.selectedDates,
-        )
+        this.filteredDoctors = this.filterService.filterByPeriodo<DoctorResponseEntity>(this.allDoctors, (doc) => doc.createdAt, this.selectedPeriod, this.selectedDates);
     }
 
     /* Funciones de validación del formulario del doctor */
     isFormValid(): boolean {
-        this.onFormChange()
-        return !(
-            this.firstNameError ??
-            this.lastFatherNameError ??
-            this.lastMotherNameError ??
-            this.clinicError ??
-            this.birthDateError ??
-            this.emailError ??
-            this.genderError ??
-            this.addressError ??
-            this.postalCodeError ??
-            this.stateError);
+        this.onFormChange();
+        return !(this.firstNameError ?? this.lastFatherNameError ?? this.lastMotherNameError ?? this.clinicError ?? this.birthDateError ?? this.emailError ?? this.genderError ?? this.addressError ?? this.postalCodeError ?? this.stateError);
     }
 
     onFormChange() {
-        this.onFirstNameChange()
-        this.onLastFatherNameChange()
-        this.onLastMotherNameChange()
-        this.onClinicChange()
-        this.onBirtDateChange()
-        this.onEmailChange()
-        this.onGenderChange()
-        this.onAddressChange()
-        this.onPostalCodeChange()
-        this.onStateChange()
+        this.onFirstNameChange();
+        this.onLastFatherNameChange();
+        this.onLastMotherNameChange();
+        this.onClinicChange();
+        this.onBirtDateChange();
+        this.onEmailChange();
+        this.onGenderChange();
+        this.onAddressChange();
+        this.onPostalCodeChange();
+        this.onStateChange();
     }
 
     onFirstNameChange() {
@@ -376,15 +360,15 @@ export class DoctorComponent implements OnInit {
     }
 
     onGenderChange() {
-        this.genderError = this.validationHelper.validateSelected(this.gender)
+        this.genderError = this.validationHelper.validateSelected(this.gender);
     }
 
     onEmailChange() {
-        this.emailError = this.validationHelper.validateEmail(this.email)
+        this.emailError = this.validationHelper.validateEmail(this.email);
     }
 
     onBirtDateChange() {
-        this.birthDateError = this.validationHelper.validateBirthDate(this.birthDate)
+        this.birthDateError = this.validationHelper.validateBirthDate(this.birthDate);
     }
 
     onAddressChange() {
@@ -392,11 +376,11 @@ export class DoctorComponent implements OnInit {
     }
 
     onPostalCodeChange() {
-        this.postalCodeError = this.validationHelper.validateFieldNumber(this.postalCode, 10)
+        this.postalCodeError = this.validationHelper.validateFieldNumber(this.postalCode, 10);
     }
 
     onStateChange() {
-        this.stateError = this.validationHelper.validateSelected(this.state)
+        this.stateError = this.validationHelper.validateSelected(this.state);
     }
 
     onPeriodSelected(periodo: string) {
@@ -410,7 +394,7 @@ export class DoctorComponent implements OnInit {
     /*  Funciones de iteración con html */
     clearFields() {
         this.clinicSelected = undefined;
-        this.doctorId = undefined
+        this.doctorId = undefined;
         this.firstName = '';
         this.lastFatherName = '';
         this.lastMotherName = '';
@@ -422,17 +406,17 @@ export class DoctorComponent implements OnInit {
         this.postalCode = '';
         this.state = '';
 
-        this.firstNameError = undefined
-        this.clinicError = undefined
-        this.lastFatherNameError = undefined
-        this.lastMotherNameError = undefined
-        this.emailError = undefined
+        this.firstNameError = undefined;
+        this.clinicError = undefined;
+        this.lastFatherNameError = undefined;
+        this.lastMotherNameError = undefined;
+        this.emailError = undefined;
         //this.phoneError = '';
-        this.genderError = undefined
-        this.birthDateError = undefined
-        this.addressError = undefined
-        this.postalCodeError = undefined
-        this.stateError = undefined
+        this.genderError = undefined;
+        this.birthDateError = undefined;
+        this.addressError = undefined;
+        this.postalCodeError = undefined;
+        this.stateError = undefined;
     }
 
     async openModal() {
@@ -444,7 +428,7 @@ export class DoctorComponent implements OnInit {
 
     closeModal() {
         if (this.isUpdate) {
-            this.isUpdate = false
+            this.isUpdate = false;
         }
         this.isVisible = false;
         this.clearFields();
@@ -466,5 +450,4 @@ export class DoctorComponent implements OnInit {
     onKeyUp(event: KeyboardEvent) {
         console.log('Key Up:', event.key);
     }
-
 }
