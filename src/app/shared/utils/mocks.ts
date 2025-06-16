@@ -1,6 +1,18 @@
 import { PatientWithInspectionsModel } from '../../feature/patient/data/models/patient.with.inspections.model';
 import { InspectionResponseEntity } from '../../feature/inspection/domain/entity/inspection.response.entity';
-import { InspectionReponseModel } from '../../feature/inspection/data/models/inspection.reponse.model';
+import { InspectionResponseModel } from '../../feature/inspection/data/models/inspectionResponseModel';
+import {
+    InspectionDetailsModel,
+    InspectionImageModel
+} from '../../feature/inspection/data/models/inspection.details.model';
+import { PatientResponseModel } from '../../feature/patient/data/models/patient.response.model';
+import { DiagnosticProbabilityModel } from '../../feature/inspection/data/models/inspection.request.model';
+import {
+    InspectionDetailsEntity,
+    InspectionImageEntity
+} from '../../feature/inspection/domain/entity/inspection.details.entity';
+import { PatientResponseEntity } from '../../feature/patient/domain/entity/patient.response.entity';
+import { DiagnosticProbabilityEntity } from '../../feature/inspection/domain/entity/inspection.request.entity';
 
 export const resultados = [
     'Todos', 'Proliferativo', 'Moderado', 'Leve', 'Sin Afección'
@@ -5742,8 +5754,8 @@ export function parseDateDDMMYYYY(dateStr: string): Date {
     return new Date(year, month - 1, day);
 }
 
-export const inspectionResponseMocks: InspectionReponseModel[] =
-    inspecciones.map(raw => new InspectionReponseModel({
+export const inspectionResponseMocks: InspectionResponseModel[] =
+    inspecciones.map(raw => new InspectionResponseModel({
         inspectionId:        Number(raw.id.replace(/^I/, '')),
         patientId:           Number(raw.paciente.replace(/^P/, '')),
         // Si quisieras calcular una fecha de nacimiento a partir de edad:
@@ -5770,3 +5782,99 @@ export function findPatient(id: string): any {
 export function findDate(id: string): any {
     return patientsDates.find((p: any) => p.clave === id);
 }
+
+export const exampleInspectionDetails = new InspectionDetailsEntity({
+    inspection: new InspectionResponseEntity({
+        inspectionId:        123,
+        patientId:           456,
+        patientBirthDate:    new Date('1980-01-15'),
+        patientGender:       'masculino',
+        patientAge:          45,
+        inspectionDate:      new Date('2025-06-10'),
+        inspectionTime:      '14:30:00',
+        eye:                 'Derecho',
+        disease:             'DMAE Seca',
+        model:               'Entity A',
+        result:              'Proliferativo',
+        notes:               'Paciente de 41 años que presenta síntomas consistentes con la Degeneración Macular Asociada a la Edad (DMAE). Durante la evaluación inicial, se observan cambios en la visión central y posibles distorsiones visuales. Es importante revisar el historial médico del paciente para identificar factores de riesgo adicionales, como antecedentes familiares de DMAE, tabaquismo, hipertensión y colesterol alto.',
+        createdAt:           new Date()
+    }),
+
+    patient: new PatientResponseEntity({
+        patientId:     456,
+        firstName:     'Juan',
+        lastFathName:  'Pérez',
+        lastMontName:  'García',
+        email:         'juan.perez@example.com',
+        phone:         '+521234567890',
+        birthDate:     new Date('1980-01-15'),
+        age:           45,
+        gender:        'Masculino',
+        occupation:    'Ingeniero',
+        address:       'Calle Falsa 123',
+        state:         'Ciudad de México',
+        postalCode:    '01234',
+        createdAt:     new Date('2020-05-01'),
+        updatedAt:     new Date('2025-06-01')
+    }),
+
+    images: [
+        new InspectionImageEntity({
+            inspectionImageId: 1,
+            imageUrl:          'assets/images/fondo_ojo.jpg',
+            title:             'Image 1'
+        }),
+        new InspectionImageEntity({
+            inspectionImageId: 2,
+            imageUrl:          'assets/images/fondo_ojo.jpg',
+            title:             'Image 2'
+        }),
+        new InspectionImageEntity({
+            inspectionImageId: 3,
+            imageUrl:          'assets/images/fondo_ojo.jpg',
+            title:             'Image 3'
+        })
+    ],
+
+    probabilities: [
+        new DiagnosticProbabilityEntity({
+            diagnosticProbabilityId: 1,
+            resultCategory:          'Proliferativo',
+            probability:             0.70
+        }),
+        new DiagnosticProbabilityEntity({
+            diagnosticProbabilityId: 2,
+            resultCategory:          'Moderado',
+            probability:             0.15
+        }),
+        new DiagnosticProbabilityEntity({
+            diagnosticProbabilityId: 3,
+            resultCategory:          'Leve',
+            probability:             0.10
+        }),
+        new DiagnosticProbabilityEntity({
+            diagnosticProbabilityId: 4,
+            resultCategory:          'Sin Afección',
+            probability:             0.05
+        })
+    ],
+
+    inspectionHistory: [
+        // Si necesitas historial, puedes añadir instancias de InspectionReponseEntity
+        new InspectionResponseEntity({
+            inspectionId:        122,
+            patientId:           456,
+            patientBirthDate:    new Date('1980-01-15'),
+            patientGender:       'masculino',
+            patientAge:          45,
+            inspectionDate:      new Date('2025-05-15'),
+            inspectionTime:      '10:00:00',
+            eye:                 'Izquierdo',
+            disease:             'Moderado',
+            model:               'Model A',
+            result:              'Moderado',
+            notes:               'Seguimiento',
+            createdAt:           new Date('2025-05-15T10:00:00')
+        })
+    ]
+});

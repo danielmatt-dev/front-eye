@@ -45,3 +45,19 @@ export function colorByDisease(disease: string) {
     }
 }
 
+export function formatDateToSpanishMexico(date?: Date): string {
+    if (!date) {
+        return ''
+    }
+
+    // Opciones de formateo: día numérico, mes largo y año, en zona América/Mexico_City
+    const options: Intl.DateTimeFormatOptions = {
+        day:   'numeric',
+        month: 'long',
+        year:  'numeric',
+        timeZone: 'America/Mexico_City'
+    };
+
+    // Intl.DateTimeFormat por defecto dará algo como "25 de mayo de 2024"
+    return new Intl.DateTimeFormat('es-MX', options).format(date);
+}
