@@ -18,20 +18,24 @@ import { GetAllInspections } from '../../domain/use_cases/getAllInspections';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { InspectionResponseEntity } from '../../domain/entity/inspection.response.entity';
 import { FilterService } from '../../../../shared/services/filter.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import {
     BaseValidatorHelper
 } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     standalone: true,
     selector: 'app-todas-inspecciones',
-    imports: [Button, InputText, PrimeTemplate, TableModule, FormsModule, DialogModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ToastModule, DatePipe],
+    imports: [Button, InputText, PrimeTemplate, TableModule, FormsModule, DialogModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ToastModule, DatePipe, NgIf],
     providers: [MessageService],
     templateUrl: './todas-inspecciones.component.html',
     styleUrl: './todas-inspecciones.component.scss'
 })
 export class TodasInspeccionesComponent implements OnInit {
+    /* Variables de interacción con html */
+    isDoctor = true;
+
     /* Opciones de la tabla*/
     @ViewChild('filter') filter!: ElementRef;
     isLoading = true;
@@ -51,13 +55,14 @@ export class TodasInspeccionesComponent implements OnInit {
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
-    validationHelper: BaseValidatorHelper
+    validationHelper: BaseValidatorHelper;
 
     constructor(
         private readonly primeng: PrimeNG,
         private readonly messageService: MessageService,
         private readonly translateService: TranslateService,
         private readonly router: Router,
+        private readonly local: LocalStorageService,
         private readonly getAllInspection: GetAllInspections,
         private readonly filterService: FilterService
     ) {
@@ -66,6 +71,8 @@ export class TodasInspeccionesComponent implements OnInit {
     }
 
     async ngOnInit() {
+        this.isDoctor = this.local.getRole() === 'DOCTOR';
+
         this.translateService.get('inspections.singular').subscribe((res: string) => {
             this.labelInspection = res.toLowerCase();
         });
@@ -74,7 +81,7 @@ export class TodasInspeccionesComponent implements OnInit {
             this.labelInspections = res.toLowerCase();
         });
 
-        await this.callGetAllInspections()
+        await this.callGetAllInspections();
     }
 
     /* Llamadas a casos de uso */
@@ -84,7 +91,7 @@ export class TodasInspeccionesComponent implements OnInit {
         this.isLoading = false;
 
         if (resultGetAllInspections._tag === 'Left') {
-            this.validationHelper.getToastException(resultGetAllInspections.left)
+            this.validationHelper.getToastException(resultGetAllInspections.left);
         }
 
         if (resultGetAllInspections._tag === 'Right') {
@@ -110,13 +117,10 @@ export class TodasInspeccionesComponent implements OnInit {
     async navigateToInspectionDetails(id?: number) {
         if (!id) {
             await this.router.navigate(['/insights/ver-detalle']);
-            return
+            return;
         }
 
-        await this.router.navigate(
-            ['/insights/ver-detalle'],
-            { queryParams: { id } }
-        );
+        await this.router.navigate(['/insights/ver-detalle'], { queryParams: { id } });
     }
 
     /*  Funciones de iteración con html */

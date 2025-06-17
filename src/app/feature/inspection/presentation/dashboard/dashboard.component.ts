@@ -402,7 +402,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
 
             // 29–120 días → “3 meses”
-            if (diffDays > 30 && diffDays <= 120) {
+            if (diffDays > 29 && diffDays <= 120) {
                 strategy = new DynamicRangeFilter();
             }
 
