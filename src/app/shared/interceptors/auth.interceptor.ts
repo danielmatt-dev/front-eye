@@ -1,7 +1,6 @@
 import { inject } from '@angular/core';
 import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { LocalStorageService } from '../services/local.storage.service';
 
 export function authInterceptorFn(
@@ -14,9 +13,14 @@ export function authInterceptorFn(
     }
 
     const token = inject(LocalStorageService).getToken();
+
+    if (token === null) {
+        // Excepción de volver a loguearse
+    }
+
     const authReq = req.clone({
         setHeaders: {
-            Authorization: token ? `Bearer ${token}` : environment.token,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
     });

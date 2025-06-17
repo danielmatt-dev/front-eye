@@ -248,7 +248,8 @@
             "internalServer": "Se produjo un error interno en el servidor.",
             "timeout": "Se agotó el tiempo de espera de la solicitud.",
             "forbidden": "Acceso denegado",
-            "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo."
+            "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo.",
+            "login": "Sesión expirada"
         },
         "messages": {
             "network": "No se pudo conectar con el servidor. Por favor intenta más tarde.",
@@ -258,7 +259,8 @@
             "internalServer": "Por favor vuelve a intentarlo más tarde.",
             "timeout": "Inténtalo de nuevo más tarde.",
             "forbidden": "No tienes permisos para realizar esta acción.",
-            "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo."
+            "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo.",
+            "login": "Por favor, vuelve a iniciar sesión para continuar"
         }
     },
     "confirmations": {
