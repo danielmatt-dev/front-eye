@@ -3,11 +3,16 @@
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
     <div class="col-span-1 order-2 xl:col-span-2 xl:order-1">
         <div class="card">
-            <div class="flex justify-between mb-4">
-                <div class="font-semibold text-xl mb-4"> {{ 'patient.titleModal'| translate }} </div>
-                <div class="flex flex-col">
+            <div class="flex flex-col lg:flex-row lg:justify-between mb-4 gap-4">
+                <!-- Título -->
+                <div class="font-semibold text-xl">
+                    {{ 'patient.titleModal' | translate }}
+                </div>
+
+                <!-- Select de paciente -->
+                <div class="flex flex-col w-full lg:w-auto">
                     <p-select
-                        class="w-80 mb-2"
+                        class="w-full lg:w-80 mb-2"
                         [options]="patientOptions"
                         optionLabel="fullName"
                         placeholder="{{ 'placeholders.patients' | translate }}"
@@ -21,18 +26,19 @@
                         }"
                         appendTo="body">
                         <ng-template let-item pTemplate="item">
-                        <span
-                            class="w-72"
-                            tooltipStyleClass="width: 100rem"
-                            pTooltip="{{ getTooltip(item) }}"
-                            tooltipPosition="top">{{ item.fullName }}
-                        </span>
+                            <span
+                                class="w-full"
+                                tooltipStyleClass="width: 100rem"
+                                pTooltip="{{ getTooltip(item) }}"
+                                tooltipPosition="top"
+                            > {{ item.fullName }}
+                            </span>
                         </ng-template>
                     </p-select>
-                    <small
-                        *ngIf="patientError"
-                        class="text-red-500"
-                    >{{ patientError }}</small>
+
+                    <small *ngIf="patientError" class="text-red-500">
+                        {{ patientError }}
+                    </small>
                 </div>
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
@@ -183,7 +189,7 @@
                     maxFileSize="4194304"
                     chooseLabel="{{ 'buttons.choose'| translate }}"
                     cancelLabel="{{ 'buttons.cancel'| translate }}"
-                    [style]="{ height: '88%', width: '100%' }"
+                    [style]="{ height: '85%', width: '100%' }"
                     mode="advanced"
                     [auto]="true">
 
@@ -252,61 +258,46 @@
                     />
                 </div>
             </div>
-            <div class="col-span-2 gap-6 mb-6">
-                <div class="grid grid-cols-5 gap-12">
-                    <div class="col-span-1 flex flex-col grow basis-16 gap-2">
-                        <label for="ojo">{{ 'labels.eye'| translate }}</label>
-                        <p-select-button
-                            id="ojo"
-                            [(ngModel)]="selectedEye"
-                            [options]="eyes"
-                            (ngModelChange)="onEyeChange()"
-                            [ngClass]="{
-                            'ng-dirty': eyeError,
-                            'ng-invalid': eyeError
-                        }"
-                        />
-                        <small
-                            *ngIf="eyeError"
-                            class="text-red-500"
-                        >{{ eyeError }}</small>
-                    </div>
-                    <div class="col-span-2 flex flex-col grow basis-16 gap-2">
-                        <label for="enfermedad">{{ 'labels.disease'| translate }}</label>
-                        <p-select
-                            id="enfermedad"
-                            [options]="afecciones"
-                            [(ngModel)]="selectedDisease"
-                            (ngModelChange)="onDiseaseChange()"
-                            [ngClass]="{
-                            'ng-dirty': diseaseError,
-                            'ng-invalid': diseaseError
-                        }"
-                            placeholder="{{ 'placeholders.disease'| translate }}"
-                        ></p-select>
-                        <small
-                            *ngIf="diseaseError"
-                            class="text-red-500"
-                        >{{ diseaseError }}</small>
-                    </div>
-                    <div class="col-span-2 flex flex-col grow basis-16 gap-2">
-                        <label for="modelo">{{ 'labels.model'| translate }}</label>
-                        <p-select
-                            id="modelo"
-                            [options]="models"
-                            [(ngModel)]="selectedModel"
-                            [ngClass]="{
-                            'ng-dirty': modelError,
-                            'ng-invalid': modelError
-                        }"
-                            (ngModelChange)="onModelChange()"
-                            placeholder="{{ 'placeholders.model'| translate }}"
-                        ></p-select>
-                        <small
-                            *ngIf="modelError"
-                            class="text-red-500"
-                        >{{ modelError }}</small>
-                    </div>
+            <div class="flex flex-col md:flex-row gap-6 mb-6">
+                <!-- Ojo -->
+                <div class="flex flex-col w-full lg:w-1/3 gap-2">
+                    <label for="ojo">{{ 'labels.eye' | translate }}</label>
+                    <p-selectButton
+                        id="ojo"
+                        [ngClass]="{ 'ng-dirty': eyeError, 'ng-invalid': eyeError }"
+                        [(ngModel)]="selectedEye"
+                        [options]="eyes"
+                        (ngModelChange)="onEyeChange()"
+                    />
+                    <small *ngIf="eyeError" class="text-red-500">{{ eyeError }}</small>
+                </div>
+
+                <!-- Afección -->
+                <div class="flex flex-col w-full lg:w-1/3 gap-2">
+                    <label for="enfermedad">{{ 'labels.disease' | translate }}</label>
+                    <p-select
+                        id="enfermedad"
+                        [options]="afecciones"
+                        [(ngModel)]="selectedDisease"
+                        (ngModelChange)="onDiseaseChange()"
+                        [ngClass]="{ 'ng-dirty': diseaseError, 'ng-invalid': diseaseError }"
+                        placeholder="{{ 'placeholders.disease' | translate }}"
+                    ></p-select>
+                    <small *ngIf="diseaseError" class="text-red-500">{{ diseaseError }}</small>
+                </div>
+
+                <!-- Modelo -->
+                <div class="flex flex-col w-full lg:w-1/3 gap-2">
+                    <label for="modelo">{{ 'labels.model' | translate }}</label>
+                    <p-select
+                        id="modelo"
+                        [options]="models"
+                        [(ngModel)]="selectedModel"
+                        (ngModelChange)="onModelChange()"
+                        [ngClass]="{ 'ng-dirty': modelError, 'ng-invalid': modelError }"
+                        placeholder="{{ 'placeholders.model' | translate }}"
+                    ></p-select>
+                    <small *ngIf="modelError" class="text-red-500">{{ modelError }}</small>
                 </div>
             </div>
             <div class="col-span-2 gap-6">

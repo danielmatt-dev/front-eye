@@ -107,7 +107,8 @@
         "disease": "Seleccione la enfermedad",
         "model": "Seleccione el modelo",
         "patients": "Seleccione un paciente",
-        "clinic": "Seleccione una clínica"
+        "clinic": "Seleccione una clínica",
+        "range": "Seleccione un rango"
     },
     "buttons": {
         "save": "Guardar",
@@ -281,6 +282,11 @@
         "selectionPatientRequired": "Debes seleccionar un paciente",
         "email": "Formato de correo electrónico incorrecto",
         "birthDateAdult": "Debe ser mayor de edad",
-        "selectionImageRequired": "Por favor, selecciona o añade una imagen para continuar"
+        "selectionImageRequired": "Por favor, selecciona una imagen para continuar",
+        "passwordRequired": "La contraseña es obligatoria.",
+        "passwordMinLength": "Debe tener al menos 8 caracteres.",
+        "passwordLowercase": "Debe incluir al menos una letra minúscula.",
+        "passwordUppercase": "Debe incluir al menos una letra mayúscula.",
+        "passwordDigit": "Debe incluir al menos un número."
     }
 }
