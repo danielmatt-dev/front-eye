@@ -1,7 +1,8 @@
 import { inject } from '@angular/core';
 import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { LocalStorageService } from '../services/local.storage.service';
+import { TokenNotFoundException } from '../exceptions/exceptions';
 
 export function authInterceptorFn(
     req: HttpRequest<any>,
@@ -15,7 +16,7 @@ export function authInterceptorFn(
     const token = inject(LocalStorageService).getToken();
 
     if (token === null) {
-        // Excepción de volver a loguearse
+        return throwError(() => new TokenNotFoundException());
     }
 
     const authReq = req.clone({

@@ -11,3 +11,5 @@ export class TimeoutException extends Error {}
 export class ForbiddenException extends Error {}
 
 export class NetworkException extends Error {}
+
+export class TokenNotFoundException extends Error {}
