@@ -22,7 +22,6 @@ import { formatDateToDDMMYYYY } from '../../../../shared/utils/functions/functio
 import { diseases, eyes, results } from '../../../../shared/utils/data';
 import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
-import { Image } from 'primeng/image';
 import { CreateInspection } from '../../domain/use_cases/createInspection';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { InspectionRequestEntity } from '../../domain/entity/inspection.request.entity';
@@ -33,7 +32,7 @@ import { GetNewInspectionData } from '../../domain/use_cases/getNewInspectionDat
 @Component({
     selector: 'app-nueva-inspeccion',
     standalone: true,
-    imports: [CommonModule, FileUploadModule, ToastModule, ButtonModule, InputText, SelectButton, Textarea, TranslatePipe, IconFieldModule, InputIconModule, TooltipModule, DropdownModule, FormsModule, DatePickerModule, SelectModule, Skeleton, Image],
+    imports: [CommonModule, FileUploadModule, ToastModule, ButtonModule, InputText, SelectButton, Textarea, TranslatePipe, IconFieldModule, InputIconModule, TooltipModule, DropdownModule, FormsModule, DatePickerModule, SelectModule, Skeleton],
     templateUrl: './nueva-inspeccion.component.html',
     styleUrl: './nueva-inspeccion.component.scss',
     providers: [MessageService]
