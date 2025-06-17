@@ -33,7 +33,8 @@ export class AppMenu implements OnInit {
                 {
                     items: [
                         { label: 'Dashboard', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/insights/dashboard'] },
-                        { label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
+                        //{ label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
+                        { label: 'Inspecciones', icon: 'pi pi-list', routerLink: ['/insights/todas-inspecciones'] },
                         {
                             label: 'Datos Geográficos',
                             icon: 'pi pi-fw pi-globe',
@@ -80,7 +81,7 @@ export class AppMenu implements OnInit {
                             icon: 'pi pi-fw pi-user',
                             routerLink: ['/insights/pacientes']
                         },
-                        { label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
+                        //{ label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
                         {
                             label: 'Cerrar sesión',
                             icon: 'pi pi-fw pi-sign-out',

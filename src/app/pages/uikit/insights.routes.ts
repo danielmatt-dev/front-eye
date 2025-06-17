@@ -39,13 +39,13 @@ export default [
     {
         path: 'ver-detalle',
         component: VerDetalleInspeccionComponent,
-        data: { roles: ['DOCTOR'] },
+        data: { roles: ['ADMIN', 'DOCTOR'] },
         canActivate: [RoleGuard]
     },
     {
         path: 'todas-inspecciones',
         component: TodasInspeccionesComponent,
-        data: { roles: ['DOCTOR'] },
+        data: { roles: ['ADMIN', 'DOCTOR'] },
         canActivate: [RoleGuard]
     },
     {
