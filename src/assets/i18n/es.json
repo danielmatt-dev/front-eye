@@ -107,7 +107,8 @@
         "disease": "Seleccione la enfermedad",
         "model": "Seleccione el modelo",
         "patients": "Seleccione un paciente",
-        "clinic": "Seleccione una clínica"
+        "clinic": "Seleccione una clínica",
+        "range": "Seleccione un rango"
     },
     "buttons": {
         "save": "Guardar",

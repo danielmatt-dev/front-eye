@@ -23,7 +23,6 @@ import { diseases, eyes, results } from '../../../../shared/utils/data';
 import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
 import { Image } from 'primeng/image';
-import { GetAllPatients } from '../../../patient/domain/use_cases/getAllPatients';
 import { CreateInspection } from '../../domain/use_cases/createInspection';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { InspectionRequestEntity } from '../../domain/entity/inspection.request.entity';

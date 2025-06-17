@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
 import { SelectButton } from 'primeng/selectbutton';
@@ -23,48 +23,49 @@ import { ValidatorHelper } from '../../../../shared/utils/validator.helper';
 import { MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
+import { Select } from 'primeng/select';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [Fluid, UIChart, SelectButton, FormsModule, CalendarModule, DatePicker, TranslatePipe],
+    imports: [Fluid, UIChart, SelectButton, FormsModule, CalendarModule, DatePicker, TranslatePipe, Select, NgIf],
     providers: [MessageService],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit {
-
+export class DashboardComponent implements OnInit, OnDestroy {
     // Conteos de detecciones
-    weeklyDetections = 0;            // Detecciones en la última semana
-    monthlyDetections = 0;           // Detecciones en el último mes
-    totalDetections = 0;             // Detecciones totales
+    weeklyDetections = 0; // Detecciones en la última semana
+    monthlyDetections = 0; // Detecciones en el último mes
+    totalDetections = 0; // Detecciones totales
 
     // Conteos por tipo de afección
-    dryDmaeCount = 0;                // Casos de DMAE Seca
-    wetDmaeCount = 0;                // Casos de DMAE Húmeda
-    diabeticRetinopathyCount = 0;    // Casos de Retinopatía Diabética
+    dryDmaeCount = 0; // Casos de DMAE Seca
+    wetDmaeCount = 0; // Casos de DMAE Húmeda
+    diabeticRetinopathyCount = 0; // Casos de Retinopatía Diabética
 
     // Conteos por género
-    maleCount = 0;                   // Cantidad de pacientes hombres
-    femaleCount = 0;                 // Cantidad de pacientes mujeres
+    maleCount = 0; // Cantidad de pacientes hombres
+    femaleCount = 0; // Cantidad de pacientes mujeres
 
     // Conteos por rango de edad
-    under30Count = 0;                // Pacientes menores de 30 años
-    between30And45Count = 0;         // Pacientes entre 30 y 45 años
-    over45Count = 0;                 // Pacientes mayores de 45 años
+    under30Count = 0; // Pacientes menores de 30 años
+    between30And45Count = 0; // Pacientes entre 30 y 45 años
+    over45Count = 0; // Pacientes mayores de 45 años
 
     // Porcentajes por género
-    malePercentage = 0;              // Porcentaje de pacientes hombres
-    femalePercentage = 0;            // Porcentaje de pacientes mujeres
+    malePercentage = 0; // Porcentaje de pacientes hombres
+    femalePercentage = 0; // Porcentaje de pacientes mujeres
 
     // Porcentajes por rango de edad
-    under30Percentage = 0;           // Porcentaje de pacientes menores de 30 años
-    between30And45Percentage = 0;    // Porcentaje de pacientes entre 30 y 45 años
-    over45Percentage = 0;            // Porcentaje de pacientes mayores de 45 años
+    under30Percentage = 0; // Porcentaje de pacientes menores de 30 años
+    between30And45Percentage = 0; // Porcentaje de pacientes entre 30 y 45 años
+    over45Percentage = 0; // Porcentaje de pacientes mayores de 45 años
 
     // Lista de opciones
-    diseases = diseases
-    ageRanges = ageRanges
+    diseases = diseases;
+    ageRanges = ageRanges;
 
     /* Providers */
     monthlyDetectionsData: any;
@@ -78,13 +79,16 @@ export class DashboardComponent implements OnInit {
     options = ['1 Día', '1 Semana', '1 Mes', '3 Meses', 'Todo', 'Rango'];
     optionSelected: string = 'Todo';
     selectedDates: Date[] = [];
-    calendarDisabled = true
+    calendarDisabled = true;
 
     /* Lista de inspecciones y filtrado */
-    allInspections: InspectionResponseEntity[] = inspectionResponseMocks
+    allInspections: InspectionResponseEntity[] = inspectionResponseMocks;
+
+    /* Variables del html */
+    isMobileView: boolean = false;
 
     /* Providers */
-    validator: ValidatorHelper
+    validator: ValidatorHelper;
 
     constructor(
         private readonly messageService: MessageService,
@@ -92,13 +96,19 @@ export class DashboardComponent implements OnInit {
         private readonly primeng: PrimeNG,
         private readonly getAllInpections: GetAllInspections
     ) {
-        this.validator = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng)
+        this.validator = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
     async ngOnInit() {
-        await this.callGetAllInspections()
-        this.calculateDetectionStatistics()
+        await this.callGetAllInspections();
+        this.calculateDetectionStatistics();
         this.initCharts();
+        this.checkScreenSize();
+        window.addEventListener('resize', this.checkScreenSize.bind(this));
+    }
+
+    ngOnDestroy(): void {
+        window.removeEventListener('resize', this.checkScreenSize.bind(this));
     }
 
     initCharts() {
@@ -107,9 +117,9 @@ export class DashboardComponent implements OnInit {
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-        const charDataInspectionsAll = new InspectionsFilterContext(new AllFilter()).apply(this.allInspections)
+        const charDataInspectionsAll = new InspectionsFilterContext(new AllFilter()).apply(this.allInspections);
 
-        this.monthlyDetectionsData = charDataInspectionsAll
+        this.monthlyDetectionsData = charDataInspectionsAll;
 
         this.monthlyDetectionsOptions = {
             maintainAspectRatio: false,
@@ -146,7 +156,7 @@ export class DashboardComponent implements OnInit {
             }
         };
 
-        this.detectionsByAgeRangeAndDiseaseData = this.getDetectionsByAgeRangeAndDisease()
+        this.detectionsByAgeRangeAndDiseaseData = this.getDetectionsByAgeRangeAndDisease();
 
         this.detectionsByAgeRangeAndDiseaseOptions = {
             maintainAspectRatio: false,
@@ -183,7 +193,7 @@ export class DashboardComponent implements OnInit {
             }
         };
 
-        this.detectionTrendData = charDataInspectionsAll
+        this.detectionTrendData = charDataInspectionsAll;
 
         this.detectionTrendOptions = {
             maintainAspectRatio: false,
@@ -224,55 +234,51 @@ export class DashboardComponent implements OnInit {
 
     /* Llamadas a casos de uso */
     async callGetAllInspections() {
-
-        const resultGetAllInspections = await this.getAllInpections.call(new NoParams())
+        const resultGetAllInspections = await this.getAllInpections.call(new NoParams());
 
         if (resultGetAllInspections._tag === 'Left') {
-            this.validator.getToastException(resultGetAllInspections.left)
+            this.validator.getToastException(resultGetAllInspections.left);
         }
 
         if (resultGetAllInspections._tag === 'Right') {
             // this.allInspections = resultGetAllInspections.right
         }
-
     }
 
     /* Funciones para filtrar los datos para las gráficas */
     filterInspections() {
-
         if (this.optionSelected === 'Rango') {
-            this.calendarDisabled = false
-            return
+            this.calendarDisabled = false;
+            return;
         }
 
-        this.calendarDisabled = true
-        this.selectedDates = []
+        this.calendarDisabled = true;
+        this.selectedDates = [];
         let strategy: InspectionsFilterStrategy = new AllFilter();
 
         switch (this.optionSelected) {
             case '1 Día':
-                strategy = new OneDayFilter()
-                break
+                strategy = new OneDayFilter();
+                break;
             case '1 Semana':
-                strategy = new OneWeekFilter()
-                break
+                strategy = new OneWeekFilter();
+                break;
             case '1 Mes':
-                strategy = new OneMonthFilter()
-                break
+                strategy = new OneMonthFilter();
+                break;
             case '3 Meses':
-                strategy = new DynamicRangeFilter()
-                break
+                strategy = new DynamicRangeFilter();
+                break;
         }
-        this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections)
+        this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections);
     }
 
     getDetectionsByAgeRangeAndDisease() {
-
         // Inicializar contadores para cada combo rango + afección
         const dataMap: Record<string, Record<string, number>> = {};
-        this.ageRanges.forEach(rango => {
+        this.ageRanges.forEach((rango) => {
             dataMap[rango] = {};
-            this.diseases.forEach(afeccion => {
+            this.diseases.forEach((afeccion) => {
                 dataMap[rango][afeccion] = 0;
             });
         });
@@ -283,23 +289,22 @@ export class DashboardComponent implements OnInit {
             else return 'Más de 45';
         }
 
-        for (const inspection of this.allInspections ) {
-            const patient = this.allInspections
-                .find(p => p.patientId === inspection.patientId)
+        for (const inspection of this.allInspections) {
+            const patient = this.allInspections.find((p) => p.patientId === inspection.patientId);
 
             if (!patient) {
-                continue
+                continue;
             }
 
-            const ageRange = getRangoEdad(patient.patientAge)
-            const disease = inspection.disease
-            dataMap[ageRange][disease]++
+            const ageRange = getRangoEdad(patient.patientAge);
+            const disease = inspection.disease;
+            dataMap[ageRange][disease]++;
         }
 
         // Construir datasets con datos agrupados por afección
-        const datasets: any[] = this.diseases.map(afeccion => ({
+        const datasets: any[] = this.diseases.map((afeccion) => ({
             label: afeccion,
-            data: this.ageRanges.map(rango => dataMap[rango][afeccion]),
+            data: this.ageRanges.map((rango) => dataMap[rango][afeccion]),
             backgroundColor: this.ageRanges.map(() => colorByDisease(afeccion)),
             borderColor: this.ageRanges.map(() => colorByDisease(afeccion)),
             borderWidth: 0
@@ -313,7 +318,7 @@ export class DashboardComponent implements OnInit {
 
     /* Cálculo de estadísticas de las inspecciones */
     calculateDetectionStatistics() {
-        this.totalDetections = this.allInspections.length
+        this.totalDetections = this.allInspections.length;
         const patientsDetected = new Set<number>();
 
         const today = new Date();
@@ -338,16 +343,13 @@ export class DashboardComponent implements OnInit {
 
             patientsDetected.add(inspection.patientId);
         }
-        this.computeDemographicDistribution(patientsDetected)
+        this.computeDemographicDistribution(patientsDetected);
     }
 
     computeDemographicDistribution(patientdIds: Set<number>) {
-
         // Procesar pacientes detectados para género y edad
         for (const patientId of patientdIds) {
-
-            const patient = this.allInspections
-                .find(p => p.patientId === patientId)
+            const patient = this.allInspections.find((p) => p.patientId === patientId);
 
             if (!patient) continue;
 
@@ -357,53 +359,41 @@ export class DashboardComponent implements OnInit {
             if (patient.patientAge < 30) this.under30Count++;
             else if (patient.patientAge >= 30 && patient.patientAge <= 45) this.between30And45Count++;
             else if (patient.patientAge > 45) this.over45Count++;
-
         }
 
         const totalPatients = this.maleCount + this.femaleCount;
 
         // Porcentajes por género
-        this.malePercentage = totalPatients
-            ? Math.round((this.maleCount / totalPatients) * 100)
-            : 0;
-        this.femalePercentage = totalPatients
-            ? Math.round((this.femaleCount / totalPatients) * 100)
-            : 0;
+        this.malePercentage = totalPatients ? Math.round((this.maleCount / totalPatients) * 100) : 0;
+        this.femalePercentage = totalPatients ? Math.round((this.femaleCount / totalPatients) * 100) : 0;
 
         // Porcentajes por rango de edad
-        this.under30Percentage = totalPatients
-            ? Math.round((this.under30Count / totalPatients) * 100)
-            : 0;
-        this.between30And45Percentage = totalPatients
-            ? Math.round((this.between30And45Count / totalPatients) * 100)
-            : 0;
-        this.over45Percentage = totalPatients
-            ? Math.round((this.over45Count / totalPatients) * 100)
-            : 0;
-
+        this.under30Percentage = totalPatients ? Math.round((this.under30Count / totalPatients) * 100) : 0;
+        this.between30And45Percentage = totalPatients ? Math.round((this.between30And45Count / totalPatients) * 100) : 0;
+        this.over45Percentage = totalPatients ? Math.round((this.over45Count / totalPatients) * 100) : 0;
     }
 
     /* Función que se ejecuta al selecionar una fecha */
     onSelectedDates(dates: Date[]) {
-        this.selectedDates = dates
+        this.selectedDates = dates;
 
         if (this.selectedDates.length === 0 || this.selectedDates.length === 1) {
-            return
+            return;
         }
 
-        let strategy: InspectionsFilterStrategy = new OneDayFilter()
+        let strategy: InspectionsFilterStrategy = new OneDayFilter();
 
-        const startDate = this.selectedDates[0]
-        let endDate = this.selectedDates[0]
-        startDate.setHours(0, 0, 0, 0)
-        endDate.setHours(23, 59, 59, 999)
+        const startDate = this.selectedDates[0];
+        let endDate = this.selectedDates[0];
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
 
         if (this.selectedDates[1] !== null) {
-            endDate = this.selectedDates[1]
-            endDate.setHours(23, 59, 59, 999)
+            endDate = this.selectedDates[1];
+            endDate.setHours(23, 59, 59, 999);
 
             const msInDay = 1000 * 60 * 60 * 24;
-            const diffMs   = endDate.getTime() - startDate.getTime();
+            const diffMs = endDate.getTime() - startDate.getTime();
             const diffDays = Math.floor(diffMs / msInDay);
 
             // 0–22 días → “22 días”
@@ -413,19 +403,23 @@ export class DashboardComponent implements OnInit {
 
             // 29–120 días → “3 meses”
             if (diffDays > 30 && diffDays <= 120) {
-                strategy = new DynamicRangeFilter()
+                strategy = new DynamicRangeFilter();
             }
 
             if (diffDays > 120) {
-                strategy = new AllFilter()
+                strategy = new AllFilter();
             }
-
         }
 
-        strategy.startDate = startDate
-        strategy.endDate = endDate
+        strategy.startDate = startDate;
+        strategy.endDate = endDate;
 
-        this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections)
+        this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections);
+    }
+
+    /* Calcular tamaño de pantalla */
+    checkScreenSize(): void {
+        this.isMobileView = window.innerWidth < 768; // Tailwind 'md' breakpoint
     }
 
     /*
