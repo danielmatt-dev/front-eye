@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PrimeNG } from 'primeng/config';
-import { inspectionResponseMocks } from '../../../../shared/utils/mocks';
+import { genders, inspectionResponseMocks } from '../../../../shared/utils/mocks';
 import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -23,11 +23,17 @@ import {
     BaseValidatorHelper
 } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { Fluid } from 'primeng/fluid';
+import { UIChart } from 'primeng/chart';
+import { InspectionsFilterContext } from '../../domain/filters/inspections.filter.context';
+import { AllFilter } from '../../domain/filters/inspections.filter';
+import { ChartData } from 'chart.js';
+import { ageRanges } from '../../../../shared/utils/data';
 
 @Component({
     standalone: true,
     selector: 'app-todas-inspecciones',
-    imports: [Button, InputText, PrimeTemplate, TableModule, FormsModule, DialogModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ToastModule, DatePipe, NgIf],
+    imports: [Button, InputText, PrimeTemplate, TableModule, FormsModule, DialogModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ToastModule, DatePipe, NgIf, Fluid, UIChart],
     providers: [MessageService],
     templateUrl: './todas-inspecciones.component.html',
     styleUrl: './todas-inspecciones.component.scss'
@@ -57,6 +63,23 @@ export class TodasInspeccionesComponent implements OnInit {
     opcionesConsultaHelper: OpcionesConsultaHelper;
     validationHelper: BaseValidatorHelper;
 
+    /* Variables de las gráficas */
+    lineData: any;
+
+    barData: any;
+
+    pieData: any;
+
+    lineOptions: any;
+
+    barOptions: any;
+
+    pieOptions: any;
+
+    /* Lista de datos */
+    ageRanges = ageRanges
+    genders = genders
+
     constructor(
         private readonly primeng: PrimeNG,
         private readonly messageService: MessageService,
@@ -82,6 +105,9 @@ export class TodasInspeccionesComponent implements OnInit {
         });
 
         await this.callGetAllInspections();
+        if (!this.isDoctor) {
+            this.initCharts()
+        }
     }
 
     /* Llamadas a casos de uso */
@@ -97,6 +123,162 @@ export class TodasInspeccionesComponent implements OnInit {
         if (resultGetAllInspections._tag === 'Right') {
             //this.allInspections = resultGetAllInspections.right;
             this.filterInspections();
+        }
+    }
+
+    /* Funciones de gráficas */
+    initCharts() {
+        const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+        const charDataInspectionsAll = new InspectionsFilterContext(new AllFilter()).apply(this.allInspections);
+
+        this.barData = this.groupByAgeRange()
+
+        this.barOptions = {
+            maintainAspectRatio: false,
+            aspectRatio: 0.8,
+            plugins: {
+                legend: {
+                    display: false,
+                    labels: {
+                        color: textColor
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: textColorSecondary,
+                        font: {
+                            weight: 500
+                        }
+                    },
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                }
+            }
+        };
+
+        this.pieData = this.groupByGender()
+
+        this.pieOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        color: textColor
+                    }
+                }
+            }
+        };
+
+        this.lineData = charDataInspectionsAll
+
+        this.lineOptions = {
+            maintainAspectRatio: false,
+            aspectRatio: 0.8,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: textColor
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                }
+            }
+        };
+    }
+
+    groupByAgeRange(): ChartData {
+
+        // Inicializar contadores para cada combo rango + afección
+        const dataMap: Record<string, number> = {};
+        this.ageRanges.forEach((range) => {
+            dataMap[range] = 0
+        });
+
+        function getRangoEdad(edad: number): string {
+            if (edad < 30) return 'Menos de 30';
+            else if (edad <= 45) return 'De 30 a 45';
+            else return 'Más de 45';
+        }
+
+        this.allInspections.forEach((inspection => {
+            const age = inspection.patientAge
+            dataMap[getRangoEdad(age)]++
+        }))
+
+        return {
+            labels: ageRanges,
+            datasets: [
+                {
+                    label: this.validationHelper.getText('titles.distribution.byAgeRange'),
+                    backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],  // Colores fijos
+                    borderColor: ['#1E88E5', '#43A047', '#FB8C00'],      // Bordes fijos
+                    data: this.ageRanges.map(range => dataMap[range])
+                }
+            ]
+        }
+    }
+
+    groupByGender(): ChartData {
+
+        const dataMap: Record<string, number> = {};
+        this.genders.forEach((gender) => {
+            dataMap[gender] = 0
+        });
+
+        this.allInspections.forEach(inspection => {
+            if (genders.includes(inspection.patientGender)) {
+                dataMap[inspection.patientGender]++
+            }
+        })
+
+        return {
+            labels: genders,
+            datasets: [
+                {
+                    label: this.validationHelper.getText('titles.distribution.byGender'),
+                    backgroundColor: ['#42A5F5', '#FF6384'],
+                    borderColor: ['#1E88E5', '#FF6384'],
+                    data: this.genders.map(gender => dataMap[gender])
+                }
+            ]
         }
     }
 
