@@ -5,7 +5,6 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { InputText } from 'primeng/inputtext';
-import { estadosMexico, genders } from '../../../../shared/utils/mocks';
 import { PrimeNG } from 'primeng/config';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
@@ -28,6 +27,7 @@ import { BaseValidatorHelper } from './validation/baseValidatorHelper';
 import { DoctorRequestEntity } from '../../domain/entity/doctor.request.entity';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { DatePickerModule } from 'primeng/datepicker';
+import { genders, statesMexico } from '../../../../shared/utils/data';
 
 @Component({
     standalone: true,
@@ -53,7 +53,7 @@ export class DoctorComponent implements OnInit {
 
     /* Catálogo de opciones */
     genders = genders;
-    states = estadosMexico;
+    states = statesMexico;
     clinics: ClinicEntity[] = [];
 
     /* Lista de doctores y filtrado */

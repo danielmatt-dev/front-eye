@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PrimeNG } from 'primeng/config';
-import { genders, inspectionResponseMocks } from '../../../../shared/utils/mocks';
+import { inspectionResponseMocks } from '../../../../shared/utils/mocks';
 import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -28,7 +28,7 @@ import { UIChart } from 'primeng/chart';
 import { InspectionsFilterContext } from '../../domain/filters/inspections.filter.context';
 import { AllFilter } from '../../domain/filters/inspections.filter';
 import { ChartData } from 'chart.js';
-import { ageRanges } from '../../../../shared/utils/data';
+import { ageRanges, genders } from '../../../../shared/utils/data';
 
 @Component({
     standalone: true,
