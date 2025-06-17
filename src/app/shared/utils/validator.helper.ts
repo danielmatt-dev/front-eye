@@ -49,7 +49,7 @@ export abstract class ValidatorHelper {
         if (ex instanceof TokenNotFoundException) {
             key = 'login'
         }
-        
+
         if (ex instanceof NetworkException) {
             key = 'network'
         }

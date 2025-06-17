@@ -15,7 +15,7 @@ export function authInterceptorFn(
 
     const token = inject(LocalStorageService).getToken();
 
-    if (token === null) {
+    if (token === null || token.trim().length === 0) {
         return throwError(() => new TokenNotFoundException());
     }
 

@@ -2,21 +2,15 @@ import { Expose } from 'class-transformer';
 
 export class AuthResponseModel {
 
-    token: string
+    token: string = ''
 
-    role: string
+    role: string = ''
 
     @Expose({ name: 'expires_at' })
-    expiresAt: number
+    expiresAt: number = 0
 
-    constructor(options: {
-        token?: string
-        role?: string
-        expiresAt?: number
-    } = {}) {
-        this.token = options.token ?? ''
-        this.role = options.role ?? ''
-        this.expiresAt = options.expiresAt ?? 0
+    constructor(partial?: Partial<AuthResponseModel>) {
+        Object.assign(this, partial)
     }
 
 }

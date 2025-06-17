@@ -12,10 +12,6 @@ export class LocalStorageService {
         return this.local.getToken()
     }
 
-    setRole(role: string) {
-        this.local.setRole(role)
-    }
-
     getRole(): string | null {
         return this.local.getRole()
     }

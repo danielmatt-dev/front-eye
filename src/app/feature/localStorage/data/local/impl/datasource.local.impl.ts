@@ -16,11 +16,13 @@ export class DatasourceLocalImpl implements DatasourceLocal {
     }
 
     setRole(role: string) {
-        localStorage.setItem('role', role);
+        const encodedRole = btoa(role)
+        localStorage.setItem('role', encodedRole);
     }
 
     getRole(): string | null {
-        return localStorage.getItem('role');
+        const encodedRole = localStorage.getItem('role');
+        return encodedRole ? atob(encodedRole) : null
     }
 
     setExpiresAt(expiresAt: number): void {
