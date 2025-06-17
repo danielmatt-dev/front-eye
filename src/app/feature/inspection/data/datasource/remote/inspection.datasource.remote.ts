@@ -1,7 +1,8 @@
 import { Either } from 'fp-ts/Either';
-import { InspectionResponseModel } from '../../models/inspectionResponseModel';
+import { InspectionResponseModel } from '../../models/inspection.response.model';
 import { InspectionRequestModel } from '../../models/inspection.request.model';
 import { InspectionDetailsModel } from '../../models/inspection.details.model';
+import { NewInspectionDataModel } from '../../models/new.inspection.data.model';
 
 export interface InspectionDatasourceRemote {
 
@@ -10,5 +11,7 @@ export interface InspectionDatasourceRemote {
     getAllInspections(): Promise<Either<Error, InspectionResponseModel[]>>
 
     getInspectionByInspectionId(inspectionId: number): Promise<Either<Error, InspectionDetailsModel>>
+
+    getDataNewInspection(): Promise<Either<Error, NewInspectionDataModel>>
 
 }

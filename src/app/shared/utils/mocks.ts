@@ -1,6 +1,6 @@
 import { PatientWithInspectionsModel } from '../../feature/patient/data/models/patient.with.inspections.model';
 import { InspectionResponseEntity } from '../../feature/inspection/domain/entity/inspection.response.entity';
-import { InspectionResponseModel } from '../../feature/inspection/data/models/inspectionResponseModel';
+import { InspectionResponseModel } from '../../feature/inspection/data/models/inspection.response.model';
 import {
     InspectionDetailsModel,
     InspectionImageModel
