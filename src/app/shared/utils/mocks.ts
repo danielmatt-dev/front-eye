@@ -1060,7 +1060,7 @@ export const doctores = [
     }
 ];
 
-export const generos = [
+export const genders = [
     'Masculino',
     'Femenino',
 ]
@@ -5785,8 +5785,8 @@ export const inspectionResponseMocks: InspectionResponseModel[] =
         patientBirthDate: new Date(new Date().getFullYear() - raw.edad, 0, 1),
         //patientBirthDate:    new Date(),                     // deja el default si no tienes birthDate
         patientGender:       raw.ojo === 'Derecho'           // asumiendo ojo ≠ género, aquí podrías usar raw.genero
-            ? 'masculino'
-            : 'femenino',
+            ? 'Masculino'
+            : 'Femenino',
         patientAge: raw.edad,
         inspectionDate:      parseDateDDMMYYYY(raw.fecha),
         inspectionTime:      `${raw.hora}:00`,

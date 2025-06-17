@@ -8,7 +8,7 @@ import { Table, TableModule } from 'primeng/table';
 import { Dialog } from 'primeng/dialog';
 import { Select } from 'primeng/select';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { estadosMexico, generos } from '../../../../shared/utils/mocks';
+import { estadosMexico, genders } from '../../../../shared/utils/mocks';
 import { PrimeNG } from 'primeng/config';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -58,7 +58,7 @@ export class PacientesComponent implements OnInit {
     selectedDates: Date[] = [];
 
     /* Catálogo de opciones */
-    genders = generos;
+    genders = genders;
     states = estadosMexico;
 
     /* Lista de pacientes y filtrado */

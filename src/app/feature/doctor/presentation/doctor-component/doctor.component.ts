@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { InputText } from 'primeng/inputtext';
-import { estadosMexico, generos } from '../../../../shared/utils/mocks';
+import { estadosMexico, genders } from '../../../../shared/utils/mocks';
 import { PrimeNG } from 'primeng/config';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
@@ -52,7 +52,7 @@ export class DoctorComponent implements OnInit {
     selectedDates: Date[] = [];
 
     /* Catálogo de opciones */
-    genders = generos;
+    genders = genders;
     states = estadosMexico;
     clinics: ClinicEntity[] = [];
 
