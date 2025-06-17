@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { CommonModule } from '@angular/common';
 import { LocalStorageService } from '../../../shared/services/local.storage.service';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
     selector: 'app-menu',
@@ -20,8 +21,8 @@ export class AppMenu implements OnInit {
     model: MenuItem[] = [];
 
     constructor(
-        private readonly local: LocalStorageService,
-        private readonly router: Router
+        private readonly authService: AuthService,
+        private readonly local: LocalStorageService
     ) {}
 
     async ngOnInit() {
@@ -94,8 +95,8 @@ export class AppMenu implements OnInit {
     }
 
     async logout() {
+        this.authService.stopTokenWatcher()
         this.local.clear()
-        await this.router.navigate(['/'])
     }
 
 }
