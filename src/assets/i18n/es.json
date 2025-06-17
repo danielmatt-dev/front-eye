@@ -281,6 +281,6 @@
         "selectionPatientRequired": "Debes seleccionar un paciente",
         "email": "Formato de correo electrónico incorrecto",
         "birthDateAdult": "Debe ser mayor de edad",
-        "selectionImageRequired": "Por favor, selecciona o añade una imagen para continuar"
+        "selectionImageRequired": "Por favor, selecciona una imagen para continuar"
     }
 }
