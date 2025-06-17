@@ -258,13 +258,10 @@
                         <label for="ojo">{{ 'labels.eye'| translate }}</label>
                         <p-select-button
                             id="ojo"
+                            class="ng-invalid ng-dirty"
                             [(ngModel)]="selectedEye"
                             [options]="eyes"
                             (ngModelChange)="onEyeChange()"
-                            [ngClass]="{
-                            'ng-dirty': eyeError,
-                            'ng-invalid': eyeError
-                        }"
                         />
                         <small
                             *ngIf="eyeError"

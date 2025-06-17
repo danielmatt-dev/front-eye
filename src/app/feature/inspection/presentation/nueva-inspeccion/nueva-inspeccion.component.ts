@@ -27,6 +27,9 @@ import { GetAllPatients } from '../../../patient/domain/use_cases/getAllPatients
 import { CreateInspection } from '../../domain/use_cases/createInspection';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { InspectionRequestEntity } from '../../domain/entity/inspection.request.entity';
+import { DiseaseEntity } from '../../../disease/domain/entity/disease.entity';
+import { AiModelEntity } from '../../../aimodel/domain/entity/aimodel.entity';
+import { GetNewInspectionData } from '../../domain/use_cases/getNewInspectionData';
 
 @Component({
     selector: 'app-nueva-inspeccion',
@@ -56,6 +59,10 @@ export class NuevaInspeccionComponent implements OnInit {
     selectedPatient?: PatientResponseEntity;
     patientOptions: any[] = [];
     birthDate?: string = '';
+
+    /* Lista de modelos y afecciones */
+    allDiseases: DiseaseEntity[] = []
+    allModels: AiModelEntity[] = []
 
     /* Campos del paciente */
     patientId?: number;
@@ -102,7 +109,7 @@ export class NuevaInspeccionComponent implements OnInit {
         private readonly translateService: TranslateService,
         private readonly primeng: PrimeNG,
         private readonly messageService: MessageService,
-        private readonly getAllPatient: GetAllPatients,
+        private readonly getAllData: GetNewInspectionData,
         private readonly createInspection: CreateInspection
     ) {
         this.validator = NewInspectionValidator.getInstance(this.messageService, this.translateService, this.primeng);
@@ -110,7 +117,7 @@ export class NuevaInspeccionComponent implements OnInit {
 
     async ngOnInit() {
 
-        await this.callGetAllPatients()
+        await this.callGetNewInspectionData()
 
         this.patientOptions = this.allPatients.map((patient) => ({
             ...patient,
@@ -119,18 +126,20 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     // Llamadas a casos de uso
-    async callGetAllPatients() {
+    async callGetNewInspectionData() {
 
         this.isLoadingGetPatients = true
-        const resultGetAllPatients = await this.getAllPatient.call(new NoParams())
+        const resultGetNewInspectionData = await this.getAllData.call(new NoParams())
         this.isLoadingGetPatients = false
 
-        if (resultGetAllPatients._tag === 'Left') {
-            this.validator.getToastException(resultGetAllPatients.left)
+        if (resultGetNewInspectionData._tag === 'Left') {
+            this.validator.getToastException(resultGetNewInspectionData.left)
         }
 
-        if (resultGetAllPatients._tag === 'Right') {
-            this.allPatients = resultGetAllPatients.right
+        if (resultGetNewInspectionData._tag === 'Right') {
+            this.allPatients = resultGetNewInspectionData.right.patients
+            this.allDiseases = resultGetNewInspectionData.right.diseases
+            this.allModels = resultGetNewInspectionData.right.models
         }
 
     }

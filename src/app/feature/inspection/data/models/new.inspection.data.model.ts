@@ -9,7 +9,7 @@ export class NewInspectionDataModel {
     patients: PatientResponseModel[] = []
 
     @Type(() => DiseaseModel)
-    disease: DiseaseModel[] = []
+    diseases: DiseaseModel[] = []
 
     @Type(() => AiModelModel)
     models: AiModelModel[] = []
