@@ -94,6 +94,31 @@ export class BaseValidatorHelper extends ValidatorHelper {
         return undefined
     }
 
+    validatePassword(password?: string) {
+
+        if (!password || password.trim() === '') {
+            return this.getText(this.validationsKey + 'required')
+        }
+
+        if (password.length < 8) {
+            return this.getText(this.validationsKey + 'passwordMinLength')
+        }
+
+        if (!/[a-z]/.test(password)) {
+            return this.getText(this.validationsKey + 'passwordLowercase')
+        }
+
+        if (!/[A-Z]/.test(password)) {
+            return this.getText(this.validationsKey + 'passwordUppercase')
+        }
+
+        if (!/\d/.test(password)) {
+            return this.getText(this.validationsKey + 'passwordDigit')
+        }
+
+        return undefined;
+    }
+
     validateBirthDate(date?: Date) {
         if (!date) {
             return this.getText(this.validationsKey + 'required')
