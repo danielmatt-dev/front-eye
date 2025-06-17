@@ -1,4 +1,4 @@
-import { InspectionResponseModel } from './inspectionResponseModel';
+import { InspectionResponseModel } from './inspection.response.model';
 import { Expose, Type } from 'class-transformer';
 import { DiagnosticProbabilityModel } from './inspection.request.model';
 import { PatientResponseModel } from '../../../patient/data/models/patient.response.model';
