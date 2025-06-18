@@ -1,13 +1,17 @@
 import { from, Subscription, timer } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { LocalStorageService } from './local.storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
     private expirationSub?: Subscription;
 
-    constructor(private readonly router: Router) {}
+    constructor(
+        private readonly router: Router,
+        private readonly local: LocalStorageService
+    ) {}
 
     async startTokenExpirationWatcher(expirationTime: number) {
         const now = Date.now();
@@ -26,6 +30,7 @@ export class AuthService {
 
     private async handleTokenExpired() {
         await this.router.navigate(['/']);
+        this.local.clear()
     }
 
     stopTokenWatcher() {
