@@ -4,11 +4,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
-import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { LoginUser } from '../../domain/use_cases/login.user';
 import { UserEntity } from '../../domain/entity/user.entity';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
@@ -16,6 +15,7 @@ import { MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
 import { NgClass, NgIf } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
+import { RoleRedirectService } from '../../../../shared/services/role.redirect.service';
 
 @Component({
     selector: 'app-login',
@@ -45,8 +45,7 @@ export class LoginComponent {
         private readonly messageService: MessageService,
         private readonly translateService: TranslateService,
         private readonly primeng: PrimeNG,
-        private readonly local: LocalStorageService,
-        private readonly router: Router,
+        private readonly roleRedirect: RoleRedirectService,
         private readonly login: LoginUser
     ) {
         this.validator = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
@@ -95,17 +94,7 @@ export class LoginComponent {
     }
 
     async redirect() {
-
-        const userRole = this.local.getRole()
-
-        if (userRole === 'ADMIN') {
-            await this.router.navigate(['/insights/dashboard'], { replaceUrl: true });
-        }
-
-        if (userRole === 'DOCTOR') {
-            await this.router.navigate(['/insights/nueva-inspeccion'], { replaceUrl: true });
-        }
-
+        await this.roleRedirect.redirectByRole()
     }
 
     clearFields() {

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NgOptimizedImage } from '@angular/common';
-import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { RoleRedirectService } from '../../../../shared/services/role.redirect.service';
 
 @Component({
     selector: 'app-access',
@@ -16,21 +16,11 @@ import { LocalStorageService } from '../../../../shared/services/local.storage.s
 export class AccessComponent {
 
     constructor(
-        private readonly router: Router,
-        private readonly local: LocalStorageService
+        private readonly roleRedirect: RoleRedirectService
     ) {}
 
     async redirect() {
-
-        const role = this.local.getRole()
-        if (role === 'ADMIN') {
-            await this.router.navigate(['/insights/dashboard'])
-        }
-
-        if (role === 'DOCTOR') {
-            await this.router.navigate(['/insights/nueva-inspeccion'])
-        }
-
+        await this.roleRedirect.redirectByRole()
     }
 
 }
