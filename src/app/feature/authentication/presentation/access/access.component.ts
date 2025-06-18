@@ -5,7 +5,6 @@ import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NgOptimizedImage } from '@angular/common';
-import { RoleRedirectService } from '../../../../shared/services/role.redirect.service';
 
 @Component({
     selector: 'app-access',
@@ -13,14 +12,4 @@ import { RoleRedirectService } from '../../../../shared/services/role.redirect.s
     imports: [ButtonModule, RouterModule, RippleModule, AppFloatingConfigurator, ButtonModule, TranslatePipe, NgOptimizedImage],
     templateUrl: './access.component.html'
 })
-export class AccessComponent {
-
-    constructor(
-        private readonly roleRedirect: RoleRedirectService
-    ) {}
-
-    async redirect() {
-        await this.roleRedirect.redirectByRole()
-    }
-
-}
+export class AccessComponent {}
