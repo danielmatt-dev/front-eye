@@ -41,7 +41,9 @@ export class DatasourceLocalImpl implements DatasourceLocal {
     }
 
     clear(): void {
-        localStorage.clear();
+        localStorage.removeItem('token')
+        localStorage.removeItem('expiresAt')
+        localStorage.removeItem('role')
     }
 
     getTheme(): Theme {
