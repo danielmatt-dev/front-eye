@@ -23,18 +23,8 @@ export class RoleGuard implements CanActivate {
             return true
         }
 
-        if (userRole === 'ADMIN') {
-            this.router.navigate(['/insights/dashboard']).then(() => {})
-            return false
-        }
-
-        if (userRole === 'DOCTOR') {
-            this.router.navigate(['/insights/nueva-inspeccion']).then(() => {})
-            return false
-        }
-
+        this.router.navigate(['/auth/access']).then(() => {})
         return false
-
     }
 
 }
