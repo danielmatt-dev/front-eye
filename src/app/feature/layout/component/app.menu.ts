@@ -96,9 +96,9 @@ export class AppMenu implements OnInit {
     }
 
     async logout() {
+        this.local.clear()
         this.authService.stopTokenWatcher()
         await this.router.navigate(['/']);
-        this.local.clear()
     }
 
 }
