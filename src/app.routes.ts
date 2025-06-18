@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AppLayout } from './app/feature/layout/component/app.layout';
-import { Notfound } from './app/pages/notfound/notfound';
+import { NotfoundComponent } from './app/feature/layout/component/notfound/notfound.component';
 import { authRedirectGuard } from './app/shared/guards/redirect/auth-redirect.guard';
 
 export const appRoutes: Routes = [
@@ -13,7 +13,7 @@ export const appRoutes: Routes = [
         ]
     },
     //{ path: 'landing', component: Landing },
-    { path: 'notfound', component: Notfound },
+    { path: 'notfound', component: NotfoundComponent },
     {
         path: 'auth',
         loadChildren: () => import('./app/feature/authentication/presentation/routes/auth.routes'),
