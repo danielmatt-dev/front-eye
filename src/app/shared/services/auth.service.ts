@@ -7,6 +7,7 @@ import { LocalStorageService } from './local.storage.service';
 export class AuthService {
 
     private expirationSub?: Subscription;
+    private marginMs = 2 * 60 * 60 * 1000
 
     constructor(
         private readonly router: Router,
@@ -15,8 +16,7 @@ export class AuthService {
 
     async startTokenExpirationWatcher(expirationTime: number) {
         const now = Date.now();
-        const marginMs = 2 * 60 * 60 * 1000;
-        const delay = expirationTime - marginMs - now;
+        const delay = expirationTime - this.marginMs - now;
 
         if (delay <= 0) {
             await this.handleTokenExpired();
@@ -28,8 +28,20 @@ export class AuthService {
         });
     }
 
+    isAuthenticated(): boolean {
+        const token = this.local.getToken();
+        const expiresAt = this.local.getExpiresAt();
+
+        if (!token?.trim() || !expiresAt) {
+            return false;
+        }
+
+        const now = Date.now();
+        return (expiresAt - this.marginMs) > now;
+    }
+
     private async handleTokenExpired() {
-        await this.router.navigate(['/']);
+        await this.router.navigate(['/auth/login']);
         this.local.clear()
     }
 
