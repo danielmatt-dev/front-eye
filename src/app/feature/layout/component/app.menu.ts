@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,7 @@ export class AppMenu implements OnInit {
     model: MenuItem[] = [];
 
     constructor(
+        private readonly router: Router,
         private readonly authService: AuthService,
         private readonly local: LocalStorageService
     ) {}
@@ -96,6 +97,7 @@ export class AppMenu implements OnInit {
 
     async logout() {
         this.authService.stopTokenWatcher()
+        await this.router.navigate(['/']);
         this.local.clear()
     }
 
