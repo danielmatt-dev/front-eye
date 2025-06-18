@@ -16,6 +16,10 @@ export class LocalStorageService {
         return this.local.getRole()
     }
 
+    getExpiresAt(): number {
+        return this.local.getExpiresAt()
+    }
+
     setTheme(theme: Theme) {
         this.local.setTheme(theme)
     }
