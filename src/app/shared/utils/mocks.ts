@@ -1060,46 +1060,6 @@ export const doctores = [
     }
 ];
 
-export const generos = [
-    'Masculino',
-    'Femenino',
-]
-
-export const estadosMexico: string[] = [
-    "Aguascalientes",
-    "Baja California",
-    "Baja California Sur",
-    "Campeche",
-    "Chiapas",
-    "Chihuahua",
-    "Ciudad de México",
-    "Coahuila",
-    "Colima",
-    "Durango",
-    "Guanajuato",
-    "Guerrero",
-    "Hidalgo",
-    "Jalisco",
-    "México",
-    "Michoacán",
-    "Morelos",
-    "Nayarit",
-    "Nuevo León",
-    "Oaxaca",
-    "Puebla",
-    "Querétaro",
-    "Quintana Roo",
-    "San Luis Potosí",
-    "Sinaloa",
-    "Sonora",
-    "Tabasco",
-    "Tamaulipas",
-    "Tlaxcala",
-    "Veracruz",
-    "Yucatán",
-    "Zacatecas",
-];
-
 export const patients = [
     {
         clave: 'P001',
@@ -5785,8 +5745,8 @@ export const inspectionResponseMocks: InspectionResponseModel[] =
         patientBirthDate: new Date(new Date().getFullYear() - raw.edad, 0, 1),
         //patientBirthDate:    new Date(),                     // deja el default si no tienes birthDate
         patientGender:       raw.ojo === 'Derecho'           // asumiendo ojo ≠ género, aquí podrías usar raw.genero
-            ? 'masculino'
-            : 'femenino',
+            ? 'Masculino'
+            : 'Femenino',
         patientAge: raw.edad,
         inspectionDate:      parseDateDDMMYYYY(raw.fecha),
         inspectionTime:      `${raw.hora}:00`,

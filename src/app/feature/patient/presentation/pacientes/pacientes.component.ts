@@ -8,7 +8,6 @@ import { Table, TableModule } from 'primeng/table';
 import { Dialog } from 'primeng/dialog';
 import { Select } from 'primeng/select';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { estadosMexico, generos } from '../../../../shared/utils/mocks';
 import { PrimeNG } from 'primeng/config';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -31,6 +30,7 @@ import { PatientRequestEntity } from '../../domain/entity/patient.request.entity
 import { PatientResponseEntity } from '../../domain/entity/patient.response.entity';
 import { calculateAge } from '../../../../shared/utils/functions/functions';
 import { DatePickerModule } from 'primeng/datepicker';
+import { genders, statesMexico } from '../../../../shared/utils/data';
 
 @Component({
     standalone: true,
@@ -58,8 +58,8 @@ export class PacientesComponent implements OnInit {
     selectedDates: Date[] = [];
 
     /* Catálogo de opciones */
-    genders = generos;
-    states = estadosMexico;
+    genders = genders;
+    states = statesMexico;
 
     /* Lista de pacientes y filtrado */
     allPatients: PatientResponseEntity[] = [];

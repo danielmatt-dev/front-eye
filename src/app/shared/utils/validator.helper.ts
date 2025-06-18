@@ -7,7 +7,7 @@ import {
     BadCredencialsException,
     BadRequestException, ForbiddenException,
     InternalServerException, NetworkException,
-    ResourceNotFoundException, TimeoutException
+    ResourceNotFoundException, TimeoutException, TokenNotFoundException
 } from '../exceptions/exceptions';
 
 export abstract class ValidatorHelper {
@@ -45,6 +45,10 @@ export abstract class ValidatorHelper {
 
         let key = 'unknown'
         let type = 'error'
+
+        if (ex instanceof TokenNotFoundException) {
+            key = 'login'
+        }
 
         if (ex instanceof NetworkException) {
             key = 'network'

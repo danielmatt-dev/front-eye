@@ -4,6 +4,7 @@ import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { CommonModule } from '@angular/common';
 import { LocalStorageService } from '../../../shared/services/local.storage.service';
+import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
     selector: 'app-menu',
@@ -20,8 +21,9 @@ export class AppMenu implements OnInit {
     model: MenuItem[] = [];
 
     constructor(
-        private readonly local: LocalStorageService,
-        private readonly router: Router
+        private readonly router: Router,
+        private readonly authService: AuthService,
+        private readonly local: LocalStorageService
     ) {}
 
     async ngOnInit() {
@@ -33,7 +35,8 @@ export class AppMenu implements OnInit {
                 {
                     items: [
                         { label: 'Dashboard', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/insights/dashboard'] },
-                        { label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
+                        //{ label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
+                        { label: 'Inspecciones', icon: 'pi pi-list', routerLink: ['/insights/todas-inspecciones'] },
                         {
                             label: 'Datos Geográficos',
                             icon: 'pi pi-fw pi-globe',
@@ -80,7 +83,7 @@ export class AppMenu implements OnInit {
                             icon: 'pi pi-fw pi-user',
                             routerLink: ['/insights/pacientes']
                         },
-                        { label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
+                        //{ label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
                         {
                             label: 'Cerrar sesión',
                             icon: 'pi pi-fw pi-sign-out',
@@ -94,7 +97,8 @@ export class AppMenu implements OnInit {
 
     async logout() {
         this.local.clear()
-        await this.router.navigate(['/'])
+        this.authService.stopTokenWatcher()
+        await this.router.navigate(['/']);
     }
 
 }

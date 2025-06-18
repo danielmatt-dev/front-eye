@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { LocalStorageService } from '../services/local.storage.service';
+import { LocalStorageService } from '../../services/local.storage.service';
 
 @Injectable({
     providedIn: 'root'
@@ -23,18 +23,8 @@ export class RoleGuard implements CanActivate {
             return true
         }
 
-        if (userRole === 'ADMIN') {
-            this.router.navigate(['/insights/dashboard']).then(() => {})
-            return false
-        }
-
-        if (userRole === 'DOCTOR') {
-            this.router.navigate(['/insights/nueva-inspeccion']).then(() => {})
-            return false
-        }
-
+        this.router.navigate(['/auth/access']).then(() => {})
         return false
-
     }
 
 }
