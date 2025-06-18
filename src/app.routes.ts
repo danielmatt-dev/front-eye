@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AppLayout } from './app/feature/layout/component/app.layout';
 import { Notfound } from './app/pages/notfound/notfound';
+import { authRedirectGuard } from './app/shared/guards/redirect/auth-redirect.guard';
 
 export const appRoutes: Routes = [
     { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
@@ -13,6 +14,10 @@ export const appRoutes: Routes = [
     },
     //{ path: 'landing', component: Landing },
     { path: 'notfound', component: Notfound },
-    { path: 'auth', loadChildren: () => import('./app/feature/authentication/presentation/routes/auth.routes') },
+    {
+        path: 'auth',
+        loadChildren: () => import('./app/feature/authentication/presentation/routes/auth.routes'),
+        canActivate: [authRedirectGuard]
+    },
     { path: '**', redirectTo: '/notfound' }
 ];
