@@ -19,7 +19,6 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
 import { PrimeNG } from 'primeng/config';
-import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable'
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
@@ -397,63 +396,6 @@ export class ReporteComponent implements OnInit {
             case 'Sin Afección': return '#4caf50';
             default: return '#9e9e9e';
         }
-    }
-
-    exportExcel() {
-        // Definir los encabezados de la tabla
-        const tableColumn = ['ID', 'Fecha', 'Hora', 'Edad', 'Afección', 'Ojo', 'Resultado'];
-
-        // Crear las filas de la tabla utilizando los datos filtrados
-        const tableRows = this.reportesFiltrados.map((rep) => {
-            return [
-                rep.id,
-                rep.fecha,
-                rep.hora,
-                rep.edad,
-                rep.afeccion,
-                rep.ojo,
-                rep.resultado
-            ];
-        });
-
-        // Combinar encabezados y filas
-        const data = [tableColumn, ...tableRows];
-
-        // Crear la hoja de trabajo
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
-
-        // Ajustar el ancho de las columnas
-        ws['!cols'] = tableColumn.map(() => ({ wch: 20 }));
-
-        // Ajustar el alto de las filas (espaciado)
-        ws['!rows'] = data.map(() => ({ hpt: 20 }));
-
-        // Aplicar estilo a los encabezados
-        tableColumn.forEach((col, index) => {
-            const cellAddress = XLSX.utils.encode_cell({ c: index, r: 0 });
-            if (ws[cellAddress]) {
-                ws[cellAddress].s = {
-                    fill: {
-                        fgColor: { rgb: 'D3D3D3' }  // Color gris claro
-                    },
-                    font: {
-                        bold: true,                   // Negrita
-                        color: { rgb: '000000' },     // Texto negro
-                        sz: 12                        // Tamaño de letra
-                    },
-                    alignment: {
-                        horizontal: 'center',         // Centrado
-                        vertical: 'center'            // Centrado vertical
-                    }
-                };
-            }
-        });
-
-        // Crear el libro de trabajo con la hoja
-        const wb: XLSX.WorkBook = { Sheets: { 'Reportes': ws }, SheetNames: ['Reportes'] };
-
-        // Descargar el archivo Excel
-        XLSX.writeFile(wb, 'reportes.xlsx');
     }
 
     exportPDF() {
