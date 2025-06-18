@@ -9,56 +9,57 @@ import {
 import { PacientesComponent } from '../../feature/patient/presentation/pacientes/pacientes.component';
 import { TodasInspeccionesComponent } from '../../feature/inspection/presentation/todas-inspecciones/todas-inspecciones.component';
 import { DoctorComponent } from '../../feature/doctor/presentation/doctor-component/doctor.component';
-import { RoleGuard } from '../../shared/guards/role.guard';
+import { RoleGuard } from '../../shared/guards/role/role.guard';
+import { authGuard } from '../../shared/guards/auth/auth.guard';
 
 export default [
     {
         path: 'dashboard',
         component: DashboardComponent,
         data: { roles: ['ADMIN'] },
-        canActivate: [RoleGuard]
+        canActivate: [authGuard, RoleGuard]
     },
     {
         path: 'reportes',
         component: ReporteComponent,
         data: { roles: ['ADMIN', 'DOCTOR'] },
-        canActivate: [RoleGuard]
+        canActivate: [authGuard, RoleGuard]
     },
     {
         path: 'datos-geograficos',
         component: DatosGeograficosComponent,
         data: { roles: ['ADMIN'] },
-        canActivate: [RoleGuard]
+        canActivate: [authGuard, RoleGuard]
     },
     {
         path: 'nueva-inspeccion',
         component: NuevaInspeccionComponent,
         data: { roles: ['DOCTOR'] },
-        canActivate: [RoleGuard]
+        canActivate: [authGuard, RoleGuard]
     },
     {
         path: 'ver-detalle',
         component: VerDetalleInspeccionComponent,
         data: { roles: ['ADMIN', 'DOCTOR'] },
-        canActivate: [RoleGuard]
+        canActivate: [authGuard, RoleGuard]
     },
     {
         path: 'todas-inspecciones',
         component: TodasInspeccionesComponent,
         data: { roles: ['ADMIN', 'DOCTOR'] },
-        canActivate: [RoleGuard]
+        canActivate: [authGuard, RoleGuard]
     },
     {
         path: 'pacientes',
         component: PacientesComponent,
         data: { roles: ['DOCTOR'] },
-        canActivate: [RoleGuard]
+        canActivate: [authGuard, RoleGuard]
     },
     {
         path: 'doctores',
         component: DoctorComponent,
         data: { roles: ['ADMIN'] },
-        canActivate: [RoleGuard]
+        canActivate: [authGuard, RoleGuard]
     },
     {
         path: '**', redirectTo: '/notfound' }
