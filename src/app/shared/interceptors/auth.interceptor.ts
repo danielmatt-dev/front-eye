@@ -9,7 +9,7 @@ export function authInterceptorFn(
     next: HttpHandlerFn
 ): Observable<HttpEvent<any>> {
 
-    if (req.url.endsWith('/auth/login')) {
+    if (req.url.endsWith('/auth/login') || req.url.includes('/assets/') ) {
         return next(req)
     }
 
