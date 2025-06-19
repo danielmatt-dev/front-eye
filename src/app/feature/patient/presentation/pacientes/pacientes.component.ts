@@ -31,6 +31,9 @@ import { PatientResponseEntity } from '../../domain/entity/patient.response.enti
 import { calculateAge } from '../../../../shared/utils/functions/functions';
 import { DatePickerModule } from 'primeng/datepicker';
 import { genders, statesMexico } from '../../../../shared/utils/data';
+import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
+import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
+import { PatientReportPdf } from '../../../report/domain/template-method/impl/patient.report.pdf';
 
 @Component({
     standalone: true,
@@ -108,7 +111,8 @@ export class PacientesComponent implements OnInit {
         private readonly getAllPatients: GetAllPatients,
         private readonly updatePatient: UpdatePatient,
         private readonly deletePatients: DeletePatients,
-        private readonly filterService: FilterService
+        private readonly filterService: FilterService,
+        private readonly generateReport: GenerateReportImpl,
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
         this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
@@ -309,6 +313,13 @@ export class PacientesComponent implements OnInit {
         }
 
         this.filteredPatients = this.filterService.filterByPeriodo<PatientResponseEntity>(this.allPatients, (pat) => pat.createdAt, this.selectedPeriod, this.selectedDates);
+    }
+
+    /* Exportar datos */
+    exportPDF() {
+        this.generateReport.abstractReportPdf = new PatientReportPdf({ patients: this.allPatients })
+        const params = new ReportFactoryParams({ name: 'Pacientes', user: 'Daniel Matt' })
+        this.generateReport.generatePDF(params)
     }
 
     /* Funciones de validación del formulario del Patient */
