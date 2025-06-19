@@ -28,6 +28,9 @@ import { DoctorRequestEntity } from '../../domain/entity/doctor.request.entity';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { genders, statesMexico } from '../../../../shared/utils/data';
+import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
+import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
+import { DoctorReportPdf } from '../../../report/domain/template-method/impl/doctor.report.pdf';
 
 @Component({
     standalone: true,
@@ -106,7 +109,8 @@ export class DoctorComponent implements OnInit {
         private readonly updateDoctor: UpdateDoctor,
         private readonly deleteDoctors: DeleteDoctors,
         private readonly getAllClinis: GetAllClinics,
-        private readonly filterService: FilterService
+        private readonly filterService: FilterService,
+        private readonly generateReport: GenerateReportImpl,
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
         this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
@@ -322,6 +326,13 @@ export class DoctorComponent implements OnInit {
         }
 
         this.filteredDoctors = this.filterService.filterByPeriodo<DoctorResponseEntity>(this.allDoctors, (doc) => doc.createdAt, this.selectedPeriod, this.selectedDates);
+    }
+
+    /* Exportar datos */
+    exportPDF() {
+        this.generateReport.abstractReportPdf = new DoctorReportPdf({ doctors: this.allDoctors })
+        const params = new ReportFactoryParams({ name: 'Doctores', user: 'Daniel Matt' })
+        this.generateReport.generatePDF(params);
     }
 
     /* Funciones de validación del formulario del doctor */
