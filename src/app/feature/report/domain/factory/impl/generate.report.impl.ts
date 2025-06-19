@@ -3,7 +3,7 @@ import { AbstractReportPdf } from '../../template-method/abstract.report.pdf';
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
-export class generateReportImpl implements GenerateReport {
+export class GenerateReportImpl implements GenerateReport {
 
     abstractReportPdf?: AbstractReportPdf = undefined
 
