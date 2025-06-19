@@ -1,13 +1,11 @@
-import { ReportFactory, ReportFactoryParams } from '../report.factory';
+import { GenerateReport, ReportFactoryParams } from '../generate.report';
 import { AbstractReportPdf } from '../../template-method/abstract.report.pdf';
+import { Injectable } from '@angular/core';
 
-export class ReportFactoryImpl implements ReportFactory {
+@Injectable({ providedIn: 'root' })
+export class generateReportImpl implements GenerateReport {
 
-    abstractReportPdf?: AbstractReportPdf
-
-    constructor(partial?: Partial<ReportFactoryImpl>) {
-        Object.assign(this, partial)
-    }
+    abstractReportPdf?: AbstractReportPdf = undefined
 
     generatePDF(params: ReportFactoryParams): void {
         this.abstractReportPdf?.generate(params)

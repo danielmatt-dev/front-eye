@@ -1,4 +1,4 @@
-export interface ReportFactory {
+export interface GenerateReport {
 
     generatePDF(params: ReportFactoryParams): void
 
