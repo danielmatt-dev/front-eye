@@ -29,6 +29,9 @@ import { InspectionsFilterContext } from '../../domain/filters/inspections.filte
 import { AllFilter } from '../../domain/filters/inspections.filter';
 import { ChartData } from 'chart.js';
 import { ageRanges, genders } from '../../../../shared/utils/data';
+import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
+import { InspectionReportPdf } from '../../../report/domain/template-method/impl/inspection.report.pdf';
+import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 
 @Component({
     standalone: true,
@@ -86,6 +89,7 @@ export class TodasInspeccionesComponent implements OnInit {
         private readonly translateService: TranslateService,
         private readonly router: Router,
         private readonly local: LocalStorageService,
+        private readonly generateReport: GenerateReportImpl,
         private readonly getAllInspection: GetAllInspections,
         private readonly filterService: FilterService
     ) {
@@ -289,6 +293,13 @@ export class TodasInspeccionesComponent implements OnInit {
         }
 
         this.filteredInspections = this.filterService.filterByPeriodo(this.allInspections, (ins) => ins.inspectionDate, this.selectedPeriod, this.selectedDates);
+    }
+
+    /* Exportar tabla */
+    exportPDF() {
+        this.generateReport.abstractReportPdf = new InspectionReportPdf({ inspections: this.allInspections })
+        const params = new ReportFactoryParams({ name: 'Inspecciones', user: 'Daniel Matt' })
+        this.generateReport.generatePDF(params)
     }
 
     /* Funciones de navegación hacia otras pantallas */

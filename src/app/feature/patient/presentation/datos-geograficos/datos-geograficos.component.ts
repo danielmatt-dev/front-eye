@@ -17,7 +17,7 @@ import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-compone
 import { FilterService } from '../../../../shared/services/filter.service';
 import { patientWithInspectionsMocks } from '../../../../shared/utils/mocks';
 import { ageRanges, diseases, results } from '../../../../shared/utils/data';
-import { generateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
+import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { GeographicDataReportPdf } from '../../../report/domain/template-method/impl/geographic-data.report.pdf';
 
@@ -96,7 +96,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         private readonly translateService: TranslateService,
         private readonly messageService: MessageService,
         private readonly filterService: FilterService,
-        private readonly reportFactory: generateReportImpl,
+        private readonly generateReport: GenerateReportImpl,
         private readonly getAllPatientsWithInspections: GetAllPatientsWithInspections
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
@@ -284,9 +284,9 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     /* Exportar datos */
     exportPDF() {
-        this.reportFactory.abstractReportPdf = new GeographicDataReportPdf({ patients: this.allPatientsCoordinates });
+        this.generateReport.abstractReportPdf = new GeographicDataReportPdf({ patients: this.allPatientsCoordinates });
         const params = new ReportFactoryParams({ name: 'Datos geográficos', user: 'Daniel Matt' });
-        this.reportFactory.generatePDF(params);
+        this.generateReport.generatePDF(params);
     }
 
     /* Funciones de selección para las opciones de consulta */
