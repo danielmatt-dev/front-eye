@@ -35,8 +35,18 @@ export abstract class ValidatorHelper {
     showMessage({ key, type = 'warn', typeToast = 'toast', life = 4000 }:
                               { key: string, type?: string; typeToast?: string; life?: number }) {
 
-        const titleMessage = this.getText(`${typeToast}.${type}.titles.${key}`)
-        const descriptionMessage = this.getText(`${typeToast}.${type}.messages.${key}`)
+        let titleMessage = ''
+        let descriptionMessage = ''
+
+        if (typeToast === 'exception') {
+            titleMessage = this.getText(`${typeToast}s.titles.${key}`)
+            descriptionMessage = this.getText(`${typeToast}s.messages.${key}`)
+        }
+
+        if (typeToast === 'toast') {
+            titleMessage = this.getText(`${typeToast}.${type}.titles.${key}`)
+            descriptionMessage = this.getText(`${typeToast}.${type}.messages.${key}`)
+        }
 
         this.sendMessage.execute({ title: titleMessage, message: descriptionMessage, type: type, life: life });
     }
