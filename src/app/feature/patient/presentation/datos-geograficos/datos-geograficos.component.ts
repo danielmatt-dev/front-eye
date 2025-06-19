@@ -13,12 +13,13 @@ import 'leaflet.control.layers.tree';
 import { GetAllPatientsWithInspections } from '../../domain/use_cases/getAllPatientsWithInspections';
 import { PatientWithInspectionsEntity } from '../../domain/entity/patient.with.inspections.entity';
 import { NoParams } from '../../../../shared/utils/usecase';
-import {
-    BaseValidatorHelper
-} from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
+import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { patientWithInspectionsMocks } from '../../../../shared/utils/mocks';
 import { ageRanges, diseases, results } from '../../../../shared/utils/data';
+import { generateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
+import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
+import { GeographicDataReportPdf } from '../../../report/domain/template-method/impl/geographic-data.report.pdf';
 
 @Component({
     selector: 'app-datos-geograficos',
@@ -29,7 +30,6 @@ import { ageRanges, diseases, results } from '../../../../shared/utils/data';
     styleUrl: './datos-geograficos.component.scss'
 })
 export class DatosGeograficosComponent implements AfterViewInit, OnInit {
-
     /* Variables de leaflet */
     map!: L.Map;
     markerClusterGroup!: L.MarkerClusterGroup;
@@ -42,9 +42,9 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     showButtons = true;
 
     /* Lista de pacientes y filtrado */
-    allPatientsCoordinates: PatientWithInspectionsEntity[] = patientWithInspectionsMocks
-    filteredPatientsCoordinates = this.allPatientsCoordinates
-    displayedPatients = this.filteredPatientsCoordinates
+    allPatientsCoordinates: PatientWithInspectionsEntity[] = patientWithInspectionsMocks;
+    filteredPatientsCoordinates = this.allPatientsCoordinates;
+    displayedPatients = this.filteredPatientsCoordinates;
 
     /* Opciones de filtrado en el mapa */
     filters = {
@@ -84,7 +84,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             }
         ]
     };
-    selectedFilters: string[] = []
+    selectedFilters: string[] = [];
     leafFilters!: { label: string; layer: L.Layer }[];
 
     /* Providers */
@@ -96,6 +96,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         private readonly translateService: TranslateService,
         private readonly messageService: MessageService,
         private readonly filterService: FilterService,
+        private readonly reportFactory: generateReportImpl,
         private readonly getAllPatientsWithInspections: GetAllPatientsWithInspections
     ) {
         this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
@@ -116,26 +117,25 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     /* Llamadas a casos de uso */
     async callGetAllPatientsWithInspections() {
-        const resultGetPatients = await this.getAllPatientsWithInspections.call(new NoParams())
+        const resultGetPatients = await this.getAllPatientsWithInspections.call(new NoParams());
 
         if (resultGetPatients._tag === 'Left') {
-            this.validationHelper.getToastException(resultGetPatients.left)
+            this.validationHelper.getToastException(resultGetPatients.left);
         }
 
         if (resultGetPatients._tag === 'Right') {
-            this.allPatientsCoordinates = resultGetPatients.right
+            this.allPatientsCoordinates = resultGetPatients.right;
             //this.filterPatientsCoordinates()
         }
-
     }
 
-    /** Aplana filters.children[].children en un sólo array */
+    /** Aplana filters.children[].children en un solo array */
     private buildLeafFilters() {
-        this.leafFilters = this.filters.children
-            .flatMap(group => group.children
+        this.leafFilters = this.filters.children.flatMap((group) =>
+            group.children
                 // sólo label y layer nos importan aquí
-                .map(child => ({ label: child.label, layer: child.layer }))
-            );
+                .map((child) => ({ label: child.label, layer: child.layer }))
+        );
     }
 
     /* Funciones para dibujar el mapa */
@@ -154,7 +154,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             zoomToBoundsOnClick: false
         });
 
-        this.displayedPatients.forEach(p => {
+        this.displayedPatients.forEach((p) => {
             const iconBase = 'assets/leaflet/images/';
 
             let iconFile = 'marker-icon-2x-green.png';
@@ -167,16 +167,15 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             }
 
             const markerIcon = new L.Icon({
-                iconUrl:  `${iconBase}${iconFile}`,
-                shadowUrl:`${iconBase}marker-shadow.png`,
-                iconSize:  [25, 41],
-                iconAnchor:[12, 41],
-                popupAnchor:[1, -34],
-                shadowSize:[41, 41]
+                iconUrl: `${iconBase}${iconFile}`,
+                shadowUrl: `${iconBase}marker-shadow.png`,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
             });
 
-            const marker = L.marker([p.latitude, p.longitude], { icon: markerIcon })
-                .bindPopup(`
+            const marker = L.marker([p.latitude, p.longitude], { icon: markerIcon }).bindPopup(`
           <b>${p.fullName}</b><br>
           Resultado: ${p.lastResult}<br>
           Afección: ${p.lastDisease}<br>
@@ -187,7 +186,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         });
 
         // comportamiento de los clusters
-        group.on('clusterclick', e => e.propagatedFrom.spiderfy());
+        group.on('clusterclick', (e) => e.propagatedFrom.spiderfy());
 
         return group;
     }
@@ -209,8 +208,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     /* Configurar los controles de inicio */
     private setupMapControls() {
         // observador de resize
-        new ResizeObserver(() => this.map.invalidateSize())
-            .observe(document.getElementById('map')!);
+        new ResizeObserver(() => this.map.invalidateSize()).observe(document.getElementById('map')!);
 
         // ejemplo de control de filtros en árbol
         const treeControl = (L.control as any).layers.tree(null, this.filters, { collapsed: true });
@@ -229,7 +227,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             const idx = parseInt(e.name, 10);
             const filtro = this.leafFilters[idx]?.label;
             if (filtro) {
-                this.selectedFilters = this.selectedFilters.filter(f => f !== filtro);
+                this.selectedFilters = this.selectedFilters.filter((f) => f !== filtro);
                 this.applyFilters();
             }
         });
@@ -237,50 +235,32 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     /** Filtra y redibuja los marcadores */
     private applyFilters(): void {
-        this.displayedPatients = this.filteredPatientsCoordinates.filter(p =>
-            this.matchesDisease(p) &&
-            this.matchesAge(p)     &&
-            this.matchesGender(p)  &&
-            this.matchesResult(p)
-        );
+        this.displayedPatients = this.filteredPatientsCoordinates.filter((p) => this.matchesDisease(p) && this.matchesAge(p) && this.matchesGender(p) && this.matchesResult(p));
         this.updateMarkersOnMap();
     }
 
     private matchesDisease(p: PatientWithInspectionsEntity): boolean {
-        const sel = this.selectedFilters.filter(f =>
-            diseases.includes(f)
-        );
+        const sel = this.selectedFilters.filter((f) => diseases.includes(f));
         return !sel.length || sel.includes(p.lastDisease);
     }
 
     private matchesAge(p: PatientWithInspectionsEntity): boolean {
-        const age = p.age
-        const sel = this.selectedFilters.filter(f =>
-            ageRanges.includes(f)
-        );
+        const age = p.age;
+        const sel = this.selectedFilters.filter((f) => ageRanges.includes(f));
         if (!sel.length) return true;
-        return sel.some(f =>
-            (f === 'Menos de 30'     && age < 30) ||
-            (f === 'De 30 a 45'      && age >= 30 && age <= 45) ||
-            (f === 'Más de 45'       && age > 45)
-        );
+        return sel.some((f) => (f === 'Menos de 30' && age < 30) || (f === 'De 30 a 45' && age >= 30 && age <= 45) || (f === 'Más de 45' && age > 45));
     }
 
     private matchesGender(p: PatientWithInspectionsEntity): boolean {
-        const sel = this.selectedFilters.filter(f => ['Hombre','Mujer'].includes(f));
+        const sel = this.selectedFilters.filter((f) => ['Hombre', 'Mujer'].includes(f));
         if (!sel.length) {
             return true;
         }
-        return sel.some(f =>
-            (f === 'Hombre' && p.gender.toLowerCase() === 'masculino') ||
-            (f === 'Mujer'  && p.gender.toLowerCase() === 'femenino')
-        );
+        return sel.some((f) => (f === 'Hombre' && p.gender.toLowerCase() === 'masculino') || (f === 'Mujer' && p.gender.toLowerCase() === 'femenino'));
     }
 
     private matchesResult(p: PatientWithInspectionsEntity): boolean {
-        const sel = this.selectedFilters.filter(f =>
-            results.includes(f)
-        );
+        const sel = this.selectedFilters.filter((f) => results.includes(f));
         if (!sel.length) return true;
         return sel.includes(p.lastResult);
     }
@@ -296,15 +276,17 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             return;
         }
 
-        this.filteredPatientsCoordinates = this.filterService.filterByPeriodo<PatientWithInspectionsEntity>(
-            this.allPatientsCoordinates,
-            pat => pat.lastInspectionDate,
-            this.selectedPeriod,
-            this.selectedDates
-        )
-        this.displayedPatients = this.filteredPatientsCoordinates
-        this.applyFilters()
-        this.updateMarkersOnMap()
+        this.filteredPatientsCoordinates = this.filterService.filterByPeriodo<PatientWithInspectionsEntity>(this.allPatientsCoordinates, (pat) => pat.lastInspectionDate, this.selectedPeriod, this.selectedDates);
+        this.displayedPatients = this.filteredPatientsCoordinates;
+        this.applyFilters();
+        this.updateMarkersOnMap();
+    }
+
+    /* Exportar datos */
+    exportPDF() {
+        this.reportFactory.abstractReportPdf = new GeographicDataReportPdf({ patients: this.allPatientsCoordinates });
+        const params = new ReportFactoryParams({ name: 'Datos geográficos', user: 'Daniel Matt' });
+        this.reportFactory.generatePDF(params);
     }
 
     /* Funciones de selección para las opciones de consulta */
@@ -315,5 +297,4 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     onDateRangeSelected(fechas: Date[]) {
         this.selectedDates = fechas;
     }
-
 }
