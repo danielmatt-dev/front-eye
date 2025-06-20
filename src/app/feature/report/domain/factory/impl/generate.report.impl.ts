@@ -1,18 +1,20 @@
 import { GenerateReport, ReportFactoryParams } from '../generate.report';
 import { AbstractReportPdf } from '../../template-method/abstract.report.pdf';
 import { Injectable } from '@angular/core';
+import { AbstractReportExcel } from '../../template-method/excel/abstract.report.excel';
 
 @Injectable({ providedIn: 'root' })
 export class GenerateReportImpl implements GenerateReport {
 
-    abstractReportPdf?: AbstractReportPdf = undefined
+    abstractReportPdf?: AbstractReportPdf
+    abstractReportExcel?: AbstractReportExcel
 
     generatePDF(params: ReportFactoryParams): void {
         this.abstractReportPdf?.generate(params)
     }
 
-    generateExcel(params: ReportFactoryParams): void {
-        throw new Error('Method not implemented.');
+    generateExcel(): void {
+        this.abstractReportExcel?.generate()
     }
 
 }

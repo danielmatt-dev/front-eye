@@ -2,7 +2,7 @@ export interface GenerateReport {
 
     generatePDF(params: ReportFactoryParams): void
 
-    generateExcel(params: ReportFactoryParams): void
+    generateExcel(): void
 
 }
 
