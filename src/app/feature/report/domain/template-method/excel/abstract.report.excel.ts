@@ -27,7 +27,7 @@ export abstract class AbstractReportExcel {
             cell.font = { bold: true };  // Hacer el texto en negritas
         });
 
-        this.sheet = this.addBody(this.sheet, headers)
+        this.sheet = this.addBody(this.sheet)
 
         // Autoajustar el ancho de las columnas
         headers.forEach((_, index) => {
@@ -53,7 +53,7 @@ export abstract class AbstractReportExcel {
     protected abstract addHeaders(): { key: string, header: string }[];
 
     // Paso 2: Agregar datos de la tabla, cada clase hija debe implementarlo
-    protected abstract addBody(sheet: ExcelJS.Worksheet, headers:  { key: string, header: string }[]): ExcelJS.Worksheet;
+    protected abstract addBody(sheet: ExcelJS.Worksheet): ExcelJS.Worksheet;
 
     private async download(filename: string) {
         const buffer = await this.workbook.xlsx.writeBuffer();

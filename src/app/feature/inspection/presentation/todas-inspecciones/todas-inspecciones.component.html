@@ -54,6 +54,7 @@
                         label="{{ 'buttons.exportExcelTable' | translate }}"
                         icon="pi pi-file-excel"
                         severity="success"
+                        (onClick)="exportExcel()"
                         outlined="true"
                         (keydown)="onKeyDown($event)"
                         (keyup)="onKeyUp($event)"

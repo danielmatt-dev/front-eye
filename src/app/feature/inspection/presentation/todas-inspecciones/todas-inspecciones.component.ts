@@ -32,6 +32,7 @@ import { ageRanges, genders } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { InspectionReportPdf } from '../../../report/domain/template-method/impl/inspection.report.pdf';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
+import { InspectionReportExcel } from '../../../report/domain/template-method/excel/impl/inspection.report.excel';
 
 @Component({
     standalone: true,
@@ -300,6 +301,11 @@ export class TodasInspeccionesComponent implements OnInit {
         this.generateReport.abstractReportPdf = new InspectionReportPdf({ inspections: this.allInspections })
         const params = new ReportFactoryParams({ name: 'Inspecciones', user: 'Daniel Matt' })
         this.generateReport.generatePDF(params)
+    }
+
+    exportExcel() {
+        this.generateReport.abstractReportExcel = new InspectionReportExcel({ inspections: this.allInspections })
+        this.generateReport.generateExcel()
     }
 
     /* Funciones de navegación hacia otras pantallas */
