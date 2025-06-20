@@ -31,6 +31,7 @@ import { genders, statesMexico } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { DoctorReportPdf } from '../../../report/domain/template-method/impl/doctor.report.pdf';
+import { DoctorReportExcel } from '../../../report/domain/template-method/excel/impl/doctor.report.excel';
 
 @Component({
     standalone: true,
@@ -330,9 +331,14 @@ export class DoctorComponent implements OnInit {
 
     /* Exportar datos */
     exportPDF() {
-        this.generateReport.abstractReportPdf = new DoctorReportPdf({ doctors: this.allDoctors })
+        this.generateReport.abstractReportPdf = new DoctorReportPdf({ doctors: this.filteredDoctors })
         const params = new ReportFactoryParams({ name: 'Doctores', user: 'Daniel Matt' })
         this.generateReport.generatePDF(params);
+    }
+
+    exportExcel() {
+        this.generateReport.abstractReportExcel = new DoctorReportExcel({ doctors: this.filteredDoctors })
+        this.generateReport.generateExcel()
     }
 
     /* Funciones de validación del formulario del doctor */
