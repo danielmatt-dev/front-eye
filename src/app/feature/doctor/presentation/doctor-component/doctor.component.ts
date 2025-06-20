@@ -331,14 +331,12 @@ export class DoctorComponent implements OnInit {
 
     /* Exportar datos */
     exportPDF() {
-        this.generateReport.abstractReportPdf = new DoctorReportPdf({ doctors: this.filteredDoctors })
         const params = new ReportFactoryParams({ name: 'Doctores', user: 'Daniel Matt' })
-        this.generateReport.generatePDF(params);
+        this.generateReport.generatePDF(params, new DoctorReportPdf({ doctors: this.filteredDoctors }));
     }
 
-    exportExcel() {
-        this.generateReport.abstractReportExcel = new DoctorReportExcel({ doctors: this.filteredDoctors })
-        this.generateReport.generateExcel()
+    async exportExcel() {
+        await this.generateReport.generateExcel(new DoctorReportExcel({ doctors: this.filteredDoctors }))
     }
 
     /* Funciones de validación del formulario del doctor */

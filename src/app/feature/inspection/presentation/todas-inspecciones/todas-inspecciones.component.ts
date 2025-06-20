@@ -298,14 +298,12 @@ export class TodasInspeccionesComponent implements OnInit {
 
     /* Exportar tabla */
     exportPDF() {
-        this.generateReport.abstractReportPdf = new InspectionReportPdf({ inspections: this.allInspections })
         const params = new ReportFactoryParams({ name: 'Inspecciones', user: 'Daniel Matt' })
-        this.generateReport.generatePDF(params)
+        this.generateReport.generatePDF(params, new InspectionReportPdf({ inspections: this.allInspections }))
     }
 
-    exportExcel() {
-        this.generateReport.abstractReportExcel = new InspectionReportExcel({ inspections: this.allInspections })
-        this.generateReport.generateExcel()
+    async exportExcel() {
+        await this.generateReport.generateExcel(new InspectionReportExcel({ inspections: this.allInspections }))
     }
 
     /* Funciones de navegación hacia otras pantallas */
