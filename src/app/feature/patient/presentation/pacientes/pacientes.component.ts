@@ -34,6 +34,7 @@ import { genders, statesMexico } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { PatientReportPdf } from '../../../report/domain/template-method/impl/patient.report.pdf';
+import { PatientReportExcel } from '../../../report/domain/template-method/excel/impl/patient.report.excel';
 
 @Component({
     standalone: true,
@@ -320,6 +321,11 @@ export class PacientesComponent implements OnInit {
         this.generateReport.abstractReportPdf = new PatientReportPdf({ patients: this.allPatients })
         const params = new ReportFactoryParams({ name: 'Pacientes', user: 'Daniel Matt' })
         this.generateReport.generatePDF(params)
+    }
+
+    exportExcel() {
+        this.generateReport.abstractReportExcel = new PatientReportExcel({ patients: this.allPatients })
+        this.generateReport.generateExcel()
     }
 
     /* Funciones de validación del formulario del Patient */
