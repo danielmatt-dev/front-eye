@@ -20,6 +20,9 @@ import { ageRanges, diseases, results } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { GeographicDataReportPdf } from '../../../report/domain/template-method/impl/geographic-data.report.pdf';
+import {
+    GeographicDataReportExcel
+} from '../../../report/domain/template-method/excel/impl/geographic-data.report.excel';
 
 @Component({
     selector: 'app-datos-geograficos',
@@ -287,6 +290,11 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         this.generateReport.abstractReportPdf = new GeographicDataReportPdf({ patients: this.allPatientsCoordinates });
         const params = new ReportFactoryParams({ name: 'Datos geográficos', user: 'Daniel Matt' });
         this.generateReport.generatePDF(params);
+    }
+
+    exportExcel() {
+        this.generateReport.abstractReportExcel = new GeographicDataReportExcel({ patients: this.allPatientsCoordinates });
+        this.generateReport.generateExcel();
     }
 
     /* Funciones de selección para las opciones de consulta */
