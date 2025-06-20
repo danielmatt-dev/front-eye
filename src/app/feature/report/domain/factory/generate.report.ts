@@ -1,8 +1,11 @@
+import { AbstractReportPdf } from '../template-method/pdf/abstract.report.pdf';
+import { AbstractReportExcel } from '../template-method/excel/abstract.report.excel';
+
 export interface GenerateReport {
 
-    generatePDF(params: ReportFactoryParams): void
+    generatePDF(params: ReportFactoryParams, abstractReportPdf: AbstractReportPdf): void
 
-    generateExcel(): void
+    generateExcel(abstractReportExcel: AbstractReportExcel): Promise<void>
 
 }
 

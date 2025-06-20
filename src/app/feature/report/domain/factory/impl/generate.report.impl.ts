@@ -6,15 +6,12 @@ import { AbstractReportExcel } from '../../template-method/excel/abstract.report
 @Injectable({ providedIn: 'root' })
 export class GenerateReportImpl implements GenerateReport {
 
-    abstractReportPdf?: AbstractReportPdf
-    abstractReportExcel?: AbstractReportExcel
-
-    generatePDF(params: ReportFactoryParams): void {
-        this.abstractReportPdf?.generate(params)
+    generatePDF(params: ReportFactoryParams, abstractReportPdf: AbstractReportPdf): void {
+        abstractReportPdf.generate(params)
     }
 
-    generateExcel(): void {
-        this.abstractReportExcel?.generate()
+    async generateExcel(abstractReportExcel: AbstractReportExcel) {
+        await abstractReportExcel.generate()
     }
 
 }
