@@ -30,7 +30,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { genders, statesMexico } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
-import { DoctorReportPdf } from '../../../report/domain/template-method/impl/doctor.report.pdf';
+import { DoctorReportPdf } from '../../../report/domain/template-method/pdf/impl/doctor.report.pdf';
 import { DoctorReportExcel } from '../../../report/domain/template-method/excel/impl/doctor.report.excel';
 
 @Component({

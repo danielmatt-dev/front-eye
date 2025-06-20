@@ -30,7 +30,7 @@ import { AllFilter } from '../../domain/filters/inspections.filter';
 import { ChartData } from 'chart.js';
 import { ageRanges, genders } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
-import { InspectionReportPdf } from '../../../report/domain/template-method/impl/inspection.report.pdf';
+import { InspectionReportPdf } from '../../../report/domain/template-method/pdf/impl/inspection.report.pdf';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { InspectionReportExcel } from '../../../report/domain/template-method/excel/impl/inspection.report.excel';
 

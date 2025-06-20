@@ -1,5 +1,5 @@
 import { GenerateReport, ReportFactoryParams } from '../generate.report';
-import { AbstractReportPdf } from '../../template-method/abstract.report.pdf';
+import { AbstractReportPdf } from '../../template-method/pdf/abstract.report.pdf';
 import { Injectable } from '@angular/core';
 import { AbstractReportExcel } from '../../template-method/excel/abstract.report.excel';
 

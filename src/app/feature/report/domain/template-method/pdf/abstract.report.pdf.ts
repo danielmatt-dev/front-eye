@@ -1,6 +1,6 @@
 import { jsPDF } from 'jspdf';
 import autoTable, { RowInput } from 'jspdf-autotable';
-import { ReportFactoryParams } from '../factory/generate.report';
+import { ReportFactoryParams } from '../../factory/generate.report';
 
 export abstract class AbstractReportPdf {
 

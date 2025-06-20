@@ -1,6 +1,6 @@
 import { RowInput } from 'jspdf-autotable';
 import { AbstractReportPdf } from '../abstract.report.pdf';
-import { PatientWithInspectionsEntity } from '../../../../patient/domain/entity/patient.with.inspections.entity';
+import { PatientWithInspectionsEntity } from '../../../../../patient/domain/entity/patient.with.inspections.entity';
 
 export class GeographicDataReportPdf extends AbstractReportPdf {
 

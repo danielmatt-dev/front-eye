@@ -19,7 +19,7 @@ import { patientWithInspectionsMocks } from '../../../../shared/utils/mocks';
 import { ageRanges, diseases, results } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
-import { GeographicDataReportPdf } from '../../../report/domain/template-method/impl/geographic-data.report.pdf';
+import { GeographicDataReportPdf } from '../../../report/domain/template-method/pdf/impl/geographic-data.report.pdf';
 import {
     GeographicDataReportExcel
 } from '../../../report/domain/template-method/excel/impl/geographic-data.report.excel';

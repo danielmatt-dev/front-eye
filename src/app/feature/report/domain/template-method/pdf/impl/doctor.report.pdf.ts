@@ -1,7 +1,7 @@
 import { RowInput } from 'jspdf-autotable';
 import { AbstractReportPdf } from '../abstract.report.pdf';
-import { DoctorResponseEntity } from '../../../../doctor/domain/entity/doctor.response.entity';
-import { formatDateToDDMMYYYY } from '../../../../../shared/utils/functions/functions';
+import { DoctorResponseEntity } from '../../../../../doctor/domain/entity/doctor.response.entity';
+import { formatDateToDDMMYYYY } from '../../../../../../shared/utils/functions/functions';
 
 export class DoctorReportPdf extends AbstractReportPdf {
 
