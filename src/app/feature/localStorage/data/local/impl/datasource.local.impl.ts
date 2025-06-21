@@ -15,18 +15,26 @@ export class DatasourceLocalImpl implements DatasourceLocal {
         return localStorage.getItem('token');
     }
 
+    setResetToken(token: string): void {
+        localStorage.setItem('reset_token', token);
+    }
+
+    getResetToken(): string | null {
+        return localStorage.getItem('reset_token');
+    }
+
     setRole(role: string) {
-        const encodedRole = btoa(role)
+        const encodedRole = btoa(role);
         localStorage.setItem('role', encodedRole);
     }
 
     getRole(): string | null {
         const encodedRole = localStorage.getItem('role');
-        return encodedRole ? atob(encodedRole) : null
+        return encodedRole ? atob(encodedRole) : null;
     }
 
     setExpiresAt(expiresAt: number): void {
-        localStorage.setItem('expiresAt', expiresAt.toString())
+        localStorage.setItem('expiresAt', expiresAt.toString());
     }
 
     getExpiresAt(): number {
@@ -41,9 +49,10 @@ export class DatasourceLocalImpl implements DatasourceLocal {
     }
 
     clear(): void {
-        localStorage.removeItem('token')
-        localStorage.removeItem('expiresAt')
-        localStorage.removeItem('role')
+        localStorage.removeItem('token');
+        localStorage.removeItem('expiresAt');
+        localStorage.removeItem('role');
+        localStorage.removeItem('reset_token');
     }
 
     getTheme(): Theme {

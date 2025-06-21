@@ -5,6 +5,10 @@ export interface DatasourceLocal {
 
     getToken(): string | null;
 
+    setResetToken(token: string): void
+
+    getResetToken(): string | null;
+
     setRole(role: string): void;
 
     getRole(): string | null;
