@@ -4,27 +4,24 @@ import { Injectable } from '@angular/core';
 import {
     AuthenticationDatasourceRemoteImpl
 } from '../../data/datasource/remote/impl/authentication.datasource.remote.impl';
-import { DatasourceLocalImpl } from '../../../localStorage/data/local/impl/datasource.local.impl';
 import { right } from 'fp-ts/Either';
 import { environment } from '../../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class ValidateEmail implements UseCase<boolean, string> {
+export class ValidateEmail implements UseCase<string, string> {
 
     constructor(
-        private readonly remote: AuthenticationDatasourceRemoteImpl,
-        private readonly local: DatasourceLocalImpl
+        private readonly remote: AuthenticationDatasourceRemoteImpl
     ) {}
 
-    async call(params: string): Promise<Either<Error, boolean>> {
+    async call(params: string): Promise<Either<Error, string>> {
         const eitherResult = await this.remote.validateEmail(params, environment.recoveryToken)
 
         if (eitherResult._tag === 'Left') {
             return eitherResult
         }
 
-        this.local.setResetToken(eitherResult.right.resetToken)
-        return right(true)
+        return right(eitherResult.right.resetToken)
     }
 
 }
