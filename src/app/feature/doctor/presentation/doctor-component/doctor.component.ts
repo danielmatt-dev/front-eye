@@ -32,6 +32,7 @@ import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { DoctorReportPdf } from '../../../report/domain/template-method/pdf/impl/doctor.report.pdf';
 import { DoctorReportExcel } from '../../../report/domain/template-method/excel/impl/doctor.report.excel';
+import { BadRequestException } from '../../../../shared/exceptions/exceptions';
 
 @Component({
     standalone: true,
@@ -170,6 +171,12 @@ export class DoctorComponent implements OnInit {
         const resultCreateDoctor = await this.createDoctor.call(doctor);
 
         if (resultCreateDoctor._tag === 'Left') {
+
+            if (resultCreateDoctor.left instanceof BadRequestException) {
+                this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered')
+                return
+            }
+
             this.validationHelper.getToastException(resultCreateDoctor.left);
             return;
         }
@@ -199,6 +206,11 @@ export class DoctorComponent implements OnInit {
         const updateResult = await this.updateDoctor.call(new UpdateDoctorParams(doctor, this.doctorId));
 
         if (updateResult._tag === 'Left') {
+            if (updateResult.left instanceof BadRequestException) {
+                this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered')
+                return
+            }
+
             this.validationHelper.getToastException(updateResult.left);
             return;
         }

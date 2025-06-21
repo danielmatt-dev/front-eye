@@ -249,7 +249,8 @@
             "timeout": "Se agotó el tiempo de espera de la solicitud.",
             "forbidden": "Acceso denegado",
             "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo.",
-            "login": "Sesión expirada"
+            "login": "Sesión expirada",
+            "emailAlredyRegistered": "Intenta con otro"
         },
         "messages": {
             "network": "No se pudo conectar con el servidor. Por favor intenta más tarde.",
@@ -260,7 +261,8 @@
             "timeout": "Inténtalo de nuevo más tarde.",
             "forbidden": "No tienes permisos para realizar esta acción.",
             "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo.",
-            "login": "Por favor, vuelve a iniciar sesión para continuar"
+            "login": "Por favor, vuelve a iniciar sesión para continuar",
+            "emailAlredyRegistered": "El correo electrónico ya está registrado"
         }
     },
     "confirmations": {

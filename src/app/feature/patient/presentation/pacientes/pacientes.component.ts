@@ -35,6 +35,7 @@ import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { PatientReportPdf } from '../../../report/domain/template-method/pdf/impl/patient.report.pdf';
 import { PatientReportExcel } from '../../../report/domain/template-method/excel/impl/patient.report.excel';
+import { BadRequestException } from '../../../../shared/exceptions/exceptions';
 
 @Component({
     standalone: true,
@@ -157,6 +158,12 @@ export class PacientesComponent implements OnInit {
         const resultCreatePatient = await this.createPatient.call(patient);
 
         if (resultCreatePatient._tag === 'Left') {
+
+            if (resultCreatePatient.left instanceof BadRequestException) {
+                this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered')
+                return
+            }
+
             this.validationHelper.getToastException(resultCreatePatient.left);
             return;
         }
@@ -185,6 +192,12 @@ export class PacientesComponent implements OnInit {
         const resultCallUpdatePatient = await this.updatePatient.call(new PutPatientParams(patient, this.patientId));
 
         if (resultCallUpdatePatient._tag === 'Left') {
+
+            if (resultCallUpdatePatient.left instanceof BadRequestException) {
+                this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered')
+                return
+            }
+
             this.validationHelper.getToastException(resultCallUpdatePatient.left);
             return;
         }

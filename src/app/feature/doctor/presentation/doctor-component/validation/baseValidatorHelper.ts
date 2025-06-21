@@ -124,22 +124,6 @@ export class BaseValidatorHelper extends ValidatorHelper {
             return this.getText(this.validationsKey + 'required')
         }
 
-        const today = new Date()
-
-        let age = today.getFullYear() - date.getFullYear();
-        const monthDiff = today.getMonth() - date.getMonth();
-        const dayDiff = today.getDate() - date.getDate();
-
-        // Ajustar si aún no ha cumplido años este año
-        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-            age--;
-        }
-
-        // 2. Verificar que tenga al menos 18 años
-        if (age < 18) {
-            return this.getText(this.validationsKey + 'birthDateAdult')
-        }
-
         return undefined
     }
 
