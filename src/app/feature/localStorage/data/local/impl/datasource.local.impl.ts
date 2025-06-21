@@ -15,14 +15,6 @@ export class DatasourceLocalImpl implements DatasourceLocal {
         return localStorage.getItem('token');
     }
 
-    setResetToken(token: string): void {
-        localStorage.setItem('reset_token', token);
-    }
-
-    getResetToken(): string | null {
-        return localStorage.getItem('reset_token');
-    }
-
     setRole(role: string) {
         const encodedRole = btoa(role);
         localStorage.setItem('role', encodedRole);
