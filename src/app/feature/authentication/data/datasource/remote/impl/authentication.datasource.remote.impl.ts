@@ -3,12 +3,12 @@ import { AuthResponseModel } from '../../../models/auth.response.model';
 import { UserModel } from '../../../models/user.model';
 import { AuthenticationDatasourceRemote } from '../authentication.datasource.remote';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ApiService } from '../../../../../../shared/services/api.service';
 import { AuthEndpoints } from '../auth.endpoints';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { map } from 'rxjs/operators';
-import { RecoveryTokenModel } from '../../../models/recovery.token.model';
+import { ResetTokenModel } from '../../../models/resetTokenModel';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationDatasourceRemoteImpl implements AuthenticationDatasourceRemote {
@@ -28,24 +28,33 @@ export class AuthenticationDatasourceRemoteImpl implements AuthenticationDatasou
         return this.apiService.sendRequest(obs$)
     }
 
-    validateEmail(email: string): Promise<Either<Error, RecoveryTokenModel>> {
+    validateEmail(email: string, recoveryToken: string): Promise<Either<Error, ResetTokenModel>> {
         const url = AuthEndpoints.PATH_RESET;
 
-        const params = new HttpParams()
+        const queryParams = new HttpParams()
             .set('email', email)
 
+        const headers = new HttpHeaders({
+            'Recovery-Token': recoveryToken
+        })
+
         const obs$ = this.http
-            .get<RecoveryTokenModel>(url, { params })
+            .get<ResetTokenModel>(url, { headers: headers, params: queryParams })
             .pipe(
-                map(response => plainToInstance(RecoveryTokenModel, response)))
+                map(response => plainToInstance(ResetTokenModel, response)))
 
         return this.apiService.sendRequest(obs$)
     }
 
-    resetPassword(user: UserModel): Promise<Either<Error, boolean>> {
+    resetPassword(user: UserModel, resetToken: string): Promise<Either<Error, boolean>> {
         const url = AuthEndpoints.PATH_RESET;
+
+        const headers = new HttpHeaders({
+            'ResetPassword-Token': resetToken
+        })
+
         const obs$ = this.http
-            .post<boolean>(url, instanceToPlain(user))
+            .post<boolean>(url, instanceToPlain(user), { headers: headers })
             .pipe(
                 map(() => true))
 
