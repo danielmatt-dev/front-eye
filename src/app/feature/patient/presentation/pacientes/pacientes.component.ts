@@ -170,7 +170,7 @@ export class PacientesComponent implements OnInit {
 
         if (resultCreatePatient._tag === 'Right') {
             const patientSuccess = resultCreatePatient.right;
-            this.validationHelper.sendToastMessageSuccessPatient('createPatient', `${patientSuccess.firstName} ${patientSuccess.lastFathName}`);
+            this.validationHelper.sendToastMessageSuccess('createPatient', `${patientSuccess.firstName} ${patientSuccess.lastFathName}`);
             this.allPatients.push(patientSuccess);
             this.filterPatients();
         }
@@ -204,7 +204,7 @@ export class PacientesComponent implements OnInit {
 
         if (resultCallUpdatePatient._tag === 'Right') {
             const patientUpdate = resultCallUpdatePatient.right;
-            this.validationHelper.sendToastMessageSuccessPatient('updatePatient', `${patientUpdate.firstName} ${patientUpdate.lastFathName}`);
+            this.validationHelper.sendToastMessageSuccess('updatePatient', `${patientUpdate.firstName} ${patientUpdate.lastFathName}`);
 
             const idx = this.allPatients.findIndex((p) => p.patientId === patientUpdate.patientId);
 
@@ -232,9 +232,9 @@ export class PacientesComponent implements OnInit {
 
         if (resultCallDeletePatients._tag === 'Right') {
             if (this.selectedPatients.length === 1) {
-                this.validationHelper.sendToastMessageSuccessPatient('deletePatient', `${this.selectedPatients[0].firstName} ${this.selectedPatients[0].lastFathName}`);
+                this.validationHelper.sendToastMessageSuccess('deletePatient', `${this.selectedPatients[0].firstName} ${this.selectedPatients[0].lastFathName}`);
             } else {
-                this.validationHelper.sendToastMessageSuccessPatient('deletePatients', `${ids.length}`);
+                this.validationHelper.sendToastMessageSuccess('deletePatients', `${ids.length}`);
             }
 
             this.allPatients = this.allPatients.filter((patient) => !ids.includes(patient.patientId));
