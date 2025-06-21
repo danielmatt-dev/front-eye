@@ -1,4 +1,5 @@
 export const environment = {
     production: false,
-    apiBaseUrl: 'http://localhost:8080/insights'
+    apiBaseUrl: 'http://localhost:8080/insights',
+    recoveryToken: '1234'
 };
