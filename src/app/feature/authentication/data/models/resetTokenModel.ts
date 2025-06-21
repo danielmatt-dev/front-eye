@@ -1,11 +1,11 @@
 import { Expose } from 'class-transformer';
 
-export class RecoveryTokenModel {
+export class ResetTokenModel {
 
     @Expose({ name: 'ResetPassword-Token' })
-    recoveryToken: string = ''
+    resetToken: string = ''
 
-    constructor(partial?: Partial<RecoveryTokenModel>) {
+    constructor(partial?: Partial<ResetTokenModel>) {
         Object.assign(this, partial)
     }
 
