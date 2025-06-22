@@ -11,7 +11,7 @@ import { GetAllInspections } from '../../domain/use_cases/getAllInspections';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { InspectionResponseEntity } from '../../domain/entity/inspection.response.entity';
 import { colorByDisease } from '../../../../shared/utils/functions/functions';
-import { ageRanges, diseases } from '../../../../shared/utils/data';
+import { ageRanges } from '../../../../shared/utils/data';
 import {
     AllFilter, RangeDaysFilter,
     InspectionsFilterStrategy,
@@ -43,9 +43,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     totalDetections = 0; // Detecciones totales
 
     // Conteos por tipo de afección
-    dryDmaeCount = 0; // Casos de DMAE Seca
-    wetDmaeCount = 0; // Casos de DMAE Húmeda
-    diabeticRetinopathyCount = 0; // Casos de Retinopatía Diabética
+    diseaseCounts: Record<string, number> = {};
 
     // Conteos por género
     maleCount = 0; // Cantidad de pacientes hombres
@@ -66,7 +64,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     over45Percentage = 0; // Porcentaje de pacientes mayores de 45 años
 
     // Lista de opciones
-    diseases = diseases;
+    diseases: string[] = [];
     ageRanges = ageRanges;
 
     /* Providers */
@@ -248,7 +246,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
 
         if (resultGetAllInspections._tag === 'Right') {
-            // this.allInspections = resultGetAllInspections.right
+            //this.allInspections = resultGetAllInspections.right.inspections
+            this.diseases = resultGetAllInspections.right.diseases.map(disease => disease.name)
+            this.diseases.forEach(d => this.diseaseCounts[d] = 0);
         }
     }
 
@@ -340,13 +340,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // Procesar detecciones
         for (const inspection of this.allInspections) {
             const inspectionDate = inspection.inspectionDate;
+            const disease = inspection.disease;
 
             if (inspectionDate >= sevenDaysAgo) this.weeklyDetections++;
             if (inspectionDate >= oneMonthAgo) this.monthlyDetections++;
 
-            if (inspection.disease === 'DMAE Seca') this.dryDmaeCount++;
-            else if (inspection.disease === 'DMAE Húmeda') this.wetDmaeCount++;
-            else if (inspection.disease === 'Retinopatía Diabética') this.diabeticRetinopathyCount++;
+            if (!(disease in this.diseaseCounts)) {
+                this.diseaseCounts[disease] = 0;
+            }
+            this.diseaseCounts[disease]++;
 
             patientsDetected.add(inspection.patientId);
         }
