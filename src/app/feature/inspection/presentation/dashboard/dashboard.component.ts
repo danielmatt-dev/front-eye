@@ -24,12 +24,14 @@ import { MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { Select } from 'primeng/select';
-import { NgIf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
+import { ProgressSpinner } from 'primeng/progressspinner';
+import { Skeleton } from 'primeng/skeleton';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [Fluid, UIChart, SelectButton, FormsModule, CalendarModule, DatePicker, TranslatePipe, Select, NgIf],
+    imports: [Fluid, UIChart, SelectButton, FormsModule, CalendarModule, DatePicker, TranslatePipe, Select, NgIf, ProgressSpinner, Skeleton, NgForOf],
     providers: [MessageService],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss'
@@ -86,6 +88,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     /* Variables del html */
     isMobileView: boolean = false;
+
+    /* Variables de carga */
+    isChartLoading = false;
 
     /* Providers */
     validator: ValidatorHelper;
@@ -234,7 +239,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     /* Llamadas a casos de uso */
     async callGetAllInspections() {
+        this.isChartLoading = true;
         const resultGetAllInspections = await this.getAllInpections.call(new NoParams());
+        this.isChartLoading = false;
 
         if (resultGetAllInspections._tag === 'Left') {
             this.validator.getToastException(resultGetAllInspections.left);
@@ -422,51 +429,4 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.isMobileView = window.innerWidth < 768; // Tailwind 'md' breakpoint
     }
 
-    /*
-    prepararDatosGraficaEdadGeneroSimple(inspecciones: any[]) {
-        const categorias = ['Menos de 30', '30 a 45', 'Más de 45'];
-        const generos = ['Masculino', 'Femenino'];
-
-        // Inicializar contadores para cada combo rango + género
-        const dataMap: Record<string, Record<string, number>> = {};
-        categorias.forEach(rango => {
-            dataMap[rango] = {};
-            generos.forEach(gen => {
-                dataMap[rango][gen] = 0;
-            });
-        });
-
-        function getRangoEdad(edad: number): string {
-            if (edad < 30) return 'Menos de 30';
-            else if (edad <= 45) return '30 a 45';
-            else return 'Más de 45';
-        }
-
-        inspecciones.forEach(ins => {
-            const rango = getRangoEdad(ins.edad);
-
-            // Buscar paciente para obtener género
-            const paciente = findPatient(ins.paciente);
-            if (!paciente) return;
-            if (!generos.includes(paciente.genero)) return;
-
-            const genero = paciente.genero;
-            dataMap[rango][genero]++;
-        });
-
-        // Construir datasets con datos agrupados por género
-        const datasets: any[] = generos.map(gen => ({
-            label: gen,
-            data: categorias.map(rango => dataMap[rango][gen]),
-            backgroundColor: categorias.map(rango => colorByGender(gen)),
-            borderColor: categorias.map(rango => colorByGender(gen)),
-            borderWidth: 0
-        }));
-
-        return {
-            labels: categorias,
-            datasets
-        };
-    }
-     */
 }

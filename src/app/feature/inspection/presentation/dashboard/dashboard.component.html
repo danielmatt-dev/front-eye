@@ -14,15 +14,36 @@
             </div>
             <div class="grid grid-cols-3">
                 <div class="text-center">
-                    <span class="text-2xl font-bold">{{ weeklyDetections }}</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ weeklyDetections }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.byPeriod.week' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">{{ monthlyDetections }}</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ monthlyDetections }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.byPeriod.month' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">{{ totalDetections }}</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ totalDetections }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.byPeriod.total' | translate }}</div>
                 </div>
             </div>
@@ -43,15 +64,36 @@
             </div>
             <div class="grid grid-cols-3">
                 <div class="text-center">
-                    <span class="text-2xl font-bold">{{ dryDmaeCount }}</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ dryDmaeCount }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.conditions.dmaeDry' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">{{wetDmaeCount }}</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{wetDmaeCount }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.conditions.dmaeWet' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">{{ diabeticRetinopathyCount }}</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ diabeticRetinopathyCount }}</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.conditions.retDiabetic' | translate }}</div>
                 </div>
             </div>
@@ -72,11 +114,25 @@
             </div>
             <div class="flex justify-center items-end">
                 <div class="text-center px-6">
-                    <span class="text-2xl font-bold">{{ malePercentage }}%</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ malePercentage }}%</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.gender.male' | translate }}</div>
                 </div>
                 <div class="text-center px-6">
-                    <span class="text-2xl font-bold">{{ femalePercentage }}%</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ femalePercentage }}%</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.gender.female' | translate }}</div>
                 </div>
             </div>
@@ -97,15 +153,36 @@
             </div>
             <div class="grid grid-cols-3">
                 <div class="text-center">
-                    <span class="text-2xl font-bold">{{ under30Percentage }}%</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ under30Percentage }}%</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.ageRanges.under30' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">{{ between30And45Percentage }}%</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ between30And45Percentage }}%</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.ageRanges.from30to45' | translate }}</div>
                 </div>
                 <div class="text-center">
-                    <span class="text-2xl font-bold">{{ over45Percentage }}%</span>
+                    <p-skeleton
+                        *ngIf="isChartLoading"
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ over45Percentage }}%</span>
                     <div class="text-sm text-muted-color">{{ 'subtitles.ageRanges.over45' | translate }}</div>
                 </div>
             </div>
@@ -118,13 +195,21 @@
     <div class="col-span-1">
         <div class="card">
             <div class="font-semibold text-xl mb-4">{{ 'titles.detectionsByMonth' | translate }}</div>
-            <p-chart type="bar" [data]="monthlyDetectionsData" [options]="monthlyDetectionsOptions"></p-chart>
+            <p-chart
+                type="bar"
+                [data]="monthlyDetectionsData"
+                [options]="monthlyDetectionsOptions">
+            </p-chart>
         </div>
     </div>
     <div class="col-span-1">
         <div class="card">
             <div class="font-semibold text-xl mb-4">{{ 'titles.detectionsByAgeAndCondition' | translate }}</div>
-            <p-chart type="bar" [data]="detectionsByAgeRangeAndDiseaseData" [options]="detectionsByAgeRangeAndDiseaseOptions"></p-chart>
+            <p-chart
+                type="bar"
+                [data]="detectionsByAgeRangeAndDiseaseData"
+                [options]="detectionsByAgeRangeAndDiseaseOptions">
+            </p-chart>
         </div>
     </div>
 </p-fluid>
