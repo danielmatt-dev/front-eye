@@ -277,8 +277,10 @@
                     <label for="enfermedad">{{ 'labels.disease' | translate }}</label>
                     <p-select
                         id="enfermedad"
-                        [options]="afecciones"
+                        [options]="allDiseases"
+                        [loading]="isLoadingGetData"
                         [(ngModel)]="selectedDisease"
+                        optionLabel="name"
                         (ngModelChange)="onDiseaseChange()"
                         [ngClass]="{ 'ng-dirty': diseaseError, 'ng-invalid': diseaseError }"
                         placeholder="{{ 'placeholders.disease' | translate }}"
@@ -291,7 +293,9 @@
                     <label for="modelo">{{ 'labels.model' | translate }}</label>
                     <p-select
                         id="modelo"
-                        [options]="models"
+                        [options]="allModels"
+                        [loading]="isLoadingGetData"
+                        optionLabel="name"
                         [(ngModel)]="selectedModel"
                         (ngModelChange)="onModelChange()"
                         [ngClass]="{ 'ng-dirty': modelError, 'ng-invalid': modelError }"

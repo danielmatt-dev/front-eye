@@ -8,7 +8,7 @@ import { InputText } from 'primeng/inputtext';
 import { SelectButton } from 'primeng/selectbutton';
 import { Textarea } from 'primeng/textarea';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { models, patientsResponseMocks, State } from '../../../../shared/utils/mocks';
+import { patientsResponseMocks, State } from '../../../../shared/utils/mocks';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
@@ -19,7 +19,7 @@ import { SelectModule } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { PatientResponseEntity } from '../../../patient/domain/entity/patient.response.entity';
 import { formatDateToDDMMYYYY } from '../../../../shared/utils/functions/functions';
-import { diseases, eyes, results } from '../../../../shared/utils/data';
+import { eyes, results } from '../../../../shared/utils/data';
 import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
 import { CreateInspection } from '../../domain/use_cases/createInspection';
@@ -44,12 +44,6 @@ export class NuevaInspeccionComponent implements OnInit {
     eyes = eyes;
     selectedEye?: string;
 
-    afecciones = diseases;
-    selectedDisease?: string = undefined;
-
-    models = models;
-    selectedModel?: string;
-
     notes = ''
 
     /* Variables del paciente */
@@ -60,7 +54,9 @@ export class NuevaInspeccionComponent implements OnInit {
 
     /* Lista de modelos y afecciones */
     allDiseases: DiseaseEntity[] = []
+    selectedDisease?: DiseaseEntity
     allModels: AiModelEntity[] = []
+    selectedModel?: AiModelEntity
 
     /* Campos del paciente */
     patientId?: number;
@@ -97,8 +93,7 @@ export class NuevaInspeccionComponent implements OnInit {
 
     /* Variables de carga */
     isLoadingCreateInspection = false
-    isLoadingGetPatients = false
-    isLoadingGetModels = false
+    isLoadingGetData = false
 
     /* Providers */
     validator: NewInspectionValidator;
@@ -126,9 +121,9 @@ export class NuevaInspeccionComponent implements OnInit {
     // Llamadas a casos de uso
     async callGetNewInspectionData() {
 
-        this.isLoadingGetPatients = true
+        this.isLoadingGetData = true
         const resultGetNewInspectionData = await this.getAllData.call(new NoParams())
-        this.isLoadingGetPatients = false
+        this.isLoadingGetData = false
 
         if (resultGetNewInspectionData._tag === 'Left') {
             this.validator.getToastException(resultGetNewInspectionData.left)
@@ -235,11 +230,11 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     onDiseaseChange() {
-        this.diseaseError = this.validator.validateSelected(this.selectedDisease);
+        this.diseaseError = this.validator.validateDiseaseSelected(this.selectedDisease);
     }
 
     onModelChange() {
-        this.modelError = this.validator.validateSelected(this.selectedModel);
+        this.modelError = this.validator.validateModelSelected(this.selectedModel);
     }
 
     onFormChange() {
