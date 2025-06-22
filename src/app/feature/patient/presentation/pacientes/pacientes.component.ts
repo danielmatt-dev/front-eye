@@ -50,6 +50,11 @@ export class PacientesComponent implements OnInit {
     @ViewChild('filter') filter!: ElementRef;
     isLoading = true;
 
+    /* Opciones de carga en botones */
+    isCreateLoading = false;
+    isUpdateLoading = false;
+    isDeleteLoading = false;
+
     /* Opciones de dialog */
     isUpdate = false;
     visible = false;
@@ -155,7 +160,9 @@ export class PacientesComponent implements OnInit {
             return;
         }
 
+        this.isCreateLoading = true;
         const resultCreatePatient = await this.createPatient.call(patient);
+        this.isCreateLoading = false;
 
         if (resultCreatePatient._tag === 'Left') {
 
@@ -189,7 +196,9 @@ export class PacientesComponent implements OnInit {
             return;
         }
 
+        this.isUpdateLoading = true;
         const resultCallUpdatePatient = await this.updatePatient.call(new PutPatientParams(patient, this.patientId));
+        this.isUpdateLoading = false;
 
         if (resultCallUpdatePatient._tag === 'Left') {
 
@@ -223,7 +232,9 @@ export class PacientesComponent implements OnInit {
             return;
         }
 
+        this.isDeleteLoading = true;
         const resultCallDeletePatients = await this.deletePatients.call(ids);
+        this.isDeleteLoading = false;
 
         if (resultCallDeletePatients._tag === 'Left') {
             this.validationHelper.getToastException(resultCallDeletePatients.left);

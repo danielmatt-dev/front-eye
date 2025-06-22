@@ -25,6 +25,7 @@
             <p-button
                 label="{{ 'buttons.delete' | translate: { items: labelPatients } }}"
                 severity="danger"
+                [loading]="isDeleteLoading"
                 (onClick)="deletePatientsConfirmation()"
                 icon="pi pi-trash">
             </p-button>
@@ -464,11 +465,13 @@
         ></p-button>
         <p-button
             *ngIf="!isUpdate"
+            [loading]="isCreateLoading"
             label="{{ 'buttons.register' | translate }}"
             (onClick)="callCreatePatient()"
         ></p-button>
         <p-button
             *ngIf="isUpdate"
+            [loading]="isUpdateLoading"
             label="{{ 'buttons.update' | translate }}"
             (onClick)="callUpdatePatient()"
         ></p-button>
