@@ -28,6 +28,7 @@ export class LoginUser implements UseCase<boolean, UserEntity> {
 
         this.local.setToken(result.right.token)
         this.local.setRole(result.right.role)
+        this.local.setUsername(result.right.username)
         const expiresAt = result.right.expiresAt
         this.local.setExpiresAt(expiresAt)
         await this.authService.startTokenExpirationWatcher(expiresAt)
