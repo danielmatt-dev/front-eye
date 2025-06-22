@@ -5,9 +5,9 @@ export class DiseaseModel {
     @Expose({ name: 'disease_id' })
     diseaseId?: number = undefined
 
-    name?: string = ''
+    name: string = ''
 
-    description?:string = ''
+    description:string = ''
 
     constructor(partial?: Partial<DiseaseModel>) {
         Object.assign(this, partial)
