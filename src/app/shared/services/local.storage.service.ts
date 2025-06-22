@@ -16,6 +16,10 @@ export class LocalStorageService {
         return this.local.getRole()
     }
 
+    getUsername(): string | null {
+        return this.local.getUsername()
+    }
+
     getExpiresAt(): number {
         return this.local.getExpiresAt()
     }
