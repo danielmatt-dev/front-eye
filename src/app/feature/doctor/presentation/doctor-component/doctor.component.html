@@ -25,6 +25,7 @@
             <p-button
                 label="{{ 'buttons.delete' | translate: { items: labelDoctors } }}"
                 severity="danger"
+                [loading]="isDeleteLoading"
                 [disabled]="selectedDoctors.length === 0"
                 (onClick)="deleteDoctorsConfirmation()"
                 icon="pi pi-trash">
@@ -282,6 +283,7 @@
                 id="clinicModal"
                 [options]="clinics"
                 optionLabel="name"
+                [loading]="isClinicsLoading"
                 [(ngModel)]="clinicSelected"
                 (ngModelChange)="onClinicChange()"
                 [ngClass]="{
@@ -432,11 +434,13 @@
         ></p-button>
         <p-button
             *ngIf="!isUpdate"
+            [loading]="isCreateLoading"
             label="{{ 'buttons.register' | translate }}"
             (onClick)="callCreateDoctor()"
         ></p-button>
         <p-button
             *ngIf="isUpdate"
+            [loading]="isUpdateLoading"
             label="{{ 'buttons.update' | translate }}"
             (onClick)="callUpdateDoctor()"
         ></p-button>

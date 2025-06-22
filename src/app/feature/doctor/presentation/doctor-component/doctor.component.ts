@@ -48,6 +48,12 @@ export class DoctorComponent implements OnInit {
     /* Opciones de la tabla*/
     isLoading = true;
 
+    /* Opciones de carga en botones */
+    isCreateLoading = false;
+    isUpdateLoading = false;
+    isDeleteLoading = false;
+    isClinicsLoading = false;
+
     /* Opciones de dialog */
     isUpdate = false;
     isVisible = false;
@@ -168,7 +174,9 @@ export class DoctorComponent implements OnInit {
             return;
         }
 
+        this.isCreateLoading = true;
         const resultCreateDoctor = await this.createDoctor.call(doctor);
+        this.isCreateLoading = false;
 
         if (resultCreateDoctor._tag === 'Left') {
 
@@ -203,7 +211,9 @@ export class DoctorComponent implements OnInit {
             return;
         }
 
+        this.isUpdateLoading = true;
         const updateResult = await this.updateDoctor.call(new UpdateDoctorParams(doctor, this.doctorId));
+        this.isUpdateLoading = false;
 
         if (updateResult._tag === 'Left') {
             if (updateResult.left instanceof BadRequestException) {
@@ -236,7 +246,9 @@ export class DoctorComponent implements OnInit {
             return;
         }
 
+        this.isDeleteLoading = true;
         const resultUseCase = await this.deleteDoctors.call(ids);
+        this.isDeleteLoading = false;
 
         if (resultUseCase._tag === 'Left') {
             this.validationHelper.getToastException(resultUseCase.left);
