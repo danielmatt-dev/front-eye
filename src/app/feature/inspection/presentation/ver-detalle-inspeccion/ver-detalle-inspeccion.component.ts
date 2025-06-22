@@ -22,17 +22,17 @@ import { DiagnosticProbabilityEntity } from '../../domain/entity/inspection.requ
 import { colorByResult, formatDateToSpanishMexico } from '../../../../shared/utils/functions/functions';
 import { CommonModule } from '@angular/common';
 import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
     selector: 'app-ver-detalle-inspeccion',
     standalone: true,
-    imports: [Button, ProgressBar, PrimeTemplate, TableModule, TranslatePipe, Image, FormsModule, ToastModule, GalleriaModule, CommonModule],
+    imports: [Button, ProgressBar, PrimeTemplate, TableModule, TranslatePipe, Image, FormsModule, ToastModule, GalleriaModule, CommonModule, SkeletonModule],
     providers: [MessageService],
     templateUrl: './ver-detalle-inspeccion.component.html',
     styleUrl: './ver-detalle-inspeccion.component.scss'
 })
 export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
-
     inspecciones = inspecciones.filter((ins) => ins.paciente === 'P001');
 
     showThumbnails: boolean | undefined;
@@ -47,34 +47,38 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
 
     responsiveOptions = [
         { breakpoint: '1300px', numVisible: 3 },
-        { breakpoint: '575px',  numVisible: 1 }
+        { breakpoint: '575px', numVisible: 1 }
     ];
 
+    /* Variables de carga */
+    isLoading = false;
+    skeletonItems = Array(4);
+
     // Id de la inspección
-    inspectionId?: number
+    inspectionId?: number;
 
     // Variables de la inspeción
-    inspection?: InspectionResponseEntity
+    inspection?: InspectionResponseEntity;
 
     // Variables del paciente
-    patient?: PatientResponseEntity
+    patient?: PatientResponseEntity;
 
     // Imágenes
-    imagesResponse: InspectionImageEntity[] = []
+    imagesResponse: InspectionImageEntity[] = [];
 
     // Probabilidades de la inspección
-    probabilities: DiagnosticProbabilityEntity[] = []
+    probabilities: DiagnosticProbabilityEntity[] = [];
 
     // Lista de inspecciones
-    allInspections: InspectionResponseEntity[] = []
+    allInspections: InspectionResponseEntity[] = [];
 
     // Resultado de inspección
-    result?: string
-    colorResult?: string = mapColors.red
+    result?: string;
+    colorResult?: string = mapColors.red;
 
     // Providers
-    validatorHelper: ValidatorHelper
-    localeTextProvider: LocaleTextProvider
+    validatorHelper: ValidatorHelper;
+    localeTextProvider: LocaleTextProvider;
 
     constructor(
         private readonly router: Router,
@@ -82,30 +86,29 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
         private readonly translateService: TranslateService,
         private readonly primeNg: PrimeNG,
         @Inject(PLATFORM_ID) private platformId: any,
-        private cd: ChangeDetectorRef,
+        private readonly cd: ChangeDetectorRef,
         private readonly route: ActivatedRoute,
         private readonly getInspectionById: GetInspectionById
     ) {
-        this.validatorHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeNg)
-        this.localeTextProvider = LocaleTextProvider.getInstance(this.translateService, this.primeNg)
+        this.validatorHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeNg);
+        this.localeTextProvider = LocaleTextProvider.getInstance(this.translateService, this.primeNg);
     }
 
     ngOnInit() {
         this.bindDocumentListeners();
 
-        this.route.queryParamMap.subscribe(params => {
+        this.route.queryParamMap.subscribe((params) => {
             const idParam = params.get('inspectionId');
-            this.inspectionId = idParam !== null
-                ? Number(idParam)
-                : undefined;
+            this.inspectionId = idParam !== null ? Number(idParam) : undefined;
         });
 
-        this.inspection = exampleInspectionDetails.inspection
-        this.patient = exampleInspectionDetails.patient
-        this.imagesResponse = exampleInspectionDetails.images
-        this.probabilities = exampleInspectionDetails.probabilities
-        this.allInspections = exampleInspectionDetails.inspectionHistory
-        this.colorResult = colorByResult(exampleInspectionDetails.inspection.result)
+        this.inspection = exampleInspectionDetails.inspection;
+        this.patient = exampleInspectionDetails.patient;
+        this.imagesResponse = exampleInspectionDetails.images;
+        this.probabilities = exampleInspectionDetails.probabilities;
+        this.probabilities.sort((a, b) => b.probability - a.probability)
+        this.allInspections = exampleInspectionDetails.inspectionHistory;
+        this.colorResult = colorByResult(exampleInspectionDetails.inspection.result);
     }
 
     ngOnDestroy() {
@@ -114,27 +117,25 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
 
     /* Llamadas a casos de uso */
     async callGetInspectionById() {
-
         if (!this.inspectionId) {
-            return
+            return;
         }
 
-        const resultGetInspectionById = await this.getInspectionById.call(this.inspectionId)
+        const resultGetInspectionById = await this.getInspectionById.call(this.inspectionId);
 
         if (resultGetInspectionById._tag === 'Left') {
-            this.validatorHelper.getToastException(resultGetInspectionById.left)
+            this.validatorHelper.getToastException(resultGetInspectionById.left);
         }
 
         if (resultGetInspectionById._tag === 'Right') {
-            const details = resultGetInspectionById.right
-            this.inspection = details.inspection
-            this.patient = details.patient
-            this.imagesResponse = details.images
-            this.probabilities = details.probabilities
-            this.allInspections = details.inspectionHistory
-            this.colorResult = colorByResult(details.inspection.result)
+            const details = resultGetInspectionById.right;
+            this.inspection = details.inspection;
+            this.patient = details.patient;
+            this.imagesResponse = details.images;
+            this.probabilities = details.probabilities;
+            this.allInspections = details.inspectionHistory;
+            this.colorResult = colorByResult(details.inspection.result);
         }
-
     }
 
     // Funciones para la sección de imágenes
@@ -175,14 +176,11 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
 
         if (doc.exitFullscreen) {
             doc.exitFullscreen();
-        }
-        else if (doc.mozCancelFullScreen) {
+        } else if (doc.mozCancelFullScreen) {
             doc.mozCancelFullScreen();
-        }
-        else if (doc.webkitExitFullscreen) {
+        } else if (doc.webkitExitFullscreen) {
             doc.webkitExitFullscreen();
-        }
-        else if (doc.msExitFullscreen) {
+        } else if (doc.msExitFullscreen) {
             doc.msExitFullscreen();
         }
     }
@@ -213,18 +211,15 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
 
     // Funciones que interaccionan con el html
     async onRowSelect(event: any) {
-        const id = event.data.inspectionId
-        await this.router.navigate(
-            ['/insights/ver-detalle'],
-            { queryParams: { id } }
-        );
+        const id = event.data.inspectionId;
+        await this.router.navigate(['/insights/ver-detalle'], { queryParams: { id } });
     }
 
-    async cancelar() {
-        await this.router.navigate(['/insights/nueva-inspeccion']);
+    async cancel() {
+        window.history.back();
     }
 
-    descargar() {
+    download() {
         this.messageService.add({
             severity: 'info',
             summary: 'Funcionalidad en Desarrollo',
