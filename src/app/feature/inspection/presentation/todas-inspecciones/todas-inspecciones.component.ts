@@ -83,6 +83,7 @@ export class TodasInspeccionesComponent implements OnInit {
     /* Lista de datos */
     ageRanges = ageRanges
     genders = genders
+    diseases: string[] = []
 
     constructor(
         private readonly primeng: PrimeNG,
@@ -127,6 +128,7 @@ export class TodasInspeccionesComponent implements OnInit {
 
         if (resultGetAllInspections._tag === 'Right') {
             //this.allInspections = resultGetAllInspections.right;
+            this.diseases = resultGetAllInspections.right.diseases.map(disease => disease.name)
             this.filterInspections();
         }
     }
