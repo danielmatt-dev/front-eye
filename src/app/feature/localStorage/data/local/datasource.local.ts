@@ -9,6 +9,10 @@ export interface DatasourceLocal {
 
     getRole(): string | null;
 
+    setUsername(username: string): void;
+
+    getUsername(): string | null;
+
     setExpiresAt(expiresAt: number): void
 
     getExpiresAt(): number

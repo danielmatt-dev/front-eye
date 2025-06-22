@@ -25,6 +25,16 @@ export class DatasourceLocalImpl implements DatasourceLocal {
         return encodedRole ? atob(encodedRole) : null;
     }
 
+    setUsername(username: string): void {
+        const encodedUsername = btoa(username);
+        localStorage.setItem('username', encodedUsername);
+    }
+
+    getUsername(): string | null {
+        const encodedUsername = localStorage.getItem('username');
+        return encodedUsername ? atob(encodedUsername) : null;
+    }
+
     setExpiresAt(expiresAt: number): void {
         localStorage.setItem('expiresAt', expiresAt.toString());
     }
