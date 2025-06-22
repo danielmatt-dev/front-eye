@@ -6,6 +6,8 @@ export class AuthResponseModel {
 
     role: string = ''
 
+    username: string = ''
+
     @Expose({ name: 'expires_at' })
     expiresAt: number = 0
 
