@@ -113,6 +113,20 @@ export class BaseValidatorHelper extends ValidatorHelper {
         return undefined;
     }
 
+    validateConfirmPassword(confirmPassword?: string, password?: string) {
+
+        const message = this.validateField(confirmPassword)
+        if (message) {
+            return message
+        }
+
+        if (confirmPassword !== password) {
+            return this.getText(this.validationsKey + 'passwordsNotMatch')
+        }
+
+        return undefined
+    }
+
     validateBirthDate(date?: Date) {
         if (!date) {
             return this.getText(this.validationsKey + 'required')
