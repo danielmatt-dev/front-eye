@@ -32,7 +32,6 @@ export class LoginComponent {
 
     /* Variables del html */
     isLoading = false;
-    checked: boolean = false;
 
     /* Variables de error */
     emailError?: string;
