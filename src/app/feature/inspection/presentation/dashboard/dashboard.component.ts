@@ -25,13 +25,12 @@ import { PrimeNG } from 'primeng/config';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { Select } from 'primeng/select';
 import { NgForOf, NgIf } from '@angular/common';
-import { ProgressSpinner } from 'primeng/progressspinner';
-import { Skeleton } from 'primeng/skeleton';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [Fluid, UIChart, SelectButton, FormsModule, CalendarModule, DatePicker, TranslatePipe, Select, NgIf, ProgressSpinner, Skeleton, NgForOf],
+    imports: [Fluid, UIChart, SelectButton, FormsModule, CalendarModule, DatePicker, TranslatePipe, Select, NgIf, SkeletonModule, NgForOf],
     providers: [MessageService],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss'
@@ -370,8 +369,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
             else if (patient.patientAge > 45) this.over45Count++;
         }
 
-        const totalPatients = this.maleCount + this.femaleCount;
+        this.calculatePercentages(this.maleCount + this.femaleCount)
+    }
 
+    calculatePercentages(totalPatients: number) {
         // Porcentajes por género
         this.malePercentage = totalPatients ? Math.round((this.maleCount / totalPatients) * 100) : 0;
         this.femalePercentage = totalPatients ? Math.round((this.femaleCount / totalPatients) * 100) : 0;
