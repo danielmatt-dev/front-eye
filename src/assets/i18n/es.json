@@ -9,6 +9,7 @@
         "emailPlaceholder": "ejemplo@correo.com",
         "passwordLabel": "Contraseña",
         "passwordPlaceholder": "Ingresa tu contraseña",
+        "resetPasswordPlaceholder": "Mínimo 8 caracteres",
         "rememberMe": "Recordarme",
         "forgotPassword": "¿Olvidaste tu contraseña?",
         "signIn": "Iniciar sesión"
@@ -31,7 +32,8 @@
         "inspectionData": "Datos de la inspección",
         "additionalData": "Datos adicionales (Opcional)",
         "occurrenceProbability": "Probabilidad de Ocurrencia (IA)",
-        "completedInspections": "Inspecciones realizadas"
+        "completedInspections": "Inspecciones realizadas",
+        "resetPassword": "Restablecer contraseña"
     },
     "subtitles": {
         "byPeriod": {
@@ -52,11 +54,15 @@
             "under30": "Menos de 30",
             "from30to45": "De 30 a 45",
             "over45": "Más de 45"
-        }
+        },
+        "validateEmailInstructions": "Ingrese su correo y presione Validar correo",
+        "resetPasswordInstructions": "Ingrese una nueva contraseña",
+        "backLogin": "Volver a inicio de sesión"
     },
     "labels": {
         "email": "Correo electrónico",
         "password": "Contraseña",
+        "confirmPassword": "Confirmar contraseña",
         "key": "Clave",
         "name": "Nombre",
         "lastname": "Apellidos",
@@ -91,6 +97,7 @@
     "placeholders": {
         "email": "ejemplo@correo.com",
         "password": "Ingresa tu contraseña",
+        "confirmPassword": "Repita su contraseña",
         "name": "Juan",
         "fatherLastName": "García",
         "motherLastName": "Pérez",
@@ -124,7 +131,9 @@
         "upload": "Subir",
         "choose": "Cargar",
         "inspect": "Inspeccionar",
-        "update": "Actualizar"
+        "update": "Actualizar",
+        "validateEmail": "Validar correo",
+        "resetPassword": "Reestablecer contraseña"
     },
     "toast": {
         "success": {
@@ -137,7 +146,9 @@
                 "updatePatient": "Datos actualizados",
                 "deletePatient": "Eliminación exitosa",
                 "deletePatients": "Eliminación exitosa",
-                "createInspection": "Inspección completada"
+                "createInspection": "Inspección completada",
+                "emailValidationSuccess": "Correo validado",
+                "passwordResetSuccess": "Contraseña restablecida"
             },
             "messages": {
                 "createDoctor": "Doctor @ registrado exitosamente",
@@ -148,7 +159,9 @@
                 "updatePatient": "Los datos del paciente @ se actualizaron con éxito",
                 "deletePatient": "El paciente @ ha sido eliminado correctamente",
                 "deletePatients": "Se eliminaron @ pacientes exitosamente",
-                "createInspection": "La inspección se ha registrado exitosamente"
+                "createInspection": "La inspección se ha registrado exitosamente",
+                "emailValidationSuccess": "Tu correo ha sido validado con éxito",
+                "passwordResetSuccess": "Ahora proceda a iniciar sesión con sus nuevas credenciales"
             }
         },
         "warn": {
@@ -250,7 +263,8 @@
             "forbidden": "Acceso denegado",
             "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo.",
             "login": "Sesión expirada",
-            "emailAlredyRegistered": "Intenta con otro"
+            "emailAlredyRegistered": "Intenta con otro",
+            "emailNotRegistered": "Correo no registrado"
         },
         "messages": {
             "network": "No se pudo conectar con el servidor. Por favor intenta más tarde.",
@@ -262,7 +276,8 @@
             "forbidden": "No tienes permisos para realizar esta acción.",
             "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo.",
             "login": "Por favor, vuelve a iniciar sesión para continuar",
-            "emailAlredyRegistered": "El correo electrónico ya está registrado"
+            "emailAlredyRegistered": "El correo electrónico ya está registrado",
+            "emailNotRegistered": "Asegúrese de que el correo ingresado sea correcto o que tenga una cuenta registrada"
         }
     },
     "confirmations": {
@@ -287,11 +302,12 @@
         "email": "Formato de correo electrónico incorrecto",
         "birthDateAdult": "Debe ser mayor de edad",
         "selectionImageRequired": "Por favor, selecciona una imagen para continuar",
-        "passwordRequired": "La contraseña es obligatoria.",
-        "passwordMinLength": "Debe tener al menos 8 caracteres.",
-        "passwordLowercase": "Debe incluir al menos una letra minúscula.",
-        "passwordUppercase": "Debe incluir al menos una letra mayúscula.",
-        "passwordDigit": "Debe incluir al menos un número."
+        "passwordRequired": "La contraseña es obligatoria",
+        "passwordMinLength": "Debe tener al menos 8 caracteres",
+        "passwordLowercase": "Debe incluir al menos una letra minúscula",
+        "passwordUppercase": "Debe incluir al menos una letra mayúscula",
+        "passwordDigit": "Debe incluir al menos un número",
+        "passwordsNotMatch": "Las contraseñas no coinciden. Por favor, verifica que sean iguales"
     },
     "accessDenied": {
         "title": "Acceso denegado",
