@@ -7,17 +7,14 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PrimeNG } from 'primeng/config';
-import { inspectionResponseMocks } from '../../../../shared/utils/mocks';
-import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
+import { inspectionResponseMocks, resultados } from '../../../../shared/utils/mocks';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
-import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-consulta/opciones-consulta-helper';
 import { Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { GetAllInspections } from '../../domain/use_cases/getAllInspections';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { InspectionResponseEntity } from '../../domain/entity/inspection.response.entity';
-import { FilterService } from '../../../../shared/services/filter.service';
 import { DatePipe, NgIf } from '@angular/common';
 import {
     BaseValidatorHelper
@@ -33,11 +30,13 @@ import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate
 import { InspectionReportPdf } from '../../../report/domain/template-method/pdf/impl/inspection.report.pdf';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { InspectionReportExcel } from '../../../report/domain/template-method/excel/impl/inspection.report.excel';
+import { DatePicker } from 'primeng/datepicker';
+import { Select } from 'primeng/select';
 
 @Component({
     standalone: true,
     selector: 'app-todas-inspecciones',
-    imports: [Button, InputText, PrimeTemplate, TableModule, FormsModule, DialogModule, TranslatePipe, OpcionesConsultaComponent, IconField, InputIcon, ToastModule, DatePipe, NgIf, Fluid, UIChart],
+    imports: [Button, InputText, PrimeTemplate, TableModule, FormsModule, DialogModule, TranslatePipe, IconField, InputIcon, ToastModule, DatePipe, NgIf, Fluid, UIChart, DatePicker, Select],
     providers: [MessageService],
     templateUrl: './todas-inspecciones.component.html',
     styleUrl: './todas-inspecciones.component.scss'
@@ -52,7 +51,6 @@ export class TodasInspeccionesComponent implements OnInit {
 
     /* Variables para opciones de consulta */
     selectedDates: Date[] = [];
-    selectedPeriod = '';
 
     /* Lista de inspecciones y filtrado */
     allInspections: InspectionResponseEntity[] = inspectionResponseMocks;
@@ -64,7 +62,6 @@ export class TodasInspeccionesComponent implements OnInit {
     labelInspections = 'inspecciones';
 
     /* Providers */
-    opcionesConsultaHelper: OpcionesConsultaHelper;
     validationHelper: BaseValidatorHelper;
 
     /* Variables de las gráficas */
@@ -81,9 +78,13 @@ export class TodasInspeccionesComponent implements OnInit {
     pieOptions: any;
 
     /* Lista de datos */
-    ageRanges = ageRanges
-    genders = genders
-    diseases: string[] = []
+    ageRanges = ageRanges;
+    genders = genders;
+    diseases: string[] = [];
+    selectedDisease = 'Todas';
+
+    results = resultados;
+    selectedResult = 'Todos';
 
     constructor(
         private readonly primeng: PrimeNG,
@@ -92,10 +93,8 @@ export class TodasInspeccionesComponent implements OnInit {
         private readonly router: Router,
         private readonly local: LocalStorageService,
         private readonly generateReport: GenerateReportImpl,
-        private readonly getAllInspection: GetAllInspections,
-        private readonly filterService: FilterService
+        private readonly getAllInspection: GetAllInspections
     ) {
-        this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
         this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
     }
 
@@ -112,7 +111,7 @@ export class TodasInspeccionesComponent implements OnInit {
 
         await this.callGetAllInspections();
         if (!this.isDoctor) {
-            this.initCharts()
+            this.initCharts();
         }
     }
 
@@ -128,9 +127,10 @@ export class TodasInspeccionesComponent implements OnInit {
 
         if (resultGetAllInspections._tag === 'Right') {
             //this.allInspections = resultGetAllInspections.right;
-            this.diseases = resultGetAllInspections.right.diseases.map(disease => disease.name)
+            this.diseases = resultGetAllInspections.right.diseases.map((disease) => disease.name);
             this.filterInspections();
         }
+        this.diseases.push('Todas');
     }
 
     /* Funciones de gráficas */
@@ -140,9 +140,7 @@ export class TodasInspeccionesComponent implements OnInit {
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-        const charDataInspectionsAll = new InspectionsFilterContext(new AllFilter()).apply(this.allInspections);
-
-        this.barData = this.groupByAgeRange()
+        this.barData = this.groupByAgeRange();
 
         this.barOptions = {
             maintainAspectRatio: false,
@@ -180,7 +178,7 @@ export class TodasInspeccionesComponent implements OnInit {
             }
         };
 
-        this.pieData = this.groupByGender()
+        this.pieData = this.groupByGender();
 
         this.pieOptions = {
             responsive: true,
@@ -196,7 +194,7 @@ export class TodasInspeccionesComponent implements OnInit {
             }
         };
 
-        this.lineData = charDataInspectionsAll
+        this.lineData = new InspectionsFilterContext(new AllFilter()).apply(this.filteredInspections);
 
         this.lineOptions = {
             maintainAspectRatio: false,
@@ -232,11 +230,10 @@ export class TodasInspeccionesComponent implements OnInit {
     }
 
     groupByAgeRange(): ChartData {
-
         // Inicializar contadores para cada combo rango + afección
         const dataMap: Record<string, number> = {};
         this.ageRanges.forEach((range) => {
-            dataMap[range] = 0
+            dataMap[range] = 0;
         });
 
         function getRangoEdad(edad: number): string {
@@ -245,36 +242,35 @@ export class TodasInspeccionesComponent implements OnInit {
             else return 'Más de 45';
         }
 
-        this.allInspections.forEach((inspection => {
-            const age = inspection.patientAge
-            dataMap[getRangoEdad(age)]++
-        }))
+        this.filteredInspections.forEach((inspection) => {
+            const age = inspection.patientAge;
+            dataMap[getRangoEdad(age)]++;
+        });
 
         return {
             labels: ageRanges,
             datasets: [
                 {
                     label: this.validationHelper.getText('titles.distribution.byAgeRange'),
-                    backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'],  // Colores fijos
-                    borderColor: ['#1E88E5', '#43A047', '#FB8C00'],      // Bordes fijos
-                    data: this.ageRanges.map(range => dataMap[range])
+                    backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'], // Colores fijos
+                    borderColor: ['#1E88E5', '#43A047', '#FB8C00'], // Bordes fijos
+                    data: this.ageRanges.map((range) => dataMap[range])
                 }
             ]
-        }
+        };
     }
 
     groupByGender(): ChartData {
-
         const dataMap: Record<string, number> = {};
         this.genders.forEach((gender) => {
-            dataMap[gender] = 0
+            dataMap[gender] = 0;
         });
 
-        this.allInspections.forEach(inspection => {
+        this.filteredInspections.forEach((inspection) => {
             if (genders.includes(inspection.patientGender)) {
-                dataMap[inspection.patientGender]++
+                dataMap[inspection.patientGender]++;
             }
-        })
+        });
 
         return {
             labels: genders,
@@ -283,29 +279,56 @@ export class TodasInspeccionesComponent implements OnInit {
                     label: this.validationHelper.getText('titles.distribution.byGender'),
                     backgroundColor: ['#42A5F5', '#FF6384'],
                     borderColor: ['#1E88E5', '#FF6384'],
-                    data: this.genders.map(gender => dataMap[gender])
+                    data: this.genders.map((gender) => dataMap[gender])
                 }
             ]
-        }
+        };
     }
 
     /* Filtrado de lista de doctores */
     filterInspections() {
-        if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.selectedPeriod, this.selectedDates)) {
-            return;
+        // || <>
+
+        this.filteredInspections = this.allInspections.filter((inspection) => {
+
+            const diseaseFilter = this.selectedDisease === 'Todas' || inspection.disease === this.selectedDisease;
+
+            const resultFilter = this.selectedResult === 'Todos' || inspection.result === this.selectedResult;
+
+            const dateFilter = this.isDateInRange(inspection.inspectionDate)
+
+            return diseaseFilter && resultFilter && dateFilter;
+        });
+
+        this.barData = this.groupByAgeRange();
+        this.pieData = this.groupByGender();
+        this.lineData = new InspectionsFilterContext(new AllFilter()).apply(this.filteredInspections);
+    }
+
+    private isDateInRange(date: Date): boolean {
+
+        if (this.selectedDates === null || this.selectedDates.length === 0) {
+            return true
         }
 
-        this.filteredInspections = this.filterService.filterByPeriodo(this.allInspections, (ins) => ins.inspectionDate, this.selectedPeriod, this.selectedDates);
+        if (this.selectedDates[1] === null) {
+            const selectedDate = this.selectedDates[0]
+            return (date.getDay() === selectedDate.getDay() &&
+                date.getMonth() === selectedDate.getMonth() &&
+                date.getFullYear() === selectedDate.getFullYear())
+        }
+
+        return (date >= this.selectedDates[0] && date <= this.selectedDates[1])
     }
 
     /* Exportar tabla */
     exportPDF() {
-        const params = new ReportFactoryParams({ name: 'Inspecciones', user: 'Daniel Matt' })
-        this.generateReport.generatePDF(params, new InspectionReportPdf({ inspections: this.allInspections }))
+        const params = new ReportFactoryParams({ name: 'Inspecciones', user: 'Daniel Matt' });
+        this.generateReport.generatePDF(params, new InspectionReportPdf({ inspections: this.filteredInspections }));
     }
 
     async exportExcel() {
-        await this.generateReport.generateExcel(new InspectionReportExcel({ inspections: this.allInspections }))
+        await this.generateReport.generateExcel(new InspectionReportExcel({ inspections: this.filteredInspections }));
     }
 
     /* Funciones de navegación hacia otras pantallas */
@@ -323,14 +346,6 @@ export class TodasInspeccionesComponent implements OnInit {
     }
 
     /*  Funciones de iteración con html */
-    onPeriodSelected(periodo: string) {
-        this.selectedPeriod = periodo;
-    }
-
-    onDateRangeSelected(fechas: Date[]) {
-        this.selectedDates = fechas;
-    }
-
     clear(table: Table) {
         table.clear();
         this.filter.nativeElement.value = '';
@@ -347,4 +362,5 @@ export class TodasInspeccionesComponent implements OnInit {
     onKeyUp(event: KeyboardEvent) {
         console.log('Key Up:', event.key);
     }
+
 }

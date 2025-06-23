@@ -1,12 +1,50 @@
 <p-toast/>
 
 <!-- Opciones de consulta -->
-<div class="mb-8">
-    <app-opciones-consulta
-        (periodoSeleccionado)="onPeriodSelected($event)"
-        (rangoFechasSeleccionado)="onDateRangeSelected($event)"
-        (consultar)="filterInspections()"
-    />
+<div class="flex flex-col gap-8 mb-8">
+    <div class="card p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="flex flex-col gap-2 w-full">
+                <label for="1" class="font-bold">{{ 'labels.conditions' | translate }}</label>
+                <p-select
+                    id="1"
+                    [(ngModel)]="selectedDisease"
+                    [options]="diseases"
+                    class="w-full"
+                ></p-select>
+            </div>
+            <div class="flex flex-col gap-2 w-full">
+                <label for="2" class="font-bold">{{ 'labels.results' | translate }}</label>
+                <p-select
+                    id="2"
+                    [(ngModel)]="selectedResult"
+                    [options]="results"
+                    class="w-full"
+                ></p-select>
+            </div>
+            <div class="flex flex-col gap-2 w-full">
+                <label for="dateRange2" class="font-bold">{{ 'labels.dateRange' | translate }}</label>
+                <p-date-picker
+                    id="dateRange2"
+                    showIcon="true"
+                    readonlyInput
+                    [showButtonBar]="true"
+                    [(ngModel)]="selectedDates"
+                    selectionMode="range"
+                    placeholder="{{ 'placeholders.dateRange' | translate }}"
+                    class="w-full"
+                    [style]="{ width: '100%' }"
+                ></p-date-picker>
+            </div>
+            <div class="flex flex-col justify-end">
+                <p-button
+                    class="w-full md:w-auto"
+                    label="{{ 'buttons.consult' | translate }}"
+                    (onClick)="filterInspections()"
+                />
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Tabla de inspecciones -->
