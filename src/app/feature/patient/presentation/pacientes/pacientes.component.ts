@@ -36,6 +36,7 @@ import { ReportFactoryParams } from '../../../report/domain/factory/generate.rep
 import { PatientReportPdf } from '../../../report/domain/template-method/pdf/impl/patient.report.pdf';
 import { PatientReportExcel } from '../../../report/domain/template-method/excel/impl/patient.report.excel';
 import { BadRequestException } from '../../../../shared/exceptions/exceptions';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     standalone: true,
@@ -114,6 +115,7 @@ export class PacientesComponent implements OnInit {
         private readonly confirmationService: ConfirmationService,
         private readonly messageService: MessageService,
         private readonly router: Router,
+        private readonly local: LocalStorageService,
         private readonly createPatient: CreatePatient,
         private readonly getAllPatients: GetAllPatients,
         private readonly updatePatient: UpdatePatient,
@@ -342,12 +344,12 @@ export class PacientesComponent implements OnInit {
 
     /* Exportar datos */
     exportPDF() {
-        const params = new ReportFactoryParams({ name: 'Pacientes', user: 'Daniel Matt' })
-        this.generateReport.generatePDF(params, new PatientReportPdf({ patients: this.allPatients }))
+        const params = new ReportFactoryParams({ name: 'Pacientes', user: this.local.getUsername() })
+        this.generateReport.generatePDF(params, new PatientReportPdf({ patients: this.filteredPatients }))
     }
 
     async exportExcel() {
-        await this.generateReport.generateExcel(new PatientReportExcel({ patients: this.allPatients }))
+        await this.generateReport.generateExcel(new PatientReportExcel({ patients: this.filteredPatients }))
     }
 
     /* Funciones de validación del formulario del Patient */

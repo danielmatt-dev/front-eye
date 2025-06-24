@@ -20,7 +20,7 @@ export class InspectionReportPdf extends AbstractReportPdf {
 
     protected override getBody(): RowInput[] {
         return this.inspections.map(inspection => [
-            inspection.inspectionId.toLocaleString(),
+            inspection.inspectionId.toString(),
             formatDateToDDMMYYYY(inspection.inspectionDate),
             inspection.inspectionTime,
             `${inspection.patientAge} años`,

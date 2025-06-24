@@ -323,7 +323,7 @@ export class TodasInspeccionesComponent implements OnInit {
 
     /* Exportar tabla */
     exportPDF() {
-        const params = new ReportFactoryParams({ name: 'Inspecciones', user: 'Daniel Matt' });
+        const params = new ReportFactoryParams({ name: 'Inspecciones', user: this.local.getUsername() });
         this.generateReport.generatePDF(params, new InspectionReportPdf({ inspections: this.filteredInspections }));
     }
 

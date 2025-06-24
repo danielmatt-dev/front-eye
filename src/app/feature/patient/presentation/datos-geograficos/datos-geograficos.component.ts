@@ -23,6 +23,7 @@ import { GeographicDataReportPdf } from '../../../report/domain/template-method/
 import {
     GeographicDataReportExcel
 } from '../../../report/domain/template-method/excel/impl/geographic-data.report.excel';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     selector: 'app-datos-geograficos',
@@ -98,6 +99,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         private readonly primeng: PrimeNG,
         private readonly translateService: TranslateService,
         private readonly messageService: MessageService,
+        private readonly local: LocalStorageService,
         private readonly filterService: FilterService,
         private readonly generateReport: GenerateReportImpl,
         private readonly getAllPatientsWithInspections: GetAllPatientsWithInspections
@@ -287,12 +289,12 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     /* Exportar datos */
     exportPDF() {
-        const params = new ReportFactoryParams({ name: 'Datos geográficos', user: 'Daniel Matt' });
-        this.generateReport.generatePDF(params, new GeographicDataReportPdf({ patients: this.allPatientsCoordinates }));
+        const params = new ReportFactoryParams({ name: 'Datos geográficos', user: this.local.getUsername() });
+        this.generateReport.generatePDF(params, new GeographicDataReportPdf({ patients: this.filteredPatientsCoordinates }));
     }
 
     async exportExcel() {
-        await this.generateReport.generateExcel(new GeographicDataReportExcel({ patients: this.allPatientsCoordinates }));
+        await this.generateReport.generateExcel(new GeographicDataReportExcel({ patients: this.filteredPatientsCoordinates }));
     }
 
     /* Funciones de selección para las opciones de consulta */

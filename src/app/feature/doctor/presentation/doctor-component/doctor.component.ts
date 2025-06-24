@@ -33,6 +33,7 @@ import { ReportFactoryParams } from '../../../report/domain/factory/generate.rep
 import { DoctorReportPdf } from '../../../report/domain/template-method/pdf/impl/doctor.report.pdf';
 import { DoctorReportExcel } from '../../../report/domain/template-method/excel/impl/doctor.report.excel';
 import { BadRequestException } from '../../../../shared/exceptions/exceptions';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     standalone: true,
@@ -112,6 +113,7 @@ export class DoctorComponent implements OnInit {
         private readonly translateService: TranslateService,
         private readonly confirmationService: ConfirmationService,
         private readonly messageService: MessageService,
+        private readonly local: LocalStorageService,
         private readonly createDoctor: CreateDoctor,
         private readonly getAllDoctors: GetAllDoctors,
         private readonly updateDoctor: UpdateDoctor,
@@ -355,7 +357,7 @@ export class DoctorComponent implements OnInit {
 
     /* Exportar datos */
     exportPDF() {
-        const params = new ReportFactoryParams({ name: 'Doctores', user: 'Daniel Matt' })
+        const params = new ReportFactoryParams({ name: 'Doctores', user: this.local.getUsername() })
         this.generateReport.generatePDF(params, new DoctorReportPdf({ doctors: this.filteredDoctors }));
     }
 
