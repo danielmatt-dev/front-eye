@@ -17,12 +17,14 @@ import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-compone
 import { PrimeNG } from 'primeng/config';
 import { InspectionResponseEntity } from '../../domain/entity/inspection.response.entity';
 import { PatientResponseEntity } from '../../../patient/domain/entity/patient.response.entity';
-import { InspectionImageEntity } from '../../domain/entity/inspection.details.entity';
+import { InspectionDetailsEntity, InspectionImageEntity } from '../../domain/entity/inspection.details.entity';
 import { DiagnosticProbabilityEntity } from '../../domain/entity/inspection.request.entity';
 import { colorByResult, formatDateToSpanishMexico } from '../../../../shared/utils/functions/functions';
 import { CommonModule } from '@angular/common';
 import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
 import { SkeletonModule } from 'primeng/skeleton';
+import { InspectionDetailsPdf } from '../../../report/domain/template-method/pdf/inspection-details.pdf';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     selector: 'app-ver-detalle-inspeccion',
@@ -57,6 +59,8 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
     // Id de la inspección
     inspectionId?: number;
 
+    details?: InspectionDetailsEntity;
+
     // Variables de la inspeción
     inspection?: InspectionResponseEntity;
 
@@ -87,7 +91,9 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
         private readonly primeNg: PrimeNG,
         @Inject(PLATFORM_ID) private platformId: any,
         private readonly cd: ChangeDetectorRef,
+        private readonly local: LocalStorageService,
         private readonly route: ActivatedRoute,
+        private readonly inspectionDetailsPdf: InspectionDetailsPdf,
         private readonly getInspectionById: GetInspectionById
     ) {
         this.validatorHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeNg);
@@ -102,6 +108,7 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
             this.inspectionId = idParam !== null ? Number(idParam) : undefined;
         });
 
+        this.details = exampleInspectionDetails
         this.inspection = exampleInspectionDetails.inspection;
         this.patient = exampleInspectionDetails.patient;
         this.imagesResponse = exampleInspectionDetails.images;
@@ -129,6 +136,7 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
 
         if (resultGetInspectionById._tag === 'Right') {
             const details = resultGetInspectionById.right;
+            this.details = details
             this.inspection = details.inspection;
             this.patient = details.patient;
             this.imagesResponse = details.images;
@@ -219,12 +227,13 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
         window.history.back();
     }
 
-    download() {
-        this.messageService.add({
-            severity: 'info',
-            summary: 'Funcionalidad en Desarrollo',
-            detail: 'Esta característica aún está en desarrollo.'
-        });
+    exportPDF() {
+
+        if (!this.details) {
+            return
+        }
+
+        this.inspectionDetailsPdf.generate(this.details)
     }
 
     protected readonly formatDateToSpanishMexico = formatDateToSpanishMexico;
