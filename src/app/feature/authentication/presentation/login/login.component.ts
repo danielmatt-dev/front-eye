@@ -16,6 +16,7 @@ import { PrimeNG } from 'primeng/config';
 import { NgClass, NgIf } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { RoleRedirectService } from '../../../../shared/services/role.redirect.service';
+import { SendMessage } from '../../../../shared/toast/send.message';
 
 @Component({
     selector: 'app-login',
@@ -47,7 +48,7 @@ export class LoginComponent {
         private readonly roleRedirect: RoleRedirectService,
         private readonly login: LoginUser
     ) {
-        this.validator = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validator = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
     }
 
     // Llamada a casos de uso

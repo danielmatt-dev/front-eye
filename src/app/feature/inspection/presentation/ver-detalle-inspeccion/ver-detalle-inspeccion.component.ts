@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
 import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
 import { SkeletonModule } from 'primeng/skeleton';
 import { InspectionDetailsPdf } from '../../../report/domain/template-method/pdf/inspection-details.pdf';
-import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { SendMessage } from '../../../../shared/toast/send.message';
 
 @Component({
     selector: 'app-ver-detalle-inspeccion',
@@ -91,12 +91,11 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
         private readonly primeNg: PrimeNG,
         @Inject(PLATFORM_ID) private platformId: any,
         private readonly cd: ChangeDetectorRef,
-        private readonly local: LocalStorageService,
         private readonly route: ActivatedRoute,
         private readonly inspectionDetailsPdf: InspectionDetailsPdf,
         private readonly getInspectionById: GetInspectionById
     ) {
-        this.validatorHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeNg);
+        this.validatorHelper = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeNg);
         this.localeTextProvider = LocaleTextProvider.getInstance(this.translateService, this.primeNg);
     }
 

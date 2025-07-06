@@ -1,6 +1,5 @@
 import { SendMessage } from '../toast/send.message';
 import { LocaleTextProvider } from '../locale.text.provider';
-import { MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimeNG } from 'primeng/config';
 import {
@@ -15,12 +14,12 @@ export abstract class ValidatorHelper {
     protected localeTextProvider: LocaleTextProvider;
     protected validationsKey = 'validations.'
 
-    protected constructor(
-        messageService: MessageService,
+    constructor(
+        sendMessage: SendMessage,
         translateService: TranslateService,
         primeng: PrimeNG
     ) {
-        this.sendMessage = SendMessage.getInstance(messageService);
+        this.sendMessage = sendMessage
         this.localeTextProvider = LocaleTextProvider.getInstance(translateService, primeng);
     }
 

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
 import { Button } from 'primeng/button';
-import { Checkbox } from 'primeng/checkbox';
 import { InputText } from 'primeng/inputtext';
 import { NgClass, NgIf } from '@angular/common';
 import { Password } from 'primeng/password';
@@ -16,11 +15,12 @@ import { ResetPassword, ResetPasswordParams } from '../../domain/use_cases/reset
 import { UserEntity } from '../../domain/entity/user.entity';
 import { ResourceNotFoundException } from '../../../../shared/exceptions/exceptions';
 import { RouterLink } from '@angular/router';
+import { SendMessage } from '../../../../shared/toast/send.message';
 
 @Component({
     selector: 'app-reset-password',
     standalone: true,
-    imports: [AppFloatingConfigurator, Button, Checkbox, InputText, NgIf, Password, ReactiveFormsModule, Toast, TranslatePipe, NgClass, FormsModule, RouterLink],
+    imports: [AppFloatingConfigurator, Button, InputText, NgIf, Password, ReactiveFormsModule, Toast, TranslatePipe, NgClass, FormsModule, RouterLink],
     providers: [MessageService],
     templateUrl: './reset-password.component.html',
     styleUrl: './reset-password.component.scss'
@@ -53,7 +53,7 @@ export class ResetPasswordComponent {
         private readonly validateEmail: ValidateEmail,
         private readonly resetPassword: ResetPassword
     ) {
-        this.validator = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validator = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
     }
 
     /* Llamas a casos de uso */
@@ -148,5 +148,5 @@ export class ResetPasswordComponent {
 
         this.isEnabledEmail = true;
     }
-    
+
 }

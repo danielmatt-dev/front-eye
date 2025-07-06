@@ -37,6 +37,7 @@ import { PatientReportPdf } from '../../../report/domain/template-method/pdf/imp
 import { PatientReportExcel } from '../../../report/domain/template-method/excel/impl/patient.report.excel';
 import { BadRequestException } from '../../../../shared/exceptions/exceptions';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { SendMessage } from '../../../../shared/toast/send.message';
 
 @Component({
     standalone: true,
@@ -123,8 +124,8 @@ export class PacientesComponent implements OnInit {
         private readonly filterService: FilterService,
         private readonly generateReport: GenerateReportImpl,
     ) {
-        this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
-        this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.opcionesConsultaHelper = new OpcionesConsultaHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
+        this.validationHelper = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
     }
 
     async ngOnInit() {

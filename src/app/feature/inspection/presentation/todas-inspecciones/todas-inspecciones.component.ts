@@ -32,6 +32,7 @@ import { ReportFactoryParams } from '../../../report/domain/factory/generate.rep
 import { InspectionReportExcel } from '../../../report/domain/template-method/excel/impl/inspection.report.excel';
 import { DatePicker } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
+import { SendMessage } from '../../../../shared/toast/send.message';
 
 @Component({
     standalone: true,
@@ -95,7 +96,7 @@ export class TodasInspeccionesComponent implements OnInit {
         private readonly generateReport: GenerateReportImpl,
         private readonly getAllInspection: GetAllInspections
     ) {
-        this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validationHelper = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
     }
 
     async ngOnInit() {

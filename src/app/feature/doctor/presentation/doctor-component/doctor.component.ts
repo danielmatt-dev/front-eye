@@ -34,6 +34,7 @@ import { DoctorReportPdf } from '../../../report/domain/template-method/pdf/impl
 import { DoctorReportExcel } from '../../../report/domain/template-method/excel/impl/doctor.report.excel';
 import { BadRequestException } from '../../../../shared/exceptions/exceptions';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { SendMessage } from '../../../../shared/toast/send.message';
 
 @Component({
     standalone: true,
@@ -122,8 +123,9 @@ export class DoctorComponent implements OnInit {
         private readonly filterService: FilterService,
         private readonly generateReport: GenerateReportImpl,
     ) {
-        this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
-        this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        const sendMessage = new SendMessage(this.messageService)
+        this.opcionesConsultaHelper = new OpcionesConsultaHelper(sendMessage, this.translateService, this.primeng);
+        this.validationHelper = new BaseValidatorHelper(sendMessage, this.translateService, this.primeng);
     }
 
     async ngOnInit() {

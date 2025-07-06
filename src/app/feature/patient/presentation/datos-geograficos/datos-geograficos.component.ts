@@ -24,6 +24,7 @@ import {
     GeographicDataReportExcel
 } from '../../../report/domain/template-method/excel/impl/geographic-data.report.excel';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { SendMessage } from '../../../../shared/toast/send.message';
 
 @Component({
     selector: 'app-datos-geograficos',
@@ -104,8 +105,8 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         private readonly generateReport: GenerateReportImpl,
         private readonly getAllPatientsWithInspections: GetAllPatientsWithInspections
     ) {
-        this.opcionesConsultaHelper = OpcionesConsultaHelper.getInstance(this.messageService, this.translateService, this.primeng);
-        this.validationHelper = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.opcionesConsultaHelper = new OpcionesConsultaHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
+        this.validationHelper = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
     }
 
     async ngOnInit() {

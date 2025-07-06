@@ -26,6 +26,7 @@ import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-compone
 import { Select } from 'primeng/select';
 import { NgForOf, NgIf } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
+import { SendMessage } from '../../../../shared/toast/send.message';
 
 @Component({
     selector: 'app-dashboard',
@@ -98,7 +99,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private readonly primeng: PrimeNG,
         private readonly getAllInpections: GetAllInspections
     ) {
-        this.validator = BaseValidatorHelper.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validator = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
     }
 
     async ngOnInit() {

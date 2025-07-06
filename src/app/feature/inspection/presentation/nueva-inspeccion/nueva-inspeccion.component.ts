@@ -28,6 +28,7 @@ import { InspectionRequestEntity } from '../../domain/entity/inspection.request.
 import { DiseaseEntity } from '../../../disease/domain/entity/disease.entity';
 import { AiModelEntity } from '../../../aimodel/domain/entity/aimodel.entity';
 import { GetNewInspectionData } from '../../domain/use_cases/getNewInspectionData';
+import { SendMessage } from '../../../../shared/toast/send.message';
 
 @Component({
     selector: 'app-nueva-inspeccion',
@@ -105,7 +106,7 @@ export class NuevaInspeccionComponent implements OnInit {
         private readonly getAllData: GetNewInspectionData,
         private readonly createInspection: CreateInspection
     ) {
-        this.validator = NewInspectionValidator.getInstance(this.messageService, this.translateService, this.primeng);
+        this.validator = new NewInspectionValidator(new SendMessage(this.messageService), this.translateService, this.primeng);
     }
 
     async ngOnInit() {

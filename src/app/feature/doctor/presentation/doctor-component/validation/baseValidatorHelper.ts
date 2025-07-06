@@ -1,26 +1,8 @@
 import { ValidatorHelper } from '../../../../../shared/utils/validator.helper';
-import { MessageService } from 'primeng/api';
-import { TranslateService } from '@ngx-translate/core';
-import { PrimeNG } from 'primeng/config';
 import { ClinicEntity } from '../../../../clinic/domain/entity/clinic.entity';
 import validator from 'validator';
 
 export class BaseValidatorHelper extends ValidatorHelper {
-
-    private static instance: BaseValidatorHelper
-
-    static getInstance(
-        messageService: MessageService,
-        translateService: TranslateService,
-        primeng: PrimeNG
-    ): BaseValidatorHelper {
-
-        if (!BaseValidatorHelper.instance) {
-            BaseValidatorHelper.instance = new BaseValidatorHelper(messageService, translateService, primeng)
-        }
-
-        return BaseValidatorHelper.instance
-    }
 
     sendToastMessageSuccess(type: 'createDoctor' | 'updateDoctor' | 'deleteDoctor' | 'deleteDoctors' | 'createPatient' | 'updatePatient' | 'deletePatient' | 'deletePatients', param: string) {
         const title = this.getText(`toast.success.titles.${type}`)
