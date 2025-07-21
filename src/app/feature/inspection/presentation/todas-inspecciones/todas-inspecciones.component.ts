@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { PrimeNG } from 'primeng/config';
-import { inspectionResponseMocks, resultados } from '../../../../shared/utils/mocks';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { Router } from '@angular/router';
@@ -25,7 +24,7 @@ import { UIChart } from 'primeng/chart';
 import { InspectionsFilterContext } from '../../domain/filters/inspections.filter.context';
 import { AllFilter } from '../../domain/filters/inspections.filter';
 import { ChartData } from 'chart.js';
-import { ageRanges, genders } from '../../../../shared/utils/data';
+import { ageRanges, genders, results } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { InspectionReportPdf } from '../../../report/domain/template-method/pdf/impl/inspection.report.pdf';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
@@ -54,7 +53,7 @@ export class TodasInspeccionesComponent implements OnInit {
     selectedDates: Date[] = [];
 
     /* Lista de inspecciones y filtrado */
-    allInspections: InspectionResponseEntity[] = inspectionResponseMocks;
+    allInspections: InspectionResponseEntity[] = [];
     filteredInspections = this.allInspections;
     selectedInspections: InspectionResponseEntity[] = [];
 
@@ -84,7 +83,7 @@ export class TodasInspeccionesComponent implements OnInit {
     diseases: string[] = [];
     selectedDisease = 'Todas';
 
-    results = resultados;
+    results = [...results, 'Todos'];
     selectedResult = 'Todos';
 
     constructor(
@@ -127,7 +126,7 @@ export class TodasInspeccionesComponent implements OnInit {
         }
 
         if (resultGetAllInspections._tag === 'Right') {
-            //this.allInspections = resultGetAllInspections.right;
+            this.allInspections = resultGetAllInspections.right.inspections;
             this.diseases = resultGetAllInspections.right.diseases.map((disease) => disease.name);
             this.filterInspections();
         }
