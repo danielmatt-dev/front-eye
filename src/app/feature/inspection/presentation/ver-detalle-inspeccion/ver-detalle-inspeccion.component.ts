@@ -1,11 +1,10 @@
-import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Button } from 'primeng/button';
 import { ProgressBar } from 'primeng/progressbar';
 import { MessageService, PrimeTemplate } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { mapColors } from '../../../../core/theme/colors';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { exampleInspectionDetails, inspecciones } from '../../../../shared/utils/mocks';
 import { Image } from 'primeng/image';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,6 +24,7 @@ import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
 import { SkeletonModule } from 'primeng/skeleton';
 import { InspectionDetailsPdf } from '../../../report/domain/template-method/pdf/inspection-details.pdf';
 import { SendMessage } from '../../../../shared/toast/send.message';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     selector: 'app-ver-detalle-inspeccion',
@@ -35,7 +35,6 @@ import { SendMessage } from '../../../../shared/toast/send.message';
     styleUrl: './ver-detalle-inspeccion.component.scss'
 })
 export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
-    inspecciones = inspecciones.filter((ins) => ins.paciente === 'P001');
 
     showThumbnails: boolean | undefined;
 
@@ -66,6 +65,7 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
 
     // Variables del paciente
     patient?: PatientResponseEntity;
+    doctor = ''
 
     // Imágenes
     imagesResponse: InspectionImageEntity[] = [];
@@ -89,32 +89,26 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
         private readonly messageService: MessageService,
         private readonly translateService: TranslateService,
         private readonly primeNg: PrimeNG,
-        @Inject(PLATFORM_ID) private platformId: any,
         private readonly cd: ChangeDetectorRef,
         private readonly route: ActivatedRoute,
         private readonly inspectionDetailsPdf: InspectionDetailsPdf,
-        private readonly getInspectionById: GetInspectionById
+        private readonly getInspectionById: GetInspectionById,
+        private readonly local: LocalStorageService
     ) {
         this.validatorHelper = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeNg);
         this.localeTextProvider = LocaleTextProvider.getInstance(this.translateService, this.primeNg);
+        this.doctor = this.local.getUsername()
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.bindDocumentListeners();
 
         this.route.queryParamMap.subscribe((params) => {
-            const idParam = params.get('inspectionId');
+            const idParam = params.get('id');
             this.inspectionId = idParam !== null ? Number(idParam) : undefined;
         });
 
-        this.details = exampleInspectionDetails
-        this.inspection = exampleInspectionDetails.inspection;
-        this.patient = exampleInspectionDetails.patient;
-        this.imagesResponse = exampleInspectionDetails.images;
-        this.probabilities = exampleInspectionDetails.probabilities;
-        this.probabilities.sort((a, b) => b.probability - a.probability)
-        this.allInspections = exampleInspectionDetails.inspectionHistory;
-        this.colorResult = colorByResult(exampleInspectionDetails.inspection.result);
+        await this.callGetInspectionById()
     }
 
     ngOnDestroy() {
@@ -138,8 +132,8 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
             this.details = details
             this.inspection = details.inspection;
             this.patient = details.patient;
-            this.imagesResponse = details.images;
-            this.probabilities = details.probabilities;
+            this.imagesResponse = details.inspection.inspectionImages;
+            this.probabilities = details.inspection.diagnosticProbabilities;
             this.allInspections = details.inspectionHistory;
             this.colorResult = colorByResult(details.inspection.result);
         }

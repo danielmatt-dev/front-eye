@@ -29,7 +29,7 @@
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'doctor.singular' | translate }}:</div>
                     <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
-                    <div *ngIf="!isLoading" class="font-bold col-span-2">Jorge Ernesto Gonzalez Diaz</div>
+                    <div *ngIf="!isLoading" class="font-bold col-span-2">{{ doctor }}</div>
                 </div>
                 <div class="flex justify-end items-center gap-4">
                     <div class="font-semibold text-xl">{{ 'labels.result' | translate }}:</div>
@@ -38,7 +38,7 @@
                         *ngIf="!isLoading"
                         label="{{ inspection?.result }}"
                         disabled="true"
-                        [style]="{opacity: '3', background: colorResult, border: colorResult}"
+                        [style]="{opacity: '3', background: colorResult, border: colorResult, color: 'white'}"
                     ></p-button>
                 </div>
             </div>
@@ -76,7 +76,9 @@
                                         [color]="colorByResult(prob.resultCategory)"
                                         showValue="false">
                                         <ng-template pTemplate="value">
-                                            {{ prob.probability | percent:'1.0-0' }}
+                                            <div class="text-white">
+                                                {{ prob.probability | percent:'1.0-0' }}
+                                            </div>
                                         </ng-template>
                                     </p-progress-bar>
                                 </div>
@@ -126,7 +128,7 @@
             >
                 <ng-template pTemplate="item" let-item>
                     <p-image
-                        [src]="item.imageUrl"
+                        [src]="'data:image/jpeg;base64,' + item.imageUrl"
                         [preview]="true"
                         [ngStyle]="{ 'width': '45%', 'margin': '0 auto' }"
                         class="rounded-md"
