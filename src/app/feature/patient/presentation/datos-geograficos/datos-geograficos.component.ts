@@ -291,11 +291,11 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     /* Exportar datos */
     exportPDF() {
         const params = new ReportFactoryParams({ name: 'Datos geográficos', user: this.local.getUsername() });
-        this.generateReport.generatePDF(params, new GeographicDataReportPdf({ patients: this.filteredPatientsCoordinates }));
+        this.generateReport.generatePDF(params, new GeographicDataReportPdf({ patients: this.displayedPatients }));
     }
 
     async exportExcel() {
-        await this.generateReport.generateExcel(new GeographicDataReportExcel({ patients: this.filteredPatientsCoordinates }));
+        await this.generateReport.generateExcel(new GeographicDataReportExcel({ patients: this.displayedPatients }));
     }
 
     /* Funciones de selección para las opciones de consulta */
