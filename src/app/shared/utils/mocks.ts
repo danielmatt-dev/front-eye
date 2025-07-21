@@ -889,8 +889,10 @@ export const patientWithInspectionsMocks: PatientWithInspectionsModel[] =
     dataPointsMocks.map(dp => new PatientWithInspectionsModel({
         patientId:        Number(dp.id.replace(/^P/, '')),
         fullName:         dp.name,
-        age: 20,
-        gender: 'Masculino',
+        age: dp.resultado === 'Leve' ? 20 :
+            dp.resultado === 'Moderado' ? 40 :
+                55,
+        gender: dp.resultado === 'Leve' ? 'Femenino' : 'Masculino',
         latitude:         dp.lat,
         longitude:        dp.lng,
         patientCreatedAt: dp.fechaCreacion,
