@@ -6,8 +6,8 @@ import { LocalStorageService } from './local.storage.service';
 export class RoleRedirectService {
 
     constructor(
-        private router: Router,
-        private local: LocalStorageService
+        private readonly router: Router,
+        private readonly local: LocalStorageService
     ) {}
 
     async redirectByRole() {

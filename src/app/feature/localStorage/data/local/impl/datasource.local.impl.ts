@@ -16,23 +16,22 @@ export class DatasourceLocalImpl implements DatasourceLocal {
     }
 
     setRole(role: string) {
-        const encodedRole = btoa(role);
-        localStorage.setItem('role', encodedRole);
+        //const encodedRole = btoa(role);
+        localStorage.setItem('role', role);
     }
 
     getRole(): string | null {
-        const encodedRole = localStorage.getItem('role');
-        return encodedRole ? atob(encodedRole) : null;
+        return localStorage.getItem('role') ?? 'ADMIN';
     }
 
     setUsername(username: string): void {
-        const encodedUsername = btoa(username);
-        localStorage.setItem('username', encodedUsername);
+        //const encodedUsername = btoa(username);
+        localStorage.setItem('username', username);
     }
 
     getUsername(): string | null {
-        const encodedUsername = localStorage.getItem('username');
-        return encodedUsername ? atob(encodedUsername) : null;
+        return localStorage.getItem('username');
+        //return encodedUsername ? atob(encodedUsername) : null;
     }
 
     setExpiresAt(expiresAt: number): void {
