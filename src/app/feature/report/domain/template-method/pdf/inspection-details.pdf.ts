@@ -39,14 +39,7 @@ export class InspectionDetailsPdf {
         const now = new Date().toLocaleString();
 
         // Logo
-        this.doc.addImage(
-            '/assets/images/isotipo_primario.png',
-            'PNG',
-            15, // x
-            10, // y
-            15, // width
-            15 // height
-        );
+        this.doc.addImage('/assets/images/imagotipo_negativo.png', 'PNG', 15, 10, 80, 15);
 
         // Fecha a la derecha
         this.doc.setFontSize(10).setFont('helvetica', 'bold');

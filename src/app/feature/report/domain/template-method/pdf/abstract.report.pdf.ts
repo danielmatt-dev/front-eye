@@ -10,7 +10,7 @@ export abstract class AbstractReportPdf {
         const now = new Date().toLocaleString()
 
         // Logo
-        this.doc.addImage('/assets/images/isotipo_primario.png', 'PNG', 15, 10, 15, 15);
+        this.doc.addImage('/assets/images/imagotipo_negativo.png', 'PNG', 15, 10, 80, 15);
 
         // Fecha (alineado a la derecha y en negritas)
         this.doc.setFontSize(10);
