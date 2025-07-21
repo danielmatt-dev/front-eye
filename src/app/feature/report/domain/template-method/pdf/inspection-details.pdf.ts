@@ -87,7 +87,7 @@ export class InspectionDetailsPdf {
         this.doc.setFont('helvetica', 'bold');
         this.doc.text('Probabilidad de Ocurrencia (IA)', 14, startY + 10);
 
-        const { probabilities } = this.inspection;
+        const probabilities = this.inspection.inspection.diagnosticProbabilities;
 
         const headers = [['Resultados', 'Probabilidad (%)']];
         const body = probabilities.map((p) =>
@@ -102,7 +102,7 @@ export class InspectionDetailsPdf {
             styles: { fontSize: 10, cellPadding: 4 },
             didDrawCell: (data) => {
                 if (data.section === 'body' && data.column.index === 1) {
-                    const prob  = this.inspection.probabilities[data.row.index];
+                    const prob  = this.inspection.inspection.diagnosticProbabilities[data.row.index];
                     const raw   = prob.probability;
                     const pct   = `${Math.round(raw * 100)}%`;
                     const fullW = data.cell.width - 8;
@@ -137,7 +137,7 @@ export class InspectionDetailsPdf {
 
         let startY: number = (this.doc as any).lastAutoTable.finalY;
 
-        const { images } = this.inspection;
+        const images = this.inspection.inspection.inspectionImages;
 
         this.doc.setFontSize(10);
         this.doc.setFont('helvetica', 'bold');
