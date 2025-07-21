@@ -7,8 +7,11 @@ export class InspectionDetailsModel {
     @Type(() => InspectionResponseModel)
     inspection: InspectionResponseModel = new InspectionResponseModel()
 
+    @Type(() => PatientResponseModel)
     patient: PatientResponseModel = new PatientResponseModel()
 
+    @Expose({ name: 'inspection_history' })
+    @Type(() => InspectionResponseModel)
     inspectionHistory: InspectionResponseModel[] = []
 
     constructor(partial?: Partial<InspectionDetailsModel>) {
