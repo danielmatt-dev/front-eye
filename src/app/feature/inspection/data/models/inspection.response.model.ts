@@ -1,4 +1,6 @@
 import { Expose, Type } from 'class-transformer';
+import { DiagnosticProbabilityModel } from './inspection.request.model';
+import { InspectionImageModel } from './inspection.details.model';
 
 export class InspectionResponseModel {
 
@@ -15,6 +17,7 @@ export class InspectionResponseModel {
     @Expose({ name: 'patient_gender' })
     patientGender: string = ''
 
+    @Expose({ name: 'patient_age' })
     patientAge: number = 0
 
     @Expose({ name: 'inspection_date' })
@@ -34,8 +37,13 @@ export class InspectionResponseModel {
 
     notes: string = ''
 
-    @Expose({ name: 'created_at' })
-    createdAt: Date = new Date()
+    @Expose({ name: 'diagnostic_probabilities' })
+    @Type(() => DiagnosticProbabilityModel)
+    diagnosticProbabilities: DiagnosticProbabilityModel[] =  []
+
+    @Expose({ name: 'inspection_images' })
+    @Type(() => InspectionImageModel)
+    inspectionImages: InspectionImageModel[] = []
 
     constructor(partial?: Partial<InspectionResponseModel>) {
         Object.assign(this, partial)

@@ -1,4 +1,4 @@
-import { Expose, Type } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
 export class InspectionRequestModel {
 
@@ -11,14 +11,9 @@ export class InspectionRequestModel {
     @Expose({ name: 'model_id' })
     modelId: number = 0;
 
-    images: string[] = [];
+    image: string = '';
 
     eye: string = '';
-
-    result: string = '';
-
-    @Type(() => DiagnosticProbabilityModel)
-    probabilities: DiagnosticProbabilityModel[] = [];
 
     notes: string = '';
 

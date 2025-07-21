@@ -1,6 +1,5 @@
 import { InspectionResponseModel } from './inspection.response.model';
 import { Expose, Type } from 'class-transformer';
-import { DiagnosticProbabilityModel } from './inspection.request.model';
 import { PatientResponseModel } from '../../../patient/data/models/patient.response.model';
 
 export class InspectionDetailsModel {
@@ -9,10 +8,6 @@ export class InspectionDetailsModel {
     inspection: InspectionResponseModel = new InspectionResponseModel()
 
     patient: PatientResponseModel = new PatientResponseModel()
-
-    images: InspectionImageModel[] = []
-
-    probabilities: DiagnosticProbabilityModel[] = []
 
     inspectionHistory: InspectionResponseModel[] = []
 
