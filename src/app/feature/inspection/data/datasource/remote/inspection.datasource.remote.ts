@@ -3,10 +3,11 @@ import { InspectionRequestModel } from '../../models/inspection.request.model';
 import { InspectionDetailsModel } from '../../models/inspection.details.model';
 import { NewInspectionDataModel } from '../../models/new.inspection.data.model';
 import { InspectionsWithDiseasesModel } from '../../models/inspections-with-diseases.model';
+import { InspectionResponseModel } from '../../models/inspection.response.model';
 
 export interface InspectionDatasourceRemote {
 
-    postInspection(request: InspectionRequestModel): Promise<Either<Error, boolean>>
+    postInspection(request: InspectionRequestModel): Promise<Either<Error, InspectionResponseModel>>
 
     getAllInspections(): Promise<Either<Error, InspectionsWithDiseasesModel>>
 

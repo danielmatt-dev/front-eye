@@ -10,6 +10,7 @@ import { InspectionDetailsModel } from '../../../models/inspection.details.model
 import { InspectionRequestModel } from '../../../models/inspection.request.model';
 import { NewInspectionDataModel } from '../../../models/new.inspection.data.model';
 import { InspectionsWithDiseasesModel } from '../../../models/inspections-with-diseases.model';
+import { InspectionResponseModel } from '../../../models/inspection.response.model';
 
 // <>
 @Injectable({ providedIn: 'root' })
@@ -20,9 +21,11 @@ export class InspectionsDatasourceRemoteImpl implements InspectionDatasourceRemo
         private readonly apiService: ApiService
     ) {}
 
-    postInspection(request: InspectionRequestModel): Promise<Either<Error, boolean>> {
+    postInspection(request: InspectionRequestModel): Promise<Either<Error, InspectionResponseModel>> {
         const url = InspectionsEndpoints.PATH;
-        const obs$ = this.http.post<boolean>(url, instanceToPlain(request)).pipe(map(() => true));
+        const obs$ = this.http
+            .post<InspectionResponseModel>(url, instanceToPlain(request))
+            .pipe(map((response) => plainToInstance(InspectionResponseModel, response)));
 
         return this.apiService.sendRequest(obs$);
     }
