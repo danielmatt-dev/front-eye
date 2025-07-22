@@ -18,8 +18,8 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { PatientResponseEntity } from '../../../patient/domain/entity/patient.response.entity';
-import { formatDateToDDMMYYYY } from '../../../../shared/utils/functions/functions';
-import { eyes, results } from '../../../../shared/utils/data';
+import { colorByResult, formatDateToDDMMYYYY } from '../../../../shared/utils/functions/functions';
+import { eyes } from '../../../../shared/utils/data';
 import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
 import { CreateInspection } from '../../domain/use_cases/createInspection';
@@ -29,6 +29,8 @@ import { DiseaseEntity } from '../../../disease/domain/entity/disease.entity';
 import { AiModelEntity } from '../../../aimodel/domain/entity/aimodel.entity';
 import { GetNewInspectionData } from '../../domain/use_cases/getNewInspectionData';
 import { SendMessage } from '../../../../shared/toast/send.message';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-nueva-inspeccion',
@@ -59,6 +61,9 @@ export class NuevaInspeccionComponent implements OnInit {
     allModels: AiModelEntity[] = []
     selectedModel?: AiModelEntity
 
+    /* Campos de la inspección */
+    inspectionId?: number;
+
     /* Campos del paciente */
     patientId?: number;
     firstName = '';
@@ -73,7 +78,7 @@ export class NuevaInspeccionComponent implements OnInit {
     occupation = '';
     statePatient = '';
 
-    doctor = 'Jorge Ernesto Gonzalez Diaz';
+    doctor = '';
 
     /* Campos para filtrar en el select component */
     filterFields: string = 'fullName,firstName,firstName,lastMontName,occupation,state,address,gender';
@@ -83,7 +88,6 @@ export class NuevaInspeccionComponent implements OnInit {
     state = State.initial;
     result = '';
     colorResult = '';
-    results = results;
 
     /* Variables para la validación de campos de la inspección */
     patientError?: string;
@@ -93,7 +97,6 @@ export class NuevaInspeccionComponent implements OnInit {
     imageError?: string;
 
     /* Variables de carga */
-    isLoadingCreateInspection = false
     isLoadingGetData = false
 
     /* Providers */
@@ -102,11 +105,14 @@ export class NuevaInspeccionComponent implements OnInit {
     constructor(
         private readonly translateService: TranslateService,
         private readonly primeng: PrimeNG,
+        private readonly router: Router,
         private readonly messageService: MessageService,
         private readonly getAllData: GetNewInspectionData,
-        private readonly createInspection: CreateInspection
+        private readonly createInspection: CreateInspection,
+        private readonly local: LocalStorageService
     ) {
         this.validator = new NewInspectionValidator(new SendMessage(this.messageService), this.translateService, this.primeng);
+        this.doctor = this.local.getUsername()
     }
 
     async ngOnInit() {
@@ -145,30 +151,53 @@ export class NuevaInspeccionComponent implements OnInit {
             return;
         }
 
+        const images = await this.filesToBase64()
+
         this.state = State.loading;
         const resultCreateInspection = await this.createInspection.call(
             new InspectionRequestEntity({
                 patientId: this.patientId,
-                diseaseId: 0,
-                modelId: 0,
-                images: [],
+                diseaseId: this.selectedDisease?.diseaseId,
+                modelId: this.selectedModel?.aiModelId,
+                image: images[0],
                 eye: this.selectedEye,
-                result: this.result,
-                probabilities: [],
                 notes: this.notes
             })
         )
-        this.state = State.success;
 
         if (resultCreateInspection._tag === 'Left') {
             this.validator.getToastException(resultCreateInspection.left)
         }
 
         if (resultCreateInspection._tag === 'Right') {
+            this.inspectionId = resultCreateInspection.right.inspectionId
+            this.result = resultCreateInspection.right.result
+            this.colorResult = colorByResult(this.result)
             this.validator.showMessage({ key: 'createInspection', type: 'success' })
             this.clearFields()
         }
 
+        this.state = State.success;
+    }
+
+    // Conversión de file a base64
+    filesToBase64() {
+        return Promise.all(
+            this.images.map(async file => {
+                const buffer = await file.arrayBuffer()
+                const binary = String.fromCharCode(...new Uint8Array(buffer))
+                return btoa(binary)
+            })
+        )
+    }
+
+    async navigateToInspectionDetails() {
+        if (!this.inspectionId) {
+            return;
+        }
+
+        const id = this.inspectionId
+        await this.router.navigate(['/insights/ver-detalle'], { queryParams: { id } });
     }
 
     // Función de validación

@@ -120,7 +120,7 @@
                         id="genero"
                         type="text"
                         [(ngModel)]="gender"
-                        placeholder="{{ 'placeholders.gender'| translate }}"
+                        placeholder="{{ 'placeholders.genderInput'| translate }}"
                     />
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
@@ -241,7 +241,7 @@
         <div class="card">
             <div class="flex justify-between">
                 <div class="font-semibold text-xl mb-4">{{ 'titles.inspectionData'| translate }}</div>
-                <a href="/insights/ver-detalle" class="text-primary" style="text-decoration: underline;">
+                <a *ngIf="inspectionId" (click)="navigateToInspectionDetails()" class="text-primary" style="text-decoration: underline;">
                     {{ 'links.viewDetail'| translate }}
                 </a>
             </div>
@@ -325,7 +325,7 @@
     </div>
     <div class="col-span-1">
         <div class="card h-full">
-            <div class="font-semibold text-xl mb-4">{{ 'titles.additionalData'| translate }}</div>
+            <div class="font-semibold text-xl mb-4">{{ 'titles.additionalDataOption'| translate }}</div>
             <div>
                 <textarea
                     pTextarea
