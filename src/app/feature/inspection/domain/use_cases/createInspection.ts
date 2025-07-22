@@ -3,14 +3,15 @@ import { UseCase } from '../../../../shared/utils/usecase';
 import { InspectionRequestEntity } from '../entity/inspection.request.entity';
 import { InspectionsDatasourceRemoteImpl } from '../../data/datasource/remote/impl/inspections.datasource.remote.impl';
 import { Injectable } from '@angular/core';
+import { InspectionResponseModel } from '../../data/models/inspection.response.model';
 
 @Injectable({ providedIn: 'root' })
-export class CreateInspection implements UseCase<boolean, InspectionRequestEntity> {
+export class CreateInspection implements UseCase<InspectionResponseModel, InspectionRequestEntity> {
 
     constructor(private readonly remote: InspectionsDatasourceRemoteImpl) {}
 
-    call(params: InspectionRequestEntity): Promise<Either<Error, boolean>> {
-        return this.remote.postInspection(params)
+    async call(params: InspectionRequestEntity): Promise<Either<Error, InspectionResponseModel>> {
+        return await this.remote.postInspection(params)
     }
 
 }
