@@ -27,6 +27,8 @@ export class InspectionResponseModel {
     @Expose({ name: 'inspection_time' })
     inspectionTime: string = ''
 
+    doctor: string = ''
+
     eye: string = ''
 
     disease: string = ''
