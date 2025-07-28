@@ -24,7 +24,6 @@ import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
 import { SkeletonModule } from 'primeng/skeleton';
 import { InspectionDetailsPdf } from '../../../report/domain/template-method/pdf/inspection-details.pdf';
 import { SendMessage } from '../../../../shared/toast/send.message';
-import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     selector: 'app-ver-detalle-inspeccion',
@@ -92,12 +91,10 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
         private readonly cd: ChangeDetectorRef,
         private readonly route: ActivatedRoute,
         private readonly inspectionDetailsPdf: InspectionDetailsPdf,
-        private readonly getInspectionById: GetInspectionById,
-        private readonly local: LocalStorageService
+        private readonly getInspectionById: GetInspectionById
     ) {
         this.validatorHelper = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeNg);
         this.localeTextProvider = LocaleTextProvider.getInstance(this.translateService, this.primeNg);
-        this.doctor = this.local.getUsername()
     }
 
     async ngOnInit() {
@@ -132,6 +129,7 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
             this.details = details
             this.inspection = details.inspection;
             this.patient = details.patient;
+            this.doctor = details.inspection.doctor;
             this.imagesResponse = details.inspection.inspectionImages;
             this.probabilities = details.inspection.diagnosticProbabilities;
             this.allInspections = details.inspectionHistory;

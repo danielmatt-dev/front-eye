@@ -338,7 +338,6 @@ export class TodasInspeccionesComponent implements OnInit {
 
     async navigateToInspectionDetails(id?: number) {
         if (!id) {
-            await this.router.navigate(['/insights/ver-detalle']);
             return;
         }
 
