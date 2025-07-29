@@ -15,7 +15,6 @@ import { PatientWithInspectionsEntity } from '../../domain/entity/patient.with.i
 import { NoParams } from '../../../../shared/utils/usecase';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { FilterService } from '../../../../shared/services/filter.service';
-import { patientWithInspectionsMocks } from '../../../../shared/utils/mocks';
 import { ageRanges, diseases, results } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
@@ -47,7 +46,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     showButtons = true;
 
     /* Lista de pacientes y filtrado */
-    allPatientsCoordinates: PatientWithInspectionsEntity[] = patientWithInspectionsMocks;
+    allPatientsCoordinates: PatientWithInspectionsEntity[] = [];
     filteredPatientsCoordinates = this.allPatientsCoordinates;
     displayedPatients = this.filteredPatientsCoordinates;
 
@@ -110,7 +109,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     }
 
     async ngOnInit() {
-        //await this.callGetAllPatientsWithInspections()
+        await this.callGetAllPatientsWithInspections()
     }
 
     ngAfterViewInit() {
@@ -131,7 +130,8 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
         if (resultGetPatients._tag === 'Right') {
             this.allPatientsCoordinates = resultGetPatients.right;
-            //this.filterPatientsCoordinates()
+            console.log(this.allPatientsCoordinates)
+            this.filterPatientsCoordinates()
         }
     }
 
