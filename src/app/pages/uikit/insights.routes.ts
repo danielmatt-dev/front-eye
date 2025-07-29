@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { ReporteComponent } from '../../feature/report/presentation/reporte/reporte.component';
 import { DatosGeograficosComponent } from '../../feature/patient/presentation/datos-geograficos/datos-geograficos.component';
 import { DashboardComponent } from '../../feature/inspection/presentation/dashboard/dashboard.component';
 import { NuevaInspeccionComponent } from '../../feature/inspection/presentation/nueva-inspeccion/nueva-inspeccion.component';
@@ -17,12 +16,6 @@ export default [
         path: 'dashboard',
         component: DashboardComponent,
         data: { roles: ['ADMIN'] },
-        canActivate: [authGuard, RoleGuard]
-    },
-    {
-        path: 'reportes',
-        component: ReporteComponent,
-        data: { roles: ['ADMIN', 'DOCTOR'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
