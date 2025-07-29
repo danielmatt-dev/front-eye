@@ -61,3 +61,9 @@ export const statesMexico: string[] = [
     "Yucatán",
     "Zacatecas",
 ];
+
+export enum State {
+    initial,
+    loading,
+    success
+}
