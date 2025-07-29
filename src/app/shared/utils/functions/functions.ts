@@ -23,8 +23,10 @@ export function calculateAge(birthDate: Date): number {
 
 export function colorByResult(result: string) {
     switch (result) {
+        case 'Avanzada': return resultColor.proliferative
         case 'Proliferativo': return resultColor.proliferative
-        case 'Moderado': return resultColor.moderate
+        case 'Avanzada Húmeda': return resultColor.moderate
+        case 'Moderada': return resultColor.moderate
         case 'Leve': return resultColor.mild
         default: return resultColor.nocondition
     }
