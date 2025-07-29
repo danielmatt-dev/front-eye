@@ -8,7 +8,6 @@ import { InputText } from 'primeng/inputtext';
 import { SelectButton } from 'primeng/selectbutton';
 import { Textarea } from 'primeng/textarea';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { patientsResponseMocks, State } from '../../../../shared/utils/mocks';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
@@ -19,7 +18,7 @@ import { SelectModule } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { PatientResponseEntity } from '../../../patient/domain/entity/patient.response.entity';
 import { colorByResult, formatDateToDDMMYYYY } from '../../../../shared/utils/functions/functions';
-import { eyes } from '../../../../shared/utils/data';
+import { eyes, State } from '../../../../shared/utils/data';
 import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
 import { CreateInspection } from '../../domain/use_cases/createInspection';
@@ -50,7 +49,7 @@ export class NuevaInspeccionComponent implements OnInit {
     notes = ''
 
     /* Variables del paciente */
-    allPatients: PatientResponseEntity[] = patientsResponseMocks;
+    allPatients: PatientResponseEntity[] = [];
     selectedPatient?: PatientResponseEntity;
     patientOptions: any[] = [];
     birthDate?: string = '';
@@ -181,14 +180,23 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     // Conversión de file a base64
-    filesToBase64() {
+    private fileToBase64(file: File): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onerror = () => reject(reader.error);
+            reader.onload = () => {
+                // reader.result == "data:<mime>;base64,AAAA..."
+                const dataUrl = reader.result as string;
+                resolve(dataUrl.split(",")[1]);  // solo la parte base64
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    filesToBase64(): Promise<string[]> {
         return Promise.all(
-            this.images.map(async file => {
-                const buffer = await file.arrayBuffer()
-                const binary = String.fromCharCode(...new Uint8Array(buffer))
-                return btoa(binary)
-            })
-        )
+            this.images.map(file => this.fileToBase64(file))
+        );
     }
 
     async navigateToInspectionDetails() {
