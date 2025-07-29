@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { inspectionResponseMocks } from '../../../../shared/utils/mocks';
 import { GetAllInspections } from '../../domain/use_cases/getAllInspections';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { InspectionResponseEntity } from '../../domain/entity/inspection.response.entity';
@@ -82,7 +81,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     calendarDisabled = true;
 
     /* Lista de inspecciones y filtrado */
-    allInspections: InspectionResponseEntity[] = inspectionResponseMocks;
+    allInspections: InspectionResponseEntity[] = [];
 
     /* Variables del html */
     isMobileView: boolean = false;
@@ -246,7 +245,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
 
         if (resultGetAllInspections._tag === 'Right') {
-            //this.allInspections = resultGetAllInspections.right.inspections
+            this.allInspections = resultGetAllInspections.right.inspections
             this.diseases = resultGetAllInspections.right.diseases.map(disease => disease.name)
             this.diseases.forEach(d => this.diseaseCounts[d] = 0);
         }
