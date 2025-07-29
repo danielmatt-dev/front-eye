@@ -68,7 +68,7 @@ export class PatientDatasourceRemoteImpl implements PatientDatasourceRemote {
     deletePatients(patientIds: PatientIdRequestModel[]): Promise<Either<Error, boolean>> {
         const url = PatientEndpoints.PATH
         const body = instanceToPlain(patientIds)
-        
+
         const obs$ = this.http
             .delete<boolean>(url, { body })
             .pipe(
@@ -78,7 +78,7 @@ export class PatientDatasourceRemoteImpl implements PatientDatasourceRemote {
     }
 
     getAllPatientsWithInspections(): Promise<Either<Error, PatientWithInspectionsModel[]>> {
-        const url = PatientEndpoints.PATH;
+        const url = PatientEndpoints.PATH + '/';
         const obs$ = this.http
             .get<PatientWithInspectionsModel[]>(url)
             .pipe(
