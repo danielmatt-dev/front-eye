@@ -118,7 +118,9 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
             return;
         }
 
+        this.isLoading = true
         const resultGetInspectionById = await this.getInspectionById.call(this.inspectionId);
+        this.isLoading = false
 
         if (resultGetInspectionById._tag === 'Left') {
             this.validatorHelper.getToastException(resultGetInspectionById.left);
