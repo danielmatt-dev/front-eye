@@ -5,7 +5,8 @@ import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { LocalStorageService } from '../../../shared/services/local.storage.service';
 
 @Component({
     selector: 'app-topbar',
@@ -37,8 +38,13 @@ import { TranslatePipe } from '@ngx-translate/core';
 
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
+
                 <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
                     <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
+                </button>
+
+                <button type="button" class="layout-topbar-action" (click)="toggleLanguage()">
+                    {{ isLanguageEs() ? 'ES' : 'EN' }}
                 </button>
 
                 <!-- Botón para cambiar el tema y estilo de la aplicación
@@ -79,9 +85,23 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class AppTopbar {
     items!: MenuItem[];
 
-    constructor(public layoutService: LayoutService) {}
+    constructor(
+        public layoutService: LayoutService,
+        private readonly translateService: TranslateService,
+        public readonly local: LocalStorageService) {}
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
     }
+
+    toggleLanguage() {
+        const lang = this.isLanguageEs() ? 'en' : 'es'
+        this.translateService.use(lang)
+        this.local.setLang(lang)
+    }
+
+    isLanguageEs(): boolean {
+        return this.local.getLang() === 'es'
+    }
+
 }
