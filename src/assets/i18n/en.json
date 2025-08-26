@@ -135,7 +135,8 @@
         "inspect": "Inspect",
         "update": "Update",
         "validateEmail": "Validate email",
-        "resetPassword": "Reset password"
+        "resetPassword": "Reset password",
+        "newInspection": "New Inspection"
     },
     "toast": {
         "success": {

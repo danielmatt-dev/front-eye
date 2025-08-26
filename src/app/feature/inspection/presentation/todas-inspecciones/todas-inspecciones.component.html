@@ -54,7 +54,7 @@
         <!-- Contenedor para los botones alineados a la derecha -->
         <div *ngIf="isDoctor" class="flex gap-2">
             <p-button
-                label="Nueva Inspección"
+                label="{{ 'buttons.newInspection' | translate }}"
                 (onClick)="natigateToNewInspection()"
                 icon="pi pi-plus"
             ></p-button>
