@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Button } from 'primeng/button';
 import { DatePipe, NgClass, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -30,7 +30,7 @@ import { PatientRequestEntity } from '../../domain/entity/patient.request.entity
 import { PatientResponseEntity } from '../../domain/entity/patient.response.entity';
 import { calculateAge } from '../../../../shared/utils/functions/functions';
 import { DatePickerModule } from 'primeng/datepicker';
-import { genders, statesMexico } from '../../../../shared/utils/data';
+import { statesMexico } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { PatientReportPdf } from '../../../report/domain/template-method/pdf/impl/patient.report.pdf';
@@ -38,6 +38,8 @@ import { PatientReportExcel } from '../../../report/domain/template-method/excel
 import { BadRequestException } from '../../../../shared/exceptions/exceptions';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { SendMessage } from '../../../../shared/toast/send.message';
+import { TranslateLang } from '../../../../shared/utils/functions/translate-lang';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     standalone: true,
@@ -70,7 +72,7 @@ export class PacientesComponent implements OnInit {
     selectedDates: Date[] = [];
 
     /* Catálogo de opciones */
-    genders = genders;
+    genders: string[] = [];
     states = statesMexico;
 
     /* Lista de pacientes y filtrado */
@@ -110,9 +112,13 @@ export class PacientesComponent implements OnInit {
     opcionesConsultaHelper: OpcionesConsultaHelper;
     validationHelper: BaseValidatorHelper;
 
+    private readonly destroyRef = inject(DestroyRef);
+
     constructor(
         private readonly primeng: PrimeNG,
         private readonly translateService: TranslateService,
+        private readonly translateLang: TranslateLang,
+        private readonly cdr: ChangeDetectorRef,
         private readonly confirmationService: ConfirmationService,
         private readonly messageService: MessageService,
         private readonly router: Router,
@@ -136,6 +142,16 @@ export class PacientesComponent implements OnInit {
         this.translateService.get('patient.plural').subscribe((res: string) => {
             this.labelPatients = res.toLowerCase();
         });
+
+        this.genders = this.translateLang.getGenderList()
+
+        this.translateService.onLangChange
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.genders = this.translateLang.getGenderList()
+                this.cdr.markForCheck()
+            })
+
         await this.callGetAllPatients();
     }
 

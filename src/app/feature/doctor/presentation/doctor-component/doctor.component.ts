@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -27,7 +27,7 @@ import { BaseValidatorHelper } from './validation/baseValidatorHelper';
 import { DoctorRequestEntity } from '../../domain/entity/doctor.request.entity';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { DatePickerModule } from 'primeng/datepicker';
-import { genders, statesMexico } from '../../../../shared/utils/data';
+import { statesMexico } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { DoctorReportPdf } from '../../../report/domain/template-method/pdf/impl/doctor.report.pdf';
@@ -35,6 +35,8 @@ import { DoctorReportExcel } from '../../../report/domain/template-method/excel/
 import { BadRequestException } from '../../../../shared/exceptions/exceptions';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { SendMessage } from '../../../../shared/toast/send.message';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateLang } from '../../../../shared/utils/functions/translate-lang';
 
 @Component({
     standalone: true,
@@ -65,7 +67,7 @@ export class DoctorComponent implements OnInit {
     selectedDates: Date[] = [];
 
     /* Catálogo de opciones */
-    genders = genders;
+    genders: string[] = [];
     states = statesMexico;
     clinics: ClinicEntity[] = [];
 
@@ -105,6 +107,8 @@ export class DoctorComponent implements OnInit {
     opcionesConsultaHelper: OpcionesConsultaHelper;
     validationHelper: BaseValidatorHelper;
 
+    private readonly destroyRef = inject(DestroyRef);
+
     /* Labels */
     labelDoctor = 'doctor';
     labelDoctors = 'doctores';
@@ -112,9 +116,11 @@ export class DoctorComponent implements OnInit {
     constructor(
         private readonly primeng: PrimeNG,
         private readonly translateService: TranslateService,
+        private readonly cdr: ChangeDetectorRef,
         private readonly confirmationService: ConfirmationService,
         private readonly messageService: MessageService,
         private readonly local: LocalStorageService,
+        private readonly translateLang: TranslateLang,
         private readonly createDoctor: CreateDoctor,
         private readonly getAllDoctors: GetAllDoctors,
         private readonly updateDoctor: UpdateDoctor,
@@ -136,6 +142,15 @@ export class DoctorComponent implements OnInit {
         this.translateService.get('doctor.plural').subscribe((res: string) => {
             this.labelDoctors = res.toLowerCase();
         });
+
+        this.genders = this.translateLang.getGenderList()
+
+        this.translateService.onLangChange
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.genders = this.translateLang.getGenderList()
+                this.cdr.markForCheck()
+            })
 
         await this.callGetAllDoctors();
         await this.callGetAllClinics();

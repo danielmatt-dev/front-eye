@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { MessageService, PrimeTemplate } from 'primeng/api';
@@ -32,6 +32,8 @@ import { InspectionReportExcel } from '../../../report/domain/template-method/ex
 import { DatePicker } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { SendMessage } from '../../../../shared/toast/send.message';
+import { TranslateLang } from '../../../../shared/utils/functions/translate-lang';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     standalone: true,
@@ -79,17 +81,21 @@ export class TodasInspeccionesComponent implements OnInit {
 
     /* Lista de datos */
     ageRanges = ageRanges;
-    genders = genders;
+    genders: string[] = [];
     diseases: string[] = [];
     selectedDisease = 'Todas';
 
     results = [...results, 'Todos'];
     selectedResult = 'Todos';
 
+    private readonly destroyRef = inject(DestroyRef);
+
     constructor(
         private readonly primeng: PrimeNG,
         private readonly messageService: MessageService,
         private readonly translateService: TranslateService,
+        private readonly cdr: ChangeDetectorRef,
+        private readonly translateLang: TranslateLang,
         private readonly router: Router,
         private readonly local: LocalStorageService,
         private readonly generateReport: GenerateReportImpl,
@@ -108,6 +114,15 @@ export class TodasInspeccionesComponent implements OnInit {
         this.translateService.get('inspections.plural').subscribe((res: string) => {
             this.labelInspections = res.toLowerCase();
         });
+
+        this.genders = this.translateLang.getGenderList()
+
+        this.translateService.onLangChange
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.genders = this.translateLang.getGenderList()
+                this.cdr.markForCheck()
+            })
 
         await this.callGetAllInspections();
         if (!this.isDoctor) {
