@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { CommonModule } from '@angular/common';
 import { LocalStorageService } from '../../../shared/services/local.storage.service';
 import { AuthService } from '../../../shared/services/auth.service';
+import { menu } from '../../../shared/utils/data';
+import { TranslateService } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-menu',
@@ -20,35 +23,52 @@ import { AuthService } from '../../../shared/services/auth.service';
 export class AppMenu implements OnInit {
     model: MenuItem[] = [];
 
+    private readonly destroyRef = inject(DestroyRef);
+
     constructor(
         private readonly router: Router,
         private readonly authService: AuthService,
-        private readonly local: LocalStorageService
+        private readonly local: LocalStorageService,
+        private readonly translateService: TranslateService,
+        private readonly cdr: ChangeDetectorRef,
     ) {}
 
     async ngOnInit() {
+        this.buildMenu()
 
+        this.translateService.onLangChange
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.buildMenu()
+                this.cdr.markForCheck()
+            })
+    }
+
+    private buildMenu() {
         const userRole = this.local.getRole()
+        const lang = this.local.getLang()
+
+        const labels = lang === 'es' ? menu.es : menu.en
 
         if (userRole === 'ADMIN') {
             this.model = [
                 {
                     items: [
-                        { label: 'Dashboard', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/insights/dashboard'] },
+                        { label: labels.dashboard, icon: 'pi pi-fw pi-chart-bar', routerLink: ['/insights/dashboard'] },
                         //{ label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
-                        { label: 'Inspecciones', icon: 'pi pi-list', routerLink: ['/insights/todas-inspecciones'] },
+                        { label: labels.inspections, icon: 'pi pi-list', routerLink: ['/insights/todas-inspecciones'] },
                         {
-                            label: 'Datos Geográficos',
+                            label: labels.geo,
                             icon: 'pi pi-fw pi-globe',
                             routerLink: ['/insights/datos-geograficos']
                         },
                         {
-                            label: 'Administrar doctores  ',
+                            label: labels.doctors,
                             icon: 'pi pi-fw pi-user',
                             routerLink: ['/insights/doctores']
                         },
                         {
-                            label: 'Cerrar sesión',
+                            label: labels.logout,
                             icon: 'pi pi-fw pi-sign-out',
                             command: () => { this.logout().then() }
                         }
@@ -62,30 +82,30 @@ export class AppMenu implements OnInit {
                 {
                     items: [
                         {
-                            label: 'Administrar inspecciones',
+                            label: labels.adminInspections,
                             icon: 'pi pi-fw pi-eye',
                             expanded: true,
                             items: [
                                 {
-                                    label: 'Nueva inspección',
+                                    label: labels.newInspection,
                                     icon: 'pi pi-fw pi-plus-circle',
                                     routerLink: ['/insights/nueva-inspeccion']
                                 },
                                 {
-                                    label: 'Todas las inspecciones',
+                                    label: labels.allInspections,
                                     icon: 'pi pi-list',
                                     routerLink: ['/insights/todas-inspecciones']
                                 }
                             ]
                         },
                         {
-                            label: 'Administrar pacientes',
+                            label: labels.patients,
                             icon: 'pi pi-fw pi-user',
                             routerLink: ['/insights/pacientes']
                         },
                         //{ label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
                         {
-                            label: 'Cerrar sesión',
+                            label: labels.logout,
                             icon: 'pi pi-fw pi-sign-out',
                             command: () => { this.logout().then() }
                         }
