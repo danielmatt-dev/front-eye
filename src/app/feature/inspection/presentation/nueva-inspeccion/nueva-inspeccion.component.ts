@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
@@ -18,7 +18,7 @@ import { SelectModule } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
 import { PatientResponseEntity } from '../../../patient/domain/entity/patient.response.entity';
 import { colorByResult, formatDateToDDMMYYYY } from '../../../../shared/utils/functions/functions';
-import { eyes, State } from '../../../../shared/utils/data';
+import { State } from '../../../../shared/utils/data';
 import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
 import { CreateInspection } from '../../domain/use_cases/createInspection';
@@ -30,6 +30,8 @@ import { GetNewInspectionData } from '../../domain/use_cases/getNewInspectionDat
 import { SendMessage } from '../../../../shared/toast/send.message';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { Router } from '@angular/router';
+import { TranslateLang } from '../../../../shared/utils/functions/translate-lang';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-nueva-inspeccion',
@@ -43,7 +45,7 @@ export class NuevaInspeccionComponent implements OnInit {
     /* Variables de la inspección */
     images: File[] = []; // Almacenar la imagen de la inspección del ojo
 
-    eyes = eyes;
+    eyes: string[] = [];
     selectedEye?: string;
 
     notes = ''
@@ -101,8 +103,12 @@ export class NuevaInspeccionComponent implements OnInit {
     /* Providers */
     validator: NewInspectionValidator;
 
+    private readonly destroyRef = inject(DestroyRef);
+
     constructor(
         private readonly translateService: TranslateService,
+        private readonly cdr: ChangeDetectorRef,
+        private readonly translateLang: TranslateLang,
         private readonly primeng: PrimeNG,
         private readonly router: Router,
         private readonly messageService: MessageService,
@@ -115,6 +121,15 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     async ngOnInit() {
+
+        this.eyes = this.translateLang.getEyesList()
+
+        this.translateService.onLangChange
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.eyes = this.translateLang.getEyesList()
+                this.cdr.markForCheck()
+            })
 
         await this.callGetNewInspectionData()
 

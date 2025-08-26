@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '../../services/local.storage.service';
-import { genders2 } from '../data';
+import { eyes2, genders2 } from '../data';
 
 @Injectable({ providedIn: 'root' })
 export class TranslateLang {
@@ -14,13 +14,19 @@ export class TranslateLang {
     }
 
     getGenderList(): string[] {
-        const langGenders = this.isLangEs()
+        const genders = this.isLangEs()
             ? genders2.es
             : genders2.en
 
-        return Object.values(langGenders)
+        return Object.values(genders)
     }
 
+    getEyesList(): string[] {
+        const eyes = this.isLangEs()
+            ? eyes2.es
+            : eyes2.en
 
+        return Object.values(eyes)
+    }
 
 }
