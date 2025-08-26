@@ -2,6 +2,7 @@ import { computed, effect, Injectable, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Theme } from '../../../shared/enums/enums';
 import { LocalStorageService } from '../../../shared/services/local.storage.service';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface layoutConfig {
     preset?: string;
@@ -80,7 +81,13 @@ export class LayoutService {
 
     private initialized = false;
 
-    constructor(private readonly local: LocalStorageService) {
+    constructor(
+        private readonly local: LocalStorageService,
+        private readonly translateService: TranslateService) {
+
+        const lang = this.local.getLang()
+        this.translateService.use(lang)
+        this.local.setLang(lang)
 
         this._config = {
             preset: 'Aura',
