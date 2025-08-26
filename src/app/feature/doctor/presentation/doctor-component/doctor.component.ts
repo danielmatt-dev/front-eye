@@ -36,7 +36,7 @@ import { BadRequestException } from '../../../../shared/exceptions/exceptions';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { SendMessage } from '../../../../shared/toast/send.message';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslateLang } from '../../../../shared/utils/functions/translate-lang';
+import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
 
 @Component({
     standalone: true,
@@ -127,9 +127,9 @@ export class DoctorComponent implements OnInit {
         private readonly deleteDoctors: DeleteDoctors,
         private readonly getAllClinis: GetAllClinics,
         private readonly filterService: FilterService,
-        private readonly generateReport: GenerateReportImpl,
+        private readonly generateReport: GenerateReportImpl
     ) {
-        const sendMessage = new SendMessage(this.messageService)
+        const sendMessage = new SendMessage(this.messageService);
         this.opcionesConsultaHelper = new OpcionesConsultaHelper(sendMessage, this.translateService, this.primeng);
         this.validationHelper = new BaseValidatorHelper(sendMessage, this.translateService, this.primeng);
     }
@@ -143,14 +143,12 @@ export class DoctorComponent implements OnInit {
             this.labelDoctors = res.toLowerCase();
         });
 
-        this.genders = this.translateLang.getGenderList()
+        this.genders = this.translateLang.getGenderList();
 
-        this.translateService.onLangChange
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.genders = this.translateLang.getGenderList()
-                this.cdr.markForCheck()
-            })
+        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.genders = this.translateLang.getGenderList();
+            this.cdr.markForCheck();
+        });
 
         await this.callGetAllDoctors();
         await this.callGetAllClinics();
@@ -198,10 +196,9 @@ export class DoctorComponent implements OnInit {
         this.isCreateLoading = false;
 
         if (resultCreateDoctor._tag === 'Left') {
-
             if (resultCreateDoctor.left instanceof BadRequestException) {
-                this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered')
-                return
+                this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered');
+                return;
             }
 
             this.validationHelper.getToastException(resultCreateDoctor.left);
@@ -236,8 +233,8 @@ export class DoctorComponent implements OnInit {
 
         if (updateResult._tag === 'Left') {
             if (updateResult.left instanceof BadRequestException) {
-                this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered')
-                return
+                this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered');
+                return;
             }
 
             this.validationHelper.getToastException(updateResult.left);
@@ -374,12 +371,12 @@ export class DoctorComponent implements OnInit {
 
     /* Exportar datos */
     exportPDF() {
-        const params = new ReportFactoryParams({ name: 'Doctores', user: this.local.getUsername() })
+        const params = new ReportFactoryParams({ name: 'Doctores', user: this.local.getUsername() });
         this.generateReport.generatePDF(params, new DoctorReportPdf({ doctors: this.filteredDoctors }));
     }
 
     async exportExcel() {
-        await this.generateReport.generateExcel(new DoctorReportExcel({ doctors: this.filteredDoctors }))
+        await this.generateReport.generateExcel(new DoctorReportExcel({ doctors: this.filteredDoctors }));
     }
 
     /* Funciones de validación del formulario del doctor */
