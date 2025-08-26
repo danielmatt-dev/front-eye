@@ -1,0 +1,323 @@
+{
+    "app": {
+        "title": "Eye Insights"
+    },
+    "login": {
+        "title": "Welcome to Eye Insights",
+        "subtitle": "Sign in to continue",
+        "emailLabel": "Email",
+        "emailPlaceholder": "example@mail.com",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password",
+        "resetPasswordPlaceholder": "Minimum 8 characters",
+        "rememberMe": "Remember me",
+        "forgotPassword": "Forgot your password?",
+        "signIn": "Sign in"
+    },
+    "titles": {
+        "doctors": "Doctors",
+        "reports": "Reports",
+        "distribution": {
+            "byCondition": "Distribution by condition",
+            "byGender": "Distribution by gender",
+            "byAgeRange": "Distribution by age range"
+        },
+        "detections": "Detections",
+        "byCondition": "By condition",
+        "byGender": "By gender",
+        "ageRanges": "Age ranges",
+        "detectionsByMonth": "Detections per month 2025",
+        "detectionsByAgeAndCondition": "Detections by age range and condition",
+        "detectionsTrend": "Detections trend",
+        "inspectionData": "Inspection data",
+        "additionalDataOption": "Additional data (Optional)",
+        "additionalData": "Additional data",
+        "occurrenceProbability": "Occurrence Probability (AI)",
+        "completedInspections": "Completed inspections",
+        "resetPassword": "Reset password"
+    },
+    "subtitles": {
+        "byPeriod": {
+            "week": "Week",
+            "month": "Month",
+            "total": "Totals"
+        },
+        "conditions": {
+            "dmaeDry": "Dry AMD",
+            "dmaeWet": "Wet AMD",
+            "retDiabetic": "Diabetic Retinopathy"
+        },
+        "gender": {
+            "male": "Men",
+            "female": "Women"
+        },
+        "ageRanges": {
+            "under30": "Under 30",
+            "from30to45": "From 30 to 45",
+            "over45": "Over 45"
+        },
+        "validateEmailInstructions": "Enter your email and press Validate email",
+        "resetPasswordInstructions": "Enter a new password",
+        "backLogin": "Back to sign in"
+    },
+    "labels": {
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm password",
+        "key": "Key",
+        "name": "Name",
+        "lastname": "Last name",
+        "fatherLastName": "Paternal last name",
+        "motherLastName": "Maternal last name",
+        "phone": "Phone",
+        "gender": "Gender",
+        "birthDate": "Birthdate",
+        "address": "Address",
+        "postalCode": "Postal code",
+        "state": "State",
+        "selectPeriod": "Select a period",
+        "dateRange": "Date range",
+        "conditions": "Conditions",
+        "results": "Results",
+        "id": "ID",
+        "date": "Date",
+        "time": "Time",
+        "age": "Age",
+        "condition": "Condition",
+        "eye": "Eye",
+        "result": "Result",
+        "occupation": "Occupation",
+        "image": "Image",
+        "images": "Images",
+        "disease": "Disease",
+        "model": "Model",
+        "actions": "Actions",
+        "years": "years",
+        "clinic": "Clinic"
+    },
+    "placeholders": {
+        "email": "example@mail.com",
+        "password": "Enter your password",
+        "confirmPassword": "Repeat your password",
+        "name": "John",
+        "fatherLastName": "Garcia",
+        "motherLastName": "Perez",
+        "phone": "5551234567",
+        "gender": "Select gender",
+        "genderInput": "e.g., Male",
+        "birthDate": "01/01/1990",
+        "address": "Main Ave. #456, Jardines",
+        "postalCode": "12345",
+        "state": "Select a state",
+        "search": "Search...",
+        "dateRange": "From - To",
+        "age": "40 years",
+        "occupation": "E.g.: Engineer, Doctor, Student",
+        "disease": "Select a disease",
+        "model": "Select a model",
+        "patients": "Select a patient",
+        "clinic": "Select a clinic",
+        "range": "Select a range"
+    },
+    "buttons": {
+        "save": "Save",
+        "register": "Register",
+        "consult": "Consult",
+        "cancel": "Cancel",
+        "exportExcel": "Export to Excel",
+        "downloadPDF": "Download PDF",
+        "exportExcelTable": "Export table to Excel",
+        "downloadPDFTable": "Download table as PDF",
+        "new": "New {{item}}",
+        "delete": "Delete {{items}}",
+        "upload": "Upload",
+        "choose": "Load",
+        "inspect": "Inspect",
+        "update": "Update",
+        "validateEmail": "Validate email",
+        "resetPassword": "Reset password"
+    },
+    "toast": {
+        "success": {
+            "titles": {
+                "createDoctor": "Success",
+                "updateDoctor": "Data updated",
+                "deleteDoctor": "Deleted successfully",
+                "deleteDoctors": "Deleted successfully",
+                "createPatient": "Success",
+                "updatePatient": "Data updated",
+                "deletePatient": "Deleted successfully",
+                "deletePatients": "Deleted successfully",
+                "createInspection": "Inspection completed",
+                "emailValidationSuccess": "Email validated",
+                "passwordResetSuccess": "Password reset"
+            },
+            "messages": {
+                "createDoctor": "Doctor @ registered successfully",
+                "updateDoctor": "Doctor @ data updated successfully",
+                "deleteDoctor": "Doctor @ has been deleted successfully",
+                "deleteDoctors": "@ doctors were deleted successfully",
+                "createPatient": "Patient @ registered successfully",
+                "updatePatient": "Patient @ data updated successfully",
+                "deletePatient": "Patient @ has been deleted successfully",
+                "deletePatients": "@ patients were deleted successfully",
+                "createInspection": "The inspection has been recorded successfully",
+                "emailValidationSuccess": "Your email has been validated successfully",
+                "passwordResetSuccess": "Now proceed to sign in with your new credentials"
+            }
+        },
+        "warn": {
+            "titles": {
+                "invalidForm": "Invalid form",
+                "dateRangeNotSelected": "Date range not selected",
+                "dateFinalNotSelected": "End date not selected"
+            },
+            "messages": {
+                "invalidForm": "Please check the fields marked in red",
+                "dateRangeNotSelected": "Please select a start and end date to run the query",
+                "dateFinalNotSelected": "Please select the end date to run the query"
+            }
+        }
+    },
+    "messages": {
+        "noDataFound": "No {{items}} found",
+        "loadingData": "Loading data. Please wait.",
+        "imageSizeLimit": "The image must be smaller than",
+        "4mb": "4 MB"
+    },
+    "doctor": {
+        "singular": "Doctor",
+        "plural": "Doctors",
+        "titleModal": "Doctor data"
+    },
+    "patient": {
+        "singular": "Patient",
+        "plural": "Patients",
+        "titleModal": "Patient data"
+    },
+    "inspections": {
+        "singular": "Inspection",
+        "plural": "Inspections"
+    },
+    "links": {
+        "viewDetail": "View details"
+    },
+    "afflictions": {
+        "proliferative": "Proliferative",
+        "moderate": "Moderate",
+        "mild": "Mild",
+        "none": "No condition"
+    },
+    "primeng": {
+        "startsWith": "Starts with",
+        "contains": "Contains",
+        "notContains": "Does not contain",
+        "endsWith": "Ends with",
+        "equals": "Equals",
+        "notEquals": "Not equals",
+        "noFilter": "No filter",
+        "lt": "Less than",
+        "lte": "Less than or equal to",
+        "gt": "Greater than",
+        "gte": "Greater than or equal to",
+        "is": "Is",
+        "isNot": "Is not",
+        "before": "Before",
+        "after": "After",
+        "dateIs": "Date is",
+        "dateIsNot": "Date is not",
+        "dateBefore": "Date is before",
+        "dateAfter": "Date is after",
+        "clear": "Clear",
+        "apply": "Apply",
+        "matchAll": "Match all",
+        "matchAny": "Match any",
+        "addRule": "Add rule",
+        "removeRule": "Remove rule",
+        "accept": "Yes",
+        "reject": "No",
+        "choose": "Select",
+        "upload": "Upload",
+        "cancel": "Cancel",
+        "dayNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        "dayNamesShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        "dayNamesMin": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+        "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        "monthNamesShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        "dateFormat": "dd/mm/yy",
+        "today": "Today",
+        "weekHeader": "Week",
+        "weak": "Weak",
+        "medium": "Medium",
+        "strong": "Strong",
+        "passwordPrompt": "Enter a password",
+        "emptyMessage": "No results found",
+        "emptyFilterMessage": "No results found"
+    },
+    "exceptions": {
+        "titles": {
+            "network": "Network failure",
+            "badCredentials": "Incorrect credentials.",
+            "resourceNotFound": "Resource not found",
+            "badRequest": "Invalid request.",
+            "internalServer": "An internal server error occurred.",
+            "timeout": "The request timed out.",
+            "forbidden": "Access denied",
+            "unknown": "An unexpected error occurred. Please try again.",
+            "login": "Session expired",
+            "emailAlredyRegistered": "Try another one",
+            "emailNotRegistered": "Email not registered"
+        },
+        "messages": {
+            "network": "Could not connect to the server. Please try again later.",
+            "badCredentials": "Check your username and password.",
+            "resourceNotFound": "The requested resource was not found.",
+            "badRequest": "Please review the data and try again.",
+            "internalServer": "Please try again later.",
+            "timeout": "Please try again later.",
+            "forbidden": "You do not have permission to perform this action.",
+            "unknown": "An unexpected error occurred. Please try again.",
+            "login": "Please sign in again to continue",
+            "emailAlredyRegistered": "The email is already registered",
+            "emailNotRegistered": "Make sure the entered email is correct or that you have a registered account"
+        }
+    },
+    "confirmations": {
+        "deleteDoctor": {
+            "message": "Are you sure you want to delete doctor {0}?",
+            "header": "Confirm deletion"
+        },
+        "deleteSelectedDoctors": {
+            "message": "Are you sure you want to delete the selected doctors?",
+            "header": "Confirm deletion"
+        }
+    },
+    "validations": {
+        "required": "Required field",
+        "maxLength": "Do not exceed {1} characters",
+        "pattern": "Letters and spaces only",
+        "noNumbers": "Numbers are not allowed",
+        "onlyNumbers": "Digits only",
+        "noSpecialChars": "No special characters",
+        "selectionRequired": "You must select an option",
+        "selectionPatientRequired": "You must select a patient",
+        "email": "Invalid email format",
+        "birthDateAdult": "Must be of legal age",
+        "selectionImageRequired": "Please select an image to continue",
+        "passwordRequired": "Password is required",
+        "passwordMinLength": "Must be at least 8 characters",
+        "passwordLowercase": "Must include at least one lowercase letter",
+        "passwordUppercase": "Must include at least one uppercase letter",
+        "passwordDigit": "Must include at least one number",
+        "passwordsNotMatch": "Passwords do not match. Please make sure they are the same"
+    },
+    "accessDenied": {
+        "title": "Access denied",
+        "message": "You do not have the required permissions to access this screen",
+        "button": "Home"
+    },
+    "notFound": {
+        "title": "Page not found",
+        "message": "The requested resource is not available"
+    }
+}
