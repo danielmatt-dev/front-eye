@@ -64,4 +64,13 @@ export class DatasourceLocalImpl implements DatasourceLocal {
     setTheme(theme: Theme): void {
         localStorage.setItem('theme', theme);
     }
+
+    setLang(lang: string): void {
+        localStorage.setItem('lang', lang);
+    }
+
+    getLang(): string {
+        return localStorage.getItem('lang') ?? 'es';
+    }
+
 }

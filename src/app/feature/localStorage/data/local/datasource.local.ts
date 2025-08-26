@@ -21,6 +21,10 @@ export interface DatasourceLocal {
 
     getTheme(): Theme
 
+    setLang(lang: string): void
+
+    getLang(): string
+
     clear(): void
 
 }

@@ -29,7 +29,16 @@ export class LocalStorageService {
     }
 
     getTheme(): Theme {
+        console.log('Theme')
         return this.local.getTheme()
+    }
+
+    setLang(lang: string): void {
+        this.local.setLang(lang)
+    }
+
+    getLang(): string {
+        return this.local.getLang()
     }
 
     clear() {
