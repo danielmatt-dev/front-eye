@@ -29,7 +29,6 @@ export class LocalStorageService {
     }
 
     getTheme(): Theme {
-        console.log('Theme')
         return this.local.getTheme()
     }
 
