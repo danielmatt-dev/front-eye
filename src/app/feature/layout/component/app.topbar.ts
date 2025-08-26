@@ -7,6 +7,7 @@ import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LocalStorageService } from '../../../shared/services/local.storage.service';
+import { take } from 'rxjs';
 
 @Component({
     selector: 'app-topbar',
@@ -96,8 +97,8 @@ export class AppTopbar {
 
     toggleLanguage() {
         const lang = this.isLanguageEs() ? 'en' : 'es'
-        this.translateService.use(lang)
         this.local.setLang(lang)
+        this.translateService.use(lang)
     }
 
     isLanguageEs(): boolean {
