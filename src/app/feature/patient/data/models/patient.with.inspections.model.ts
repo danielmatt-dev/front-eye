@@ -30,6 +30,9 @@ export class PatientWithInspectionsModel {
     @Expose({ name: 'last_result' })
     lastResult: string = ''
 
+    @Expose({ name: 'last_disease_id' })
+    lastDiseaseId: number = 0
+
     @Expose({ name: 'last_disease' })
     lastDisease: string = ''
 
