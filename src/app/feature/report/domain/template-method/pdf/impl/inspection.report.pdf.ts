@@ -1,11 +1,11 @@
 import { RowInput } from 'jspdf-autotable';
 import { AbstractReportPdf } from '../abstract.report.pdf';
-import { InspectionResponseEntity } from '../../../../../inspection/domain/entity/inspection.response.entity';
 import { formatDateToDDMMYYYY } from '../../../../../../shared/utils/functions/functions';
+import { InspectionResponseModel } from '../../../../../inspection/data/models/inspection.response.model';
 
 export class InspectionReportPdf extends AbstractReportPdf {
 
-    inspections: InspectionResponseEntity[] = []
+    inspections: InspectionResponseModel[] = []
 
     constructor(partial?: Partial<InspectionReportPdf>) {
         super();

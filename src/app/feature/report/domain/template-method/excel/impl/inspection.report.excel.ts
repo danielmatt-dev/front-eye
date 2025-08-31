@@ -1,10 +1,10 @@
 import { Worksheet } from 'exceljs';
 import { AbstractReportExcel } from '../abstract.report.excel';
-import { InspectionResponseEntity } from '../../../../../inspection/domain/entity/inspection.response.entity';
+import { InspectionResponseModel } from '../../../../../inspection/data/models/inspection.response.model';
 
 export class InspectionReportExcel extends AbstractReportExcel {
 
-    inspections: InspectionResponseEntity[] = []
+    inspections: InspectionResponseModel[] = []
 
     constructor(partial?: Partial<InspectionReportExcel>) {
         super();

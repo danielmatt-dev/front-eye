@@ -1,6 +1,7 @@
 import { Expose, Type } from 'class-transformer';
 import { DiagnosticProbabilityModel } from './inspection.request.model';
 import { InspectionImageModel } from './inspection.details.model';
+import { OptionLabel } from '../../../../shared/utils/data';
 
 export class InspectionResponseModel {
 
@@ -31,11 +32,20 @@ export class InspectionResponseModel {
 
     eye: string = ''
 
+    eyeOption: OptionLabel | undefined;
+
+    @Expose({ name: 'disease_id' })
+    diseaseId: number = 0;
+
     disease: string = ''
+
+    diseaseOption: OptionLabel | undefined;
 
     model: string = ''
 
     result: string = ''
+
+    resultOption: OptionLabel | undefined;
 
     notes: string = ''
 

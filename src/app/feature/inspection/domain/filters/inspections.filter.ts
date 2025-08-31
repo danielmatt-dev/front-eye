@@ -1,7 +1,7 @@
-import { InspectionResponseEntity } from '../entity/inspection.response.entity';
 import { results } from '../../../../shared/utils/data';
 import { colorByResult } from '../../../../shared/utils/functions/functions';
 import { ChartData } from 'chart.js';
+import { InspectionResponseModel } from '../../data/models/inspection.response.model';
 
 export abstract class InspectionsFilterStrategy {
 
@@ -20,7 +20,7 @@ export abstract class InspectionsFilterStrategy {
         results.forEach((cat) => (this.dataMap[cat] = []));
     }
 
-    filter(data: InspectionResponseEntity[], startDate?: Date): InspectionResponseEntity[] {
+    filter(data: InspectionResponseModel[], startDate?: Date): InspectionResponseModel[] {
         if (!startDate) {
             return data
         }
@@ -37,11 +37,11 @@ export abstract class InspectionsFilterStrategy {
             );
     }
 
-    abstract getDataMap(filteredData: InspectionResponseEntity[]): void
+    abstract getDataMap(filteredData: InspectionResponseModel[]): void
 
     abstract getStartDate(): Date | undefined
 
-    getChartData(data: InspectionResponseEntity[]): ChartData {
+    getChartData(data: InspectionResponseModel[]): ChartData {
 
         this.startDate = this.getStartDate()
         const filteredData = this.filter(data, this.startDate)
@@ -64,7 +64,7 @@ export abstract class InspectionsFilterStrategy {
 
 export class AllFilter extends InspectionsFilterStrategy {
 
-    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+    override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData()
 
         const monthsSet = new Set<number>();
@@ -74,8 +74,8 @@ export class AllFilter extends InspectionsFilterStrategy {
 
         const months = Array.from(monthsSet).sort((a,b) => a-b);
         const labelMonths = [
-            'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
-            'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+            'January', 'February', 'March', 'April', 'May', 'June', 'July',
+            'August', 'September', 'October', 'November', 'December'
         ]
 
         this.labels = months.map(m => labelMonths[m-1])
@@ -98,7 +98,7 @@ export class AllFilter extends InspectionsFilterStrategy {
 
 export class ThreeMonthsFilter extends InspectionsFilterStrategy {
 
-    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+    override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData()
 
         const threeMonthsAgo = new Date(this.endDate)
@@ -145,7 +145,7 @@ export class ThreeMonthsFilter extends InspectionsFilterStrategy {
 }
 
 export class DynamicRangeFilter extends InspectionsFilterStrategy {
-    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+    override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData();
 
         // 1) Normalizamos startDate y endDate a medianoche
@@ -208,7 +208,7 @@ export class DynamicRangeFilter extends InspectionsFilterStrategy {
 }
 
 export class TwoMonthsFilter extends InspectionsFilterStrategy {
-    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+    override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData();
 
         const n = 8; // 8 intervalos (semanas aproximadas)
@@ -265,7 +265,7 @@ export class TwoMonthsFilter extends InspectionsFilterStrategy {
         if (this.startDate) {
             return this.startDate;
         }
-        // Sino, calculamos endDate - 2 meses
+        // Si no, calculamos endDate - 2 meses
         const d = new Date(this.endDate);
         d.setMonth(d.getMonth() - 2);
         d.setHours(0, 0, 0, 0);
@@ -275,7 +275,7 @@ export class TwoMonthsFilter extends InspectionsFilterStrategy {
 
 export class OneMonthFilter extends InspectionsFilterStrategy {
 
-    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+    override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData()
 
         const n = 4
@@ -328,7 +328,7 @@ export class OneMonthFilter extends InspectionsFilterStrategy {
 }
 
 export class RangeDaysFilter extends InspectionsFilterStrategy {
-    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+    override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData();
 
         const start = new Date(this.startDate ?? this.endDate);
@@ -388,7 +388,7 @@ export class RangeDaysFilter extends InspectionsFilterStrategy {
 
 export class OneWeekFilter extends InspectionsFilterStrategy {
 
-    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+    override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData()
 
         const oneWeekAgo = new Date(this.endDate); // Incluye hoy + 6 días atrás = 7 días total
@@ -438,7 +438,7 @@ export class OneWeekFilter extends InspectionsFilterStrategy {
 
 export class OneDayFilter extends InspectionsFilterStrategy {
 
-    override getDataMap(filteredData: InspectionResponseEntity[]): void {
+    override getDataMap(filteredData: InspectionResponseModel[]): void {
 
         this.initData()
 
