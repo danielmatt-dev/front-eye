@@ -1,3 +1,13 @@
+// Revisar antes de enviar
+// gender, eye, periodos
+
+import { Lang } from './functions/translate-lang';
+
+export interface OptionLabel {
+    label: string,
+    value: any
+}
+
 export const genders = [
     'Masculino',
     'Femenino',
@@ -14,10 +24,16 @@ export const genders2 = {
     }
 }
 
-export const eyes = [
-    'Derecho',
-    'Izquierdo'
-]
+export const genders3: Record<'en' | 'es', OptionLabel[]> = {
+    en: [
+        { label: 'Male', value: 'Masculino' },
+        { label: 'Female', value: 'Femenino' }
+    ],
+    es: [
+        { label: 'Masculino', value: 'Masculino' },
+        { label: 'Femenino', value: 'Femenino' }
+    ]
+}
 
 export const eyes2 = {
     en: {
@@ -28,6 +44,17 @@ export const eyes2 = {
         right: 'Derecho',
         left: 'Izquierdo'
     }
+}
+
+export const eyes3: Record<'en' | 'es', OptionLabel[]> = {
+    en: [
+        { label: 'Right', value: 'Derecho' },
+        { label: 'Left', value: 'Izquierdo' }
+    ],
+    es: [
+        { label: 'Derecho', value: 'Derecho' },
+        { label: 'Izquierdo', value: 'Izquierdo' }
+    ]
 }
 
 export const diseases = [
@@ -49,6 +76,21 @@ export const diseases2 = {
     }
 }
 
+export const diseases3: Record<'en' | 'es', OptionLabel[]> = {
+    en: [
+        { label: 'Wet AMD', value: 1 },
+        { label: 'Dry AMD', value: 2 },
+        { label: 'Diabetic Retinopathy', value: 3 },
+        { label: 'All', value: -1 },
+    ],
+    es: [
+        { label: 'DMAE Húmeda', value: 1 },
+        { label: 'DMAE Seca', value: 2 },
+        { label: 'Retinopatía Diabética', value: 3 },
+        { label: 'Todas', value: -1 },
+    ]
+}
+
 export const ageRanges = [
     'Menos de 30',
     'De 30 a 45',
@@ -68,12 +110,160 @@ export const ageRanges2 = {
     }
 }
 
+export const ageRanges3: Record<'en' | 'es', OptionLabel[]> = {
+    en: [
+        { label: 'Under 30', value: 1 },
+        { label: '30 to 45', value: 2 },
+        { label: 'Over 45', value: 3 },
+    ],
+    es: [
+        { label: 'Menos de 30', value: 1 },
+        { label: 'De 30 a 45', value: 2 },
+        { label: 'Más de 45', value: 3 },
+    ]
+}
+
 export const results = [
     'Proliferativo',
     'Moderado',
     'Leve',
     'Sin Afección'
 ]
+
+export const results2 = {
+    en: {
+        proliferative: 'Proliferative',
+        moderate: 'Moderate',
+        mild: 'Mild',
+        none: 'No condition'
+    },
+    es: {
+        proliferative: 'Proliferativo',
+        moderate: 'Moderado',
+        mild: 'Leve',
+        none: 'Sin Afección'
+    }
+}
+
+export const results3: Record<'en' | 'es', OptionLabel[]> = {
+    en: [
+        { label: 'No condition', value: 'Sin Afección' },
+        { label: 'Mild', value: 'Leve' },
+        { label: 'Moderate', value: 'Moderado' },
+        { label: 'Proliferative', value: 'Proliferativo' },
+        { label: 'All', value: -1 }
+    ],
+    es: [
+        { label: 'Sin Afección', value: 'Sin Afección' },
+        { label: 'Leve', value: 'Leve' },
+        { label: 'Moderado', value: 'Moderado' },
+        { label: 'Proliferativo', value: 'Proliferativo' },
+        { label: 'Todos', value: -1 }
+    ]
+}
+
+export const periods = {
+    es: {
+        currentMonth: 'Mes actual',
+        twoMonths: '2 meses',
+        threeMonths: '3 meses',
+        custom: 'Personalizado'
+    },
+    en: {
+        currentMonth: 'Current month',
+        twoMonths: '2 months',
+        threeMonths: '3 months',
+        custom: 'Custom'
+    }
+}
+
+export const periods3: Record<'en' | 'es', OptionLabel[]> = {
+    es: [
+        { label: 'Mes actual', value: 0 },
+        { label: '2 meses', value: 1 },
+        { label: '3 meses', value: 2 },
+        { label: 'Personalizado', value: -1 }
+    ],
+    en: [
+        { label: 'Current month', value: 0 },
+        { label: '2 months', value: 1 },
+        { label: '3 months', value: 2 },
+        { label: 'Custom', value: -1 }
+    ]
+}
+
+export const labelMonths = {
+    es: [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+        'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ],
+    en: [
+        'January', 'February', 'March', 'April', 'May', 'June', 'July',
+        'August', 'September', 'October', 'November', 'December'
+    ]
+};
+
+export const months: Record<'en' | 'es', OptionLabel[]> = {
+    es: [
+        { label: 'Enero', value: 1 },
+        { label: 'Febrero', value: 2 },
+        { label: 'Marzo', value: 3 },
+        { label: 'Abril', value: 4 },
+        { label: 'Mayo', value: 5 },
+        { label: 'Junio', value: 6 },
+        { label: 'Julio', value: 7 },
+        { label: 'Agosto', value: 8 },
+        { label: 'Septiembre', value: 9 },
+        { label: 'Octubre', value: 10 },
+        { label: 'Noviembre', value: 11 },
+        { label: 'Diciembre', value: 12 }
+    ],
+    en: [
+        { label: 'January', value: 1 },
+        { label: 'February', value: 2 },
+        { label: 'March', value: 3 },
+        { label: 'April', value: 4 },
+        { label: 'May', value: 5 },
+        { label: 'June', value: 6 },
+        { label: 'July', value: 7 },
+        { label: 'August', value: 8 },
+        { label: 'September', value: 9 },
+        { label: 'October', value: 10 },
+        { label: 'November', value: 11 },
+        { label: 'December', value: 12 }
+    ]
+}
+
+export const DICTS: Record<string, Record<Lang, OptionLabel[]>> = {
+    ['gender']: genders3,
+    ['eye']: eyes3,
+    ['disease']: diseases3,
+    ['ageRange']: ageRanges3,
+    ['period']: periods3,
+    ['result']: results3,
+    ['month']: months
+}
+
+export const LIST_OPTIONS = {
+    'es': [
+        ...genders3['es'],
+        ...eyes3['es'],
+        ...diseases3['es'],
+        ...ageRanges3['es'],
+        ...periods3['es'],
+        ...results3['es'],
+        ...months['es']
+    ],
+    'en': [
+        ...genders3['en'],
+        ...eyes3['en'],
+        ...diseases3['en'],
+        ...ageRanges3['en'],
+        ...periods3['en'],
+        ...results3['en'],
+        ...months['en']
+    ]
+}
 
 export const statesMexico: string[] = [
     "Aguascalientes",
