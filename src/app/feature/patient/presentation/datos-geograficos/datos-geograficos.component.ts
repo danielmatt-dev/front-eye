@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DestroyRef, HostListener, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { OpcionesConsultaComponent } from '../../../../shared/components/opciones-consulta/opciones-consulta.component';
 import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-consulta/opciones-consulta-helper';
@@ -11,19 +11,20 @@ import 'leaflet.featuregroup.subgroup';
 import 'leaflet.markercluster';
 import 'leaflet.control.layers.tree';
 import { GetAllPatientsWithInspections } from '../../domain/use_cases/getAllPatientsWithInspections';
-import { PatientWithInspectionsEntity } from '../../domain/entity/patient.with.inspections.entity';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { FilterService } from '../../../../shared/services/filter.service';
-import { ageRanges, diseases, results } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
+import { OptionLabel } from '../../../../shared/utils/data';
 import { GeographicDataReportPdf } from '../../../report/domain/template-method/pdf/impl/geographic-data.report.pdf';
-import {
-    GeographicDataReportExcel
-} from '../../../report/domain/template-method/excel/impl/geographic-data.report.excel';
+import { GeographicDataReportExcel } from '../../../report/domain/template-method/excel/impl/geographic-data.report.excel';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { SendMessage } from '../../../../shared/toast/send.message';
+import { PatientWithInspectionsModel } from '../../data/models/patient.with.inspections.model';
+import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
+import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
+import { getRangoEdad } from '../../../../shared/utils/functions/functions';
 
 @Component({
     selector: 'app-datos-geograficos',
@@ -37,16 +38,17 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     /* Variables de leaflet */
     map!: L.Map;
     markerClusterGroup!: L.MarkerClusterGroup;
+    treeControl?: L.Control.Layers;
 
     /* Variables para opciones de consulta */
-    selectedPeriod = '';
+    selectedPeriod: OptionLabel | undefined;
     selectedDates: Date[] = [];
 
     /*  Variables de iteración con html */
     showButtons = true;
 
     /* Lista de pacientes y filtrado */
-    allPatientsCoordinates: PatientWithInspectionsEntity[] = [];
+    allPatientsCoordinates: PatientWithInspectionsModel[] = [];
     filteredPatientsCoordinates = this.allPatientsCoordinates;
     displayedPatients = this.filteredPatientsCoordinates;
 
@@ -95,9 +97,26 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     opcionesConsultaHelper: OpcionesConsultaHelper;
     validationHelper: BaseValidatorHelper;
 
+    private readonly destroyRef = inject(DestroyRef);
+
+    isReadyMap = false;
+
+    /* Listas */
+    diseases: OptionLabel[] = [];
+    genders: OptionLabel[] = [];
+    ageRanges: OptionLabel[] = [];
+    results: OptionLabel[] = [];
+
+    diseasesLabels: string[] = [];
+    gendersLabels: string[] = [];
+    ageRangesLabels: string[] = [];
+    resultsLabels: string[] = [];
+
     constructor(
         private readonly primeng: PrimeNG,
         private readonly translateService: TranslateService,
+        private readonly translateLang: TranslateLang,
+        private readonly cdr: ChangeDetectorRef,
         private readonly messageService: MessageService,
         private readonly local: LocalStorageService,
         private readonly filterService: FilterService,
@@ -109,16 +128,57 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     }
 
     async ngOnInit() {
-        await this.callGetAllPatientsWithInspections()
+        await this.callGetAllPatientsWithInspections();
+        reloadOnLangChange(this.translateService, this.destroyRef, this.translate);
     }
 
     ngAfterViewInit() {
         this.map = L.map('map').setView([18.8498, -97.1039], 13);
         this.setupBaseLayer();
         this.updateMarkersOnMap();
-        this.buildLeafFilters();
-        this.setupMapControls();
+        this.isReadyMap = true;
     }
+
+    /* Traducciones */
+    private readonly translate = () => {
+        this.diseases = this.translateLang.getOptionsByType(TypeList.disease, false);
+        this.diseasesLabels = this.diseases.map((d) => d.label);
+
+        this.ageRanges = this.translateLang.getOptionsByType(TypeList.ageRange);
+        this.ageRangesLabels = this.ageRanges.map((a) => a.label);
+
+        this.genders = this.translateLang.getOptionsByType(TypeList.gender);
+        this.gendersLabels = this.genders.map((g) => g.label);
+
+        this.results = this.translateLang.getOptionsByType(TypeList.result, false);
+        this.resultsLabels = this.results.map((r) => r.label);
+
+        this.allPatientsCoordinates = this.allPatientsCoordinates.map((pat) => {
+            pat.lastResult = this.translateLang.translateByOptionLabel({
+                value: pat.lastResult,
+                type: TypeList.result
+            }).label;
+
+            pat.lastDisease = this.translateLang.translateByOptionLabel({
+                type: TypeList.disease,
+                value: pat.lastDiseaseId
+            }).label;
+
+            pat.gender = this.translateLang.translateByOptionLabel({
+                type: TypeList.gender,
+                value: pat.gender
+            }).label;
+
+            return pat;
+        });
+
+        if (this.isReadyMap) {
+            this.updateMarkersOnMap();
+            this.buildLeafFilters();
+            this.setupMapControls();
+        }
+        this.cdr.markForCheck();
+    };
 
     /* Llamadas a casos de uso */
     async callGetAllPatientsWithInspections() {
@@ -130,13 +190,44 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
         if (resultGetPatients._tag === 'Right') {
             this.allPatientsCoordinates = resultGetPatients.right;
-            console.log(this.allPatientsCoordinates)
-            this.filterPatientsCoordinates()
+            this.filterPatientsCoordinates();
         }
     }
 
     /** Aplana filters.children[].children en un solo array */
     private buildLeafFilters() {
+        const labels = this.translateLang.getGeographicLabels();
+
+        this.filters = {
+            label: labels.filter,
+            children: [
+                {
+                    label: labels.disease,
+                    children: this.diseases.map((d) => {
+                        return { label: d.label, layer: L.layerGroup() };
+                    })
+                },
+                {
+                    label: labels.ageRange,
+                    children: this.ageRanges.map((a) => {
+                        return { label: a.label, layer: L.layerGroup() };
+                    })
+                },
+                {
+                    label: labels.gender,
+                    children: this.genders.map((g) => {
+                        return { label: g.label, layer: L.layerGroup() };
+                    })
+                },
+                {
+                    label: labels.result,
+                    children: this.results.map((r) => {
+                        return { label: r.label, layer: L.layerGroup() };
+                    })
+                }
+            ]
+        };
+
         this.leafFilters = this.filters.children.flatMap((group) =>
             group.children
                 // sólo label y layer nos importan aquí
@@ -164,11 +255,11 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             const iconBase = 'assets/leaflet/images/';
 
             let iconFile = 'marker-icon-2x-green.png';
-            if (p.lastDisease === 'DMAE Seca') {
+            if (p.lastDiseaseId === 2) {
                 iconFile = 'marker-icon-2x-gold.png';
             }
 
-            if (p.lastDisease === 'Retinopatía Diabética') {
+            if (p.lastDiseaseId === 3) {
                 iconFile = 'marker-icon-2x-violet.png';
             }
 
@@ -181,12 +272,18 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
                 shadowSize: [41, 41]
             });
 
+            const labels = this.translateLang.getGeographicLabels();
+
+            const resultLabel = labels.result;
+            const diseaseLabel = labels.disease;
+            const numInspectionsLabel = labels.numInspections;
+
             const marker = L.marker([p.latitude, p.longitude], { icon: markerIcon }).bindPopup(`
-          <b>${p.fullName}</b><br>
-          Resultado: ${p.lastResult}<br>
-          Afección: ${p.lastDisease}<br>
-          Num. Inspecciones: ${p.inspectionCount}
-        `);
+                  <b>${p.fullName}</b><br>
+                  <b>${resultLabel}:</b> ${p.lastResult}<br>
+                  <b>${diseaseLabel}:</b> ${p.lastDisease}<br>
+                  <b>${numInspectionsLabel}:</b> ${p.inspectionCount}
+            `);
 
             group.addLayer(marker);
         });
@@ -216,9 +313,13 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
         // observador de resize
         new ResizeObserver(() => this.map.invalidateSize()).observe(document.getElementById('map')!);
 
+        if (this.treeControl) {
+            this.map.removeControl(this.treeControl);
+        }
+
         // ejemplo de control de filtros en árbol
-        const treeControl = (L.control as any).layers.tree(null, this.filters, { collapsed: true });
-        treeControl.addTo(this.map);
+        this.treeControl = (L.control as any).layers.tree(null, this.filters, { collapsed: true });
+        this.treeControl?.addTo(this.map);
 
         this.map.on('overlayadd', (e: any) => {
             const idx = parseInt(e.name, 10);
@@ -241,34 +342,40 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     /** Filtra y redibuja los marcadores */
     private applyFilters(): void {
-        this.displayedPatients = this.filteredPatientsCoordinates.filter((p) => this.matchesDisease(p) && this.matchesAge(p) && this.matchesGender(p) && this.matchesResult(p));
+        this.displayedPatients = this.filteredPatientsCoordinates.filter((p) =>
+            this.matchesDisease(p) &&
+            this.matchesAge(p) &&
+            this.matchesGender(p) &&
+            this.matchesResult(p));
         this.updateMarkersOnMap();
     }
 
-    private matchesDisease(p: PatientWithInspectionsEntity): boolean {
-        const sel = this.selectedFilters.filter((f) => diseases.includes(f));
+    private matchesDisease(p: PatientWithInspectionsModel): boolean {
+        const sel = this.selectedFilters.filter((f) =>
+            this.diseasesLabels.includes(f));
         return !sel.length || sel.includes(p.lastDisease);
     }
 
-    private matchesAge(p: PatientWithInspectionsEntity): boolean {
-        const age = p.age;
-        const sel = this.selectedFilters.filter((f) => ageRanges.includes(f));
-        if (!sel.length) return true;
-        return sel.some((f) => (f === 'Menos de 30' && age < 30) || (f === 'De 30 a 45' && age >= 30 && age <= 45) || (f === 'Más de 45' && age > 45));
+    private matchesAge(p: PatientWithInspectionsModel): boolean {
+        const option = this.translateLang.translateByOptionLabel({
+            type: TypeList.ageRange,
+            value: getRangoEdad(p.age)
+        });
+
+        const sel = this.selectedFilters.filter((f) =>
+            this.ageRangesLabels.includes(f));
+
+        return !sel.length || sel.includes(option.label);
     }
 
-    private matchesGender(p: PatientWithInspectionsEntity): boolean {
-        const sel = this.selectedFilters.filter((f) => ['Hombre', 'Mujer'].includes(f));
-        if (!sel.length) {
-            return true;
-        }
-        return sel.some((f) => (f === 'Hombre' && p.gender.toLowerCase() === 'masculino') || (f === 'Mujer' && p.gender.toLowerCase() === 'femenino'));
+    private matchesGender(p: PatientWithInspectionsModel): boolean {
+        const sel = this.selectedFilters.filter((f) => this.gendersLabels.includes(f));
+        return !sel.length || sel.includes(p.gender);
     }
 
-    private matchesResult(p: PatientWithInspectionsEntity): boolean {
-        const sel = this.selectedFilters.filter((f) => results.includes(f));
-        if (!sel.length) return true;
-        return sel.includes(p.lastResult);
+    private matchesResult(p: PatientWithInspectionsModel): boolean {
+        const sel = this.selectedFilters.filter((f) => this.resultsLabels.includes(f));
+        return !sel.length || sel.includes(p.lastResult);
     }
 
     @HostListener('window:resize')
@@ -282,7 +389,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             return;
         }
 
-        this.filteredPatientsCoordinates = this.filterService.filterByPeriodo<PatientWithInspectionsEntity>(this.allPatientsCoordinates, (pat) => pat.lastInspectionDate, this.selectedPeriod, this.selectedDates);
+        this.filteredPatientsCoordinates = this.filterService.filterByPeriodo<PatientWithInspectionsModel>(this.allPatientsCoordinates, (pat) => pat.lastInspectionDate, this.selectedPeriod, this.selectedDates);
         this.displayedPatients = this.filteredPatientsCoordinates;
         this.applyFilters();
         this.updateMarkersOnMap();
@@ -299,7 +406,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     }
 
     /* Funciones de selección para las opciones de consulta */
-    onPeriodSelected(periodo: string) {
+    onPeriodSelected(periodo: OptionLabel) {
         this.selectedPeriod = periodo;
     }
 
