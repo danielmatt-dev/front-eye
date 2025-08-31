@@ -15,11 +15,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DatePipe, NgClass, NgIf } from '@angular/common';
 import { OpcionesConsultaHelper } from '../../../../shared/components/opciones-consulta/opciones-consulta-helper';
 import { Toast } from 'primeng/toast';
-import { CreateDoctor } from '../../domain/use_cases/createDoctor';
-import { GetAllDoctors } from '../../domain/use_cases/getAllDoctors';
-import { UpdateDoctor, UpdateDoctorParams } from '../../domain/use_cases/updateDoctor';
+import { CreateDoctor } from '../../domain/use_cases/create-doctor';
+import { GetAllDoctors } from '../../domain/use_cases/getAll-doctors';
+import { UpdateDoctor, UpdateDoctorParams } from '../../domain/use_cases/update-doctor';
 import { DeleteDoctors } from '../../domain/use_cases/deleteDoctors';
-import { DoctorResponseEntity } from '../../domain/entity/doctor.response.entity';
 import { GetAllClinics } from '../../../clinic/domain/use_cases/getAllClinics';
 import { ClinicEntity } from '../../../clinic/domain/entity/clinic.entity';
 import { NoParams } from '../../../../shared/utils/usecase';
@@ -27,7 +26,7 @@ import { BaseValidatorHelper } from './validation/baseValidatorHelper';
 import { DoctorRequestEntity } from '../../domain/entity/doctor.request.entity';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { DatePickerModule } from 'primeng/datepicker';
-import { statesMexico } from '../../../../shared/utils/data';
+import { OptionLabel, statesMexico } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { DoctorReportPdf } from '../../../report/domain/template-method/pdf/impl/doctor.report.pdf';
@@ -35,8 +34,9 @@ import { DoctorReportExcel } from '../../../report/domain/template-method/excel/
 import { BadRequestException } from '../../../../shared/exceptions/exceptions';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { SendMessage } from '../../../../shared/toast/send.message';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
+import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
+import { DoctorResponseModel } from '../../data/models/doctor.response.model';
 
 @Component({
     standalone: true,
@@ -63,18 +63,18 @@ export class DoctorComponent implements OnInit {
     isVisible = false;
 
     /* Variables para opciones de consulta */
-    selectedPeriod = '';
+    selectedPeriod: OptionLabel | undefined;
     selectedDates: Date[] = [];
 
     /* Catálogo de opciones */
-    genders: string[] = [];
+    genders: OptionLabel[] = [];
     states = statesMexico;
     clinics: ClinicEntity[] = [];
 
     /* Lista de doctores y filtrado */
-    allDoctors: DoctorResponseEntity[] = [];
+    allDoctors: DoctorResponseModel[] = [];
     filteredDoctors = this.allDoctors;
-    selectedDoctors: DoctorResponseEntity[] = [];
+    selectedDoctors: DoctorResponseModel[] = [];
 
     /* Campos de doctor */
     doctorId?: number;
@@ -143,15 +143,26 @@ export class DoctorComponent implements OnInit {
             this.labelDoctors = res.toLowerCase();
         });
 
-        this.genders = this.translateLang.getGenderList();
-
-        this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.genders = this.translateLang.getGenderList();
-            this.cdr.markForCheck();
-        });
+        reloadOnLangChange(this.translateService, this.destroyRef, this.loadGenders);
 
         await this.callGetAllDoctors();
         await this.callGetAllClinics();
+    }
+
+    /* Traducciones de idioma */
+    private readonly loadGenders = () => {
+        this.genders = this.translateLang.getOptionsByType(TypeList.gender);
+        this.translateGenders();
+        this.cdr.markForCheck();
+    };
+
+    private translateGenders() {
+        this.allDoctors = this.allDoctors.map((doctor) => {
+            const genderOption = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: doctor.gender });
+            doctor.genderOption = genderOption;
+            doctor.gender = genderOption.value;
+            return doctor;
+        });
     }
 
     /* Llamadas a casos de uso */
@@ -167,9 +178,9 @@ export class DoctorComponent implements OnInit {
 
         if (resultUseCase._tag === 'Right') {
             this.allDoctors = resultUseCase.right;
-            //this.filteredDoctors = this.allDoctors;
-            this.filterDoctors();
         }
+        this.translateGenders();
+        this.filterDoctors();
     }
 
     async callGetAllClinics() {
@@ -207,6 +218,9 @@ export class DoctorComponent implements OnInit {
 
         if (resultCreateDoctor._tag === 'Right') {
             const doctorSuccess = resultCreateDoctor.right;
+            const genderOption = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: doctorSuccess.gender });
+            doctorSuccess.genderOption = genderOption;
+            doctorSuccess.gender = genderOption.value;
             this.validationHelper.sendToastMessageSuccess('createDoctor', `${doctorSuccess.firstName} ${doctorSuccess.lastFathName}`);
             this.allDoctors.push(doctorSuccess);
             this.filterDoctors();
@@ -243,6 +257,9 @@ export class DoctorComponent implements OnInit {
 
         if (updateResult._tag === 'Right') {
             const doctorUpdated = updateResult.right;
+            const genderOption = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: doctorUpdated.gender });
+            doctorUpdated.genderOption = genderOption;
+            doctorUpdated.gender = genderOption.value;
             this.validationHelper.sendToastMessageSuccess('updateDoctor', `${doctorUpdated.firstName} ${doctorUpdated.lastFathName}`);
 
             const idx = this.allDoctors.findIndex((d) => d.doctorId === doctorUpdated.doctorId);
@@ -307,7 +324,7 @@ export class DoctorComponent implements OnInit {
         });
     }
 
-    async editDoctor(doctor: DoctorResponseEntity) {
+    async editDoctor(doctor: DoctorResponseModel) {
         this.isUpdate = true;
 
         this.doctorId = doctor.doctorId;
@@ -316,7 +333,7 @@ export class DoctorComponent implements OnInit {
         this.lastFatherName = doctor.lastFathName;
         this.lastMotherName = doctor.lastMontName;
         this.birthDate = doctor.birthDate;
-        this.gender = doctor.gender;
+        this.gender = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: doctor.gender }).value;
         //this.phone = doctor.phone
         this.email = doctor.email;
         this.address = doctor.address;
@@ -327,7 +344,7 @@ export class DoctorComponent implements OnInit {
         await this.openModal();
     }
 
-    deleteDoctorConfirmation(doctor: DoctorResponseEntity): void {
+    deleteDoctorConfirmation(doctor: DoctorResponseModel): void {
         const header = this.validationHelper.getText('confirmations.deleteDoctor.header');
         const message = this.validationHelper.getText('confirmations.deleteDoctor.message');
 
@@ -366,7 +383,7 @@ export class DoctorComponent implements OnInit {
             return;
         }
 
-        this.filteredDoctors = this.filterService.filterByPeriodo<DoctorResponseEntity>(this.allDoctors, (doc) => doc.createdAt, this.selectedPeriod, this.selectedDates);
+        this.filteredDoctors = this.filterService.filterByPeriodo<DoctorResponseModel>(this.allDoctors, (doc) => doc.createdAt, this.selectedPeriod, this.selectedDates);
     }
 
     /* Exportar datos */
@@ -438,7 +455,7 @@ export class DoctorComponent implements OnInit {
         this.stateError = this.validationHelper.validateSelected(this.state);
     }
 
-    onPeriodSelected(periodo: string) {
+    onPeriodSelected(periodo: OptionLabel) {
         this.selectedPeriod = periodo;
     }
 
