@@ -1,11 +1,11 @@
 import { RowInput } from 'jspdf-autotable';
 import { AbstractReportPdf } from '../abstract.report.pdf';
-import { DoctorResponseEntity } from '../../../../../doctor/domain/entity/doctor.response.entity';
 import { formatDateToDDMMYYYY } from '../../../../../../shared/utils/functions/functions';
+import { DoctorResponseModel } from '../../../../../doctor/data/models/doctor.response.model';
 
 export class DoctorReportPdf extends AbstractReportPdf {
 
-    doctors: DoctorResponseEntity[] = []
+    doctors: DoctorResponseModel[] = []
 
     constructor(partial?: Partial<DoctorReportPdf>) {
         super();

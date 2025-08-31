@@ -1,10 +1,10 @@
 import { AbstractReportExcel } from '../abstract.report.excel';
-import { DoctorResponseEntity } from '../../../../../doctor/domain/entity/doctor.response.entity';
 import ExcelJS from 'exceljs';
+import { DoctorResponseModel } from '../../../../../doctor/data/models/doctor.response.model';
 
 export class DoctorReportExcel extends AbstractReportExcel {
 
-    doctors: DoctorResponseEntity[] = [];
+    doctors: DoctorResponseModel[] = [];
 
     constructor(partial?: Partial<DoctorReportExcel>) {
         super();
