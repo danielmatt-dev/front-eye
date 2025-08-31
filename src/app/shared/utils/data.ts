@@ -192,6 +192,25 @@ export const periods3: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
+export const geographicLabels = {
+    en: {
+        filter: 'Filters',
+        ageRange: 'Age ranges',
+        gender: 'Gender',
+        result: 'Result',
+        disease: 'Disease',
+        numInspections: 'Num. Inspections'
+    },
+    es: {
+        filter: 'Filtros',
+        ageRange: 'Rangos de edad',
+        gender: 'Género',
+        result: 'Resultado',
+        disease: 'Afección',
+        numInspections: 'Num. Inspecciones'
+    }
+}
+
 export const labelMonths = {
     es: [
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
@@ -244,26 +263,22 @@ export const DICTS: Record<string, Record<Lang, OptionLabel[]>> = {
     ['month']: months
 }
 
-export const LIST_OPTIONS = {
-    'es': [
-        ...genders3['es'],
-        ...eyes3['es'],
-        ...diseases3['es'],
-        ...ageRanges3['es'],
-        ...periods3['es'],
-        ...results3['es'],
-        ...months['es']
-    ],
-    'en': [
-        ...genders3['en'],
-        ...eyes3['en'],
-        ...diseases3['en'],
-        ...ageRanges3['en'],
-        ...periods3['en'],
-        ...results3['en'],
-        ...months['en']
-    ]
-}
+export const LIST_OPTIONS = [
+    ...genders3['es'],
+    ...eyes3['es'],
+    ...diseases3['es'],
+    ...ageRanges3['es'],
+    ...periods3['es'],
+    ...results3['es'],
+    ...months['es'],
+    ...genders3['en'],
+    ...eyes3['en'],
+    ...diseases3['en'],
+    ...ageRanges3['en'],
+    ...periods3['en'],
+    ...results3['en'],
+    ...months['en']
+]
 
 export const statesMexico: string[] = [
     "Aguascalientes",
