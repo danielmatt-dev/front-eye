@@ -9,7 +9,7 @@
                 <div class="font-bold mb-2">{{ 'labels.selectPeriod' | translate }}</div>
                 <div class="flex flex-wrap gap-2">
                     <div
-                        *ngFor="let categoria of categorias"
+                        *ngFor="let categoria of categories"
                         class="px-4 py-2 rounded-full cursor-pointer transition-all"
                         [ngClass]="{
                             'bg-primary text-primary-contrast': categoria.selected,
