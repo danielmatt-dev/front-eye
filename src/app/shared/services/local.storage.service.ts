@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Theme } from '../enums/enums';
 import { DatasourceLocalImpl } from '../../feature/localStorage/data/local/impl/datasource.local.impl';
+import { Lang } from '../utils/functions/translate-lang';
 
 // <>
 @Injectable({ providedIn: 'root' })
@@ -36,8 +37,8 @@ export class LocalStorageService {
         this.local.setLang(lang)
     }
 
-    getLang(): string {
-        return this.local.getLang()
+    getLang(): Lang {
+        return <"en" | "es"> this.local.getLang()
     }
 
     clear() {
