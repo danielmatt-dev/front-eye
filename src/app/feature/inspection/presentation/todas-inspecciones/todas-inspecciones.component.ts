@@ -33,6 +33,7 @@ import { TranslateLang, TypeList } from '../../../../shared/utils/functions/tran
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
 import { DiseaseEntity } from '../../../disease/domain/entity/disease.entity';
 import { InspectionResponseModel } from '../../data/models/inspection.response.model';
+import { getRangoEdad } from '../../../../shared/utils/functions/functions';
 
 @Component({
     standalone: true,
@@ -302,12 +303,6 @@ export class TodasInspeccionesComponent implements OnInit {
         this.ageRanges.forEach((range) => {
             dataMap[range.value] = 0;
         });
-
-        function getRangoEdad(edad: number): number {
-            if (edad < 30) return 1;
-            else if (edad <= 45) return 2;
-            else return 3;
-        }
 
         this.filteredInspections.forEach((inspection) => {
             const age = inspection.patientAge;
