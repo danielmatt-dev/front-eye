@@ -76,13 +76,11 @@ export class OpcionesConsultaComponent implements OnInit {
     }
 
     private readonly loadPeriods = () => {
-        const periods = this.translateLang.getTranslateList({ type: TypeList.period });
-        const categories = [
-            { label: periods[0], selected: false, value: 0 },
-            { label: periods[1], selected: false, value: 1 },
-            { label: periods[2], selected: false, value: 2 },
-            { label: periods[3], selected: false, value: -1 }
-        ];
+        const periods = this.translateLang.getOptionsByType(TypeList.period);
+
+        const categories = periods.map(p => {
+            return { label: p.label, selected: false, value: p.value }
+        })
 
         categories.forEach(cat => {
             if (cat.value === this.categorySelected?.value) {
