@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { OptionLabel } from '../utils/data';
 
 @Injectable({ providedIn: 'root' })
 export class FilterService {
@@ -6,28 +7,22 @@ export class FilterService {
     filterByPeriodo<T>(
         items: T[],
         dateGetter: (item: T) => Date,
-        period: string,
+        period: OptionLabel | undefined,
         selectedDates: Date[]
     ): T[] {
 
-        if (!period || period === 'Personalizado' && selectedDates.length === 0) {
+        if (!period || period.value === -1 && selectedDates.length === 0) {
             return items
         }
-
-        const mesesARestar: Record<string, number> = {
-            'Mes actual': 0,
-            '2 meses': 1,
-            '3 meses': 2
-        };
 
         const today = new Date()
         let initDate: Date;
         let finalDate: Date = today;
 
-        let n = mesesARestar[period] ?? 0
+        let n = period.value
         initDate = new Date(today.getFullYear(), today.getMonth() - n, 1)
 
-        if (period === 'Personalizado') {
+        if (period.value === -1) {
             if (selectedDates.length === 2) {
                 initDate = selectedDates[0]
                 finalDate = selectedDates[1]
