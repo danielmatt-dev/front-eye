@@ -166,7 +166,7 @@
                 <td>{{ patient.lastFathName }} {{ patient.lastMontName }}</td>
                 <td>{{ patient.birthDate | date:'dd/MM/yyyy' }}</td>
                 <td>{{ patient.age }} {{ 'labels.years' | translate }} </td>
-                <td>{{ patient.gender }}</td>
+                <td>{{ patient.genderOption.label }}</td>
                 <td>{{ patient.occupation }}</td>
                 <td>{{ patient.postalCode }}</td>
                 <td>{{ patient.address }}</td>
@@ -352,6 +352,8 @@
             <p-select
                 id="genero"
                 [(ngModel)]="gender"
+                optionLabel="label"
+                optionValue="value"
                 [options]="genders"
                 [ngClass]="{
                     'ng-dirty': genderError,

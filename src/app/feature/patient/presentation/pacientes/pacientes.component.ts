@@ -20,17 +20,16 @@ import { PatientResponseModel } from '../../data/models/patient.response.model';
 import {
     BaseValidatorHelper
 } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
-import { CreatePatient } from '../../domain/use_cases/createPatient';
-import { GetAllPatients } from '../../domain/use_cases/getAllPatients';
-import { PutPatientParams, UpdatePatient } from '../../domain/use_cases/updatePatient';
+import { CreatePatient } from '../../domain/use_cases/create-patient';
+import { GetAllPatients } from '../../domain/use_cases/getAll-patients';
+import { PutPatientParams, UpdatePatient } from '../../domain/use_cases/update-patient';
 import { DeletePatients } from '../../domain/use_cases/deletePatients';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { PatientRequestEntity } from '../../domain/entity/patient.request.entity';
-import { PatientResponseEntity } from '../../domain/entity/patient.response.entity';
 import { calculateAge } from '../../../../shared/utils/functions/functions';
 import { DatePickerModule } from 'primeng/datepicker';
-import { statesMexico } from '../../../../shared/utils/data';
+import { OptionLabel, statesMexico } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { PatientReportPdf } from '../../../report/domain/template-method/pdf/impl/patient.report.pdf';
@@ -38,8 +37,8 @@ import { PatientReportExcel } from '../../../report/domain/template-method/excel
 import { BadRequestException } from '../../../../shared/exceptions/exceptions';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { SendMessage } from '../../../../shared/toast/send.message';
-import { TranslateLang } from '../../../../shared/utils/functions/translate-lang';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
+import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
 
 @Component({
     standalone: true,
@@ -68,15 +67,15 @@ export class PacientesComponent implements OnInit {
     labelPatients = 'pacientes';
 
     /* Variables para opciones de consulta */
-    selectedPeriod = '';
+    selectedPeriod: OptionLabel | undefined;
     selectedDates: Date[] = [];
 
     /* Catálogo de opciones */
-    genders: string[] = [];
+    genders: OptionLabel[] = [];
     states = statesMexico;
 
     /* Lista de pacientes y filtrado */
-    allPatients: PatientResponseEntity[] = [];
+    allPatients: PatientResponseModel[] = [];
     filteredPatients = this.allPatients;
     selectedPatients: PatientResponseModel[] = [];
 
@@ -143,16 +142,25 @@ export class PacientesComponent implements OnInit {
             this.labelPatients = res.toLowerCase();
         });
 
-        this.genders = this.translateLang.getGenderList()
-
-        this.translateService.onLangChange
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.genders = this.translateLang.getGenderList()
-                this.cdr.markForCheck()
-            })
+        reloadOnLangChange(this.translateService, this.destroyRef, this.loadGenders)
 
         await this.callGetAllPatients();
+    }
+
+    /* Traducciones de idioma */
+    private readonly loadGenders = () => {
+        this.genders = this.translateLang.getOptionsByType(TypeList.gender);
+        this.translateGenders();
+        this.cdr.markForCheck();
+    }
+
+    private translateGenders() {
+        this.allPatients = this.allPatients.map(patient => {
+            const genderOption = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: patient.gender });
+            patient.genderOption = genderOption
+            patient.gender = genderOption.value
+            return patient
+        })
     }
 
     /* Llamadas a casos de uso */
@@ -169,8 +177,9 @@ export class PacientesComponent implements OnInit {
         if (resultUseCase._tag === 'Right') {
             this.allPatients = resultUseCase.right;
             //this.filteredPatients = this.allPatients;
-            this.filterPatients();
         }
+        this.translateGenders();
+        this.filterPatients();
     }
 
     async callCreatePatient() {
@@ -196,6 +205,9 @@ export class PacientesComponent implements OnInit {
 
         if (resultCreatePatient._tag === 'Right') {
             const patientSuccess = resultCreatePatient.right;
+            const genderOption = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: patientSuccess.gender });
+            patientSuccess.genderOption = genderOption;
+            patientSuccess.gender = genderOption.value;
             this.validationHelper.sendToastMessageSuccess('createPatient', `${patientSuccess.firstName} ${patientSuccess.lastFathName}`);
             this.allPatients.push(patientSuccess);
             this.filterPatients();
@@ -232,6 +244,9 @@ export class PacientesComponent implements OnInit {
 
         if (resultCallUpdatePatient._tag === 'Right') {
             const patientUpdate = resultCallUpdatePatient.right;
+            const genderOption = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: patientUpdate.gender });
+            patientUpdate.genderOption = genderOption;
+            patientUpdate.gender = genderOption.value;
             this.validationHelper.sendToastMessageSuccess('updatePatient', `${patientUpdate.firstName} ${patientUpdate.lastFathName}`);
 
             const idx = this.allPatients.findIndex((p) => p.patientId === patientUpdate.patientId);
@@ -297,7 +312,7 @@ export class PacientesComponent implements OnInit {
         });
     }
 
-    editPatient(patient: PatientResponseEntity) {
+    editPatient(patient: PatientResponseModel) {
         this.isUpdate = true;
 
         this.patientId = patient.patientId;
@@ -317,7 +332,7 @@ export class PacientesComponent implements OnInit {
         this.openModal();
     }
 
-    deletePatientConfirmation(patient: PatientResponseEntity) {
+    deletePatientConfirmation(patient: PatientResponseModel) {
         const header = this.validationHelper.getText('confirmations.deletePatient.header');
         const message = this.validationHelper.getText('confirmations.deletePatient.message');
 
@@ -356,7 +371,9 @@ export class PacientesComponent implements OnInit {
             return;
         }
 
-        this.filteredPatients = this.filterService.filterByPeriodo<PatientResponseEntity>(this.allPatients, (pat) => pat.createdAt, this.selectedPeriod, this.selectedDates);
+        this.filteredPatients = this.filterService
+            .filterByPeriodo<PatientResponseModel>(
+                this.allPatients, (pat) => pat.createdAt, this.selectedPeriod, this.selectedDates);
     }
 
     /* Exportar datos */
@@ -448,7 +465,7 @@ export class PacientesComponent implements OnInit {
         this.stateError = this.validationHelper.validateSelected(this.state);
     }
 
-    onPeriodSelected(periodo: string) {
+    onPeriodSelected(periodo: OptionLabel) {
         this.selectedPeriod = periodo;
     }
 
@@ -512,7 +529,7 @@ export class PacientesComponent implements OnInit {
         console.log('Key Up:', event.key);
     }
 
-    async natigateToNewInspection(patient: PatientResponseEntity) {
+    async natigateToNewInspection(patient: PatientResponseModel) {
         await this.router.navigate(['/insights/nueva-inspeccion'], { state: { patient } });
     }
 }
