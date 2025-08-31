@@ -15,16 +15,14 @@ import { GetAllInspections } from '../../domain/use_cases/getAllInspections';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { InspectionResponseEntity } from '../../domain/entity/inspection.response.entity';
 import { DatePipe, NgIf } from '@angular/common';
-import {
-    BaseValidatorHelper
-} from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
+import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
 import { InspectionsFilterContext } from '../../domain/filters/inspections.filter.context';
 import { AllFilter } from '../../domain/filters/inspections.filter';
 import { ChartData } from 'chart.js';
-import { ageRanges, genders, results } from '../../../../shared/utils/data';
+import { OptionLabel } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { InspectionReportPdf } from '../../../report/domain/template-method/pdf/impl/inspection.report.pdf';
 import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
@@ -32,8 +30,9 @@ import { InspectionReportExcel } from '../../../report/domain/template-method/ex
 import { DatePicker } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { SendMessage } from '../../../../shared/toast/send.message';
-import { TranslateLang } from '../../../../shared/utils/functions/translate-lang';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
+import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
+import { DiseaseEntity } from '../../../disease/domain/entity/disease.entity';
 
 @Component({
     standalone: true,
@@ -80,13 +79,15 @@ export class TodasInspeccionesComponent implements OnInit {
     pieOptions: any;
 
     /* Lista de datos */
-    ageRanges = ageRanges;
-    genders: string[] = [];
-    diseases: string[] = [];
-    selectedDisease = 'Todas';
+    ageRanges: OptionLabel[] = [];
+    genders: OptionLabel[] = [];
 
-    results = [...results, 'Todos'];
-    selectedResult = 'Todos';
+    originalDiseases: DiseaseEntity[] = [];
+    diseases: OptionLabel[] = [];
+    selectedDisease: OptionLabel = { label: 'Todas', value: -1 };
+
+    results: OptionLabel[] = [];
+    selectedResult: OptionLabel = { label: 'Todos', value: -1 };
 
     private readonly destroyRef = inject(DestroyRef);
 
@@ -115,19 +116,68 @@ export class TodasInspeccionesComponent implements OnInit {
             this.labelInspections = res.toLowerCase();
         });
 
-        this.genders = this.translateLang.getGenderList()
-
-        this.translateService.onLangChange
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.genders = this.translateLang.getGenderList()
-                this.cdr.markForCheck()
-            })
+        reloadOnLangChange(this.translateService, this.destroyRef, this.translatePage);
 
         await this.callGetAllInspections();
         if (!this.isDoctor) {
             this.initCharts();
         }
+    }
+
+    /* Traducciones de idioma */
+    private readonly translatePage = () => {
+        this.genders = this.translateLang.getOptionsByType(TypeList.gender);
+        this.ageRanges = this.translateLang.getOptionsByType(TypeList.ageRange);
+        this.translateResults();
+        this.translateDiseases();
+        this.translateInspections();
+        this.initCharts();
+        this.cdr.markForCheck();
+    };
+
+    translateResults() {
+        this.results = this.translateLang.getOptionsByType(TypeList.result);
+
+        this.selectedResult = this.translateLang.translateByOptionLabel({
+            type: TypeList.result,
+            value: this.selectedResult.value
+        });
+    }
+
+    translateDiseases() {
+        this.diseases = this.translateLang.buildDiseaseOptions(this.originalDiseases, true);
+
+        this.selectedDisease = this.translateLang.translateByOptionLabel({
+            type: TypeList.disease,
+            value: this.selectedDisease.value
+        });
+    }
+
+    translateInspections() {
+        this.allInspections = this.allInspections.map((inspection) => {
+            const resultOption = this.translateLang.translateByOptionLabel({
+                value: inspection.result,
+                type: TypeList.result
+            });
+            inspection.resultOption = resultOption;
+            inspection.result = resultOption.value;
+
+            const diseaseOption = this.translateLang.translateByOptionLabel({
+                value: inspection.diseaseId,
+                type: TypeList.disease
+            });
+            inspection.diseaseOption = diseaseOption;
+            inspection.disease = diseaseOption.value;
+
+            const eyeOption = this.translateLang.translateByOptionLabel({
+                value: inspection.eye,
+                type: TypeList.eye
+            });
+            inspection.eyeOption = eyeOption;
+            inspection.eye = eyeOption.value;
+
+            return inspection;
+        });
     }
 
     /* Llamadas a casos de uso */
@@ -142,10 +192,12 @@ export class TodasInspeccionesComponent implements OnInit {
 
         if (resultGetAllInspections._tag === 'Right') {
             this.allInspections = resultGetAllInspections.right.inspections;
-            this.diseases = resultGetAllInspections.right.diseases.map((disease) => disease.name);
-            this.filterInspections();
+            this.originalDiseases = resultGetAllInspections.right.diseases
+            this.diseases = this.translateLang.buildDiseaseOptions(this.originalDiseases, true);
         }
-        this.diseases.push('Todas');
+        this.translateDiseases();
+        this.translateInspections();
+        this.filterInspections();
     }
 
     /* Funciones de gráficas */
@@ -248,13 +300,13 @@ export class TodasInspeccionesComponent implements OnInit {
         // Inicializar contadores para cada combo rango + afección
         const dataMap: Record<string, number> = {};
         this.ageRanges.forEach((range) => {
-            dataMap[range] = 0;
+            dataMap[range.value] = 0;
         });
 
-        function getRangoEdad(edad: number): string {
-            if (edad < 30) return 'Menos de 30';
-            else if (edad <= 45) return 'De 30 a 45';
-            else return 'Más de 45';
+        function getRangoEdad(edad: number): number {
+            if (edad < 30) return 1;
+            else if (edad <= 45) return 2;
+            else return 3;
         }
 
         this.filteredInspections.forEach((inspection) => {
@@ -263,13 +315,13 @@ export class TodasInspeccionesComponent implements OnInit {
         });
 
         return {
-            labels: ageRanges,
+            labels: this.ageRanges.map((ran) => ran.label),
             datasets: [
                 {
                     label: this.validationHelper.getText('titles.distribution.byAgeRange'),
                     backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726'], // Colores fijos
                     borderColor: ['#1E88E5', '#43A047', '#FB8C00'], // Bordes fijos
-                    data: this.ageRanges.map((range) => dataMap[range])
+                    data: this.ageRanges.map((range) => dataMap[range.value])
                 }
             ]
         };
@@ -277,8 +329,11 @@ export class TodasInspeccionesComponent implements OnInit {
 
     groupByGender(): ChartData {
         const dataMap: Record<string, number> = {};
+        const genders: string[] = [];
+
         this.genders.forEach((gender) => {
-            dataMap[gender] = 0;
+            dataMap[gender.value] = 0;
+            genders.push(gender.value);
         });
 
         this.filteredInspections.forEach((inspection) => {
@@ -288,13 +343,13 @@ export class TodasInspeccionesComponent implements OnInit {
         });
 
         return {
-            labels: genders,
+            labels: this.genders.map((gen) => gen.label),
             datasets: [
                 {
                     label: this.validationHelper.getText('titles.distribution.byGender'),
                     backgroundColor: ['#42A5F5', '#FF6384'],
                     borderColor: ['#1E88E5', '#FF6384'],
-                    data: this.genders.map((gender) => dataMap[gender])
+                    data: this.genders.map((gender) => dataMap[gender.value])
                 }
             ]
         };
@@ -305,12 +360,11 @@ export class TodasInspeccionesComponent implements OnInit {
         // || <>
 
         this.filteredInspections = this.allInspections.filter((inspection) => {
+            const diseaseFilter = this.selectedDisease.value === -1 || inspection.diseaseOption?.value === this.selectedDisease.value;
 
-            const diseaseFilter = this.selectedDisease === 'Todas' || inspection.disease === this.selectedDisease;
+            const resultFilter = this.selectedResult?.value === -1 || inspection.resultOption?.value === this.selectedResult.value;
 
-            const resultFilter = this.selectedResult === 'Todos' || inspection.result === this.selectedResult;
-
-            const dateFilter = this.isDateInRange(inspection.inspectionDate)
+            const dateFilter = this.isDateInRange(inspection.inspectionDate);
 
             return diseaseFilter && resultFilter && dateFilter;
         });
@@ -321,19 +375,16 @@ export class TodasInspeccionesComponent implements OnInit {
     }
 
     private isDateInRange(date: Date): boolean {
-
         if (this.selectedDates === null || this.selectedDates.length === 0) {
-            return true
+            return true;
         }
 
         if (this.selectedDates[1] === null) {
-            const selectedDate = this.selectedDates[0]
-            return (date.getDay() === selectedDate.getDay() &&
-                date.getMonth() === selectedDate.getMonth() &&
-                date.getFullYear() === selectedDate.getFullYear())
+            const selectedDate = this.selectedDates[0];
+            return date.getDay() === selectedDate.getDay() && date.getMonth() === selectedDate.getMonth() && date.getFullYear() === selectedDate.getFullYear();
         }
 
-        return (date >= this.selectedDates[0] && date <= this.selectedDates[1])
+        return date >= this.selectedDates[0] && date <= this.selectedDates[1];
     }
 
     /* Exportar tabla */
@@ -376,5 +427,4 @@ export class TodasInspeccionesComponent implements OnInit {
     onKeyUp(event: KeyboardEvent) {
         console.log('Key Up:', event.key);
     }
-
 }

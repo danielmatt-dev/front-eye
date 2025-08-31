@@ -9,6 +9,7 @@
                 <p-select
                     id="1"
                     [(ngModel)]="selectedDisease"
+                    optionLabel="label"
                     [options]="diseases"
                     class="w-full"
                 ></p-select>
@@ -18,6 +19,7 @@
                 <p-select
                     id="2"
                     [(ngModel)]="selectedResult"
+                    optionLabel="label"
                     [options]="results"
                     class="w-full"
                 ></p-select>
@@ -170,9 +172,9 @@
                 <td>{{ inspeccion.inspectionDate | date:'dd/MM/yyyy' }}</td>
                 <td>{{ inspeccion.inspectionTime }}</td>
                 <td>{{ inspeccion.patientAge }} {{ 'labels.years' | translate }} </td>
-                <td>{{ inspeccion.disease }}</td>
-                <td>{{ inspeccion.eye }}</td>
-                <td>{{ inspeccion.result }}</td>
+                <td>{{ inspeccion.diseaseOption.label }}</td>
+                <td>{{ inspeccion.eyeOption.label }}</td>
+                <td>{{ inspeccion.resultOption.label }}</td>
                 <td>
                     <p-button
                         icon="pi pi-folder-plus"
