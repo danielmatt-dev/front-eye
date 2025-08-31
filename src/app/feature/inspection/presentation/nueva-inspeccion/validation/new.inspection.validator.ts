@@ -1,11 +1,11 @@
 import { ValidatorHelper } from '../../../../../shared/utils/validator.helper';
-import { PatientResponseEntity } from '../../../../patient/domain/entity/patient.response.entity';
 import { AiModelEntity } from '../../../../aimodel/domain/entity/aimodel.entity';
 import { DiseaseEntity } from '../../../../disease/domain/entity/disease.entity';
+import { PatientResponseModel } from '../../../../patient/data/models/patient.response.model';
 
 export class NewInspectionValidator extends ValidatorHelper {
 
-    validatePatientSelected(patient?: PatientResponseEntity): string | undefined {
+    validatePatientSelected(patient?: PatientResponseModel): string | undefined {
         if (!patient) {
             return this.getText(this.validationsKey + 'selectionPatientRequired')
         }
