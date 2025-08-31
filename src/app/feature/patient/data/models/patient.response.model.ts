@@ -1,4 +1,5 @@
 import { Expose, Type } from 'class-transformer';
+import { OptionLabel } from '../../../../shared/utils/data';
 
 export class PatientResponseModel {
 
@@ -42,6 +43,8 @@ export class PatientResponseModel {
     @Type(() => Date)
     @Expose({ name: 'updated_at' })
     updatedAt: Date = new Date()
+
+    genderOption: OptionLabel | undefined;
 
     constructor(partial?: Partial<PatientResponseModel>) {
         Object.assign(this, partial);
