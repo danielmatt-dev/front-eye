@@ -25,9 +25,12 @@ export function colorByResult(result: string) {
     switch (result) {
         case 'Avanzada': return resultColor.proliferative
         case 'Proliferativo': return resultColor.proliferative
+        case 'Proliferative': return resultColor.proliferative
         case 'Avanzada Húmeda': return resultColor.moderate
         case 'Moderada': return resultColor.moderate
+        case 'Moderate': return resultColor.moderate
         case 'Leve': return resultColor.mild
+        case 'Mild': return resultColor.mild
         default: return resultColor.nocondition
     }
 }
@@ -42,7 +45,9 @@ export function colorByGender(gender: string) {
 export function colorByDisease(disease: string) {
     switch (disease) {
         case 'DMAE Seca': return diseaseColor.dryAmd
+        case 'Dry AMD': return diseaseColor.dryAmd
         case 'DMAE Húmeda': return diseaseColor.wetAmd
+        case 'Wet AMD': return diseaseColor.wetAmd
         default: return diseaseColor.diabeticRetinopathy
     }
 }
@@ -74,4 +79,11 @@ export function formatDateToDDMMYYYY(date?: Date): string {
     const month = String(date.getMonth() + 1).padStart(2, '0'); // enero es 0
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
+}
+
+
+export function getRangoEdad(edad: number): number {
+    if (edad < 30) return 1;
+    else if (edad <= 45) return 2;
+    else return 3;
 }
