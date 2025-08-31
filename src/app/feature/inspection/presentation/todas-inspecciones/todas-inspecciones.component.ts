@@ -13,7 +13,6 @@ import { Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { GetAllInspections } from '../../domain/use_cases/getAllInspections';
 import { NoParams } from '../../../../shared/utils/usecase';
-import { InspectionResponseEntity } from '../../domain/entity/inspection.response.entity';
 import { DatePipe, NgIf } from '@angular/common';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
@@ -33,6 +32,7 @@ import { SendMessage } from '../../../../shared/toast/send.message';
 import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
 import { DiseaseEntity } from '../../../disease/domain/entity/disease.entity';
+import { InspectionResponseModel } from '../../data/models/inspection.response.model';
 
 @Component({
     standalone: true,
@@ -54,9 +54,9 @@ export class TodasInspeccionesComponent implements OnInit {
     selectedDates: Date[] = [];
 
     /* Lista de inspecciones y filtrado */
-    allInspections: InspectionResponseEntity[] = [];
+    allInspections: InspectionResponseModel[] = [];
     filteredInspections = this.allInspections;
-    selectedInspections: InspectionResponseEntity[] = [];
+    selectedInspections: InspectionResponseModel[] = [];
 
     /* Labels */
     labelInspection = 'inspección';
