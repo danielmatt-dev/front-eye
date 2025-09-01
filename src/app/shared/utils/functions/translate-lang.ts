@@ -1,22 +1,11 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '../../services/local.storage.service';
 import {
-    ageRanges2, ageRanges3,
-    DICTS,
-    diseases2,
-    diseases3,
-    eyes2,
-    eyes3,
-    genders2,
-    genders3,
+    DICTS, diseases,
     geographicLabels,
-    labelMonths,
     LIST_OPTIONS,
     OptionLabel,
-    periods,
-    periods3,
-    results2,
-    results3
+    toolTips
 } from '../data';
 import { DiseaseEntity } from '../../../feature/disease/domain/entity/disease.entity';
 
@@ -28,44 +17,14 @@ export enum TypeList {
     ageRange = 'ageRange',
     period = 'period',
     result = 'result',
-    month = 'month'
+    month = 'month',
+    option = 'option',
+    day = 'day',
 }
 
 @Injectable({ providedIn: 'root' })
 export class TranslateLang {
     constructor(private readonly local: LocalStorageService) {}
-
-    getTranslateList({ type }: { type: TypeList }): string[] {
-        let values = {};
-
-        const isLangEs = this.isLangEs();
-
-        switch (type) {
-            case TypeList.gender:
-                values = isLangEs ? genders2.es : genders2.en;
-                break;
-            case TypeList.eye:
-                values = isLangEs ? eyes2.es : eyes2.en;
-                break;
-            case TypeList.disease:
-                values = isLangEs ? diseases2.es : diseases2.en;
-                break;
-            case TypeList.ageRange:
-                values = isLangEs ? ageRanges2.es : ageRanges2.en;
-                break;
-            case TypeList.period:
-                values = isLangEs ? periods.es : periods.en;
-                break;
-            case TypeList.result:
-                values = isLangEs ? results2.es : results2.en;
-                break;
-            case TypeList.month:
-                values = isLangEs ? labelMonths.es : labelMonths.en;
-                break;
-        }
-
-        return Object.values(values);
-    }
 
     getOptionsByType(type: TypeList, withAll: boolean = true): OptionLabel[] {
         const dict = DICTS[type];
@@ -82,49 +41,6 @@ export class TranslateLang {
         return options;
     }
 
-    translateByValue({ type, value, from, to }: { type: TypeList; value: string; from: Lang; to: Lang }): string {
-        let srcDict = {};
-        let dstDict = {};
-
-        switch (type) {
-            case TypeList.gender:
-                srcDict = genders2[from];
-                dstDict = genders2[to];
-                break;
-            case TypeList.eye:
-                srcDict = eyes2[from];
-                dstDict = eyes2[to];
-                break;
-            case TypeList.disease:
-                srcDict = diseases2[from];
-                dstDict = diseases2[to];
-                break;
-            case TypeList.ageRange:
-                srcDict = ageRanges2[from];
-                dstDict = ageRanges2[to];
-                break;
-            case TypeList.result:
-                srcDict = results2[from];
-                dstDict = results2[to];
-                break;
-        }
-
-        // 1) Intento exacto
-        let key = (Object.keys(srcDict) as Array<keyof typeof srcDict>).find((k) => srcDict[k] === value.trim());
-
-        // 2) Intento case-insensitive / con trim
-        if (!key) {
-            const needle = value.trim().toLowerCase();
-            key = (Object.keys(srcDict) as Array<keyof typeof srcDict>).find((k) => srcDict[k] === needle);
-        }
-
-        // Si no se encontró una clave para ese valor, regresamos el valor original.
-        if (!key) return value;
-
-        // Devolvemos el valor equivalente en el idioma destino.
-        return dstDict[key];
-    }
-
     translateByOptionLabel({ type, value }: { type: TypeList; value: any }): OptionLabel {
         const to = this.local.getLang();
 
@@ -139,19 +55,19 @@ export class TranslateLang {
         return option ?? { label: value, value: value };
     }
 
-    buildDiseaseOptions(diseases: DiseaseEntity[], withAll: boolean): OptionLabel[] {
+    buildDiseaseOptions(dis: DiseaseEntity[], withAll: boolean): OptionLabel[] {
         const to = this.local.getLang();
 
-        const dict = diseases3[to];
+        const dict = diseases[to];
         const keys = dict.map((op) => op.value);
 
         const options: OptionLabel[] = []
 
-        diseases.forEach((disease) => {
+        dis.forEach((disease) => {
             if (!keys.includes(disease.diseaseId)) {
                 const option = { label: disease.name, value: disease.diseaseId };
-                diseases3['es'].push(option);
-                diseases3['en'].push(option);
+                diseases['es'].push(option);
+                diseases['en'].push(option);
                 options.push(option);
                 return;
             }
@@ -178,16 +94,8 @@ export class TranslateLang {
         return geographicLabels[this.local.getLang()]
     }
 
-    translateByValueEnAndEs({ type, value }: { type: TypeList; value: string }): string {
-        const isLangEs = this.isLangEs();
-        const from = isLangEs ? 'en' : 'es';
-        const to = isLangEs ? 'es' : 'en';
-
-        return this.translateByValue({ type: type, value: value, from: from, to: to });
-    }
-
-    isLangEs(): boolean {
-        return this.local.getLang() === 'es';
+    getToolTips() {
+        return toolTips[this.local.getLang()]
     }
 
 }
