@@ -25,12 +25,10 @@ export function colorByResult(result: string) {
     switch (result) {
         case 'Avanzada': return resultColor.proliferative
         case 'Proliferativo': return resultColor.proliferative
-        case 'Proliferative': return resultColor.proliferative
         case 'Avanzada Húmeda': return resultColor.moderate
         case 'Moderada': return resultColor.moderate
-        case 'Moderate': return resultColor.moderate
+        case 'Moderado': return resultColor.moderate
         case 'Leve': return resultColor.mild
-        case 'Mild': return resultColor.mild
         default: return resultColor.nocondition
     }
 }
@@ -42,13 +40,12 @@ export function colorByGender(gender: string) {
     return genderColor.male
 }
 
-export function colorByDisease(disease: string) {
-    switch (disease) {
-        case 'DMAE Seca': return diseaseColor.dryAmd
-        case 'Dry AMD': return diseaseColor.dryAmd
-        case 'DMAE Húmeda': return diseaseColor.wetAmd
-        case 'Wet AMD': return diseaseColor.wetAmd
-        default: return diseaseColor.diabeticRetinopathy
+export function colorByDisease(diseaseValue: number) {
+    switch (diseaseValue) {
+        case 1: return diseaseColor.dryAmd
+        case 2: return diseaseColor.wetAmd
+        case 3: return diseaseColor.diabeticRetinopathy
+        default: return diseaseColor.other
     }
 }
 
