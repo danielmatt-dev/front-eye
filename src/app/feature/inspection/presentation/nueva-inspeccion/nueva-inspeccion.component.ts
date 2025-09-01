@@ -16,9 +16,8 @@ import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
-import { PatientResponseEntity } from '../../../patient/domain/entity/patient.response.entity';
 import { colorByResult, formatDateToDDMMYYYY } from '../../../../shared/utils/functions/functions';
-import { State } from '../../../../shared/utils/data';
+import { OptionLabel, State } from '../../../../shared/utils/data';
 import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
 import { CreateInspection } from '../../domain/use_cases/createInspection';
@@ -30,8 +29,9 @@ import { GetNewInspectionData } from '../../domain/use_cases/getNewInspectionDat
 import { SendMessage } from '../../../../shared/toast/send.message';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { Router } from '@angular/router';
-import { TranslateLang } from '../../../../shared/utils/functions/translate-lang';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
+import { PatientResponseModel } from '../../../patient/data/models/patient.response.model';
+import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
 
 @Component({
     selector: 'app-nueva-inspeccion',
@@ -45,20 +45,22 @@ export class NuevaInspeccionComponent implements OnInit {
     /* Variables de la inspección */
     images: File[] = []; // Almacenar la imagen de la inspección del ojo
 
-    eyes: string[] = [];
-    selectedEye?: string;
+    eyes: OptionLabel[] = [];
+    selectedEye?: OptionLabel;
 
     notes = ''
 
     /* Variables del paciente */
-    allPatients: PatientResponseEntity[] = [];
-    selectedPatient?: PatientResponseEntity;
+    allPatients: PatientResponseModel[] = [];
+    selectedPatient?: PatientResponseModel;
     patientOptions: any[] = [];
     birthDate?: string = '';
 
     /* Lista de modelos y afecciones */
+    diseaseOptions: OptionLabel[] = []
     allDiseases: DiseaseEntity[] = []
-    selectedDisease?: DiseaseEntity
+    selectedDisease?: OptionLabel
+
     allModels: AiModelEntity[] = []
     selectedModel?: AiModelEntity
 
@@ -121,22 +123,20 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     async ngOnInit() {
-
-        this.eyes = this.translateLang.getEyesList()
-
-        this.translateService.onLangChange
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.eyes = this.translateLang.getEyesList()
-                this.cdr.markForCheck()
-            })
-
         await this.callGetNewInspectionData()
+
+        reloadOnLangChange(this.translateService, this.destroyRef, this.loadTranslate)
 
         this.patientOptions = this.allPatients.map((patient) => ({
             ...patient,
             fullName: `${patient.firstName} ${patient.lastFathName} ${patient.lastMontName}`
         }));
+    }
+
+    private readonly loadTranslate = () => {
+        this.eyes = this.translateLang.getOptionsByType(TypeList.eye)
+        this.diseaseOptions = this.translateLang.buildDiseaseOptions(this.allDiseases, false)
+        this.cdr.markForCheck()
     }
 
     // Llamadas a casos de uso
@@ -171,10 +171,10 @@ export class NuevaInspeccionComponent implements OnInit {
         const resultCreateInspection = await this.createInspection.call(
             new InspectionRequestEntity({
                 patientId: this.patientId,
-                diseaseId: this.selectedDisease?.diseaseId,
+                diseaseId: this.selectedDisease?.value,
                 modelId: this.selectedModel?.aiModelId,
                 image: images[0],
-                eye: this.selectedEye,
+                eye: this.selectedEye?.value,
                 notes: this.notes
             })
         )
@@ -198,7 +198,10 @@ export class NuevaInspeccionComponent implements OnInit {
     private fileToBase64(file: File): Promise<string> {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.onerror = () => reject(reader.error);
+            reader.onerror = () => {
+                // reader.error puede ser null, aseguramos un Error válido
+                reject(new Error(reader.error?.message || "Error al leer el archivo"));
+            };
             reader.onload = () => {
                 // reader.result == "data:<mime>;base64,AAAA..."
                 const dataUrl = reader.result as string;
@@ -236,14 +239,17 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     // Funciones de interacción con la interfaz
-    getTooltip(patient: PatientResponseEntity): string {
+    getTooltip(patient: PatientResponseModel): string {
+
+        const labels = this.translateLang.getToolTips()
+
         return `
-            Nombre: ${patient.firstName} ${patient.lastFathName} ${patient.lastMontName}\n
-            Edad: ${patient.age} años\n
-            Género: ${patient.gender}\n
-            Ocupación: ${patient.occupation}\n
-            Dirección: ${patient.address}, ${patient.state}\n
-            Código Postal: ${patient.postalCode}
+            ${labels.name}: ${patient.firstName} ${patient.lastFathName} ${patient.lastMontName}\n
+            ${labels.age}: ${patient.age} ${labels.years}\n
+            ${labels.gender}: ${patient.gender}\n
+            ${labels.occupation}: ${patient.occupation}\n
+            ${labels.address}: ${patient.address}, ${patient.state}\n
+            ${labels.postalCode}: ${patient.postalCode}
         `;
     }
 
@@ -279,11 +285,11 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     onEyeChange() {
-        this.eyeError = this.validator.validateSelected(this.selectedEye);
+        this.eyeError = this.validator.validateSelected(this.selectedEye?.label);
     }
 
     onDiseaseChange() {
-        this.diseaseError = this.validator.validateDiseaseSelected(this.selectedDisease);
+        this.diseaseError = this.validator.validateDiseaseSelected(this.selectedDisease?.value);
     }
 
     onModelChange() {

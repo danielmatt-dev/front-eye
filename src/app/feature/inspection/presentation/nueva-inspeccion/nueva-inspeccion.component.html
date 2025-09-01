@@ -267,6 +267,7 @@
                         [ngClass]="{ 'ng-dirty': eyeError, 'ng-invalid': eyeError }"
                         [(ngModel)]="selectedEye"
                         [options]="eyes"
+                        optionLabel="label"
                         (ngModelChange)="onEyeChange()"
                     />
                     <small *ngIf="eyeError" class="text-red-500">{{ eyeError }}</small>
@@ -277,10 +278,10 @@
                     <label for="enfermedad">{{ 'labels.disease' | translate }}</label>
                     <p-select
                         id="enfermedad"
-                        [options]="allDiseases"
+                        [options]="diseaseOptions"
                         [loading]="isLoadingGetData"
                         [(ngModel)]="selectedDisease"
-                        optionLabel="name"
+                        optionLabel="label"
                         (ngModelChange)="onDiseaseChange()"
                         [ngClass]="{ 'ng-dirty': diseaseError, 'ng-invalid': diseaseError }"
                         placeholder="{{ 'placeholders.disease' | translate }}"
