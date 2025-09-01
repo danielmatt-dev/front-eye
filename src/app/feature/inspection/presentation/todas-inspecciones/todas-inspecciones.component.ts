@@ -96,6 +96,7 @@ export class TodasInspeccionesComponent implements OnInit {
         private readonly primeng: PrimeNG,
         private readonly messageService: MessageService,
         private readonly translateService: TranslateService,
+        private readonly contextFilter: InspectionsFilterContext,
         private readonly cdr: ChangeDetectorRef,
         private readonly translateLang: TranslateLang,
         private readonly router: Router,
@@ -262,7 +263,7 @@ export class TodasInspeccionesComponent implements OnInit {
             }
         };
 
-        this.lineData = new InspectionsFilterContext(new AllFilter()).apply(this.filteredInspections);
+        this.lineData = this.contextFilter.apply(this.filteredInspections, new AllFilter());
 
         this.lineOptions = {
             maintainAspectRatio: false,
@@ -366,7 +367,7 @@ export class TodasInspeccionesComponent implements OnInit {
 
         this.barData = this.groupByAgeRange();
         this.pieData = this.groupByGender();
-        this.lineData = new InspectionsFilterContext(new AllFilter()).apply(this.filteredInspections);
+        this.lineData = this.contextFilter.apply(this.filteredInspections, new AllFilter());
     }
 
     private isDateInRange(date: Date): boolean {
