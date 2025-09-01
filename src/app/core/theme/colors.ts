@@ -20,5 +20,6 @@ export const resultColor = {
 export const diseaseColor = {
     'dryAmd': '#fbc02d',
     'wetAmd': '#009688',
-    'diabeticRetinopathy': '#9c27b0'
+    'diabeticRetinopathy': '#9c27b0',
+    'other': '#'
 }
