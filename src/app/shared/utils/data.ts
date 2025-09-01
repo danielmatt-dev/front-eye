@@ -5,26 +5,11 @@ import { Lang } from './functions/translate-lang';
 
 export interface OptionLabel {
     label: string,
-    value: any
+    value: any,
+    short?: string
 }
 
-export const genders = [
-    'Masculino',
-    'Femenino',
-]
-
-export const genders2 = {
-    en: {
-        male: 'Male',
-        female: 'Female'
-    },
-    es: {
-        male: 'Masculino',
-        female: 'Femenino'
-    }
-}
-
-export const genders3: Record<'en' | 'es', OptionLabel[]> = {
+export const genders: Record<'en' | 'es', OptionLabel[]> = {
     en: [
         { label: 'Male', value: 'Masculino' },
         { label: 'Female', value: 'Femenino' }
@@ -35,18 +20,7 @@ export const genders3: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const eyes2 = {
-    en: {
-        right: 'Right',
-        left: 'Left'
-    },
-    es: {
-        right: 'Derecho',
-        left: 'Izquierdo'
-    }
-}
-
-export const eyes3: Record<'en' | 'es', OptionLabel[]> = {
+export const eyes: Record<'en' | 'es', OptionLabel[]> = {
     en: [
         { label: 'Right', value: 'Derecho' },
         { label: 'Left', value: 'Izquierdo' }
@@ -57,26 +31,7 @@ export const eyes3: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const diseases = [
-    'DMAE Seca',
-    'DMAE Húmeda',
-    'Retinopatía Diabética'
-]
-
-export const diseases2 = {
-    en: {
-        dryAMD: 'Dry AMD',
-        wetAMD: 'Wet AMD',
-        diabeticRetinopathy: 'Diabetic Retinopathy'
-    },
-    es: {
-        dryAMD: 'DMAE Seca',
-        wetAMD: 'DMAE Húmeda',
-        diabeticRetinopathy: 'Retinopatía Diabética'
-    }
-}
-
-export const diseases3: Record<'en' | 'es', OptionLabel[]> = {
+export const diseases: Record<'en' | 'es', OptionLabel[]> = {
     en: [
         { label: 'Wet AMD', value: 1 },
         { label: 'Dry AMD', value: 2 },
@@ -91,26 +46,7 @@ export const diseases3: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const ageRanges = [
-    'Menos de 30',
-    'De 30 a 45',
-    'Más de 45'
-]
-
-export const ageRanges2 = {
-    en: {
-        under30: 'Under 30',
-        from30to45: '30 to 45',
-        over45: 'Over 45'
-    },
-    es: {
-        under30: 'Menos de 30',
-        from30to45: 'De 30 a 45',
-        over45: 'Más de 45'
-    }
-}
-
-export const ageRanges3: Record<'en' | 'es', OptionLabel[]> = {
+export const ageRanges: Record<'en' | 'es', OptionLabel[]> = {
     en: [
         { label: 'Under 30', value: 1 },
         { label: '30 to 45', value: 2 },
@@ -123,29 +59,7 @@ export const ageRanges3: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const results = [
-    'Proliferativo',
-    'Moderado',
-    'Leve',
-    'Sin Afección'
-]
-
-export const results2 = {
-    en: {
-        proliferative: 'Proliferative',
-        moderate: 'Moderate',
-        mild: 'Mild',
-        none: 'No condition'
-    },
-    es: {
-        proliferative: 'Proliferativo',
-        moderate: 'Moderado',
-        mild: 'Leve',
-        none: 'Sin Afección'
-    }
-}
-
-export const results3: Record<'en' | 'es', OptionLabel[]> = {
+export const results: Record<'en' | 'es', OptionLabel[]> = {
     en: [
         { label: 'No condition', value: 'Sin Afección' },
         { label: 'Mild', value: 'Leve' },
@@ -162,22 +76,7 @@ export const results3: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const periods = {
-    es: {
-        currentMonth: 'Mes actual',
-        twoMonths: '2 meses',
-        threeMonths: '3 meses',
-        custom: 'Personalizado'
-    },
-    en: {
-        currentMonth: 'Current month',
-        twoMonths: '2 months',
-        threeMonths: '3 months',
-        custom: 'Custom'
-    }
-}
-
-export const periods3: Record<'en' | 'es', OptionLabel[]> = {
+export const periods: Record<'en' | 'es', OptionLabel[]> = {
     es: [
         { label: 'Mes actual', value: 0 },
         { label: '2 meses', value: 1 },
@@ -189,6 +88,25 @@ export const periods3: Record<'en' | 'es', OptionLabel[]> = {
         { label: '2 months', value: 1 },
         { label: '3 months', value: 2 },
         { label: 'Custom', value: -1 }
+    ]
+}
+
+export const options: Record<'en' | 'es', OptionLabel[]> = {
+    en: [
+        { label: '1 Day', value: 1 },
+        { label: '1 Week', value: 2 },
+        { label: '1 Month', value: 3 },
+        { label: '3 Months', value: 4 },
+        { label: 'All', value: -1 },
+        { label: 'Range', value: 0 }
+    ],
+    es: [
+        { label: '1 Día', value: 1 },
+        { label: '1 Semana', value: 2 },
+        { label: '1 Mes', value: 3 },
+        { label: '3 Meses', value: 4 },
+        { label: 'Todo', value: -1 },
+        { label: 'Rango', value: 0 }
     ]
 }
 
@@ -211,72 +129,105 @@ export const geographicLabels = {
     }
 }
 
-export const labelMonths = {
-    es: [
-        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
-        'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ],
-    en: [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July',
-        'August', 'September', 'October', 'November', 'December'
-    ]
-};
+export const toolTips = {
+    en: {
+        name: 'Name',
+        age: 'Age',
+        years: 'years',
+        gender: 'Gender',
+        occupation: 'Occupation',
+        address: 'Address',
+        postalCode: 'Postal Code'
+    },
+    es: {
+        name: 'Nombre',
+        age: 'Edad',
+        years: 'años',
+        gender: 'Género',
+        occupation: 'Ocupación',
+        address: 'Dirección',
+        postalCode: 'Código Postal'
+    }
+}
 
 export const months: Record<'en' | 'es', OptionLabel[]> = {
     es: [
-        { label: 'Enero', value: 1 },
-        { label: 'Febrero', value: 2 },
-        { label: 'Marzo', value: 3 },
-        { label: 'Abril', value: 4 },
-        { label: 'Mayo', value: 5 },
-        { label: 'Junio', value: 6 },
-        { label: 'Julio', value: 7 },
-        { label: 'Agosto', value: 8 },
-        { label: 'Septiembre', value: 9 },
-        { label: 'Octubre', value: 10 },
-        { label: 'Noviembre', value: 11 },
-        { label: 'Diciembre', value: 12 }
+        { label: 'Enero', short: 'Ene', value: 1 },
+        { label: 'Febrero', short: 'Feb', value: 2 },
+        { label: 'Marzo', short: 'Mar', value: 3 },
+        { label: 'Abril', short: 'Abr', value: 4 },
+        { label: 'Mayo', short: 'May', value: 5 },
+        { label: 'Junio', short: 'Jun', value: 6 },
+        { label: 'Julio', short: 'Jul', value: 7 },
+        { label: 'Agosto', short: 'Ago', value: 8 },
+        { label: 'Septiembre', short: 'Sep', value: 9 },
+        { label: 'Octubre', short: 'Oct', value: 10 },
+        { label: 'Noviembre', short: 'Nov', value: 11 },
+        { label: 'Diciembre', short: 'Dic', value: 12 }
     ],
     en: [
-        { label: 'January', value: 1 },
-        { label: 'February', value: 2 },
-        { label: 'March', value: 3 },
-        { label: 'April', value: 4 },
-        { label: 'May', value: 5 },
-        { label: 'June', value: 6 },
-        { label: 'July', value: 7 },
-        { label: 'August', value: 8 },
-        { label: 'September', value: 9 },
-        { label: 'October', value: 10 },
-        { label: 'November', value: 11 },
-        { label: 'December', value: 12 }
+        { label: 'January', short: 'Jan', value: 1 },
+        { label: 'February', short: 'Feb', value: 2 },
+        { label: 'March', short: 'Mar', value: 3 },
+        { label: 'April', short: 'Apr', value: 4 },
+        { label: 'May', short: 'May', value: 5 },
+        { label: 'June', short: 'Jun', value: 6 },
+        { label: 'July', short: 'Jul', value: 7 },
+        { label: 'August', short: 'Aug', value: 8 },
+        { label: 'September', short: 'Sep', value: 9 },
+        { label: 'October', short: 'Oct', value: 10 },
+        { label: 'November', short: 'Nov', value: 11 },
+        { label: 'December', short: 'Dec', value: 12 }
+    ]
+}
+
+export const days: Record<'en' | 'es', OptionLabel[]> = {
+    es: [
+        { label: 'Domingo', short: 'Dom', value: 0 },
+        { label: 'Lunes', short: 'Lun', value: 1 },
+        { label: 'Martes', short: 'Mar', value: 2 },
+        { label: 'Miércoles', short: 'Mié', value: 3 },
+        { label: 'Jueves', short: 'Jue', value: 4 },
+        { label: 'Viernes', short: 'Vie', value: 5 },
+        { label: 'Sábado', short: 'Sáb', value: 6 }
+    ],
+    en: [
+        { label: 'Sunday', short: 'Sun', value: 0 },
+        { label: 'Monday', short: 'Mon', value: 1 },
+        { label: 'Tuesday', short: 'Tue', value: 2 },
+        { label: 'Wednesday', short: 'Wed', value: 3 },
+        { label: 'Thursday', short: 'Thu', value: 4 },
+        { label: 'Friday', short: 'Fri', value: 5 },
+        { label: 'Saturday', short: 'Sat', value: 6 }
     ]
 }
 
 export const DICTS: Record<string, Record<Lang, OptionLabel[]>> = {
-    ['gender']: genders3,
-    ['eye']: eyes3,
-    ['disease']: diseases3,
-    ['ageRange']: ageRanges3,
-    ['period']: periods3,
-    ['result']: results3,
-    ['month']: months
+    ['gender']: genders,
+    ['eye']: eyes,
+    ['disease']: diseases,
+    ['ageRange']: ageRanges,
+    ['period']: periods,
+    ['result']: results,
+    ['month']: months,
+    ['day']: days,
+    ['option']: options
 }
 
 export const LIST_OPTIONS = [
-    ...genders3['es'],
-    ...eyes3['es'],
-    ...diseases3['es'],
-    ...ageRanges3['es'],
-    ...periods3['es'],
-    ...results3['es'],
+    ...genders['es'],
+    ...eyes['es'],
+    ...diseases['es'],
+    ...ageRanges['es'],
+    ...periods['es'],
+    ...results['es'],
     ...months['es'],
-    ...genders3['en'],
-    ...eyes3['en'],
-    ...diseases3['en'],
-    ...ageRanges3['en'],
-    ...periods3['en'],
-    ...results3['en'],
+    ...genders['en'],
+    ...eyes['en'],
+    ...diseases['en'],
+    ...ageRanges['en'],
+    ...periods['en'],
+    ...results['en'],
     ...months['en']
 ]
 
