@@ -64,7 +64,7 @@
             </div>
 
             <div class="grid grid-cols-3">
-                <ng-container *ngFor="let d of diseases">
+                <ng-container *ngFor="let d of diseasesOptions">
                     <div class="text-center">
                         <p-skeleton
                             *ngIf="isChartLoading"
@@ -73,8 +73,8 @@
                             height="2rem"
                             width="4rem"
                         />
-                        <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ diseaseCounts[d] || 0 }}</span>
-                        <div class="text-sm text-muted-color">{{ d }}</div>
+                        <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ diseaseCounts[d.value] || 0 }}</span>
+                        <div class="text-sm text-muted-color">{{ d.label }}</div>
                     </div>
                 </ng-container>
             </div>
@@ -205,9 +205,10 @@
             id="range"
             class="w-full md:w-auto"
             [options]="options"
+            optionLabel="label"
             [(ngModel)]="optionSelected"
             [allowEmpty]="false"
-            (ngModelChange)="filterInspections()"
+            (ngModelChange)="filterInspections(false)"
         ></p-select-button>
 
         <!-- Mostrar p-select solo en pantallas pequeñas -->
@@ -216,9 +217,10 @@
             id="range-mobile"
             class="w-full"
             [options]="options"
+            optionLabel="label"
             [(ngModel)]="optionSelected"
             placeholder="{{ 'placeholders.range' | translate }}"
-            (onChange)="filterInspections()"
+            (onChange)="filterInspections(false)"
         ></p-select>
 
         <!-- Date picker -->

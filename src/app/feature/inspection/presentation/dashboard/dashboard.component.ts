@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { Fluid } from 'primeng/fluid';
 import { UIChart } from 'primeng/chart';
 import { SelectButton } from 'primeng/selectbutton';
@@ -8,15 +8,8 @@ import { DatePicker } from 'primeng/datepicker';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { GetAllInspections } from '../../domain/use_cases/getAllInspections';
 import { NoParams } from '../../../../shared/utils/usecase';
-import { InspectionResponseEntity } from '../../domain/entity/inspection.response.entity';
-import { colorByDisease } from '../../../../shared/utils/functions/functions';
-import { ageRanges } from '../../../../shared/utils/data';
-import {
-    AllFilter, RangeDaysFilter,
-    InspectionsFilterStrategy,
-    OneDayFilter, OneMonthFilter,
-    OneWeekFilter, DynamicRangeFilter
-} from '../../domain/filters/inspections.filter';
+import { colorByDisease, getRangoEdad } from '../../../../shared/utils/functions/functions';
+import { AllFilter, DynamicRangeFilter, InspectionsFilterStrategy, OneDayFilter, OneMonthFilter, OneWeekFilter, RangeDaysFilter } from '../../domain/filters/inspections.filter';
 import { InspectionsFilterContext } from '../../domain/filters/inspections.filter.context';
 import { ValidatorHelper } from '../../../../shared/utils/validator.helper';
 import { MessageService } from 'primeng/api';
@@ -26,6 +19,11 @@ import { Select } from 'primeng/select';
 import { NgForOf, NgIf } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SendMessage } from '../../../../shared/toast/send.message';
+import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
+import { InspectionResponseModel } from '../../data/models/inspection.response.model';
+import { OptionLabel } from '../../../../shared/utils/data';
+import { DiseaseModel } from '../../../disease/data/model/disease.model';
+import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
 
 @Component({
     selector: 'app-dashboard',
@@ -42,7 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     totalDetections = 0; // Detecciones totales
 
     // Conteos por tipo de afección
-    diseaseCounts: Record<string, number> = {};
+    diseaseCounts: Record<number, number> = {};
 
     // Conteos por género
     maleCount = 0; // Cantidad de pacientes hombres
@@ -63,8 +61,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     over45Percentage = 0; // Porcentaje de pacientes mayores de 45 años
 
     // Lista de opciones
-    diseases: string[] = [];
-    ageRanges = ageRanges;
+    diseasesOptions: OptionLabel[] = [];
+    ageRanges: OptionLabel[] = [];
 
     /* Providers */
     monthlyDetectionsData: any;
@@ -75,13 +73,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     detectionTrendOptions: any;
 
     /* Opciones para consultar */
-    options = ['1 Día', '1 Semana', '1 Mes', '3 Meses', 'Todo', 'Rango'];
-    optionSelected: string = 'Todo';
+    options: OptionLabel[] = [];
+    optionSelected: OptionLabel = { label: 'Todo', value: -1 };
     selectedDates: Date[] = [];
     calendarDisabled = true;
 
     /* Lista de inspecciones y filtrado */
-    allInspections: InspectionResponseEntity[] = [];
+    allInspections: InspectionResponseModel[] = [];
+    diseases: DiseaseModel[] = [];
 
     /* Variables del html */
     isMobileView: boolean = false;
@@ -92,9 +91,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     /* Providers */
     validator: ValidatorHelper;
 
+    private readonly destroyRef = inject(DestroyRef);
+
     constructor(
         private readonly messageService: MessageService,
         private readonly translateService: TranslateService,
+        private readonly translateLang: TranslateLang,
+        private readonly contextFilter: InspectionsFilterContext,
+        private readonly cdr: ChangeDetectorRef,
         private readonly primeng: PrimeNG,
         private readonly getAllInpections: GetAllInspections
     ) {
@@ -103,6 +107,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         await this.callGetAllInspections();
+        reloadOnLangChange(this.translateService, this.destroyRef, this.loadTranslate);
         this.calculateDetectionStatistics();
         this.initCharts();
         this.checkScreenSize();
@@ -119,7 +124,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-        const charDataInspectionsAll = new InspectionsFilterContext(new AllFilter()).apply(this.allInspections);
+        const charDataInspectionsAll = this.contextFilter.apply(this.allInspections, new AllFilter());
 
         this.monthlyDetectionsData = charDataInspectionsAll;
 
@@ -234,6 +239,38 @@ export class DashboardComponent implements OnInit, OnDestroy {
         };
     }
 
+    /* Traducciones */
+    private readonly loadTranslate = () => {
+        this.diseasesOptions = this.translateLang.buildDiseaseOptions(this.diseases, false);
+        this.ageRanges = this.translateLang.getOptionsByType(TypeList.ageRange);
+        this.options = this.translateLang.getOptionsByType(TypeList.option);
+        this.optionSelected = this.translateLang.translateByOptionLabel({
+            type: TypeList.option,
+            value: this.optionSelected.value
+        });
+
+        this.allInspections = this.allInspections.map((ins) => {
+            const option = this.translateLang.translateByOptionLabel({
+                value: ins.disease,
+                type: TypeList.disease
+            });
+            ins.diseaseOption = option;
+            ins.disease = option.value;
+
+            const resultOption = this.translateLang.translateByOptionLabel({
+                value: ins.result,
+                type: TypeList.result
+            });
+            ins.resultOption = resultOption
+            ins.result = resultOption.value
+            return ins;
+        });
+
+        this.initCharts();
+        this.filterInspections(true);
+        this.cdr.markForCheck();
+    };
+
     /* Llamadas a casos de uso */
     async callGetAllInspections() {
         this.isChartLoading = true;
@@ -245,16 +282,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
 
         if (resultGetAllInspections._tag === 'Right') {
-            this.allInspections = resultGetAllInspections.right.inspections
-            this.diseases = resultGetAllInspections.right.diseases.map(disease => disease.name)
-            this.diseases.forEach(d => this.diseaseCounts[d] = 0);
+            this.allInspections = resultGetAllInspections.right.inspections;
+            this.diseases = resultGetAllInspections.right.diseases;
         }
     }
 
     /* Funciones para filtrar los datos para las gráficas */
-    filterInspections() {
-        if (this.optionSelected === 'Rango') {
+    filterInspections(reload: boolean) {
+        if (this.optionSelected.value === 0) {
             this.calendarDisabled = false;
+            if (reload) this.detectionTrendData = this.contextFilter.apply(this.allInspections, new RangeDaysFilter());
             return;
         }
 
@@ -262,38 +299,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.selectedDates = [];
         let strategy: InspectionsFilterStrategy = new AllFilter();
 
-        switch (this.optionSelected) {
-            case '1 Día':
+        switch (this.optionSelected.value) {
+            case 1:
                 strategy = new OneDayFilter();
                 break;
-            case '1 Semana':
+            case 2:
                 strategy = new OneWeekFilter();
                 break;
-            case '1 Mes':
+            case 3:
                 strategy = new OneMonthFilter();
                 break;
-            case '3 Meses':
+            case 4:
                 strategy = new DynamicRangeFilter();
                 break;
         }
-        this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections);
+        this.detectionTrendData = this.contextFilter.apply(this.allInspections, strategy);
     }
 
     getDetectionsByAgeRangeAndDisease() {
         // Inicializar contadores para cada combo rango + afección
         const dataMap: Record<string, Record<string, number>> = {};
-        this.ageRanges.forEach((rango) => {
-            dataMap[rango] = {};
-            this.diseases.forEach((afeccion) => {
-                dataMap[rango][afeccion] = 0;
+        this.ageRanges.forEach((ag) => {
+            dataMap[ag.value] = {};
+            this.diseasesOptions.forEach((op) => {
+                dataMap[ag.value][op.value] = 0;
             });
         });
-
-        function getRangoEdad(edad: number): string {
-            if (edad < 30) return 'Menos de 30';
-            else if (edad <= 45) return 'De 30 a 45';
-            else return 'Más de 45';
-        }
 
         for (const inspection of this.allInspections) {
             const patient = this.allInspections.find((p) => p.patientId === inspection.patientId);
@@ -303,21 +334,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
 
             const ageRange = getRangoEdad(patient.patientAge);
-            const disease = inspection.disease;
+            const disease = inspection.diseaseOption?.value;
             dataMap[ageRange][disease]++;
         }
 
         // Construir datasets con datos agrupados por afección
-        const datasets: any[] = this.diseases.map((afeccion) => ({
-            label: afeccion,
-            data: this.ageRanges.map((rango) => dataMap[rango][afeccion]),
-            backgroundColor: this.ageRanges.map(() => colorByDisease(afeccion)),
-            borderColor: this.ageRanges.map(() => colorByDisease(afeccion)),
+        const datasets: any[] = this.diseasesOptions.map((op) => ({
+            label: op.label,
+            data: this.ageRanges.map((ag) => dataMap[ag.value][op.value]),
+            backgroundColor: this.ageRanges.map(() => colorByDisease(op.value)),
+            borderColor: this.ageRanges.map(() => colorByDisease(op.value)),
             borderWidth: 0
         }));
 
         return {
-            labels: this.ageRanges,
+            labels: this.ageRanges.map((ag) => ag.label),
             datasets
         };
     }
@@ -339,7 +370,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // Procesar detecciones
         for (const inspection of this.allInspections) {
             const inspectionDate = inspection.inspectionDate;
-            const disease = inspection.disease;
+            const disease = inspection.diseaseOption?.value;
 
             if (inspectionDate >= sevenDaysAgo) this.weeklyDetections++;
             if (inspectionDate >= oneMonthAgo) this.monthlyDetections++;
@@ -361,15 +392,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
             if (!patient) continue;
 
-            if (patient.patientGender.toLowerCase() === 'masculino') this.maleCount++;
-            else if (patient.patientGender.toLowerCase() === 'femenino') this.femaleCount++;
+            const option = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: patient.patientGender });
+
+            if (option.value === 'Masculino') this.maleCount++;
+            else if (option.value === 'Femenino') this.femaleCount++;
 
             if (patient.patientAge < 30) this.under30Count++;
             else if (patient.patientAge >= 30 && patient.patientAge <= 45) this.between30And45Count++;
             else if (patient.patientAge > 45) this.over45Count++;
         }
 
-        this.calculatePercentages(this.maleCount + this.femaleCount)
+        this.calculatePercentages(this.maleCount + this.femaleCount);
     }
 
     calculatePercentages(totalPatients: number) {
@@ -424,12 +457,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         strategy.startDate = startDate;
         strategy.endDate = endDate;
 
-        this.detectionTrendData = new InspectionsFilterContext(strategy).apply(this.allInspections);
+        this.detectionTrendData = this.contextFilter.apply(this.allInspections, strategy);
     }
 
     /* Calcular tamaño de pantalla */
     checkScreenSize(): void {
         this.isMobileView = window.innerWidth < 768; // Tailwind 'md' breakpoint
     }
-
 }
