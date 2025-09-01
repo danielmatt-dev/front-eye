@@ -1,10 +1,10 @@
 import { Worksheet } from 'exceljs';
 import { AbstractReportExcel } from '../abstract.report.excel';
-import { PatientWithInspectionsEntity } from '../../../../../patient/domain/entity/patient.with.inspections.entity';
+import { PatientWithInspectionsModel } from '../../../../../patient/data/models/patient.with.inspections.model';
 
 export class GeographicDataReportExcel extends AbstractReportExcel {
 
-    patients: PatientWithInspectionsEntity[] = []
+    patients: PatientWithInspectionsModel[] = []
 
     constructor(partial?: Partial<GeographicDataReportExcel>) {
         super()

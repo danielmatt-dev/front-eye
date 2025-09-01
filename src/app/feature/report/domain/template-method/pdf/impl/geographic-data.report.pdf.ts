@@ -1,10 +1,10 @@
 import { RowInput } from 'jspdf-autotable';
 import { AbstractReportPdf } from '../abstract.report.pdf';
-import { PatientWithInspectionsEntity } from '../../../../../patient/domain/entity/patient.with.inspections.entity';
+import { PatientWithInspectionsModel } from '../../../../../patient/data/models/patient.with.inspections.model';
 
 export class GeographicDataReportPdf extends AbstractReportPdf {
 
-    patients: PatientWithInspectionsEntity[] = []
+    patients: PatientWithInspectionsModel[] = []
 
     constructor(partial?: Partial<GeographicDataReportPdf>) {
         super()
