@@ -55,6 +55,10 @@ export class TranslateLang {
         return option ?? { label: value, value: value };
     }
 
+    getDateFormat(): string {
+        return this.local.getLang() === 'es' ? 'dd/MM/yyyy' : 'yyyy-MM-dd'
+    }
+
     buildDiseaseOptions(dis: DiseaseEntity[], withAll: boolean): OptionLabel[] {
         const to = this.local.getLang();
 

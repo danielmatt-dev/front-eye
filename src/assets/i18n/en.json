@@ -93,7 +93,8 @@
         "model": "Model",
         "actions": "Actions",
         "years": "years",
-        "clinic": "Clinic"
+        "clinic": "Clinic",
+        "datetime": "Datetime"
     },
     "placeholders": {
         "email": "example@mail.com",
