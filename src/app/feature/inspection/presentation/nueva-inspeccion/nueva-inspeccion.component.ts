@@ -22,7 +22,6 @@ import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
 import { CreateInspection } from '../../domain/use_cases/createInspection';
 import { NoParams } from '../../../../shared/utils/usecase';
-import { InspectionRequestEntity } from '../../domain/entity/inspection.request.entity';
 import { DiseaseEntity } from '../../../disease/domain/entity/disease.entity';
 import { AiModelEntity } from '../../../aimodel/domain/entity/aimodel.entity';
 import { GetNewInspectionData } from '../../domain/use_cases/getNewInspectionData';
@@ -32,6 +31,7 @@ import { Router } from '@angular/router';
 import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
 import { PatientResponseModel } from '../../../patient/data/models/patient.response.model';
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
+import { InspectionRequestModel } from '../../data/models/inspection.request.model';
 
 @Component({
     selector: 'app-nueva-inspeccion',
@@ -48,7 +48,7 @@ export class NuevaInspeccionComponent implements OnInit {
     eyes: OptionLabel[] = [];
     selectedEye?: OptionLabel;
 
-    notes = ''
+    notes = '';
 
     /* Variables del paciente */
     allPatients: PatientResponseModel[] = [];
@@ -57,12 +57,12 @@ export class NuevaInspeccionComponent implements OnInit {
     birthDate?: string = '';
 
     /* Lista de modelos y afecciones */
-    diseaseOptions: OptionLabel[] = []
-    allDiseases: DiseaseEntity[] = []
-    selectedDisease?: OptionLabel
+    diseaseOptions: OptionLabel[] = [];
+    allDiseases: DiseaseEntity[] = [];
+    selectedDisease?: OptionLabel;
 
-    allModels: AiModelEntity[] = []
-    selectedModel?: AiModelEntity
+    allModels: AiModelEntity[] = [];
+    selectedModel?: AiModelEntity;
 
     /* Campos de la inspección */
     inspectionId?: number;
@@ -90,6 +90,7 @@ export class NuevaInspeccionComponent implements OnInit {
     /* Variables del resultado de la inspección */
     state = State.initial;
     result = '';
+    resultOption?: OptionLabel;
     colorResult = '';
 
     /* Variables para la validación de campos de la inspección */
@@ -100,7 +101,7 @@ export class NuevaInspeccionComponent implements OnInit {
     imageError?: string;
 
     /* Variables de carga */
-    isLoadingGetData = false
+    isLoadingGetData = false;
 
     /* Providers */
     validator: NewInspectionValidator;
@@ -119,13 +120,13 @@ export class NuevaInspeccionComponent implements OnInit {
         private readonly local: LocalStorageService
     ) {
         this.validator = new NewInspectionValidator(new SendMessage(this.messageService), this.translateService, this.primeng);
-        this.doctor = this.local.getUsername()
+        this.doctor = this.local.getUsername();
     }
 
     async ngOnInit() {
-        await this.callGetNewInspectionData()
+        await this.callGetNewInspectionData();
 
-        reloadOnLangChange(this.translateService, this.destroyRef, this.loadTranslate)
+        reloadOnLangChange(this.translateService, this.destroyRef, this.loadTranslate);
 
         this.patientOptions = this.allPatients.map((patient) => ({
             ...patient,
@@ -134,42 +135,43 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     private readonly loadTranslate = () => {
-        this.eyes = this.translateLang.getOptionsByType(TypeList.eye)
-        this.diseaseOptions = this.translateLang.buildDiseaseOptions(this.allDiseases, false)
-        this.cdr.markForCheck()
-    }
+        this.eyes = this.translateLang.getOptionsByType(TypeList.eye);
+        this.diseaseOptions = this.translateLang.buildDiseaseOptions(this.allDiseases, false);
+        this.resultOption = this.translateLang.translateByOptionLabel({
+            value: this.result,
+            type: TypeList.result
+        });
+        this.cdr.markForCheck();
+    };
 
     // Llamadas a casos de uso
     async callGetNewInspectionData() {
-
-        this.isLoadingGetData = true
-        const resultGetNewInspectionData = await this.getAllData.call(new NoParams())
-        this.isLoadingGetData = false
+        this.isLoadingGetData = true;
+        const resultGetNewInspectionData = await this.getAllData.call(new NoParams());
+        this.isLoadingGetData = false;
 
         if (resultGetNewInspectionData._tag === 'Left') {
-            this.validator.getToastException(resultGetNewInspectionData.left)
+            this.validator.getToastException(resultGetNewInspectionData.left);
         }
 
         if (resultGetNewInspectionData._tag === 'Right') {
-            this.allPatients = resultGetNewInspectionData.right.patients
-            this.allDiseases = resultGetNewInspectionData.right.diseases
-            this.allModels = resultGetNewInspectionData.right.models
+            this.allPatients = resultGetNewInspectionData.right.patients;
+            this.allDiseases = resultGetNewInspectionData.right.diseases;
+            this.allModels = resultGetNewInspectionData.right.models;
         }
-
     }
 
     async callCreateInspection() {
-
         if (!this.isFormaValid()) {
             this.validator.showMessage({ key: 'invalidForm' });
             return;
         }
 
-        const images = await this.filesToBase64()
+        const images = await this.filesToBase64();
 
         this.state = State.loading;
         const resultCreateInspection = await this.createInspection.call(
-            new InspectionRequestEntity({
+            new InspectionRequestModel({
                 patientId: this.patientId,
                 diseaseId: this.selectedDisease?.value,
                 modelId: this.selectedModel?.aiModelId,
@@ -177,18 +179,18 @@ export class NuevaInspeccionComponent implements OnInit {
                 eye: this.selectedEye?.value,
                 notes: this.notes
             })
-        )
+        );
 
         if (resultCreateInspection._tag === 'Left') {
-            this.validator.getToastException(resultCreateInspection.left)
+            this.validator.getToastException(resultCreateInspection.left);
         }
 
         if (resultCreateInspection._tag === 'Right') {
-            this.inspectionId = resultCreateInspection.right.inspectionId
+            this.inspectionId = resultCreateInspection.right.inspectionId;
             this.result = resultCreateInspection.right.result
-            this.colorResult = colorByResult(this.result)
-            this.validator.showMessage({ key: 'createInspection', type: 'success' })
-            this.clearFields()
+            this.colorResult = colorByResult(this.result);
+            this.validator.showMessage({ key: 'createInspection', type: 'success' });
+            this.clearFields();
         }
 
         this.state = State.success;
@@ -200,21 +202,19 @@ export class NuevaInspeccionComponent implements OnInit {
             const reader = new FileReader();
             reader.onerror = () => {
                 // reader.error puede ser null, aseguramos un Error válido
-                reject(new Error(reader.error?.message || "Error al leer el archivo"));
+                reject(new Error(reader.error?.message || 'Error al leer el archivo'));
             };
             reader.onload = () => {
                 // reader.result == "data:<mime>;base64,AAAA..."
                 const dataUrl = reader.result as string;
-                resolve(dataUrl.split(",")[1]);  // solo la parte base64
+                resolve(dataUrl.split(',')[1]); // solo la parte base64
             };
             reader.readAsDataURL(file);
         });
     }
 
     filesToBase64(): Promise<string[]> {
-        return Promise.all(
-            this.images.map(file => this.fileToBase64(file))
-        );
+        return Promise.all(this.images.map((file) => this.fileToBase64(file)));
     }
 
     async navigateToInspectionDetails() {
@@ -222,26 +222,19 @@ export class NuevaInspeccionComponent implements OnInit {
             return;
         }
 
-        const id = this.inspectionId
+        const id = this.inspectionId;
         await this.router.navigate(['/insights/ver-detalle'], { queryParams: { id } });
     }
 
     // Función de validación
     isFormaValid(): boolean {
         this.onFormChange();
-        return !(
-            this.imageError ??
-            this.patientError ??
-            this.eyeError ??
-            this.diseaseError ??
-            this.modelError
-        );
+        return !(this.imageError ?? this.patientError ?? this.eyeError ?? this.diseaseError ?? this.modelError);
     }
 
     // Funciones de interacción con la interfaz
     getTooltip(patient: PatientResponseModel): string {
-
-        const labels = this.translateLang.getToolTips()
+        const labels = this.translateLang.getToolTips();
 
         return `
             ${labels.name}: ${patient.firstName} ${patient.lastFathName} ${patient.lastMontName}\n
@@ -281,7 +274,7 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     onImageChange() {
-        this.imageError = this.validator.validateImageSelected(this.images)
+        this.imageError = this.validator.validateImageSelected(this.images);
     }
 
     onEyeChange() {
@@ -298,7 +291,7 @@ export class NuevaInspeccionComponent implements OnInit {
 
     onFormChange() {
         this.onPatientChange();
-        this.onImageChange()
+        this.onImageChange();
         this.onEyeChange();
         this.onDiseaseChange();
         this.onModelChange();
