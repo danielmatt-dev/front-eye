@@ -164,7 +164,7 @@
                 <td>{{ patient.patientId }}</td>
                 <td>{{ patient.firstName }}</td>
                 <td>{{ patient.lastFathName }} {{ patient.lastMontName }}</td>
-                <td>{{ patient.birthDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ patient.birthDate | date: dateFormat }}</td>
                 <td>{{ patient.age }} {{ 'labels.years' | translate }} </td>
                 <td>{{ patient.genderOption.label }}</td>
                 <td>{{ patient.occupation }}</td>

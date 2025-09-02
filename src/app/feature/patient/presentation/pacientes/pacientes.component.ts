@@ -111,6 +111,9 @@ export class PacientesComponent implements OnInit {
     opcionesConsultaHelper: OpcionesConsultaHelper;
     validationHelper: BaseValidatorHelper;
 
+    // Fecha y hora formato
+    dateFormat = 'dd/MM/yyyy'
+
     private readonly destroyRef = inject(DestroyRef);
 
     constructor(
@@ -149,6 +152,7 @@ export class PacientesComponent implements OnInit {
 
     /* Traducciones de idioma */
     private readonly loadGenders = () => {
+        this.dateFormat = this.translateLang.getDateFormat()
         this.genders = this.translateLang.getOptionsByType(TypeList.gender);
         this.translateGenders();
         this.cdr.markForCheck();

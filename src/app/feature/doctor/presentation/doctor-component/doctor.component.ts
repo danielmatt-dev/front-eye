@@ -103,6 +103,9 @@ export class DoctorComponent implements OnInit {
     postalCodeError?: string;
     stateError?: string;
 
+    // Fecha y hora formato
+    dateFormat = 'dd/MM/yyyy'
+
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
     validationHelper: BaseValidatorHelper;
@@ -151,6 +154,7 @@ export class DoctorComponent implements OnInit {
 
     /* Traducciones de idioma */
     private readonly loadGenders = () => {
+        this.dateFormat = this.translateLang.getDateFormat()
         this.genders = this.translateLang.getOptionsByType(TypeList.gender);
         this.translateGenders();
         this.cdr.markForCheck();

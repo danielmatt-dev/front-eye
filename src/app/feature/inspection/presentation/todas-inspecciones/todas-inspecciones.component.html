@@ -169,7 +169,7 @@
         <ng-template pTemplate="body" let-inspeccion>
             <tr [pSelectableRow]="inspeccion">
                 <td>{{ inspeccion.inspectionId }}</td>
-                <td>{{ inspeccion.inspectionDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ inspeccion.inspectionDate | date: dateFormat }}</td>
                 <td>{{ inspeccion.inspectionTime }}</td>
                 <td>{{ inspeccion.patientAge }} {{ 'labels.years' | translate }} </td>
                 <td>{{ inspeccion.diseaseOption.label }}</td>

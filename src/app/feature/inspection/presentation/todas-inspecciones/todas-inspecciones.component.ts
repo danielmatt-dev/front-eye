@@ -90,6 +90,9 @@ export class TodasInspeccionesComponent implements OnInit {
     results: OptionLabel[] = [];
     selectedResult: OptionLabel = { label: 'Todos', value: -1 };
 
+    // Fecha y hora formato
+    dateFormat = 'dd/MM/yyyy'
+
     private readonly destroyRef = inject(DestroyRef);
 
     constructor(
@@ -128,6 +131,7 @@ export class TodasInspeccionesComponent implements OnInit {
 
     /* Traducciones de idioma */
     private readonly translatePage = () => {
+        this.dateFormat = this.translateLang.getDateFormat()
         this.genders = this.translateLang.getOptionsByType(TypeList.gender);
         this.ageRanges = this.translateLang.getOptionsByType(TypeList.ageRange);
         this.translateResults();

@@ -162,7 +162,7 @@
                 <td>{{ doctor.firstName }}</td>
                 <td>{{ doctor.lastFathName }} {{ doctor.lastMontName }} </td>
                 <td>{{ doctor.clinic }}</td>
-                <td>{{ doctor.birthDate | date:'dd/MM/yyyy' }}</td>
+                <td>{{ doctor.birthDate | date: dateFormat }}</td>
                 <td>{{ doctor.genderOption.label }}</td>
                 <td>{{ doctor.postalCode }}</td>
                 <td>{{ doctor.address }}</td>
