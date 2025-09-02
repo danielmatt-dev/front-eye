@@ -64,7 +64,7 @@
                     routerLink="/auth/reset"
                     class="block mb-6 w-full text-right font-medium text-primary cursor-pointer"
                 >{{ 'login.forgotPassword' | translate }}</span>
-                <p-button [label]="'login.signIn' | translate" styleClass="w-full" (onClick)="callLogin()"></p-button>
+                <p-button [label]="'login.signIn' | translate" [loading]="isLoading" styleClass="w-full" (onClick)="callLogin()"></p-button>
             </div>
         </div>
     </div>
