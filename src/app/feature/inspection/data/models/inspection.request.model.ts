@@ -1,4 +1,5 @@
 import { Expose } from 'class-transformer';
+import { OptionLabel } from '../../../../shared/utils/data';
 
 export class InspectionRequestModel {
 
@@ -31,6 +32,8 @@ export class DiagnosticProbabilityModel {
     resultCategory: string = ''
 
     probability: number = 0.0
+
+    resultOption: OptionLabel | undefined;
 
     constructor(partial?: Partial<DiagnosticProbabilityModel>) {
         Object.assign(this, partial)

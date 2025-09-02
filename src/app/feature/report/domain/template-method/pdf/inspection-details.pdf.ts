@@ -1,15 +1,15 @@
-import { InspectionDetailsEntity } from '../../../../inspection/domain/entity/inspection.details.entity';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { colorByResult, formatDateToDDMMYYYY } from '../../../../../shared/utils/functions/functions';
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '../../../../../shared/services/local.storage.service';
+import { InspectionDetailsModel } from '../../../../inspection/data/models/inspection.details.model';
 
 @Injectable({ providedIn: 'root' })
 export class InspectionDetailsPdf {
 
     private doc!: jsPDF;
-    inspection!: InspectionDetailsEntity;
+    inspection!: InspectionDetailsModel;
 
     constructor(
         private readonly local: LocalStorageService
@@ -17,7 +17,7 @@ export class InspectionDetailsPdf {
         //this.inspection = inspection;
     }
 
-    generate(inspection: InspectionDetailsEntity) {
+    generate(inspection: InspectionDetailsModel) {
         this.inspection = inspection
         this.createDocument();
         this.addHeader();
