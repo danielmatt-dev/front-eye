@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Button } from 'primeng/button';
 import { ProgressBar } from 'primeng/progressbar';
 import { MessageService, PrimeTemplate } from 'primeng/api';
@@ -14,16 +14,19 @@ import { GetInspectionById } from '../../domain/use_cases/getInspectionById';
 import { ValidatorHelper } from '../../../../shared/utils/validator.helper';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { PrimeNG } from 'primeng/config';
-import { InspectionResponseEntity } from '../../domain/entity/inspection.response.entity';
-import { PatientResponseEntity } from '../../../patient/domain/entity/patient.response.entity';
-import { InspectionDetailsEntity, InspectionImageEntity } from '../../domain/entity/inspection.details.entity';
-import { DiagnosticProbabilityEntity } from '../../domain/entity/inspection.request.entity';
-import { colorByResult, formatDateToSpanishMexico } from '../../../../shared/utils/functions/functions';
+import { colorByResult } from '../../../../shared/utils/functions/functions';
 import { CommonModule } from '@angular/common';
 import { LocaleTextProvider } from '../../../../shared/locale.text.provider';
 import { SkeletonModule } from 'primeng/skeleton';
 import { InspectionDetailsPdf } from '../../../report/domain/template-method/pdf/inspection-details.pdf';
 import { SendMessage } from '../../../../shared/toast/send.message';
+import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
+import { PatientResponseModel } from '../../../patient/data/models/patient.response.model';
+import { InspectionResponseModel } from '../../data/models/inspection.response.model';
+import { DiagnosticProbabilityModel } from '../../data/models/inspection.request.model';
+import { InspectionDetailsModel, InspectionImageModel } from '../../data/models/inspection.details.model';
+import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     selector: 'app-ver-detalle-inspeccion',
@@ -34,7 +37,6 @@ import { SendMessage } from '../../../../shared/toast/send.message';
     styleUrl: './ver-detalle-inspeccion.component.scss'
 })
 export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
-
     showThumbnails: boolean | undefined;
 
     fullscreen: boolean = false;
@@ -57,36 +59,42 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
     // Id de la inspección
     inspectionId?: number;
 
-    details?: InspectionDetailsEntity;
+    details?: InspectionDetailsModel;
 
     // Variables de la inspeción
-    inspection?: InspectionResponseEntity;
+    inspection?: InspectionResponseModel;
 
     // Variables del paciente
-    patient?: PatientResponseEntity;
-    doctor = ''
+    patient?: PatientResponseModel;
+    doctor = '';
 
     // Imágenes
-    imagesResponse: InspectionImageEntity[] = [];
+    imagesResponse: InspectionImageModel[] = [];
 
     // Probabilidades de la inspección
-    probabilities: DiagnosticProbabilityEntity[] = [];
+    probabilities: DiagnosticProbabilityModel[] = [];
 
     // Lista de inspecciones
-    allInspections: InspectionResponseEntity[] = [];
+    allInspections: InspectionResponseModel[] = [];
 
     // Resultado de inspección
-    result?: string;
     colorResult?: string = mapColors.red;
+
+    // Fecha y hora formato
+    dateFormat = 'dd/MM/yyyy'
 
     // Providers
     validatorHelper: ValidatorHelper;
     localeTextProvider: LocaleTextProvider;
 
+    private readonly destroyRef = inject(DestroyRef);
+
     constructor(
         private readonly router: Router,
         private readonly messageService: MessageService,
         private readonly translateService: TranslateService,
+        private readonly translateLang: TranslateLang,
+        private readonly cdr: ChangeDetectorRef,
         private readonly primeNg: PrimeNG,
         private readonly cd: ChangeDetectorRef,
         private readonly route: ActivatedRoute,
@@ -105,12 +113,71 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
             this.inspectionId = idParam !== null ? Number(idParam) : undefined;
         });
 
-        await this.callGetInspectionById()
+        await this.callGetInspectionById();
+        reloadOnLangChange(this.translateService, this.destroyRef, this.translate);
     }
 
     ngOnDestroy() {
         this.unbindDocumentListeners();
     }
+
+    private readonly translate = () => {
+
+        this.dateFormat = this.translateLang.getDateFormat()
+
+        if (this.inspection) {
+            this.inspection.eyeOption = this.translateLang.translateByOptionLabel({
+                value: this.inspection.eye,
+                type: TypeList.eye
+            });
+            this.inspection.resultOption = this.translateLang.translateByOptionLabel({
+                value: this.inspection.result,
+                type: TypeList.result
+            });
+            this.inspection.diseaseOption = this.translateLang.translateByOptionLabel({
+                value: this.inspection.diseaseId,
+                type: TypeList.disease
+            });
+        }
+
+        if (this.patient) {
+            this.patient.genderOption = this.translateLang.translateByOptionLabel({
+                value: this.patient.gender,
+                type: TypeList.gender
+            });
+        }
+
+        this.probabilities = this.probabilities.map((p) => {
+            const option = this.translateLang.translateByOptionLabel({
+                value: p.resultCategory,
+                type: TypeList.result
+            });
+            p.resultOption = option;
+            p.resultCategory = option.value;
+
+            return p;
+        });
+
+        this.allInspections = this.allInspections.map((a) => {
+            const eyeOption = this.translateLang.translateByOptionLabel({
+                value: a.eye,
+                type: TypeList.eye
+            });
+            a.eyeOption = eyeOption;
+            a.eye = eyeOption.value;
+
+            const resultOption = this.translateLang.translateByOptionLabel({
+                value: a.result,
+                type: TypeList.result
+            });
+            a.resultOption = resultOption;
+            a.result = resultOption.value;
+
+            return a;
+        });
+
+        this.cdr.markForCheck();
+    };
 
     /* Llamadas a casos de uso */
     async callGetInspectionById() {
@@ -118,9 +185,9 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.isLoading = true
+        this.isLoading = true;
         const resultGetInspectionById = await this.getInspectionById.call(this.inspectionId);
-        this.isLoading = false
+        this.isLoading = false;
 
         if (resultGetInspectionById._tag === 'Left') {
             this.validatorHelper.getToastException(resultGetInspectionById.left);
@@ -128,7 +195,7 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
 
         if (resultGetInspectionById._tag === 'Right') {
             const details = resultGetInspectionById.right;
-            this.details = details
+            this.details = details;
             this.inspection = details.inspection;
             this.patient = details.patient;
             this.doctor = details.inspection.doctor;
@@ -221,14 +288,12 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
     }
 
     exportPDF() {
-
         if (!this.details) {
-            return
+            return;
         }
 
-        this.inspectionDetailsPdf.generate(this.details)
+        this.inspectionDetailsPdf.generate(this.details);
     }
 
-    protected readonly formatDateToSpanishMexico = formatDateToSpanishMexico;
     protected readonly colorByResult = colorByResult;
 }

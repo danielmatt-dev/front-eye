@@ -7,24 +7,24 @@
             <div class="card h-full">
                 <div class="font-semibold text-xl mb-4">{{ 'titles.inspectionData' | translate }}</div>
                 <div class="grid grid-cols-3 my-6">
-                    <div class="col-span-1">{{ 'labels.date' | translate }}:</div>
+                    <div class="col-span-1">{{ 'labels.datetime' | translate }}:</div>
                     <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
-                    <div *ngIf="!isLoading" class="font-bold col-span-2">{{ formatDateToSpanishMexico(inspection?.inspectionDate) }}</div>
-                </div>
-                <div class="grid grid-cols-3 my-6">
-                    <div class="col-span-1">{{ 'labels.time' | translate }}:</div>
-                    <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
-                    <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.inspectionTime }}</div>
+                    <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.inspectionDate | date: dateFormat }} {{ inspection?.inspectionTime }}</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'labels.eye' | translate }}:</div>
                     <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
-                    <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.eye }}</div>
+                    <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.eyeOption?.label }}</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'labels.disease' | translate }}:</div>
                     <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
-                    <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.disease }}</div>
+                    <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.diseaseOption?.label }}</div>
+                </div>
+                <div class="grid grid-cols-3 my-6">
+                    <div class="col-span-1">{{ 'labels.model' | translate }}:</div>
+                    <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
+                    <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.model }}</div>
                 </div>
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'doctor.singular' | translate }}:</div>
@@ -36,7 +36,7 @@
                     <p-skeleton *ngIf="isLoading" width="6rem" height="2rem" />
                     <p-button
                         *ngIf="!isLoading"
-                        label="{{ inspection?.result }}"
+                        label="{{ inspection?.resultOption?.label }}"
                         disabled="true"
                         [style]="{opacity: '3', background: colorResult, border: colorResult, color: 'white'}"
                     ></p-button>
@@ -68,7 +68,7 @@
                             <ng-container *ngFor="let prob of probabilities">
                                 <div class="row-span-1 grid grid-cols-3 gap-2 items-center">
                                     <div class="col-span-1">
-                                        {{ prob.resultCategory }} ({{ (prob.probability * 100) | number:'1.0-0' }}%)
+                                        {{ prob.resultOption?.label }} ({{ (prob.probability * 100) | number:'1.0-0' }}%)
                                     </div>
                                     <p-progress-bar
                                         class="col-span-2"
@@ -173,17 +173,17 @@
             <div class="grid grid-cols-2 my-6">
                 <div class="col-span-1">{{ 'labels.birthDate' | translate }}:</div>
                 <p-skeleton *ngIf="isLoading" class="col-span-1" height="1.5rem" />
-                <div *ngIf="!isLoading"  class="font-bold col-span-1">{{ patient?.birthDate | date:'dd/MM/yyyy' }}</div>
+                <div *ngIf="!isLoading"  class="font-bold col-span-1">{{ patient?.birthDate | date: dateFormat }}</div>
             </div>
             <div class="grid grid-cols-2 my-6">
                 <div class="col-span-1">{{ 'labels.age' | translate }}:</div>
                 <p-skeleton *ngIf="isLoading" class="col-span-1" height="1.5rem" />
-                <div *ngIf="!isLoading"  class="font-bold col-span-1">{{ patient?.age }} años</div>
+                <div *ngIf="!isLoading"  class="font-bold col-span-1">{{ patient?.age }} {{ 'labels.years' | translate }}</div>
             </div>
             <div class="grid grid-cols-2 my-6">
                 <div class="col-span-1">{{ 'labels.gender' | translate }}:</div>
                 <p-skeleton *ngIf="isLoading" class="col-span-1" height="1.5rem" />
-                <div *ngIf="!isLoading"  class="font-bold col-span-1">{{ patient?.gender }}</div>
+                <div *ngIf="!isLoading"  class="font-bold col-span-1">{{ patient?.genderOption?.label }}</div>
             </div>
             <div class="grid grid-cols-2 my-6">
                 <div class="col-span-1">{{ 'labels.phone' | translate }}:</div>
@@ -238,9 +238,9 @@
                 <ng-template pTemplate="body" let-inspection>
                     <tr [pSelectableRow]="inspection">
                         <td>{{ inspection.inspectionId }}</td>
-                        <td>{{ inspection.inspectionDate | date: 'dd/MM/yyyy' }}</td>
-                        <td>{{ inspection.eye }}</td>
-                        <td>{{ inspection.result }}</td>
+                        <td>{{ inspection.inspectionDate | date: dateFormat }}</td>
+                        <td>{{ inspection.eyeOption.label }}</td>
+                        <td>{{ inspection.resultOption.label }}</td>
                     </tr>
                 </ng-template>
 
