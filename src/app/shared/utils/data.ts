@@ -9,7 +9,7 @@ export interface OptionLabel {
     short?: string
 }
 
-export const genders: Record<'en' | 'es', OptionLabel[]> = {
+export const genders: Record<Lang, OptionLabel[]> = {
     en: [
         { label: 'Male', value: 'Masculino' },
         { label: 'Female', value: 'Femenino' }
@@ -20,7 +20,7 @@ export const genders: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const eyes: Record<'en' | 'es', OptionLabel[]> = {
+export const eyes: Record<Lang, OptionLabel[]> = {
     en: [
         { label: 'Right', value: 'Derecho' },
         { label: 'Left', value: 'Izquierdo' }
@@ -31,7 +31,7 @@ export const eyes: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const diseases: Record<'en' | 'es', OptionLabel[]> = {
+export const diseases: Record<Lang, OptionLabel[]> = {
     en: [
         { label: 'Wet AMD', value: 1 },
         { label: 'Dry AMD', value: 2 },
@@ -46,7 +46,7 @@ export const diseases: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const ageRanges: Record<'en' | 'es', OptionLabel[]> = {
+export const ageRanges: Record<Lang, OptionLabel[]> = {
     en: [
         { label: 'Under 30', value: 1 },
         { label: '30 to 45', value: 2 },
@@ -59,7 +59,7 @@ export const ageRanges: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const results: Record<'en' | 'es', OptionLabel[]> = {
+export const results: Record<Lang, OptionLabel[]> = {
     en: [
         { label: 'No condition', value: 'Sin Afección' },
         { label: 'Mild', value: 'Leve' },
@@ -76,7 +76,7 @@ export const results: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const periods: Record<'en' | 'es', OptionLabel[]> = {
+export const periods: Record<Lang, OptionLabel[]> = {
     es: [
         { label: 'Mes actual', value: 0 },
         { label: '2 meses', value: 1 },
@@ -91,7 +91,7 @@ export const periods: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const options: Record<'en' | 'es', OptionLabel[]> = {
+export const options: Record<Lang, OptionLabel[]> = {
     en: [
         { label: '1 Day', value: 1 },
         { label: '1 Week', value: 2 },
@@ -150,7 +150,7 @@ export const toolTips = {
     }
 }
 
-export const months: Record<'en' | 'es', OptionLabel[]> = {
+export const months: Record<Lang, OptionLabel[]> = {
     es: [
         { label: 'Enero', short: 'Ene', value: 1 },
         { label: 'Febrero', short: 'Feb', value: 2 },
@@ -181,7 +181,7 @@ export const months: Record<'en' | 'es', OptionLabel[]> = {
     ]
 }
 
-export const days: Record<'en' | 'es', OptionLabel[]> = {
+export const days: Record<Lang, OptionLabel[]> = {
     es: [
         { label: 'Domingo', short: 'Dom', value: 0 },
         { label: 'Lunes', short: 'Lun', value: 1 },
