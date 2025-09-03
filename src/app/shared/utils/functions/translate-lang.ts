@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '../../services/local.storage.service';
 import {
-    DICTS, diseases,
-    geographicLabels,
+    detailsHeaders,
+    DICTS, diseases, doctorHeaders, geographicHeaders,
+    geographicLabels, HEADERS, inspectionHeaders,
     LIST_OPTIONS,
-    OptionLabel,
+    OptionLabel, patientHeaders, pdf,
     toolTips
 } from '../data';
 import { DiseaseEntity } from '../../../feature/disease/domain/entity/disease.entity';
@@ -20,6 +21,12 @@ export enum TypeList {
     month = 'month',
     option = 'option',
     day = 'day',
+    doctor = 'doctor',
+    patient = 'patient',
+    geographic = 'geographic',
+    inspection = 'inspection',
+    details = 'details',
+    pdf = 'pdf'
 }
 
 @Injectable({ providedIn: 'root' })
@@ -100,6 +107,10 @@ export class TranslateLang {
 
     getToolTips() {
         return toolTips[this.local.getLang()]
+    }
+
+    getHeaders(type: TypeList) {
+        return HEADERS[type][this.local.getLang()]
     }
 
 }

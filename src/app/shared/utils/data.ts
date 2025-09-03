@@ -150,6 +150,136 @@ export const toolTips = {
     }
 }
 
+export const doctorHeaders: Record<Lang, Record<string, string>> = {
+    en: {
+        title: 'Doctors',
+        id: 'ID',
+        name: 'Name',
+        clinic: 'Clinic',
+        birthdate: 'Birthdate',
+        email: 'Email',
+        gender: 'Gender',
+        address: 'Address'
+    },
+    es: {
+        title: 'Doctores',
+        id: 'ID',
+        name: 'Nombre',
+        clinic: 'Clínica',
+        birthdate: 'Fecha de nacimiento',
+        email: 'Correo',
+        gender: 'Género',
+        address: 'Dirección'
+    }
+}
+
+export const geographicHeaders: Record<Lang, Record<string, string>> = {
+    en: {
+        title: 'Geographic Data',
+        id: 'ID',
+        patient: 'Patient',
+        latitude: 'Latitude',
+        longitude: 'Longitude',
+        disease: 'Disease',
+        result: 'Result',
+        numInspections: 'Num. Inspections'
+    },
+    es: {
+        title: 'Datos geográficos',
+        id: 'ID',
+        patient: 'Paciente',
+        latitude: 'Latitud',
+        longitude: 'Longitud',
+        disease: 'Afección',
+        result: 'Resultado',
+        numInspections: 'Num. Inspecciones'
+    }
+}
+
+export const inspectionHeaders: Record<Lang, Record<string, string>> = {
+    en: {
+        title: 'Inspections',
+        id: 'ID',
+        date: 'Date',
+        time: 'Time',
+        age: 'Age',
+        years: 'years',
+        disease: 'Disease',
+        eye: 'Eye',
+        result: 'Result',
+    },
+    es: {
+        title: 'Inspecciones',
+        id: 'ID',
+        date: 'Fecha',
+        time: 'Hora',
+        age: 'Edad',
+        years: 'años',
+        disease: 'Afección',
+        eye: 'Ojo',
+        result: 'Resultado'
+    }
+}
+
+export const patientHeaders: Record<Lang, Record<string, string>> = {
+    en: {
+        title: 'Patients',
+        id: 'ID',
+        patient: 'Patient',
+        birthdate: 'Birthdate',
+        gender: 'Gender',
+        email: 'Email',
+        occupation: 'Occupation',
+        address: 'Address'
+    },
+    es: {
+        title: 'Pacientes',
+        id: 'ID',
+        patient: 'Paciente',
+        birthdate: 'Fecha de nacimiento',
+        gender: 'Género',
+        email: 'Correo',
+        occupation: 'Ocupación',
+        address: 'Dirección'
+    }
+}
+
+export const detailsHeaders: Record<Lang, Record<string, string>> = {
+    en: {
+        details: 'Inspection Details',
+        data: 'Inspection Data',
+        occurrence: 'Occurrence Probability (AI)',
+        results: 'Results',
+        probability: 'Probability (%)',
+        images: 'Images',
+        patient: 'Patient Data',
+        notes: 'Additional Notes'
+    },
+    es: {
+        details: 'Detalle de la inspección',
+        data: 'Datos de la inspección',
+        occurrence: 'Probabilidad de Ocurrencia (IA)',
+        results: 'Resultados',
+        probability: 'Probabilidad (%)',
+        images: 'Imágenes',
+        patient: 'Datos del paciente',
+        notes: 'Notas adicionales'
+    }
+}
+
+export const pdf = {
+    en: {
+        page: 'Page',
+        pc: 'pc',
+        years: 'years'
+    },
+    es: {
+        page: 'Página',
+        pc: 'cp',
+        years: 'años'
+    }
+}
+
 export const months: Record<Lang, OptionLabel[]> = {
     es: [
         { label: 'Enero', short: 'Ene', value: 1 },
@@ -212,6 +342,15 @@ export const DICTS: Record<string, Record<Lang, OptionLabel[]>> = {
     ['month']: months,
     ['day']: days,
     ['option']: options
+}
+
+export const HEADERS: Record<string, Record<Lang, Record<string, string>>> = {
+    ['doctor']: doctorHeaders,
+    ['patient']: patientHeaders,
+    ['inspection']: inspectionHeaders,
+    ['geographic']: geographicHeaders,
+    ['details']: detailsHeaders,
+    ['pdf']: pdf
 }
 
 export const LIST_OPTIONS = [
