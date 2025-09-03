@@ -401,7 +401,10 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     }
 
     async exportExcel() {
-        await this.generateReport.generateExcel(new GeographicDataReportExcel({ patients: this.displayedPatients }));
+        await this.generateReport.generateExcel(new GeographicDataReportExcel({
+            patients: this.displayedPatients,
+            headers: this.translateLang.getHeaders(TypeList.geographic)
+        }));
     }
 
     /* Funciones de selección para las opciones de consulta */

@@ -402,7 +402,11 @@ export class DoctorComponent implements OnInit {
     }
 
     async exportExcel() {
-        await this.generateReport.generateExcel(new DoctorReportExcel({ doctors: this.filteredDoctors }));
+        await this.generateReport.generateExcel(
+            new DoctorReportExcel({
+                doctors: this.filteredDoctors,
+                headers: this.translateLang.getHeaders(TypeList.doctor)
+            }));
     }
 
     /* Funciones de validación del formulario del doctor */

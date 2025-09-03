@@ -399,7 +399,12 @@ export class TodasInspeccionesComponent implements OnInit {
     }
 
     async exportExcel() {
-        await this.generateReport.generateExcel(new InspectionReportExcel({ inspections: this.filteredInspections }));
+        await this.generateReport.generateExcel(
+            new InspectionReportExcel({
+                inspections: this.filteredInspections,
+                headers: this.translateLang.getHeaders(TypeList.inspection)
+            })
+        );
     }
 
     /* Funciones de navegación hacia otras pantallas */

@@ -392,7 +392,10 @@ export class PacientesComponent implements OnInit {
 
     async exportExcel() {
         await this.generateReport.generateExcel(
-            new PatientReportExcel({ patients: this.filteredPatients }))
+            new PatientReportExcel({
+                patients: this.filteredPatients,
+                headers: this.translateLang.getHeaders(TypeList.patient)
+            }))
     }
 
     /* Funciones de validación del formulario del Patient */
