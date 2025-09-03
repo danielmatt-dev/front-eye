@@ -292,6 +292,14 @@
         "deleteSelectedDoctors": {
             "message": "Are you sure you want to delete the selected doctors?",
             "header": "Confirm deletion"
+        },
+        "deletePatient": {
+            "message": "Are you sure you want to delete patient {0}?",
+            "header": "Confirm deletion"
+        },
+        "deleteSelectedPatients": {
+            "message": "Are you sure you want to delete the selected patients?",
+            "header": "Confirm deletion"
         }
     },
     "validations": {

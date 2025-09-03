@@ -26,6 +26,7 @@
                 label="{{ 'buttons.delete' | translate: { items: labelPatients } }}"
                 severity="danger"
                 [loading]="isDeleteLoading"
+                [disabled]="selectedPatients.length === 0"
                 (onClick)="deletePatientsConfirmation()"
                 icon="pi pi-trash">
             </p-button>
