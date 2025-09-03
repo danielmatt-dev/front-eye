@@ -5,6 +5,7 @@ import { PatientWithInspectionsModel } from '../../../../../patient/data/models/
 export class GeographicDataReportExcel extends AbstractReportExcel {
 
     patients: PatientWithInspectionsModel[] = []
+    headers: Record<string, string> = {}
 
     constructor(partial?: Partial<GeographicDataReportExcel>) {
         super()
@@ -12,22 +13,22 @@ export class GeographicDataReportExcel extends AbstractReportExcel {
     }
 
     protected override getFileName(): string {
-        return 'reporte_pacientes'
+        return this.headers['filename']
     }
 
     protected override getWorksheetName(): string {
-        return 'Pacientes'
+        return this.headers['title']
     }
 
     protected override addHeaders(): { key: string; header: string }[] {
         return [
-            { key: 'patientId', header: 'ID' },
-            { key: 'fullName', header: 'Paciente' },
-            { key: 'latitude', header: 'Latitud' },
-            { key: 'longitude', header: 'Longitud' },
-            { key: 'lastDisease', header: 'Afección' },
-            { key: 'lastResult', header: 'Resultado' },
-            { key: 'inspectionCount', header: 'Num. Inspecciones' },
+            { key: 'patientId', header: this.headers['id'] },
+            { key: 'fullName', header: this.headers['patient'] },
+            { key: 'latitude', header: this.headers['latitude'] },
+            { key: 'longitude', header: this.headers['longitude'] },
+            { key: 'lastDisease', header: this.headers['disease'] },
+            { key: 'lastResult', header: this.headers['result'] },
+            { key: 'inspectionCount', header: this.headers['numInspections'] },
         ]
     }
 

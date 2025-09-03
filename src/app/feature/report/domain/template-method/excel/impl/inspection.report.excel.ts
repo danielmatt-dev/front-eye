@@ -5,6 +5,7 @@ import { InspectionResponseModel } from '../../../../../inspection/data/models/i
 export class InspectionReportExcel extends AbstractReportExcel {
 
     inspections: InspectionResponseModel[] = []
+    headers: Record<string, string> = {}
 
     constructor(partial?: Partial<InspectionReportExcel>) {
         super();
@@ -12,22 +13,22 @@ export class InspectionReportExcel extends AbstractReportExcel {
     }
 
     protected override getFileName(): string {
-        return 'reporte_inspecciones'
+        return this.headers['filename']
     }
 
     protected override getWorksheetName(): string {
-        return 'Inspecciones'
+        return this.headers['title']
     }
 
     protected override addHeaders(): { key: string; header: string }[] {
         return [
-            { key: 'inspectionId', header: 'ID' },
-            { key: 'inspectionDate', header: 'Fecha' },
-            { key: 'inspectionTime', header: 'Hora' },
-            { key: 'patientAge', header: 'Edad' },
-            { key: 'disease', header: 'Afección' },
-            { key: 'eye', header: 'Ojo' },
-            { key: 'result', header: 'Resultado' },
+            { key: 'inspectionId', header: this.headers['id'] },
+            { key: 'inspectionDate', header: this.headers['date'] },
+            { key: 'inspectionTime', header: this.headers['time'] },
+            { key: 'patientAge', header: this.headers['age'] },
+            { key: 'disease', header: this.headers['disease'] },
+            { key: 'eye', header: this.headers['eye'] },
+            { key: 'result', header: this.headers['result'] },
         ]
     }
 
@@ -38,9 +39,9 @@ export class InspectionReportExcel extends AbstractReportExcel {
                 inspectionDate: inspection.inspectionDate.toLocaleDateString('en-GB'),
                 inspectionTime: inspection.inspectionTime,
                 patientAge: inspection.patientAge,
-                disease: inspection.disease,
-                eye: inspection.eye,
-                result: inspection.result
+                disease: inspection.diseaseOption?.label,
+                eye: inspection.eyeOption?.label,
+                result: inspection.resultOption?.label
             })
         })
         return sheet
