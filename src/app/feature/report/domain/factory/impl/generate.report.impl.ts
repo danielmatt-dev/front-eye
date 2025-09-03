@@ -1,4 +1,4 @@
-import { GenerateReport, ReportFactoryParams } from '../generate.report';
+import { GenerateReport } from '../generate.report';
 import { AbstractReportPdf } from '../../template-method/pdf/abstract.report.pdf';
 import { Injectable } from '@angular/core';
 import { AbstractReportExcel } from '../../template-method/excel/abstract.report.excel';
@@ -6,8 +6,8 @@ import { AbstractReportExcel } from '../../template-method/excel/abstract.report
 @Injectable({ providedIn: 'root' })
 export class GenerateReportImpl implements GenerateReport {
 
-    generatePDF(params: ReportFactoryParams, abstractReportPdf: AbstractReportPdf): void {
-        abstractReportPdf.generate(params)
+    generatePDF(abstractReportPdf: AbstractReportPdf): void {
+        abstractReportPdf.generate()
     }
 
     async generateExcel(abstractReportExcel: AbstractReportExcel) {
