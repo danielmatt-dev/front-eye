@@ -3,19 +3,8 @@ import { AbstractReportExcel } from '../template-method/excel/abstract.report.ex
 
 export interface GenerateReport {
 
-    generatePDF(params: ReportFactoryParams, abstractReportPdf: AbstractReportPdf): void
+    generatePDF(abstractReportPdf: AbstractReportPdf): void
 
     generateExcel(abstractReportExcel: AbstractReportExcel): Promise<void>
-
-}
-
-export class ReportFactoryParams {
-
-    name: string = ''
-    user: string = ''
-
-    constructor(partial?: Partial<ReportFactoryParams>) {
-        Object.assign(this, partial)
-    }
 
 }

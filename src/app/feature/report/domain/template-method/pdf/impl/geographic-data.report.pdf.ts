@@ -4,17 +4,36 @@ import { PatientWithInspectionsModel } from '../../../../../patient/data/models/
 
 export class GeographicDataReportPdf extends AbstractReportPdf {
 
-    patients: PatientWithInspectionsModel[] = []
+    patients: PatientWithInspectionsModel[] = [];
+    headers: Record<string, string> = {}
+    data: Record<string, string> = {}
+    username: string = ''
 
     constructor(partial?: Partial<GeographicDataReportPdf>) {
-        super()
-        Object.assign(this, partial)
+        super();
+        Object.assign(this, partial);
+    }
+
+    protected override getTitle(): string {
+        return this.headers['title']
+    }
+
+    protected override getUsername(): string {
+        return this.username
     }
 
     protected override getHeaderColums(): RowInput[] {
         return [
-            ['ID', 'Paciente', 'Latitud', 'Longitud', 'Afección', 'Resultado', 'Num. Inspecciones']
-        ]
+            [
+                this.headers['id'],
+                this.headers['patient'],
+                this.headers['latitude'],
+                this.headers['longitude'],
+                this.headers['disease'],
+                this.headers['result'],
+                this.headers['numInspections']
+            ]
+        ];
     }
 
     protected override getBody(): RowInput[] {
@@ -28,5 +47,4 @@ export class GeographicDataReportPdf extends AbstractReportPdf {
             patient.inspectionCount
         ])
     }
-
 }

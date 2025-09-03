@@ -1,12 +1,11 @@
 import { jsPDF } from 'jspdf';
 import autoTable, { RowInput } from 'jspdf-autotable';
-import { ReportFactoryParams } from '../../factory/generate.report';
 
 export abstract class AbstractReportPdf {
 
     private doc!: jsPDF
 
-    private getHeader(name: string) {
+    private getHeader() {
         const now = new Date().toLocaleString()
 
         // Logo
@@ -19,16 +18,20 @@ export abstract class AbstractReportPdf {
 
         // Título del reporte
         this.doc.setFontSize(12);
-        this.doc.text(name, 14, 32, { align: 'left' });
+        this.doc.text(this.getTitle(), 14, 32, { align: 'left' });
     }
+
+    protected abstract getTitle(): string;
 
     protected abstract getHeaderColums(): RowInput[]
 
-    generate(params: ReportFactoryParams): void {
+    protected abstract getUsername(): string;
+
+    generate(): void {
         this.doc = new jsPDF()
 
         // Añadir header
-        this.getHeader(params.name)
+        this.getHeader()
         autoTable(this.doc, {
             startY: 38,
             head: this.getHeaderColums(),
@@ -47,7 +50,7 @@ export abstract class AbstractReportPdf {
                 4: { cellWidth: 30 } // Índice de la columna "Correo"
             },
             didDrawPage: (data) => {
-                this.drawFooter(params.user, data.pageNumber);
+                this.drawFooter(this.getUsername(), data.pageNumber);
             }
         })
 
@@ -69,7 +72,7 @@ export abstract class AbstractReportPdf {
         this.doc.text(user, 10, pageHeight - 10);
 
         // Número de página a la derecha
-        this.doc.text(`Página ${pageNumber}`, pageWidth - 10, pageHeight - 10, { align: 'right' });
+        this.doc.text(`${pageNumber}`, pageWidth - 10, pageHeight - 10, { align: 'right' });
     }
 
 }
