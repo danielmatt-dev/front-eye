@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '../../services/local.storage.service';
 import {
-    detailsHeaders,
-    DICTS, diseases, doctorHeaders, geographicHeaders,
-    geographicLabels, HEADERS, inspectionHeaders,
+    DICTS, diseases,
+    geographicLabels, HEADERS,
     LIST_OPTIONS,
-    OptionLabel, patientHeaders, pdf,
+    OptionLabel,
     toolTips
 } from '../data';
 import { DiseaseEntity } from '../../../feature/disease/domain/entity/disease.entity';

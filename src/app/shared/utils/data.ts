@@ -159,7 +159,8 @@ export const doctorHeaders: Record<Lang, Record<string, string>> = {
         birthdate: 'Birthdate',
         email: 'Email',
         gender: 'Gender',
-        address: 'Address'
+        address: 'Address',
+        filename: 'patients_report'
     },
     es: {
         title: 'Doctores',
@@ -169,7 +170,8 @@ export const doctorHeaders: Record<Lang, Record<string, string>> = {
         birthdate: 'Fecha de nacimiento',
         email: 'Correo',
         gender: 'Género',
-        address: 'Dirección'
+        address: 'Dirección',
+        filename: 'reporte_doctores'
     }
 }
 
@@ -182,7 +184,8 @@ export const geographicHeaders: Record<Lang, Record<string, string>> = {
         longitude: 'Longitude',
         disease: 'Disease',
         result: 'Result',
-        numInspections: 'Num. Inspections'
+        numInspections: 'Num. Inspections',
+        filename: 'geographic_data_report'
     },
     es: {
         title: 'Datos geográficos',
@@ -192,7 +195,8 @@ export const geographicHeaders: Record<Lang, Record<string, string>> = {
         longitude: 'Longitud',
         disease: 'Afección',
         result: 'Resultado',
-        numInspections: 'Num. Inspecciones'
+        numInspections: 'Num. Inspecciones',
+        filename: 'reporte_datos_geograficos'
     }
 }
 
@@ -207,6 +211,7 @@ export const inspectionHeaders: Record<Lang, Record<string, string>> = {
         disease: 'Disease',
         eye: 'Eye',
         result: 'Result',
+        filename: 'inspections_report'
     },
     es: {
         title: 'Inspecciones',
@@ -217,7 +222,8 @@ export const inspectionHeaders: Record<Lang, Record<string, string>> = {
         years: 'años',
         disease: 'Afección',
         eye: 'Ojo',
-        result: 'Resultado'
+        result: 'Resultado',
+        filename: 'reporte_inspecciones'
     }
 }
 
@@ -230,7 +236,8 @@ export const patientHeaders: Record<Lang, Record<string, string>> = {
         gender: 'Gender',
         email: 'Email',
         occupation: 'Occupation',
-        address: 'Address'
+        address: 'Address',
+        filename: 'patients_report'
     },
     es: {
         title: 'Pacientes',
@@ -240,7 +247,8 @@ export const patientHeaders: Record<Lang, Record<string, string>> = {
         gender: 'Género',
         email: 'Correo',
         occupation: 'Ocupación',
-        address: 'Dirección'
+        address: 'Dirección',
+        filename: 'reporte_pacientes'
     }
 }
 
