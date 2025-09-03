@@ -30,9 +30,9 @@ import { Select } from 'primeng/select';
 import { SendMessage } from '../../../../shared/toast/send.message';
 import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
-import { DiseaseEntity } from '../../../disease/domain/entity/disease.entity';
 import { InspectionResponseModel } from '../../data/models/inspection.response.model';
 import { getRangoEdad } from '../../../../shared/utils/functions/functions';
+import { DiseaseModel } from '../../../disease/data/model/disease.model';
 
 @Component({
     standalone: true,
@@ -82,7 +82,7 @@ export class TodasInspeccionesComponent implements OnInit {
     ageRanges: OptionLabel[] = [];
     genders: OptionLabel[] = [];
 
-    originalDiseases: DiseaseEntity[] = [];
+    originalDiseases: DiseaseModel[] = [];
     diseases: OptionLabel[] = [];
     selectedDisease: OptionLabel = { label: 'Todas', value: -1 };
 

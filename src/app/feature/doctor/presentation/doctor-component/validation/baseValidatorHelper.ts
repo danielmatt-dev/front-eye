@@ -1,6 +1,6 @@
 import { ValidatorHelper } from '../../../../../shared/utils/validator.helper';
-import { ClinicEntity } from '../../../../clinic/domain/entity/clinic.entity';
 import validator from 'validator';
+import { ClinicModel } from '../../../../clinic/data/models/clinic.model';
 
 export class BaseValidatorHelper extends ValidatorHelper {
 
@@ -10,7 +10,7 @@ export class BaseValidatorHelper extends ValidatorHelper {
         this.sendToastMessage({title: title, message: message, type: 'success'})
     }
 
-    validateSelectedClinic(clinic?: ClinicEntity): string | undefined {
+    validateSelectedClinic(clinic?: ClinicModel): string | undefined {
 
         if (!clinic) {
             return this.getText(this.validationsKey + 'selectionRequired')

@@ -7,7 +7,7 @@ import {
     OptionLabel,
     toolTips
 } from '../data';
-import { DiseaseEntity } from '../../../feature/disease/domain/entity/disease.entity';
+import { DiseaseModel } from '../../../feature/disease/data/model/disease.model';
 
 export type Lang = 'en' | 'es';
 export enum TypeList {
@@ -65,7 +65,7 @@ export class TranslateLang {
         return this.local.getLang() === 'es' ? 'dd/MM/yyyy' : 'yyyy-MM-dd'
     }
 
-    buildDiseaseOptions(dis: DiseaseEntity[], withAll: boolean): OptionLabel[] {
+    buildDiseaseOptions(dis: DiseaseModel[], withAll: boolean): OptionLabel[] {
         const to = this.local.getLang();
 
         const dict = diseases[to];

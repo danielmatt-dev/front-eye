@@ -20,10 +20,8 @@ import { GetAllDoctors } from '../../domain/use_cases/getAll-doctors';
 import { UpdateDoctor, UpdateDoctorParams } from '../../domain/use_cases/update-doctor';
 import { DeleteDoctors } from '../../domain/use_cases/deleteDoctors';
 import { GetAllClinics } from '../../../clinic/domain/use_cases/getAllClinics';
-import { ClinicEntity } from '../../../clinic/domain/entity/clinic.entity';
 import { NoParams } from '../../../../shared/utils/usecase';
 import { BaseValidatorHelper } from './validation/baseValidatorHelper';
-import { DoctorRequestEntity } from '../../domain/entity/doctor.request.entity';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { OptionLabel, statesMexico } from '../../../../shared/utils/data';
@@ -36,6 +34,8 @@ import { SendMessage } from '../../../../shared/toast/send.message';
 import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
 import { DoctorResponseModel } from '../../data/models/doctor.response.model';
+import { ClinicModel } from '../../../clinic/data/models/clinic.model';
+import { DoctorRequestModel } from '../../data/models/doctor.request.model';
 
 @Component({
     standalone: true,
@@ -68,7 +68,7 @@ export class DoctorComponent implements OnInit {
     /* Catálogo de opciones */
     genders: OptionLabel[] = [];
     states = statesMexico;
-    clinics: ClinicEntity[] = [];
+    clinics: ClinicModel[] = [];
 
     /* Lista de doctores y filtrado */
     allDoctors: DoctorResponseModel[] = [];
@@ -77,7 +77,7 @@ export class DoctorComponent implements OnInit {
 
     /* Campos de doctor */
     doctorId?: number;
-    clinicSelected?: ClinicEntity = undefined;
+    clinicSelected?: ClinicModel = undefined;
     firstName = '';
     lastFatherName = '';
     lastMotherName = '';
@@ -306,14 +306,14 @@ export class DoctorComponent implements OnInit {
     }
 
     /* Preparación de datos para los casos de uso */
-    getDoctorRequest(): DoctorRequestEntity | undefined {
+    getDoctorRequest(): DoctorRequestModel | undefined {
         /* Validar campos */
         if (!this.isFormValid()) {
             this.validationHelper.showMessage({ key: 'invalidForm' });
             return undefined;
         }
 
-        return new DoctorRequestEntity({
+        return new DoctorRequestModel({
             clinicId: this.clinicSelected?.clinicId,
             firstName: this.firstName,
             lastFathName: this.lastFatherName,

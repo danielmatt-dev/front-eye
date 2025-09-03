@@ -12,10 +12,10 @@ import { MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
 import { ValidateEmail } from '../../domain/use_cases/validate-email';
 import { ResetPassword, ResetPasswordParams } from '../../domain/use_cases/reset-password';
-import { UserEntity } from '../../domain/entity/user.entity';
 import { ResourceNotFoundException } from '../../../../shared/exceptions/exceptions';
 import { RouterLink } from '@angular/router';
 import { SendMessage } from '../../../../shared/toast/send.message';
+import { UserModel } from '../../data/models/user.model';
 
 @Component({
     selector: 'app-reset-password',
@@ -99,7 +99,7 @@ export class ResetPasswordComponent {
             return;
         }
 
-        const user = new UserEntity({ email: this.email, password: this.password });
+        const user = new UserModel({ email: this.email, password: this.password });
 
         const resultResetPassword = await this.resetPassword.call(new ResetPasswordParams(user, this.token));
 

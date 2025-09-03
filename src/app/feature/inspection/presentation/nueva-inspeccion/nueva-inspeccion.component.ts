@@ -22,8 +22,6 @@ import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
 import { CreateInspection } from '../../domain/use_cases/createInspection';
 import { NoParams } from '../../../../shared/utils/usecase';
-import { DiseaseEntity } from '../../../disease/domain/entity/disease.entity';
-import { AiModelEntity } from '../../../aimodel/domain/entity/aimodel.entity';
 import { GetNewInspectionData } from '../../domain/use_cases/getNewInspectionData';
 import { SendMessage } from '../../../../shared/toast/send.message';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
@@ -32,6 +30,8 @@ import { TranslateLang, TypeList } from '../../../../shared/utils/functions/tran
 import { PatientResponseModel } from '../../../patient/data/models/patient.response.model';
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
 import { InspectionRequestModel } from '../../data/models/inspection.request.model';
+import { AiModelModel } from '../../../aimodel/data/model/aimodel.model';
+import { DiseaseModel } from '../../../disease/data/model/disease.model';
 
 @Component({
     selector: 'app-nueva-inspeccion',
@@ -58,11 +58,11 @@ export class NuevaInspeccionComponent implements OnInit {
 
     /* Lista de modelos y afecciones */
     diseaseOptions: OptionLabel[] = [];
-    allDiseases: DiseaseEntity[] = [];
+    allDiseases: DiseaseModel[] = [];
     selectedDisease?: OptionLabel;
 
-    allModels: AiModelEntity[] = [];
-    selectedModel?: AiModelEntity;
+    allModels: AiModelModel[] = [];
+    selectedModel?: AiModelModel;
 
     /* Campos de la inspección */
     inspectionId?: number;

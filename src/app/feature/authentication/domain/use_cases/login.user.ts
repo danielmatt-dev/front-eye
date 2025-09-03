@@ -1,6 +1,5 @@
 import { Either } from 'fp-ts/lib/Either';
 import { UseCase } from '../../../../shared/utils/usecase';
-import { UserEntity } from '../entity/user.entity';
 import { Injectable } from '@angular/core';
 import {
     AuthenticationDatasourceRemoteImpl
@@ -8,9 +7,10 @@ import {
 import { DatasourceLocalImpl } from '../../../localStorage/data/local/impl/datasource.local.impl';
 import { right } from 'fp-ts/Either';
 import { AuthService } from '../../../../shared/services/auth.service';
+import { UserModel } from '../../data/models/user.model';
 
 @Injectable({ providedIn: 'root' })
-export class LoginUser implements UseCase<boolean, UserEntity> {
+export class LoginUser implements UseCase<boolean, UserModel> {
 
     constructor(
         private readonly authService: AuthService,
@@ -18,7 +18,7 @@ export class LoginUser implements UseCase<boolean, UserEntity> {
         private readonly local: DatasourceLocalImpl
     ) {}
 
-    async call(params: UserEntity): Promise<Either<Error, boolean>> {
+    async call(params: UserModel): Promise<Either<Error, boolean>> {
 
         const result = await this.remote.login(params)
 

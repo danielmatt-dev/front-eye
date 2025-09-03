@@ -9,7 +9,6 @@ import { RippleModule } from 'primeng/ripple';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
 import { LoginUser } from '../../domain/use_cases/login.user';
-import { UserEntity } from '../../domain/entity/user.entity';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { MessageService } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
@@ -17,6 +16,7 @@ import { NgClass, NgIf } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { RoleRedirectService } from '../../../../shared/services/role.redirect.service';
 import { SendMessage } from '../../../../shared/toast/send.message';
+import { UserModel } from '../../data/models/user.model';
 
 @Component({
     selector: 'app-login',
@@ -61,7 +61,7 @@ export class LoginComponent {
 
         this.isLoading = true;
         const resultLoginUser = await this.login.call(
-            new UserEntity({
+            new UserModel({
                 email: this.email,
                 password: this.password
             })

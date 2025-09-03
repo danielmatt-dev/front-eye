@@ -1,9 +1,9 @@
 import { UseCase } from '../../../../shared/utils/usecase';
-import { PatientRequestEntity } from '../entity/patient.request.entity';
 import { Either } from 'fp-ts/lib/Either';
 import { Injectable } from '@angular/core';
 import { PatientDatasourceRemoteImpl } from '../../data/datasource/remote/impl/patient.datasource.remote.impl';
 import { PatientResponseModel } from '../../data/models/patient.response.model';
+import { PatientRequestModel } from '../../data/models/patient.request.model';
 
 @Injectable({ providedIn: 'root' })
 export class UpdatePatient implements UseCase<PatientResponseModel, PutPatientParams> {
@@ -18,11 +18,11 @@ export class UpdatePatient implements UseCase<PatientResponseModel, PutPatientPa
 
 export class PutPatientParams {
 
-    request: PatientRequestEntity
+    request: PatientRequestModel
     patientId: number
 
     constructor(
-        request: PatientRequestEntity,
+        request: PatientRequestModel,
         patientId: number
     ) {
         this.request = request

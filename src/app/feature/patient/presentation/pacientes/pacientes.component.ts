@@ -26,7 +26,6 @@ import { PutPatientParams, UpdatePatient } from '../../domain/use_cases/update-p
 import { DeletePatients } from '../../domain/use_cases/deletePatients';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { NoParams } from '../../../../shared/utils/usecase';
-import { PatientRequestEntity } from '../../domain/entity/patient.request.entity';
 import { calculateAge } from '../../../../shared/utils/functions/functions';
 import { DatePickerModule } from 'primeng/datepicker';
 import { OptionLabel, statesMexico } from '../../../../shared/utils/data';
@@ -38,6 +37,7 @@ import { SendMessage } from '../../../../shared/toast/send.message';
 import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
+import { PatientRequestModel } from '../../data/models/patient.request.model';
 
 @Component({
     standalone: true,
@@ -293,14 +293,14 @@ export class PacientesComponent implements OnInit {
     }
 
     /* Preparación de datos para los casos de uso */
-    getPatientRequest(): PatientRequestEntity | undefined {
+    getPatientRequest(): PatientRequestModel | undefined {
         /* Validar campos */
         if (!this.isFormValid()) {
             this.validationHelper.showMessage({ key: 'invalidForm' });
             return undefined;
         }
 
-        return new PatientRequestEntity({
+        return new PatientRequestModel({
             firstName: this.firstName,
             lastFathName: this.lastFatherName,
             lastMontName: this.lastMotherName,

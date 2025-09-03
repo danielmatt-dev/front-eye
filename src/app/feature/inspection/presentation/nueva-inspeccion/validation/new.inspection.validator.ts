@@ -1,7 +1,7 @@
 import { ValidatorHelper } from '../../../../../shared/utils/validator.helper';
-import { AiModelEntity } from '../../../../aimodel/domain/entity/aimodel.entity';
-import { DiseaseEntity } from '../../../../disease/domain/entity/disease.entity';
 import { PatientResponseModel } from '../../../../patient/data/models/patient.response.model';
+import { AiModelModel } from '../../../../aimodel/data/model/aimodel.model';
+import { DiseaseModel } from '../../../../disease/data/model/disease.model';
 
 export class NewInspectionValidator extends ValidatorHelper {
 
@@ -21,7 +21,7 @@ export class NewInspectionValidator extends ValidatorHelper {
         return undefined
     }
 
-    validateModelSelected(model?: AiModelEntity): string | undefined {
+    validateModelSelected(model?: AiModelModel): string | undefined {
         if (!model) {
             return this.getText(this.validationsKey + 'selectionPatientRequired')
         }
@@ -29,7 +29,7 @@ export class NewInspectionValidator extends ValidatorHelper {
         return undefined
     }
 
-    validateDiseaseSelected(disease?: DiseaseEntity): string | undefined {
+    validateDiseaseSelected(disease?: DiseaseModel): string | undefined {
         if (!disease) {
             return this.getText(this.validationsKey + 'selectionPatientRequired')
         }

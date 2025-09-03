@@ -1,10 +1,10 @@
 import { Either } from 'fp-ts/lib/Either';
 import { UseCase } from '../../../../shared/utils/usecase';
-import { UserEntity } from '../entity/user.entity';
 import {
     AuthenticationDatasourceRemoteImpl
 } from '../../data/datasource/remote/impl/authentication.datasource.remote.impl';
 import { Injectable } from '@angular/core';
+import { UserModel } from '../../data/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class ResetPassword implements UseCase<boolean, ResetPasswordParams> {
@@ -21,10 +21,10 @@ export class ResetPassword implements UseCase<boolean, ResetPasswordParams> {
 
 export class ResetPasswordParams {
 
-    user: UserEntity
+    user: UserModel
     resetToken: string
 
-    constructor(user: UserEntity, resetToken: string) {
+    constructor(user: UserModel, resetToken: string) {
         this.user = user
         this.resetToken = resetToken
     }
