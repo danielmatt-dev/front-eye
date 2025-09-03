@@ -31,14 +31,13 @@ import { calculateAge } from '../../../../shared/utils/functions/functions';
 import { DatePickerModule } from 'primeng/datepicker';
 import { OptionLabel, statesMexico } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
-import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { PatientReportPdf } from '../../../report/domain/template-method/pdf/impl/patient.report.pdf';
 import { PatientReportExcel } from '../../../report/domain/template-method/excel/impl/patient.report.excel';
 import { BadRequestException } from '../../../../shared/exceptions/exceptions';
-import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { SendMessage } from '../../../../shared/toast/send.message';
 import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
+import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 
 @Component({
     standalone: true,
@@ -382,12 +381,18 @@ export class PacientesComponent implements OnInit {
 
     /* Exportar datos */
     exportPDF() {
-        const params = new ReportFactoryParams({ name: 'Pacientes', user: this.local.getUsername() })
-        this.generateReport.generatePDF(params, new PatientReportPdf({ patients: this.filteredPatients }))
+        this.generateReport.generatePDF(
+            new PatientReportPdf({
+                patients: this.filteredPatients,
+                headers: this.translateLang.getHeaders(TypeList.patient),
+                data: this.translateLang.getHeaders(TypeList.pdf),
+                username: this.local.getUsername()
+            }))
     }
 
     async exportExcel() {
-        await this.generateReport.generateExcel(new PatientReportExcel({ patients: this.filteredPatients }))
+        await this.generateReport.generateExcel(
+            new PatientReportExcel({ patients: this.filteredPatients }))
     }
 
     /* Funciones de validación del formulario del Patient */

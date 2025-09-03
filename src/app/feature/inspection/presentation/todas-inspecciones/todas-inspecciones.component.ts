@@ -24,7 +24,6 @@ import { ChartData } from 'chart.js';
 import { OptionLabel } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { InspectionReportPdf } from '../../../report/domain/template-method/pdf/impl/inspection.report.pdf';
-import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { InspectionReportExcel } from '../../../report/domain/template-method/excel/impl/inspection.report.excel';
 import { DatePicker } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
@@ -91,7 +90,7 @@ export class TodasInspeccionesComponent implements OnInit {
     selectedResult: OptionLabel = { label: 'Todos', value: -1 };
 
     // Fecha y hora formato
-    dateFormat = 'dd/MM/yyyy'
+    dateFormat = 'dd/MM/yyyy';
 
     private readonly destroyRef = inject(DestroyRef);
 
@@ -131,7 +130,7 @@ export class TodasInspeccionesComponent implements OnInit {
 
     /* Traducciones de idioma */
     private readonly translatePage = () => {
-        this.dateFormat = this.translateLang.getDateFormat()
+        this.dateFormat = this.translateLang.getDateFormat();
         this.genders = this.translateLang.getOptionsByType(TypeList.gender);
         this.ageRanges = this.translateLang.getOptionsByType(TypeList.ageRange);
         this.translateResults();
@@ -198,7 +197,7 @@ export class TodasInspeccionesComponent implements OnInit {
 
         if (resultGetAllInspections._tag === 'Right') {
             this.allInspections = resultGetAllInspections.right.inspections;
-            this.originalDiseases = resultGetAllInspections.right.diseases
+            this.originalDiseases = resultGetAllInspections.right.diseases;
             this.diseases = this.translateLang.buildDiseaseOptions(this.originalDiseases, true);
         }
         this.translateDiseases();
@@ -389,8 +388,14 @@ export class TodasInspeccionesComponent implements OnInit {
 
     /* Exportar tabla */
     exportPDF() {
-        const params = new ReportFactoryParams({ name: 'Inspecciones', user: this.local.getUsername() });
-        this.generateReport.generatePDF(params, new InspectionReportPdf({ inspections: this.filteredInspections }));
+        this.generateReport.generatePDF(
+            new InspectionReportPdf({
+                inspections: this.filteredInspections,
+                headers: this.translateLang.getHeaders(TypeList.inspection),
+                data: this.translateLang.getHeaders(TypeList.pdf),
+                username: this.local.getUsername()
+            })
+        );
     }
 
     async exportExcel() {

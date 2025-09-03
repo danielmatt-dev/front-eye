@@ -15,7 +15,6 @@ import { NoParams } from '../../../../shared/utils/usecase';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { FilterService } from '../../../../shared/services/filter.service';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
-import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { OptionLabel } from '../../../../shared/utils/data';
 import { GeographicDataReportPdf } from '../../../report/domain/template-method/pdf/impl/geographic-data.report.pdf';
 import { GeographicDataReportExcel } from '../../../report/domain/template-method/excel/impl/geographic-data.report.excel';
@@ -342,17 +341,12 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     /** Filtra y redibuja los marcadores */
     private applyFilters(): void {
-        this.displayedPatients = this.filteredPatientsCoordinates.filter((p) =>
-            this.matchesDisease(p) &&
-            this.matchesAge(p) &&
-            this.matchesGender(p) &&
-            this.matchesResult(p));
+        this.displayedPatients = this.filteredPatientsCoordinates.filter((p) => this.matchesDisease(p) && this.matchesAge(p) && this.matchesGender(p) && this.matchesResult(p));
         this.updateMarkersOnMap();
     }
 
     private matchesDisease(p: PatientWithInspectionsModel): boolean {
-        const sel = this.selectedFilters.filter((f) =>
-            this.diseasesLabels.includes(f));
+        const sel = this.selectedFilters.filter((f) => this.diseasesLabels.includes(f));
         return !sel.length || sel.includes(p.lastDisease);
     }
 
@@ -362,8 +356,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             value: getRangoEdad(p.age)
         });
 
-        const sel = this.selectedFilters.filter((f) =>
-            this.ageRangesLabels.includes(f));
+        const sel = this.selectedFilters.filter((f) => this.ageRangesLabels.includes(f));
 
         return !sel.length || sel.includes(option.label);
     }
@@ -397,8 +390,14 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
 
     /* Exportar datos */
     exportPDF() {
-        const params = new ReportFactoryParams({ name: 'Datos geográficos', user: this.local.getUsername() });
-        this.generateReport.generatePDF(params, new GeographicDataReportPdf({ patients: this.displayedPatients }));
+        this.generateReport.generatePDF(
+            new GeographicDataReportPdf({
+                patients: this.displayedPatients,
+                headers: this.translateLang.getHeaders(TypeList.geographic),
+                data: this.translateLang.getHeaders(TypeList.pdf),
+                username: this.local.getUsername()
+            })
+        );
     }
 
     async exportExcel() {

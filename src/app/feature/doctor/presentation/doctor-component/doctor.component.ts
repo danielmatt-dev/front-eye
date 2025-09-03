@@ -28,7 +28,6 @@ import { FilterService } from '../../../../shared/services/filter.service';
 import { DatePickerModule } from 'primeng/datepicker';
 import { OptionLabel, statesMexico } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
-import { ReportFactoryParams } from '../../../report/domain/factory/generate.report';
 import { DoctorReportPdf } from '../../../report/domain/template-method/pdf/impl/doctor.report.pdf';
 import { DoctorReportExcel } from '../../../report/domain/template-method/excel/impl/doctor.report.excel';
 import { BadRequestException } from '../../../../shared/exceptions/exceptions';
@@ -104,7 +103,7 @@ export class DoctorComponent implements OnInit {
     stateError?: string;
 
     // Fecha y hora formato
-    dateFormat = 'dd/MM/yyyy'
+    dateFormat = 'dd/MM/yyyy';
 
     /* Providers */
     opcionesConsultaHelper: OpcionesConsultaHelper;
@@ -154,7 +153,7 @@ export class DoctorComponent implements OnInit {
 
     /* Traducciones de idioma */
     private readonly loadGenders = () => {
-        this.dateFormat = this.translateLang.getDateFormat()
+        this.dateFormat = this.translateLang.getDateFormat();
         this.genders = this.translateLang.getOptionsByType(TypeList.gender);
         this.translateGenders();
         this.cdr.markForCheck();
@@ -392,8 +391,14 @@ export class DoctorComponent implements OnInit {
 
     /* Exportar datos */
     exportPDF() {
-        const params = new ReportFactoryParams({ name: 'Doctores', user: this.local.getUsername() });
-        this.generateReport.generatePDF(params, new DoctorReportPdf({ doctors: this.filteredDoctors }));
+        this.generateReport.generatePDF(
+            new DoctorReportPdf({
+                doctors: this.filteredDoctors,
+                headers: this.translateLang.getHeaders(TypeList.doctor),
+                data: this.translateLang.getHeaders(TypeList.pdf),
+                username: this.local.getUsername()
+            })
+        );
     }
 
     async exportExcel() {
