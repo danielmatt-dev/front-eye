@@ -61,17 +61,21 @@ export const ageRanges: Record<Lang, OptionLabel[]> = {
 
 export const results: Record<Lang, OptionLabel[]> = {
     en: [
-        { label: 'No condition', value: 'Sin Afección' },
+        { label: 'No condition', value: 'Sin afección' },
         { label: 'Mild', value: 'Leve' },
         { label: 'Moderate', value: 'Moderado' },
         { label: 'Proliferative', value: 'Proliferativo' },
+        { label: 'Advanced', value: 'Avanzada' },
+        { label: 'Advanced Wet', value: 'Avanzada Húmeda' },
         { label: 'All', value: -1 }
     ],
     es: [
-        { label: 'Sin Afección', value: 'Sin Afección' },
+        { label: 'Sin Afección', value: 'Sin afección' },
         { label: 'Leve', value: 'Leve' },
         { label: 'Moderado', value: 'Moderado' },
         { label: 'Proliferativo', value: 'Proliferativo' },
+        { label: 'Avanzada', value: 'Avanzada' },
+        { label: 'Avanzada Húmeda', value: 'Avanzada Húmeda' },
         { label: 'Todos', value: -1 }
     ]
 }
