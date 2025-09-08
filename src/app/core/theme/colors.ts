@@ -1,6 +1,8 @@
 export const mapColors = {
     'red': '#ff3d32',
-    'amber': '#f97316',
+    'redLight': '#FF7043',
+    'orange': '#F4A460',
+    'yellow': '#FFC107',
     'blue': '#3b82f6',
     'green': '#22c55e'
 }
@@ -11,10 +13,12 @@ export const genderColor = {
 }
 
 export const resultColor = {
-    'proliferative': mapColors.red,
-    'moderate': mapColors.amber,
+    'nocondition': mapColors.green,
     'mild': mapColors.blue,
-    'nocondition': mapColors.green
+    'moderate': mapColors.yellow,
+    'advanced': mapColors.orange,
+    'advancedwet': mapColors.redLight,
+    'proliferative': mapColors.red,
 }
 
 export const diseaseColor = {
