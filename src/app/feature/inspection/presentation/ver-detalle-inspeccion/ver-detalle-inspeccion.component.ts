@@ -81,7 +81,7 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
     colorResult?: string = mapColors.red;
 
     // Fecha y hora formato
-    dateFormat = 'dd/MM/yyyy'
+    dateFormat = 'dd/MM/yyyy';
 
     // Providers
     validatorHelper: ValidatorHelper;
@@ -94,11 +94,11 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
         private readonly messageService: MessageService,
         private readonly translateService: TranslateService,
         private readonly translateLang: TranslateLang,
+        private readonly local: LocalStorageService,
         private readonly cdr: ChangeDetectorRef,
         private readonly primeNg: PrimeNG,
         private readonly cd: ChangeDetectorRef,
         private readonly route: ActivatedRoute,
-        private readonly inspectionDetailsPdf: InspectionDetailsPdf,
         private readonly getInspectionById: GetInspectionById
     ) {
         this.validatorHelper = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeNg);
@@ -122,8 +122,7 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
     }
 
     private readonly translate = () => {
-
-        this.dateFormat = this.translateLang.getDateFormat()
+        this.dateFormat = this.translateLang.getDateFormat();
 
         if (this.inspection) {
             this.inspection.eyeOption = this.translateLang.translateByOptionLabel({
@@ -292,7 +291,15 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.inspectionDetailsPdf.generate(this.details);
+        const detailsPdf = new InspectionDetailsPdf({
+            headers: this.translateLang.getHeaders(TypeList.details),
+            inspection: this.details,
+            headersInspection: this.translateLang.getHeaders(TypeList.inspection),
+            headersPatient: this.translateLang.getHeaders(TypeList.patient),
+            dataPdf: this.translateLang.getHeaders(TypeList.pdf),
+            username: this.local.getUsername()
+        });
+        detailsPdf.generate();
     }
 
     protected readonly colorByResult = colorByResult;
