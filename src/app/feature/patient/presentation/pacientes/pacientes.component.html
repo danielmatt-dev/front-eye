@@ -92,7 +92,7 @@
                         <input
                             #filter
                             pInputText
-                            class="sm:w-64 lg:w-96"
+                            class="sm:w-52 lg:w-96"
                             type="text"
                             (input)="onGlobalFilter(dt, $event)"
                             placeholder="{{ 'placeholders.search' | translate }}"
@@ -104,6 +104,12 @@
                             (keyup)="onKeyUp($event)"
                         />
                     </p-iconfield>
+                    <p-button
+                        class="ml-2"
+                        icon="pi pi-refresh"
+                        outlined="true"
+                        (onClick)="callGetAllPatients()"
+                    />
                 </div>
             </div>
         </ng-template>
