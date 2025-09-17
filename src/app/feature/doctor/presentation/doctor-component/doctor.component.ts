@@ -147,8 +147,7 @@ export class DoctorComponent implements OnInit {
 
         reloadOnLangChange(this.translateService, this.destroyRef, this.loadGenders);
 
-        await this.callGetAllDoctors();
-        await this.callGetAllClinics();
+        await this.loadDoctors()
     }
 
     /* Traducciones de idioma */
@@ -166,6 +165,11 @@ export class DoctorComponent implements OnInit {
             doctor.gender = genderOption.value;
             return doctor;
         });
+    }
+
+    async loadDoctors() {
+        await this.callGetAllDoctors();
+        await this.callGetAllClinics();
     }
 
     /* Llamadas a casos de uso */
