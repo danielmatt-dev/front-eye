@@ -113,8 +113,7 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
             this.inspectionId = idParam !== null ? Number(idParam) : undefined;
         });
 
-        await this.callGetInspectionById();
-        reloadOnLangChange(this.translateService, this.destroyRef, this.translate);
+        await this.loadInspection()
     }
 
     ngOnDestroy() {
@@ -177,6 +176,11 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
 
         this.cdr.markForCheck();
     };
+
+    async loadInspection() {
+        await this.callGetInspectionById();
+        reloadOnLangChange(this.translateService, this.destroyRef, this.translate);
+    }
 
     /* Llamadas a casos de uso */
     async callGetInspectionById() {
@@ -279,7 +283,15 @@ export class VerDetalleInspeccionComponent implements OnInit, OnDestroy {
     // Funciones que interaccionan con el html
     async onRowSelect(event: any) {
         const id = event.data.inspectionId;
-        await this.router.navigate(['/insights/ver-detalle'], { queryParams: { id } });
+        this.inspectionId = id
+
+        await this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { id },
+            queryParamsHandling: 'merge', // Mantiene otros params si existen
+            replaceUrl: true              // Reemplaza la URL en el historial
+        });
+        await this.loadInspection()
     }
 
     async cancel() {
