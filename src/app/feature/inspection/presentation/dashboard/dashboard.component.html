@@ -63,16 +63,54 @@
                 </div>
             </div>
 
+            <div *ngIf="isChartLoading" class="grid grid-cols-3">
+                <div class="text-center">
+                    <p-skeleton
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <p-skeleton
+                        class="flex items-center justify-center pt-1.5"
+                        shape="text"
+                        height="1rem"
+                        width="4rem"
+                    />
+                </div>
+                <div class="text-center">
+                    <p-skeleton
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <p-skeleton
+                        class="flex items-center justify-center pt-1.5"
+                        shape="text"
+                        height="1rem"
+                        width="4rem"
+                    />
+                </div>
+                <div class="text-center">
+                    <p-skeleton
+                        class="flex items-center justify-center"
+                        shape="text"
+                        height="2rem"
+                        width="4rem"
+                    />
+                    <p-skeleton
+                        class="flex items-center justify-center pt-1.5"
+                        shape="text"
+                        height="1rem"
+                        width="4rem"
+                    />
+                </div>
+            </div>
+
             <div class="grid grid-cols-3">
                 <ng-container *ngFor="let d of diseasesOptions">
                     <div class="text-center">
-                        <p-skeleton
-                            *ngIf="isChartLoading"
-                            class="flex items-center justify-center"
-                            shape="text"
-                            height="2rem"
-                            width="4rem"
-                        />
                         <span *ngIf="!isChartLoading" class="text-2xl font-bold">{{ diseaseCounts[d.value] || 0 }}</span>
                         <div class="text-sm text-muted-color">{{ d.label }}</div>
                     </div>
