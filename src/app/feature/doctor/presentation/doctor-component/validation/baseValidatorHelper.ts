@@ -2,14 +2,40 @@ import { ValidatorHelper } from '../../../../../shared/utils/validator.helper';
 import validator from 'validator';
 import { ClinicModel } from '../../../../clinic/data/models/clinic.model';
 
+/**
+ * Helper de validaciones específico para el módulo de doctores y pacientes.
+ *
+ * @description
+ * Extiende de {@link ValidatorHelper} y agrega validaciones personalizadas
+ * para campos de formulario relacionados con doctores y pacientes.
+ *
+ * Además, incluye métodos para enviar mensajes de éxito estandarizados
+ * usando `toast notifications`.
+ */
 export class BaseValidatorHelper extends ValidatorHelper {
-
+    /**
+     * Envía un mensaje de éxito (toast) para operaciones CRUD de doctores o pacientes.
+     *
+     * @param type Tipo de operación (por ejemplo, `"createDoctor"` o `"deletePatient"`).
+     * @param param Texto dinámico a reemplazar en el mensaje (por ejemplo, nombre del doctor).
+     *
+     * @example
+     * ```ts
+     * this.sendToastMessageSuccess('createDoctor', 'Dr. Juan Pérez');
+     * ```
+     */
     sendToastMessageSuccess(type: 'createDoctor' | 'updateDoctor' | 'deleteDoctor' | 'deleteDoctors' | 'createPatient' | 'updatePatient' | 'deletePatient' | 'deletePatients', param: string) {
         const title = this.getText(`toast.success.titles.${type}`)
         const message = this.getText(`toast.success.messages.${type}`).replace('@', param)
-        this.sendToastMessage({title: title, message: message, type: 'success'})
+        this.sendToastMessage({ title: title, message: message, type: 'success' })
     }
 
+    /**
+     * Valida si se seleccionó una clínica.
+     *
+     * @param clinic Clínica seleccionada.
+     * @returns `undefined` si es válido o un mensaje de error en caso contrario.
+     */
     validateSelectedClinic(clinic?: ClinicModel): string | undefined {
 
         if (!clinic) {
@@ -19,6 +45,15 @@ export class BaseValidatorHelper extends ValidatorHelper {
         return undefined
     }
 
+    /**
+ * Valida el nombre de un doctor/paciente.
+ *
+ * - No debe estar vacío.
+ * - No debe contener números ni caracteres especiales.
+ *
+ * @param firstName Nombre a validar.
+ * @returns `undefined` si es válido o un mensaje de error en caso contrario.
+ */
     validateName(firstName: string): string | undefined {
 
         const message = this.validateField(firstName)
@@ -39,6 +74,13 @@ export class BaseValidatorHelper extends ValidatorHelper {
         return undefined
     }
 
+    /**
+   * Valida un campo numérico (por ejemplo, código postal).
+   *
+   * @param postalCode Valor del código postal.
+   * @param maxLength Longitud máxima permitida.
+   * @returns `undefined` si es válido o un mensaje de error en caso contrario.
+   */
     validateFieldNumber(postalCode: string, maxLength: number): string | undefined {
         const message = this.validateField(postalCode, maxLength)
         if (message) {
@@ -57,6 +99,12 @@ export class BaseValidatorHelper extends ValidatorHelper {
         return undefined
     }
 
+    /**
+   * Valida el formato de un correo electrónico.
+   *
+   * @param email Correo a validar.
+   * @returns `undefined` si es válido o un mensaje de error en caso contrario.
+   */
     validateEmail(email: string) {
         const message = this.validateField(email)
         if (message) {
@@ -70,6 +118,17 @@ export class BaseValidatorHelper extends ValidatorHelper {
         return undefined
     }
 
+    /**
+   * Valida la seguridad de una contraseña.
+   *
+   * Requisitos:
+   * - No vacía.
+   * - Longitud mínima de 8 caracteres.
+   * - Al menos una minúscula, una mayúscula y un dígito.
+   *
+   * @param password Contraseña a validar.
+   * @returns `undefined` si es válida o un mensaje de error.
+   */
     validatePassword(password?: string) {
 
         if (!password || password.trim() === '') {
@@ -95,6 +154,13 @@ export class BaseValidatorHelper extends ValidatorHelper {
         return undefined;
     }
 
+    /**
+   * Valida que la confirmación de contraseña coincida con la contraseña.
+   *
+   * @param confirmPassword Confirmación de la contraseña.
+   * @param password Contraseña original.
+   * @returns `undefined` si coinciden o un mensaje de error si no.
+   */
     validateConfirmPassword(confirmPassword?: string, password?: string) {
 
         const message = this.validateField(confirmPassword)
@@ -109,6 +175,12 @@ export class BaseValidatorHelper extends ValidatorHelper {
         return undefined
     }
 
+    /**
+   * Valida que la fecha de nacimiento no esté vacía.
+   *
+   * @param date Fecha de nacimiento.
+   * @returns `undefined` si es válida o un mensaje de error si está vacía.
+   */
     validateBirthDate(date?: Date) {
         if (!date) {
             return this.getText(this.validationsKey + 'required')
