@@ -1,26 +1,23 @@
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { colorByResult } from '../../../../../shared/utils/functions/functions';
-import { Injectable } from '@angular/core';
-import { LocalStorageService } from '../../../../../shared/services/local.storage.service';
 import { InspectionDetailsModel } from '../../../../inspection/data/models/inspection.details.model';
-import { TranslateLang, TypeList } from '../../../../../shared/utils/functions/translate-lang';
 
-@Injectable({ providedIn: 'root' })
 export class InspectionDetailsPdf {
     private doc!: jsPDF;
     inspection!: InspectionDetailsModel;
     headers: Record<string, string> = {};
+    headersInspection: Record<string, string> = {};
+    headersPatient: Record<string, string> = {};
+    dataPdf: Record<string, string> = {};
+    username = ''
 
-    constructor(
-        private readonly local: LocalStorageService,
-        private readonly translateLang: TranslateLang
-    ) {
-        this.headers = this.translateLang.getHeaders(TypeList.details);
+    constructor(partial?: Partial<InspectionDetailsPdf>) {
+        Object.assign(this, partial)
     }
 
-    generate(inspection: InspectionDetailsModel) {
-        this.inspection = inspection;
+    generate() {
+        //this.inspection = inspection;
         this.createDocument();
         this.addHeader();
         this.addInspectionSection();
@@ -61,8 +58,16 @@ export class InspectionDetailsPdf {
         this.doc.setFont('helvetica', 'bold');
         this.doc.text(this.headers['data'], 14, 40);
 
-        const headersInspection = this.translateLang.getHeaders(TypeList.inspection);
-        const headers = [[headersInspection['id'], headersInspection['date'], headersInspection['time'], headersInspection['age'], headersInspection['disease'], headersInspection['result']]];
+        const headers = [
+            [
+                this.headersInspection['id'],
+                this.headersInspection['date'],
+                this.headersInspection['time'],
+                this.headersInspection['age'],
+                this.headersInspection['disease'],
+                this.headersInspection['result']
+            ]
+        ];
         const body = [[inspection.inspectionId, inspection.inspectionDate.toLocaleDateString(), inspection.inspectionTime, inspection.eyeOption?.label ?? '', inspection.diseaseOption?.label ?? '', inspection.resultOption?.label ?? '']];
 
         autoTable(this.doc, {
@@ -228,9 +233,17 @@ export class InspectionDetailsPdf {
         this.doc.setFont('helvetica', 'bold');
         this.doc.text(this.headers['patient'], 14, startY + 10);
 
-        const headersPatient = this.translateLang.getHeaders(TypeList.patient);
-        const data = this.translateLang.getHeaders(TypeList.pdf);
-        const headers = [[headersPatient['id'], headersPatient['patient'], headersPatient['birthdate'], headersPatient['gender'], headersPatient['email'], headersPatient['occupation'], headersPatient['address']]];
+        const headers = [
+            [
+                this.headersPatient['id'],
+                this.headersPatient['patient'],
+                this.headersPatient['birthdate'],
+                this.headersPatient['gender'],
+                this.headersPatient['email'],
+                this.headersPatient['occupation'],
+                this.headersPatient['address']
+            ]
+        ];
         const body = [
             [
                 patient.patientId.toString(),
@@ -239,7 +252,7 @@ export class InspectionDetailsPdf {
                 patient.genderOption?.label ?? '',
                 patient.email,
                 patient.occupation,
-                `${patient.address}. ${data['pc']} ${patient.postalCode}. ${patient.state}`
+                `${patient.address}. ${this.dataPdf['pc']} ${patient.postalCode}. ${patient.state}`
             ]
         ];
         startY += 12;
@@ -285,7 +298,7 @@ export class InspectionDetailsPdf {
                 halign: 'justify'
             },
             didDrawPage: (data) => {
-                this.drawFooter(data.pageNumber, this.local.getUsername());
+                this.drawFooter(data.pageNumber, this.username);
             }
         });
     }

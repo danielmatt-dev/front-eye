@@ -122,10 +122,7 @@ export class TodasInspeccionesComponent implements OnInit {
 
         reloadOnLangChange(this.translateService, this.destroyRef, this.translatePage);
 
-        await this.callGetAllInspections();
-        if (!this.isDoctor) {
-            this.initCharts();
-        }
+        await this.loadInspections()
     }
 
     /* Traducciones de idioma */
@@ -183,6 +180,13 @@ export class TodasInspeccionesComponent implements OnInit {
 
             return inspection;
         });
+    }
+
+    async loadInspections() {
+        await this.callGetAllInspections();
+        if (!this.isDoctor) {
+            this.initCharts();
+        }
     }
 
     /* Llamadas a casos de uso */

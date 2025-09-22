@@ -67,7 +67,7 @@
         #dt1
         dataKey="inspectionId"
         [rows]="50"
-        [loading]="false"
+        [loading]="isLoading"
         [value]="filteredInspections"
         [rowHover]="true"
         [paginator]="true"
@@ -119,7 +119,7 @@
                         <input
                             #filter
                             pInputText
-                            class="sm:w-64 lg:w-96"
+                            class="sm:w-52 lg:w-96"
                             type="text"
                             (input)="onGlobalFilter(dt1, $event)"
                             placeholder="{{ 'placeholders.search' | translate }}" />
@@ -130,6 +130,12 @@
                             (keyup)="onKeyUp($event)"
                         />
                     </p-iconfield>
+                    <p-button
+                        class="ml-2"
+                        icon="pi pi-refresh"
+                        outlined="true"
+                        (onClick)="loadInspections()"
+                    />
                 </div>
             </div>
         </ng-template>
