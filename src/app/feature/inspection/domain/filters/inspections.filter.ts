@@ -4,21 +4,44 @@ import { ChartData } from 'chart.js';
 import { InspectionResponseModel } from '../../data/models/inspection.response.model';
 import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
 
+/**
+ * Clase abstracta que define la estrategia base para el filtrado y
+ * agregación de inspecciones en función de un rango de tiempo.
+ *
+ * @description
+ * Esta clase sigue el **Patrón Strategy**, permitiendo implementar diferentes
+ * estrategias de filtrado (por día, semana, mes, rango dinámico, etc.).
+ * Cada subclase debe implementar `getDataMap` y `getStartDate`.
+ */
 export abstract class InspectionsFilterStrategy {
+    /** Fecha final del rango de filtrado (por defecto, fecha actual). */
     endDate = new Date();
+
+    /** Fecha inicial del rango de filtrado (puede ser indefinida y calculada en `getStartDate`). */
     startDate?: Date = undefined;
+
+    /** Etiquetas para el eje X de la gráfica (fechas, intervalos, etc.). */
     labels: string[] = [];
+
+    /** Mapa que asocia cada resultado con su arreglo de conteos por etiqueta. */
     dataMap: Record<string, number[]> = {};
 
+    /** Opciones de resultados (Normal, DMAE, etc.) obtenidas de traducciones. */
     results: OptionLabel[] = [];
+
+    /** Valores de los resultados, usados para indexar `dataMap`. */
     values: string[] = [];
 
+    /** Servicio de traducción para internacionalización de etiquetas. */
     translateLang!: TranslateLang;
 
     constructor() {
         this.initData();
     }
 
+    /**
+     * Inyecta el servicio de traducción y prepara el mapa de resultados.
+     */
     setTranslateLang(translateLang: TranslateLang) {
         this.translateLang = translateLang;
         this.results = this.translateLang.getOptionsByType(TypeList.result, false);
@@ -26,11 +49,17 @@ export abstract class InspectionsFilterStrategy {
         this.values = this.results.map((r) => r.value);
     }
 
+    /**
+     * Inicializa las estructuras internas (labels y dataMap).
+     */
     initData() {
         this.labels = [];
         this.dataMap = {};
     }
 
+    /**
+     * Filtra las inspecciones según el rango de fechas definido.
+     */
     filter(data: InspectionResponseModel[], startDate?: Date): InspectionResponseModel[] {
         if (!startDate) {
             return data;
@@ -45,10 +74,17 @@ export abstract class InspectionsFilterStrategy {
         return data.filter((ins) => ins.inspectionDateTime >= startOfDay && ins.inspectionDateTime <= endOfDay);
     }
 
+    /** Construye el `dataMap` en base a los datos filtrados. */
     abstract getDataMap(filteredData: InspectionResponseModel[]): void;
 
+    /** Retorna la fecha inicial que se usará en el filtrado. */
     abstract getStartDate(): Date | undefined;
 
+    /**
+     * Devuelve los datos listos para graficarse.
+     *
+     * @returns {@link ChartData} con etiquetas y datasets segmentados por resultado.
+     */
     getChartData(data: InspectionResponseModel[]): ChartData {
         this.startDate = this.getStartDate();
         const filteredData = this.filter(data, this.startDate);
@@ -68,6 +104,9 @@ export abstract class InspectionsFilterStrategy {
     }
 }
 
+/**
+ * Estrategia que agrupa inspecciones por **mes**.
+ */
 export class AllFilter extends InspectionsFilterStrategy {
     override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData();
@@ -97,6 +136,9 @@ export class AllFilter extends InspectionsFilterStrategy {
     }
 }
 
+/**
+ * Estrategia que divide el rango dinámico en hasta 8 intervalos aproximados de una semana.
+ */
 export class DynamicRangeFilter extends InspectionsFilterStrategy {
     override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData();
@@ -162,6 +204,9 @@ export class DynamicRangeFilter extends InspectionsFilterStrategy {
     }
 }
 
+/**
+ * Estrategia que agrupa inspecciones en 4 intervalos (semanas) del último mes.
+ */
 export class OneMonthFilter extends InspectionsFilterStrategy {
     override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData();
@@ -213,6 +258,9 @@ export class OneMonthFilter extends InspectionsFilterStrategy {
     }
 }
 
+/**
+ * Estrategia que agrupa inspecciones por día dentro de un rango de días.
+ */
 export class RangeDaysFilter extends InspectionsFilterStrategy {
     override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData();
@@ -265,6 +313,9 @@ export class RangeDaysFilter extends InspectionsFilterStrategy {
     }
 }
 
+/**
+ * Estrategia que agrupa inspecciones por día de la última semana.
+ */
 export class OneWeekFilter extends InspectionsFilterStrategy {
     override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData();
@@ -308,6 +359,9 @@ export class OneWeekFilter extends InspectionsFilterStrategy {
     }
 }
 
+/**
+ * Estrategia que divide el día actual en intervalos de 4 horas.
+ */
 export class OneDayFilter extends InspectionsFilterStrategy {
     override getDataMap(filteredData: InspectionResponseModel[]): void {
         this.initData();

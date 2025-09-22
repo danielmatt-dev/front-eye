@@ -45,49 +45,91 @@ import { DoctorRequestModel } from '../../data/models/doctor.request.model';
     templateUrl: './doctor.component.html',
     styleUrl: './doctor.component.scss'
 })
+/**
+ * Componente de administración de doctores.
+ *
+ * @description
+ * Muestra una tabla con doctores (filtro por período/fecha), permite crear,
+ * actualizar y eliminar registros, y exportar resultados a PDF/Excel.
+ * Integra validaciones, traducciones y confirmaciones.
+ */
 export class DoctorComponent implements OnInit {
     @ViewChild('filter') filter!: ElementRef;
+    /** Referencia al input de búsqueda global de la tabla. */
+    @ViewChild('filter') filter!: ElementRef;
 
-    /* Opciones de la tabla*/
+    /* ----------------------------- Estado UI general ----------------------------- */
+
+    /** Indicador de carga de la tabla. */
     isLoading = true;
 
-    /* Opciones de carga en botones */
+    /** Indicador de carga del botón crear. */
     isCreateLoading = false;
+    /** Indicador de carga del botón actualizar. */
     isUpdateLoading = false;
+    /** Indicador de carga del botón eliminar. */
     isDeleteLoading = false;
+    /** Indicador de carga de catálogo de clínicas. */
     isClinicsLoading = false;
 
-    /* Opciones de dialog */
+    /** True si el modal está en modo edición; de lo contrario, creación. */
     isUpdate = false;
+    /** Visibilidad del modal de creación/edición. */
     isVisible = false;
 
-    /* Variables para opciones de consulta */
+    /* ------------------------ Filtros de opciones de consulta ------------------- */
+
+    /** Período seleccionado (Hoy, Semana, Mes, Rango, etc.). */
     selectedPeriod: OptionLabel | undefined;
+    /** Rango de fechas personalizado seleccionado. */
     selectedDates: Date[] = [];
 
-    /* Catálogo de opciones */
+    /* -------------------------------- Catálogos -------------------------------- */
+
+    /** Opciones de género traducidas. */
     genders: OptionLabel[] = [];
+    /** Estados de México (catálogo estático). */
     states = statesMexico;
+    /** Catálogo de clínicas cargado desde backend. */
     clinics: ClinicModel[] = [];
 
-    /* Lista de doctores y filtrado */
+    /* --------------------------- Datos y selección tabla ------------------------ */
+
+    /** Lista completa de doctores (del backend). */
     allDoctors: DoctorResponseModel[] = [];
+    /** Lista filtrada mostrada en tabla. */
     filteredDoctors = this.allDoctors;
+    /** Filas seleccionadas en la tabla. */
     selectedDoctors: DoctorResponseModel[] = [];
 
-    /* Campos de doctor */
+    /* --------------------------- Campos de formulario --------------------------- */
+
+    /** ID del doctor en edición. */
     doctorId?: number;
+    /** Clínica seleccionada en el modal. */
     clinicSelected?: ClinicModel = undefined;
+    /** Nombre del doctor. */
     firstName = '';
+    /** Apellido paterno. */
     lastFatherName = '';
+    /** Apellido materno. */
     lastMotherName = '';
+    /** Fecha de nacimiento. */
     birthDate?: Date;
+    /** Género seleccionado (valor). */
     gender?: string;
+    /** Teléfono (campo opcional en UI). */
     phone = '';
+    /** Email. */
     email = '';
+    /** Dirección. */
     address = '';
+    /** Estado (valor). */
     state?: string = undefined;
+    /** Código postal. */
     postalCode = '';
+
+    /* ---------------------------- Errores de validación ------------------------- */
 
     /* Campos de validación */
     firstNameError?: string;
@@ -105,16 +147,41 @@ export class DoctorComponent implements OnInit {
     // Fecha y hora formato
     dateFormat = 'dd/MM/yyyy';
 
+    /* --------------------------------- Helpers --------------------------------- */
+
     /* Providers */
+    /** Helper para filtros por período/rango. */
     opcionesConsultaHelper: OpcionesConsultaHelper;
+    /** Helper de validación y toasts. */
     validationHelper: BaseValidatorHelper;
 
+    /** DestroyRef para gestionar subscripciones en cambios de idioma. */
     private readonly destroyRef = inject(DestroyRef);
 
-    /* Labels */
+    /* --------------------------------- Labels ---------------------------------- */
+    /** Label singular traducido (e.g., "doctor"). */
     labelDoctor = 'doctor';
+    /** Label plural traducido (e.g., "doctores"). */
     labelDoctors = 'doctores';
 
+    /**
+   * Constructor.
+   *
+   * @param primeng Configuración global PrimeNG.
+   * @param translateService Servicio de traducción (ngx-translate).
+   * @param cdr ChangeDetectorRef para marcar detección de cambios manual.
+   * @param confirmationService Servicio de confirmación PrimeNG.
+   * @param messageService Servicio de mensajes/Toast PrimeNG.
+   * @param local Servicio de almacenamiento local (para username).
+   * @param translateLang Utilidades de traducción para listas y headers.
+   * @param createDoctor Caso de uso crear doctor.
+   * @param getAllDoctors Caso de uso listar doctores.
+   * @param updateDoctor Caso de uso actualizar doctor.
+   * @param deleteDoctors Caso de uso eliminar doctores.
+   * @param getAllClinis Caso de uso listar clínicas.
+   * @param filterService Servicio de filtrado por período/fechas.
+   * @param generateReport Fábrica para generar reportes PDF/Excel.
+   */
     constructor(
         private readonly primeng: PrimeNG,
         private readonly translateService: TranslateService,
@@ -136,6 +203,13 @@ export class DoctorComponent implements OnInit {
         this.validationHelper = new BaseValidatorHelper(sendMessage, this.translateService, this.primeng);
     }
 
+    /**
+ * Hook de inicialización.
+ *
+ * - Carga labels traducidos.
+ * - Configura recarga al cambiar idioma.
+ * - Carga doctores y clínicas.
+ */
     async ngOnInit() {
         this.translateService.get('doctor.singular').subscribe((res: string) => {
             this.labelDoctor = res.toLowerCase();
@@ -152,6 +226,7 @@ export class DoctorComponent implements OnInit {
     }
 
     /* Traducciones de idioma */
+    /** Carga opciones de género y formato de fecha según idioma. */
     private readonly loadGenders = () => {
         this.dateFormat = this.translateLang.getDateFormat();
         this.genders = this.translateLang.getOptionsByType(TypeList.gender);
@@ -159,6 +234,7 @@ export class DoctorComponent implements OnInit {
         this.cdr.markForCheck();
     };
 
+    /** Traduce y asigna `genderOption` en cada doctor para mostrar en UI. */
     private translateGenders() {
         this.allDoctors = this.allDoctors.map((doctor) => {
             const genderOption = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: doctor.gender });
@@ -168,7 +244,8 @@ export class DoctorComponent implements OnInit {
         });
     }
 
-    /* Llamadas a casos de uso */
+    /* ------------------------------ Casos de uso ------------------------------- */
+    /** Obtiene todos los doctores y aplica traducciones/filtros. */
     async callGetAllDoctors() {
         this.isLoading = true;
         const resultUseCase = await this.getAllDoctors.call(new NoParams());
@@ -186,6 +263,7 @@ export class DoctorComponent implements OnInit {
         this.filterDoctors();
     }
 
+    /** Obtiene catálogo de clínicas. */
     async callGetAllClinics() {
         const resultUseCase = await this.getAllClinis.call(new NoParams());
 
@@ -199,6 +277,7 @@ export class DoctorComponent implements OnInit {
         }
     }
 
+    /** Crea un doctor a partir del formulario, con validación y toasts. */
     async callCreateDoctor() {
         const doctor = this.getDoctorRequest();
         if (!doctor) {
@@ -233,6 +312,7 @@ export class DoctorComponent implements OnInit {
         this.clearFields();
     }
 
+    /** Actualiza un doctor existente, con validación y toasts. */
     async callUpdateDoctor() {
         const doctor = this.getDoctorRequest();
 
@@ -276,6 +356,7 @@ export class DoctorComponent implements OnInit {
         this.closeModal();
     }
 
+    /** Elimina doctores seleccionados tras confirmación y muestra toasts. */
     async callDeleteAllDoctors() {
         const ids = this.selectedDoctors.map((d) => d.doctorId);
         if (ids.length === 0) {
@@ -305,7 +386,11 @@ export class DoctorComponent implements OnInit {
         }
     }
 
-    /* Preparación de datos para los casos de uso */
+    /* ----------------------- Preparación de datos (request) --------------------- */
+    /**
+   * Construye el {@link DoctorRequestModel} desde el formulario.
+   * @returns `DoctorRequestModel` válido o `undefined` si el formulario es inválido.
+   */
     getDoctorRequest(): DoctorRequestModel | undefined {
         /* Validar campos */
         if (!this.isFormValid()) {
@@ -327,6 +412,9 @@ export class DoctorComponent implements OnInit {
         });
     }
 
+    /* --------------------------- Acciones por registro -------------------------- */
+
+    /** Prepara el formulario para editar un doctor y abre el modal. */
     async editDoctor(doctor: DoctorResponseModel) {
         this.isUpdate = true;
 
@@ -347,6 +435,7 @@ export class DoctorComponent implements OnInit {
         await this.openModal();
     }
 
+    /** Pide confirmación para eliminar un doctor individual. */
     deleteDoctorConfirmation(doctor: DoctorResponseModel): void {
         const header = this.validationHelper.getText('confirmations.deleteDoctor.header');
         const message = this.validationHelper.getText('confirmations.deleteDoctor.message');
@@ -364,6 +453,7 @@ export class DoctorComponent implements OnInit {
         });
     }
 
+    /** Pide confirmación para eliminar doctores seleccionados. */
     deleteDoctorsConfirmation() {
         const message = this.validationHelper.getText('confirmations.deleteSelectedDoctors.message');
         const header = this.validationHelper.getText('confirmations.deleteSelectedDoctors.message');
@@ -380,7 +470,9 @@ export class DoctorComponent implements OnInit {
         });
     }
 
-    /* Filtrado de lista de doctores */
+    /* --------------------------------- Filtros --------------------------------- */
+
+    /** Aplica filtro por período/fechas a la lista de doctores. */
     filterDoctors(): void {
         if (!this.opcionesConsultaHelper.validarRangoSeleccionado(this.selectedPeriod, this.selectedDates)) {
             return;
@@ -389,7 +481,9 @@ export class DoctorComponent implements OnInit {
         this.filteredDoctors = this.filterService.filterByPeriodo<DoctorResponseModel>(this.allDoctors, (doc) => doc.createdAt, this.selectedPeriod, this.selectedDates);
     }
 
-    /* Exportar datos */
+    /* --------------------------------- Exportar -------------------------------- */
+
+    /** Genera PDF con la lista filtrada de doctores. */
     exportPDF() {
         this.generateReport.generatePDF(
             new DoctorReportPdf({
@@ -401,6 +495,7 @@ export class DoctorComponent implements OnInit {
         );
     }
 
+    /** Genera Excel con la lista filtrada de doctores. */
     async exportExcel() {
         await this.generateReport.generateExcel(
             new DoctorReportExcel({
@@ -409,12 +504,14 @@ export class DoctorComponent implements OnInit {
             }));
     }
 
-    /* Funciones de validación del formulario del doctor */
+    /* --------------------------- Validación de formulario ---------------------- */
+    /** Retorna `true` si el formulario es válido. */
     isFormValid(): boolean {
         this.onFormChange();
         return !(this.firstNameError ?? this.lastFatherNameError ?? this.lastMotherNameError ?? this.clinicError ?? this.birthDateError ?? this.emailError ?? this.genderError ?? this.addressError ?? this.postalCodeError ?? this.stateError);
     }
 
+    /** Revalida todos los campos del formulario. */
     onFormChange() {
         this.onFirstNameChange();
         this.onLastFatherNameChange();
@@ -428,55 +525,70 @@ export class DoctorComponent implements OnInit {
         this.onStateChange();
     }
 
+    /** Valida nombre. */
     onFirstNameChange() {
         this.firstNameError = this.validationHelper.validateName(this.firstName);
     }
 
+    /** Valida apellido paterno. */
     onLastFatherNameChange() {
         this.lastFatherNameError = this.validationHelper.validateName(this.lastFatherName);
     }
 
+    /** Valida apellido materno. */
     onLastMotherNameChange() {
         this.lastMotherNameError = this.validationHelper.validateName(this.lastMotherName);
     }
 
+    /** Valida clínica seleccionada. */
     onClinicChange() {
         this.clinicError = this.validationHelper.validateSelectedClinic(this.clinicSelected);
     }
 
+    /** Valida género. */
     onGenderChange() {
         this.genderError = this.validationHelper.validateSelected(this.gender);
     }
 
+    /** Valida email. */
     onEmailChange() {
         this.emailError = this.validationHelper.validateEmail(this.email);
     }
 
+    /** Valida fecha de nacimiento. */
     onBirtDateChange() {
         this.birthDateError = this.validationHelper.validateBirthDate(this.birthDate);
     }
 
+    /** Valida dirección. */
     onAddressChange() {
         this.addressError = this.validationHelper.validateField(this.address);
     }
 
+    /** Valida código postal (numérico, longitud). */
     onPostalCodeChange() {
         this.postalCodeError = this.validationHelper.validateFieldNumber(this.postalCode, 10);
     }
 
+    /** Valida estado. */
     onStateChange() {
         this.stateError = this.validationHelper.validateSelected(this.state);
     }
 
+    /** Setter del período seleccionado (desde componente de opciones). */
     onPeriodSelected(periodo: OptionLabel) {
         this.selectedPeriod = periodo;
     }
 
+    /** Setter del rango de fechas seleccionado (desde componente de opciones). */
     onDateRangeSelected(fechas: Date[]) {
         this.selectedDates = fechas;
     }
 
+    /* ------------------------ Interacción con el template ---------------------- */
+
     /*  Funciones de iteración con html */
+    /** Limpia el formulario y errores, y resetea modo/visibilidad. */
     clearFields() {
         this.clinicSelected = undefined;
         this.doctorId = undefined;
@@ -504,6 +616,7 @@ export class DoctorComponent implements OnInit {
         this.stateError = undefined;
     }
 
+    /** Abre el modal y asegura que el catálogo de clínicas esté cargado. */
     async openModal() {
         this.isVisible = true;
         if (this.clinics.length === 0) {
@@ -511,6 +624,7 @@ export class DoctorComponent implements OnInit {
         }
     }
 
+    /** Cierra el modal y limpia el formulario. */
     closeModal() {
         if (this.isUpdate) {
             this.isUpdate = false;
@@ -519,15 +633,18 @@ export class DoctorComponent implements OnInit {
         this.clearFields();
     }
 
+    /** Limpia filtros de la tabla y el input de búsqueda global. */
     clear(table: Table) {
         table.clear();
         this.filter.nativeElement.value = '';
     }
 
+    /** Aplica filtro global en la tabla. */
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
+    /** Eventos de teclado (debug/log). */
     onKeyDown(event: KeyboardEvent) {
         console.log('Key Down:', event.key);
     }

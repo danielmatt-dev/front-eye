@@ -25,6 +25,20 @@ import { OptionLabel } from '../../../../shared/utils/data';
 import { DiseaseModel } from '../../../disease/data/model/disease.model';
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
 
+/**
+ * Componente de dashboard para métricas y tendencias de inspecciones.
+ *
+ * @description
+ * Pertenece a la capa de **presentation/components** dentro de la Clean Architecture.
+ * Renderiza tarjetas de conteos, distribuciones demográficas, y gráficas (PrimeNG Chart)
+ * a partir de los datos de inspecciones obtenidos mediante el caso de uso `GetAllInspections`.
+ *
+ * La lógica principal incluye:
+ * - Carga inicial de inspecciones y catálogo de enfermedades.
+ * - Cálculo de estadísticas (por periodo, género y rangos de edad).
+ * - Generación de datasets para gráficas (por mes, por edad/afección y tendencia).
+ * - Filtro de inspecciones por rango de fechas utilizando el patrón Strategy.
+ */
 @Component({
     selector: 'app-dashboard',
     standalone: true,
@@ -93,6 +107,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     private readonly destroyRef = inject(DestroyRef);
 
+    /**
+     * Constructor del componente.
+     *
+     * @param messageService `MessageService` - Servicio de PrimeNG para notificaciones/toasts.
+     * @param translateService `TranslateService` - Servicio de i18n para traducciones dinámicas.
+     * @param translateLang `TranslateLang` - Utilidad de mapeo de opciones traducibles (meses, días, catálogos).
+     * @param contextFilter `InspectionsFilterContext` - Contexto del patrón Strategy para generar `ChartData`.
+     * @param cdr `ChangeDetectorRef` - Control manual del ciclo de detección de cambios.
+     * @param primeng `PrimeNG` - Configuración global de PrimeNG.
+     * @param getAllInpections `GetAllInspections` - Caso de uso que obtiene inspecciones y enfermedades.
+     */
     constructor(
         private readonly messageService: MessageService,
         private readonly translateService: TranslateService,
@@ -102,32 +127,58 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private readonly primeng: PrimeNG,
         private readonly getAllInpections: GetAllInspections
     ) {
+        // Inicializa helper de validación y mensajes con traducción integrada
         this.validator = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
     }
 
+    /**
+     * Hook de inicialización del componente.
+     *
+     * @returns `Promise<void>` cuando completa la carga inicial y el set-up de gráficos y listeners.
+     */
     async ngOnInit() {
+        // 1) Cargar todas las inspecciones y catálogo de enfermedades (caso de uso de domain)
         await this.callGetAllInspections();
+
+        // 2) Reconfigurar traducciones y datasets cuando cambie el idioma
         reloadOnLangChange(this.translateService, this.destroyRef, this.loadTranslate);
+
+        // 3) Calcular estadísticas base y preparar gráficos iniciales
         this.calculateDetectionStatistics();
         this.initCharts();
+
+        // 4) Configurar comportamiento responsivo (vista móvil vs escritorio)
         this.checkScreenSize();
         window.addEventListener('resize', this.checkScreenSize.bind(this));
     }
 
+    /**
+     * Hook de destrucción del componente.
+     *
+     * @returns `void`
+     */
     ngOnDestroy(): void {
         window.removeEventListener('resize', this.checkScreenSize.bind(this));
     }
 
+    /**
+ * Inicializa la configuración y datasets de las gráficas del dashboard.
+ *
+ * @returns `void`
+ */
     initCharts() {
+        // Toma colores del tema actual (CSS variables) para mantener consistencia visual
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
+        // Aplica la estrategia "AllFilter" para construir la serie completa por mes
         const charDataInspectionsAll = this.contextFilter.apply(this.allInspections, new AllFilter());
 
         this.monthlyDetectionsData = charDataInspectionsAll;
 
+        // Gráfica: Detecciones por mes
         this.monthlyDetectionsOptions = {
             maintainAspectRatio: false,
             aspectRatio: 0.8,
@@ -163,6 +214,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
         };
 
+        // Gráfica: Detecciones por rango de edad y afección (dataset agrupado)
         this.detectionsByAgeRangeAndDiseaseData = this.getDetectionsByAgeRangeAndDisease();
 
         this.detectionsByAgeRangeAndDiseaseOptions = {
@@ -240,15 +292,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     /* Traducciones */
+    /**
+     * Reaplica traducciones a opciones y normaliza valores de las inspecciones
+     * cuando se produce un cambio de idioma.
+     *
+     * @private
+     * @returns `void`
+     */
     private readonly loadTranslate = () => {
+        // Construcción de opciones traducidas (enfermedades, rangos de edad y opciones de filtro)
         this.diseasesOptions = this.translateLang.buildDiseaseOptions(this.diseases, false);
         this.ageRanges = this.translateLang.getOptionsByType(TypeList.ageRange);
         this.options = this.translateLang.getOptionsByType(TypeList.option);
+        // Mantener la opción seleccionada, pero traducida al nuevo idioma
         this.optionSelected = this.translateLang.translateByOptionLabel({
             type: TypeList.option,
             value: this.optionSelected.value
         });
 
+        // Reasignar labels/values traducidos a cada inspección para mantener consistencia i18n
         this.allInspections = this.allInspections.map((ins) => {
             const option = this.translateLang.translateByOptionLabel({
                 value: ins.disease,
@@ -266,12 +328,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
             return ins;
         });
 
+        // Regenerar gráficos y aplicar filtro actual
         this.initCharts();
         this.filterInspections(true);
+
+        // Forzar detección de cambios para reflejar el nuevo idioma en UI
         this.cdr.markForCheck();
     };
 
     /* Llamadas a casos de uso */
+    /**
+     * Invoca el caso de uso `GetAllInspections` para cargar inspecciones y enfermedades.
+     *
+     * @returns `Promise<void>` cuando concluye el proceso y actualiza estados de carga/errores.
+     */
     async callGetAllInspections() {
         this.isChartLoading = true;
         const resultGetAllInspections = await this.getAllInpections.call(new NoParams());
@@ -288,7 +358,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     /* Funciones para filtrar los datos para las gráficas */
+    /**
+ * Aplica filtros de rango a la tendencia de detecciones, usando estrategias de `InspectionsFilterStrategy`.
+ *
+ * @param reload `boolean` - Si es `true`, recalcula el dataset con la estrategia actual sin limpiar el calendario.
+ * @returns `void`
+ */
     filterInspections(reload: boolean) {
+        // Valor 0 → habilita calendario para seleccionar un rango personalizado
         if (this.optionSelected.value === 0) {
             this.calendarDisabled = false;
             if (reload) this.detectionTrendData = this.contextFilter.apply(this.allInspections, new RangeDaysFilter());
@@ -316,6 +393,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.detectionTrendData = this.contextFilter.apply(this.allInspections, strategy);
     }
 
+    /**
+     * Construye el dataset de barras apiladas por rango de edad y afección.
+     *
+     * @returns Objeto con `labels` (rangos de edad) y `datasets` (uno por afección).
+     */
     getDetectionsByAgeRangeAndDisease() {
         // Inicializar contadores para cada combo rango + afección
         const dataMap: Record<string, Record<string, number>> = {};
@@ -354,6 +436,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     /* Cálculo de estadísticas de las inspecciones */
+    /**
+     * Calcula estadísticas agregadas de detecciones y prepara insumos para distribución demográfica.
+     *
+     * @returns `void`
+     */
     calculateDetectionStatistics() {
         this.totalDetections = this.allInspections.length;
         const patientsDetected = new Set<number>();
@@ -385,6 +472,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.computeDemographicDistribution(patientsDetected);
     }
 
+    /**
+ * Calcula distribución demográfica (género y rangos de edad) a partir de IDs únicos de pacientes.
+ *
+ * @param patientdIds `Set<number>` - Conjunto de identificadores de pacientes detectados.
+ * @returns `void`
+ */
     computeDemographicDistribution(patientdIds: Set<number>) {
         // Procesar pacientes detectados para género y edad
         for (const patientId of patientdIds) {
@@ -405,6 +498,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.calculatePercentages(this.maleCount + this.femaleCount);
     }
 
+    /**
+     * Calcula porcentajes de género y rangos de edad a partir del total de pacientes.
+     *
+     * @param totalPatients `number` - Total de pacientes considerados en la muestra.
+     * @returns `void`
+     */
     calculatePercentages(totalPatients: number) {
         // Porcentajes por género
         this.malePercentage = totalPatients ? Math.round((this.maleCount / totalPatients) * 100) : 0;
@@ -417,6 +516,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     /* Función que se ejecuta al selecionar una fecha */
+    /**
+     * Maneja la selección de fechas del calendario y determina la estrategia de filtrado.
+     *
+     * @param dates `Date[]` - Rango de fechas seleccionado (inicio y fin).
+     * @returns `void`
+     */
     onSelectedDates(dates: Date[]) {
         this.selectedDates = dates;
 
@@ -454,13 +559,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
             }
         }
 
+        // Define el rango en la estrategia seleccionada
         strategy.startDate = startDate;
         strategy.endDate = endDate;
 
+        // Aplica el filtro al conjunto de inspecciones para actualizar la tendencia
         this.detectionTrendData = this.contextFilter.apply(this.allInspections, strategy);
     }
 
     /* Calcular tamaño de pantalla */
+    /**
+     * Evalúa el ancho de ventana para alternar la vista móvil (Tailwind breakpoint `md`).
+     *
+     * @returns `void`
+     */
     checkScreenSize(): void {
         this.isMobileView = window.innerWidth < 768; // Tailwind 'md' breakpoint
     }
