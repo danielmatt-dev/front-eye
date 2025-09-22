@@ -61,12 +61,22 @@
                 <div class=" flex justify-end items-end relative w-full sm:w-64 lg:w-96">
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search" />
-                        <input #filter pInputText class="sm:w-64 lg:w-96" type="text"
+                        <input
+                            #filter
+                            pInputText
+                            class="sm:w-52 lg:w-96"
+                            type="text"
                             (input)="onGlobalFilter(dt1, $event)"
                             placeholder="{{ 'placeholders.search' | translate }}" />
                         <p-inputicon (click)="clear(dt1)" styleClass="pi pi-times" (keydown)="onKeyDown($event)"
                             (keyup)="onKeyUp($event)" />
                     </p-iconfield>
+                    <p-button
+                        class="ml-2"
+                        icon="pi pi-refresh"
+                        outlined="true"
+                        (onClick)="loadDoctors()"
+                    />
                 </div>
             </div>
         </ng-template>

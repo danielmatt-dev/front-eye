@@ -8,13 +8,10 @@
 export const mapColors = {
     /** Color rojo de referencia. @example "#ff3d32" */
     'red': '#ff3d32',
-
-    /** Color ámbar de referencia. @example "#f97316" */
-    'amber': '#f97316',
-
-    /** Color azul de referencia. @example "#3b82f6" */
+    'redLight': '#FF7043',
+    'orange': '#F4A460',
+    'yellow': '#FFC107',
     'blue': '#3b82f6',
-
     /** Color verde de referencia. @example "#22c55e" */
     'green': '#22c55e'
 }
@@ -40,17 +37,20 @@ export const genderColor = {
  * Relaciona los distintos resultados clínicos con colores de la paleta `mapColors`.
  */
 export const resultColor = {
-    /** Color para casos proliferativos. Usa `mapColors.red`. */
-    'proliferative': mapColors.red,
-
-    /** Color para casos moderados. Usa `mapColors.amber`. */
-    'moderate': mapColors.amber,
-
+    /** Color para casos sin condición detectada. Usa `mapColors.green`. */  
+    'nocondition': mapColors.green,
+    
     /** Color para casos leves. Usa `mapColors.blue`. */
     'mild': mapColors.blue,
+  
+    /** Color para casos moderados. Usa `mapColors.amber`. */
+    'moderate': mapColors.yellow,
+    'advanced': mapColors.orange,
+    'advancedwet': mapColors.redLight,
+  
+     /** Color para casos proliferativos. Usa `mapColors.red`. */
+    'proliferative': mapColors.red,
 
-    /** Color para casos sin condición detectada. Usa `mapColors.green`. */
-    'nocondition': mapColors.green
 }
 
 /**

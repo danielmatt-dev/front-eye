@@ -1,47 +1,49 @@
-<!--
-    Plantilla del componente Todas Inspecciones (capa: presentation/components)
-
-    @description
-    Vista para consultar, filtrar, exportar y navegar al detalle de inspecciones:
-    - Filtros por afección, resultado y rango de fechas.
-    - Tabla con búsqueda global, ordenamiento y paginación (PrimeNG Table).
-    - Exportación a Excel/PDF y limpieza de filtros.
-    - Visualizaciones (línea, pie y barras) cuando el usuario no es doctor.
-
-    Notas:
-    - Se usa @ngx-translate para i18n.
-    - PrimeNG provee p-select, p-date-picker, p-table, p-button, p-chart, p-toast.
-    - Los valores y handlers (ngModel / (onClick)) se resuelven en el .ts.
--->
-<p-toast />
+<p-toast/>
 
 <!-- Opciones de consulta -->
 <div class="flex flex-col gap-8 mb-8">
     <div class="card p-4">
-        <!-- Controles de filtro: afección, resultado, rango de fechas y botón consultar -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="flex flex-col gap-2 w-full">
                 <label for="1" class="font-bold">{{ 'labels.conditions' | translate }}</label>
-                <!-- Catálogo de enfermedades (OptionLabel: label/value) -->
-                <p-select id="1" [(ngModel)]="selectedDisease" optionLabel="label" [options]="diseases"
-                    class="w-full"></p-select>
+                <p-select
+                    id="1"
+                    [(ngModel)]="selectedDisease"
+                    optionLabel="label"
+                    [options]="diseases"
+                    class="w-full"
+                ></p-select>
             </div>
             <div class="flex flex-col gap-2 w-full">
                 <label for="2" class="font-bold">{{ 'labels.results' | translate }}</label>
-                <!-- Catálogo de resultados (positivo/negativo/etc.) -->
-                <p-select id="2" [(ngModel)]="selectedResult" optionLabel="label" [options]="results"
-                    class="w-full"></p-select>
+                <p-select
+                    id="2"
+                    [(ngModel)]="selectedResult"
+                    optionLabel="label"
+                    [options]="results"
+                    class="w-full"
+                ></p-select>
             </div>
             <div class="flex flex-col gap-2 w-full">
                 <label for="dateRange2" class="font-bold">{{ 'labels.dateRange' | translate }}</label>
-                <p-date-picker id="dateRange2" showIcon="true" readonlyInput [showButtonBar]="true"
-                    [(ngModel)]="selectedDates" selectionMode="range"
-                    placeholder="{{ 'placeholders.dateRange' | translate }}" class="w-full"
-                    [style]="{ width: '100%' }"></p-date-picker>
+                <p-date-picker
+                    id="dateRange2"
+                    showIcon="true"
+                    readonlyInput
+                    [showButtonBar]="true"
+                    [(ngModel)]="selectedDates"
+                    selectionMode="range"
+                    placeholder="{{ 'placeholders.dateRange' | translate }}"
+                    class="w-full"
+                    [style]="{ width: '100%' }"
+                ></p-date-picker>
             </div>
             <div class="flex flex-col justify-end">
-                <p-button class="w-full md:w-auto" label="{{ 'buttons.consult' | translate }}"
-                    (onClick)="filterInspections()" />
+                <p-button
+                    class="w-full md:w-auto"
+                    label="{{ 'buttons.consult' | translate }}"
+                    (onClick)="filterInspections()"
+                />
             </div>
         </div>
     </div>
@@ -53,13 +55,23 @@
         <div class="font-semibold text-xl mb-4">{{ 'inspections.plural' | translate }}</div>
         <!-- Contenedor para los botones alineados a la derecha -->
         <div *ngIf="isDoctor" class="flex gap-2">
-            <p-button label="{{ 'buttons.newInspection' | translate }}" (onClick)="natigateToNewInspection()"
-                icon="pi pi-plus"></p-button>
+            <p-button
+                label="{{ 'buttons.newInspection' | translate }}"
+                (onClick)="natigateToNewInspection()"
+                icon="pi pi-plus"
+            ></p-button>
         </div>
     </div>
 
-    <p-table #dt1 dataKey="inspectionId" [rows]="50" [loading]="false" [value]="filteredInspections" [rowHover]="true"
-        [paginator]="true" [globalFilterFields]="[
+    <p-table
+        #dt1
+        dataKey="inspectionId"
+        [rows]="50"
+        [loading]="isLoading"
+        [value]="filteredInspections"
+        [rowHover]="true"
+        [paginator]="true"
+        [globalFilterFields]="[
             'inspectionId',
             'inspectionDate',
             'inspectionTime',
@@ -70,31 +82,60 @@
             'eyeOption.label',
             'result',
             'resultOption.label'
-        ]" responsiveLayout="scroll" selectionMode="single" scrollHeight="40rem" scrollable="true"
+        ]"
+        responsiveLayout="scroll"
+        selectionMode="single"
+        scrollHeight="40rem"
+        scrollable="true"
         [(selection)]="selectedInspections">
 
         <ng-template pTemplate="caption">
             <div class="flex justify-between flex-col sm:flex-row items-center gap-4 w-full">
                 <!-- Contenedor de botones alineados a la izquierda -->
                 <div class="flex flex-col-375 sm:flex-row gap-2">
-                    <p-button label="{{ 'buttons.exportExcelTable' | translate }}" icon="pi pi-file-excel"
-                        severity="success" (onClick)="exportExcel()" outlined="true" (keydown)="onKeyDown($event)"
-                        (keyup)="onKeyUp($event)"></p-button>
+                    <p-button
+                        label="{{ 'buttons.exportExcelTable' | translate }}"
+                        icon="pi pi-file-excel"
+                        severity="success"
+                        (onClick)="exportExcel()"
+                        outlined="true"
+                        (keydown)="onKeyDown($event)"
+                        (keyup)="onKeyUp($event)"
+                    ></p-button>
 
-                    <p-button label="{{ 'buttons.downloadPDFTable' | translate }}" severity="danger"
-                        (onClick)="exportPDF()" outlined="true" icon="pi pi-file-pdf"></p-button>
+                    <p-button
+                        label="{{ 'buttons.downloadPDFTable' | translate }}"
+                        severity="danger"
+                        (onClick)="exportPDF()"
+                        outlined="true"
+                        icon="pi pi-file-pdf"
+                    ></p-button>
                 </div>
 
                 <!-- Input de búsqueda alineado a la derecha -->
                 <div class=" flex justify-end items-end relative w-full sm:w-64 lg:w-96">
                     <p-iconfield>
                         <p-inputicon styleClass="pi pi-search" />
-                        <input #filter pInputText class="sm:w-64 lg:w-96" type="text"
+                        <input
+                            #filter
+                            pInputText
+                            class="sm:w-52 lg:w-96"
+                            type="text"
                             (input)="onGlobalFilter(dt1, $event)"
                             placeholder="{{ 'placeholders.search' | translate }}" />
-                        <p-inputicon (click)="clear(dt1)" styleClass="pi pi-times" (keydown)="onKeyDown($event)"
-                            (keyup)="onKeyUp($event)" />
+                        <p-inputicon
+                            (click)="clear(dt1)"
+                            styleClass="pi pi-times"
+                            (keydown)="onKeyDown($event)"
+                            (keyup)="onKeyUp($event)"
+                        />
                     </p-iconfield>
+                    <p-button
+                        class="ml-2"
+                        icon="pi pi-refresh"
+                        outlined="true"
+                        (onClick)="loadInspections()"
+                    />
                 </div>
             </div>
         </ng-template>
@@ -106,13 +147,11 @@
                     <p-sortIcon field="inspectionId"></p-sortIcon>
                 </th>
                 <!-- Columna de Fecha con Ordenación Correcta -->
-                <th id="date" pSortableColumn="inspectionDate" style="min-width: 10rem; font-weight: bold"
-                    (keyup)="onKeyUp($event)">
+                <th id="date" pSortableColumn="inspectionDate" style="min-width: 10rem; font-weight: bold" (keyup)="onKeyUp($event)" >
                     {{ 'labels.date' | translate }}
                     <p-sortIcon field="inspectionDate"></p-sortIcon>
                 </th>
-                <th id="time" pSortableColumn="inspectionTime" style="min-width: 8rem; font-weight: bold"
-                    (keyup)="onKeyUp($event)" (keydown)="onKeyDown($event)">
+                <th id="time" pSortableColumn="inspectionTime" style="min-width: 8rem; font-weight: bold" (keyup)="onKeyUp($event)" (keydown)="onKeyDown($event)" >
                     {{ 'labels.time' | translate }}
                     <p-sortIcon field="inspectionTime"></p-sortIcon>
                 </th>
@@ -146,9 +185,14 @@
                 <td>{{ inspeccion.eyeOption.label }}</td>
                 <td>{{ inspeccion.resultOption.label }}</td>
                 <td>
-                    <p-button icon="pi pi-folder-plus" class="mx-1" severity="success"
-                        (onClick)="navigateToInspectionDetails(inspeccion.inspectionId)" [rounded]="true"
-                        [outlined]="true" />
+                    <p-button
+                        icon="pi pi-folder-plus"
+                        class="mx-1"
+                        severity="success"
+                        (onClick)="navigateToInspectionDetails(inspeccion.inspectionId)"
+                        [rounded]="true"
+                        [outlined]="true"
+                    />
                 </td>
             </tr>
         </ng-template>
@@ -181,7 +225,10 @@
             <div class="font-semibold text-xl mb-4">{{ 'titles.distribution.byGender' | translate }}</div>
             <div class="flex flex-col items-center">
                 <div class="w-full h-[300px] md:h-[375px]">
-                    <p-chart type="pie" [data]="pieData" [options]="pieOptions"
+                    <p-chart
+                        type="pie"
+                        [data]="pieData"
+                        [options]="pieOptions"
                         class="w-full h-full flex justify-center items-center">
                     </p-chart>
                 </div>
