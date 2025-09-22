@@ -1,3 +1,20 @@
+<!--
+    Plantilla del componente Nueva Inspección (capa: presentation/components)
+
+    @description
+    Vista para capturar los datos necesarios de una nueva inspección:
+    - Selección de paciente (con búsqueda y tooltip detallado)
+    - Carga de imagen (p-fileupload con límite de 4MB)
+    - Selección de ojo, afección y modelo de IA
+    - Visualización del resultado (según estado: loading/success)
+    - Campo de notas adicionales
+    - Acciones de cancelar e iniciar inspección
+
+    Notas:
+    - Se utiliza @ngx-translate para i18n.
+    - PrimeNG provee los controles: p-select, p-fileupload, p-selectButton, p-button, p-toast, p-skeleton, pTextarea.
+    - Las clases utilitarias (Tailwind) controlan layout responsivo.
+-->
 <p-toast />
 
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">

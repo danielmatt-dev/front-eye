@@ -34,6 +34,20 @@ import { InspectionResponseModel } from '../../data/models/inspection.response.m
 import { getRangoEdad } from '../../../../shared/utils/functions/functions';
 import { DiseaseModel } from '../../../disease/data/model/disease.model';
 
+/**
+ * Componente para la consulta y gestión de **todas las inspecciones**.
+ *
+ * @description
+ * Pertenece a la capa de **presentation/components** de la Clean Architecture.
+ * Muestra un tablero con:
+ * - Filtros por fecha, resultado y afección.
+ * - Tabla con paginación, búsqueda global y navegación al detalle.
+ * - Exportación de resultados a **PDF** y **Excel**.
+ * - Gráficas (línea, pie, barras) de distribución cuando el usuario NO es doctor.
+ *
+ * Orquesta el caso de uso `GetAllInspections` (domain/use_cases), y usa
+ * `InspectionsFilterContext` con la estrategia `AllFilter` para construir `ChartData`.
+ */
 @Component({
     standalone: true,
     selector: 'app-todas-inspecciones',
@@ -94,6 +108,20 @@ export class TodasInspeccionesComponent implements OnInit {
 
     private readonly destroyRef = inject(DestroyRef);
 
+    /**
+     * Constructor del componente.
+     *
+     * @param primeng `PrimeNG` - Configuración de PrimeNG.
+     * @param messageService `MessageService` - Toaster para notificaciones.
+     * @param translateService `TranslateService` - Servicio de internacionalización.
+     * @param contextFilter `InspectionsFilterContext` - Contexto de filtros para `ChartData`.
+     * @param cdr `ChangeDetectorRef` - Detección de cambios manual.
+     * @param translateLang `TranslateLang` - Utilidades para etiquetas/formatos según idioma.
+     * @param router `Router` - Navegación entre pantallas.
+     * @param local `LocalStorageService` - Rol del usuario, nombre y otros datos de sesión.
+     * @param generateReport `GenerateReportImpl` - Fábrica para exportar reportes (PDF/Excel).
+     * @param getAllInspection `GetAllInspections` - Caso de uso para obtener inspecciones y enfermedades.
+     */
     constructor(
         private readonly primeng: PrimeNG,
         private readonly messageService: MessageService,
@@ -109,9 +137,14 @@ export class TodasInspeccionesComponent implements OnInit {
         this.validationHelper = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
     }
 
+    /**
+     * Hook de inicialización: determina el rol, carga traducciones y datos, y configura gráficas.
+     */
     async ngOnInit() {
+        // Determina si el usuario es doctor (controla UI de acciones)
         this.isDoctor = this.local.getRole() === 'DOCTOR';
 
+        // Traducciones de etiquetas sing/plural para títulos y mensajes
         this.translateService.get('inspections.singular').subscribe((res: string) => {
             this.labelInspection = res.toLowerCase();
         });
@@ -120,26 +153,37 @@ export class TodasInspeccionesComponent implements OnInit {
             this.labelInspections = res.toLowerCase();
         });
 
+        // Reaplica traducciones y re-renderiza al cambiar de idioma
         reloadOnLangChange(this.translateService, this.destroyRef, this.translatePage);
 
+        // Carga inicial de inspecciones + catálogos
         await this.callGetAllInspections();
+        // Si el usuario NO es doctor, inicializa gráficas de distribución
         if (!this.isDoctor) {
             this.initCharts();
         }
     }
 
     /* Traducciones de idioma */
+    /**
+     * Reconstruye formatos, catálogos y datasets traducidos tras un cambio de idioma.
+     *
+     * @private
+     */
     private readonly translatePage = () => {
         this.dateFormat = this.translateLang.getDateFormat();
         this.genders = this.translateLang.getOptionsByType(TypeList.gender);
         this.ageRanges = this.translateLang.getOptionsByType(TypeList.ageRange);
         this.translateResults();
         this.translateDiseases();
-        this.translateInspections();
-        this.initCharts();
+        this.translateInspections(); // Normaliza labels/values de cada inspección según i18n
+        this.initCharts();           // Regenera datasets para gráficos
         this.cdr.markForCheck();
     };
 
+    /**
+     * Traduce catálogo de resultados y preserva la opción seleccionada.
+     */
     translateResults() {
         this.results = this.translateLang.getOptionsByType(TypeList.result);
 
@@ -149,6 +193,9 @@ export class TodasInspeccionesComponent implements OnInit {
         });
     }
 
+    /**
+     * Traduce catálogo de enfermedades (OptionLabel) y preserva la selección.
+     */
     translateDiseases() {
         this.diseases = this.translateLang.buildDiseaseOptions(this.originalDiseases, true);
 
@@ -158,6 +205,10 @@ export class TodasInspeccionesComponent implements OnInit {
         });
     }
 
+    /**
+     * Reetiqueta y normaliza propiedades de cada inspección para i18n:
+     * result/resultOption, disease/diseaseOption, eye/eyeOption.
+     */
     translateInspections() {
         this.allInspections = this.allInspections.map((inspection) => {
             const resultOption = this.translateLang.translateByOptionLabel({
@@ -186,6 +237,9 @@ export class TodasInspeccionesComponent implements OnInit {
     }
 
     /* Llamadas a casos de uso */
+    /**
+     * Carga todas las inspecciones y el catálogo de enfermedades usando el caso de uso.
+     */
     async callGetAllInspections() {
         this.isLoading = true;
         const resultGetAllInspections = await this.getAllInspection.call(new NoParams());
@@ -206,6 +260,10 @@ export class TodasInspeccionesComponent implements OnInit {
     }
 
     /* Funciones de gráficas */
+    /**
+     * Inicializa datasets y opciones de las gráficas (barras, pie, línea)
+     * usando variables de tema (CSS) para colores de texto y grid.
+     */
     initCharts() {
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
@@ -301,6 +359,11 @@ export class TodasInspeccionesComponent implements OnInit {
         };
     }
 
+    /**
+     * Agrupa inspecciones por rango de edad y construye `ChartData` de barras.
+     *
+     * @returns `ChartData` con etiquetas de rango y totales por barra.
+     */
     groupByAgeRange(): ChartData {
         // Inicializar contadores para cada combo rango + afección
         const dataMap: Record<string, number> = {};
@@ -326,6 +389,11 @@ export class TodasInspeccionesComponent implements OnInit {
         };
     }
 
+    /**
+ * Agrupa inspecciones por género y construye `ChartData` de pie.
+ *
+ * @returns `ChartData` con etiquetas de género y sus totales.
+ */
     groupByGender(): ChartData {
         const dataMap: Record<string, number> = {};
         const genders: string[] = [];
@@ -354,9 +422,13 @@ export class TodasInspeccionesComponent implements OnInit {
         };
     }
 
-    /* Filtrado de lista de doctores */
+    /* Filtrado de lista de inspecciones */
+    /**
+     * Aplica filtros por enfermedad, resultado y rango de fechas a `allInspections`.
+     * Además, regenera datasets de gráficas con la lista resultante.
+     */
     filterInspections() {
-        // || <>
+        // Filtrado compuesto: enfermedad AND resultado AND fecha en rango
 
         this.filteredInspections = this.allInspections.filter((inspection) => {
             const diseaseFilter = this.selectedDisease.value === -1 || inspection.diseaseOption?.value === this.selectedDisease.value;
@@ -368,11 +440,18 @@ export class TodasInspeccionesComponent implements OnInit {
             return diseaseFilter && resultFilter && dateFilter;
         });
 
+        // Actualiza datasets de las gráficas en función del resultado filtrado
         this.barData = this.groupByAgeRange();
         this.pieData = this.groupByGender();
         this.lineData = this.contextFilter.apply(this.filteredInspections, new AllFilter());
     }
 
+    /**
+     * Verifica si una fecha cae dentro del rango seleccionado en `selectedDates`.
+     *
+     * @param date `Date` - Fecha de la inspección.
+     * @returns `boolean` `true` si la fecha está dentro del rango o no hay filtro; `false` en caso contrario.
+     */
     private isDateInRange(date: Date): boolean {
         if (this.selectedDates === null || this.selectedDates.length === 0) {
             return true;
@@ -387,7 +466,11 @@ export class TodasInspeccionesComponent implements OnInit {
     }
 
     /* Exportar tabla */
+    /**
+     * Genera un PDF de las inspecciones filtradas usando la plantilla `InspectionReportPdf`.
+     */
     exportPDF() {
+        // Construcción de parámetros para el template method PDF
         this.generateReport.generatePDF(
             new InspectionReportPdf({
                 inspections: this.filteredInspections,
@@ -398,6 +481,9 @@ export class TodasInspeccionesComponent implements OnInit {
         );
     }
 
+    /**
+     * Genera un archivo Excel de las inspecciones filtradas usando `InspectionReportExcel`.
+     */
     async exportExcel() {
         await this.generateReport.generateExcel(
             new InspectionReportExcel({
@@ -408,10 +494,18 @@ export class TodasInspeccionesComponent implements OnInit {
     }
 
     /* Funciones de navegación hacia otras pantallas */
+    /**
+     * Navega a la pantalla de creación de nueva inspección.
+     */
     async natigateToNewInspection() {
         await this.router.navigate(['/insights/nueva-inspeccion']);
     }
 
+    /**
+    * Navega a la vista de detalle de una inspección específica.
+    *
+    * @param id `number | undefined` - Identificador de la inspección.
+    */
     async navigateToInspectionDetails(id?: number) {
         if (!id) {
             return;
@@ -421,19 +515,40 @@ export class TodasInspeccionesComponent implements OnInit {
     }
 
     /*  Funciones de iteración con html */
+    /**
+     * Limpia filtros de la tabla y el input de búsqueda global.
+     *
+     * @param table `Table` - Instancia de PrimeNG Table.
+     */
     clear(table: Table) {
         table.clear();
         this.filter.nativeElement.value = '';
     }
 
+    /**
+     * Aplica búsqueda global sobre los campos definidos en `[globalFilterFields]`.
+     *
+     * @param table `Table` - Tabla sobre la que se aplicará el filtro.
+     * @param event `Event` - Evento de input con el término de búsqueda.
+     */
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
     }
 
+    /**
+     * Handlers de teclado (útiles para accesibilidad o debugging de interacciones).
+     *
+     * @param event `KeyboardEvent`
+     */
     onKeyDown(event: KeyboardEvent) {
         console.log('Key Down:', event.key);
     }
 
+    /**
+ * Handler al soltar una tecla (útil para medir latencia o auditar inputs).
+ *
+ * @param event `KeyboardEvent`
+ */
     onKeyUp(event: KeyboardEvent) {
         console.log('Key Up:', event.key);
     }

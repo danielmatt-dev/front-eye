@@ -33,6 +33,19 @@ import { InspectionRequestModel } from '../../data/models/inspection.request.mod
 import { AiModelModel } from '../../../aimodel/data/model/aimodel.model';
 import { DiseaseModel } from '../../../disease/data/model/disease.model';
 
+/**
+ * Componente para crear una **nueva inspección**.
+ *
+ * @description
+ * Forma parte de la capa de **presentation/components** dentro de la Clean Architecture.
+ * Orquesta la captura de datos de paciente, selección de imagen, enfermedad y modelo de IA,
+ * y ejecuta los casos de uso de **domain/use_cases**:
+ * - `GetNewInspectionData` para precargar pacientes, enfermedades y modelos.
+ * - `CreateInspection` para enviar la inspección al backend.
+ *
+ * La UI se construye con PrimeNG (dropdown/select, fileupload, selectButton, toast, skeleton),
+ * soporta i18n con `@ngx-translate`, y valida entradas con `NewInspectionValidator`.
+ */
 @Component({
     selector: 'app-nueva-inspeccion',
     standalone: true,
@@ -108,6 +121,20 @@ export class NuevaInspeccionComponent implements OnInit {
 
     private readonly destroyRef = inject(DestroyRef);
 
+    
+    /**
+     * Constructor del componente.
+     *
+     * @param translateService `TranslateService` - Servicio de traducciones.
+     * @param cdr `ChangeDetectorRef` - Para marcar y disparar detección de cambios.
+     * @param translateLang `TranslateLang` - Utilidad para construir y traducir opciones (result, eye, disease).
+     * @param primeng `PrimeNG` - Configuración global de PrimeNG.
+     * @param router `Router` - Navegación a detalle de inspección.
+     * @param messageService `MessageService` - Notificaciones (toasts).
+     * @param getAllData `GetNewInspectionData` - Caso de uso para precargar catálogos.
+     * @param createInspection `CreateInspection` - Caso de uso para crear la inspección.
+     * @param local `LocalStorageService` - Obtención de datos de sesión (usuario/doctor).
+     */
     constructor(
         private readonly translateService: TranslateService,
         private readonly cdr: ChangeDetectorRef,
@@ -122,21 +149,37 @@ export class NuevaInspeccionComponent implements OnInit {
         this.validator = new NewInspectionValidator(new SendMessage(this.messageService), this.translateService, this.primeng);
         this.doctor = this.local.getUsername();
     }
-
+    
+    /**
+     * Hook de inicialización del componente.
+     *
+     * @returns `Promise<void>` cuando termina la carga inicial de catálogos y enlaza listeners de i18n.
+     */
     async ngOnInit() {
+        // 1) Precarga de pacientes, enfermedades y modelos desde el backend (use case)
         await this.callGetNewInspectionData();
 
+        // 2) Reaplicar traducciones dinámicamente cuando cambie el idioma
         reloadOnLangChange(this.translateService, this.destroyRef, this.loadTranslate);
 
+        // 3) Construir opciones del dropdown de pacientes (fullName derivado)
         this.patientOptions = this.allPatients.map((patient) => ({
             ...patient,
             fullName: `${patient.firstName} ${patient.lastFathName} ${patient.lastMontName}`
         }));
     }
 
+    /**
+     * Reconfigura opciones traducidas y resultado cada vez que cambia el idioma.
+     *
+     * @private
+     * @returns `void`
+     */
     private readonly loadTranslate = () => {
+         // Construye opciones de ojo y enfermedad a partir de catálogos + i18n
         this.eyes = this.translateLang.getOptionsByType(TypeList.eye);
         this.diseaseOptions = this.translateLang.buildDiseaseOptions(this.allDiseases, false);
+        // Traduce la etiqueta del resultado actual (si existe)
         this.resultOption = this.translateLang.translateByOptionLabel({
             value: this.result,
             type: TypeList.result
@@ -145,6 +188,11 @@ export class NuevaInspeccionComponent implements OnInit {
     };
 
     // Llamadas a casos de uso
+    /**
+     * Obtiene datos iniciales para la nueva inspección (pacientes, enfermedades, modelos).
+     *
+     * @returns `Promise<void>` que finaliza tras actualizar los catálogos y estados de carga/errores.
+     */
     async callGetNewInspectionData() {
         this.isLoadingGetData = true;
         const resultGetNewInspectionData = await this.getAllData.call(new NoParams());
@@ -161,15 +209,24 @@ export class NuevaInspeccionComponent implements OnInit {
         }
     }
 
+    /**
+     * Envía la inspección al backend usando el caso de uso `CreateInspection`.
+     *
+     * @returns `Promise<void>` que concluye tras mostrar toasts y actualizar estado/resultados.
+     */
     async callCreateInspection() {
+        // Validación previa de formulario
         if (!this.isFormaValid()) {
             this.validator.showMessage({ key: 'invalidForm' });
             return;
         }
-
+        // Conversión de archivos a base64 (solo se envía el primero)
         const images = await this.filesToBase64();
 
+        // Estado de carga mientras se crea la inspección
         this.state = State.loading;
+
+        // Construcción del payload de la inspección (DTO de data layer) y ejecución del use case
         const resultCreateInspection = await this.createInspection.call(
             new InspectionRequestModel({
                 patientId: this.patientId,
@@ -181,10 +238,12 @@ export class NuevaInspeccionComponent implements OnInit {
             })
         );
 
+        // Manejo de error de backend / red
         if (resultCreateInspection._tag === 'Left') {
             this.validator.getToastException(resultCreateInspection.left);
         }
 
+        // Caso exitoso: persistimos id, pintamos resultado y notificamos
         if (resultCreateInspection._tag === 'Right') {
             this.inspectionId = resultCreateInspection.right.inspectionId;
             this.result = resultCreateInspection.right.result
@@ -196,7 +255,14 @@ export class NuevaInspeccionComponent implements OnInit {
         this.state = State.success;
     }
 
+
     // Conversión de file a base64
+    /**
+     * Convierte un archivo a una cadena base64 (sin encabezado data URL).
+     *
+     * @param file `File` - Archivo a convertir.
+     * @returns `Promise<string>` con la porción **base64** del archivo.
+     */
     private fileToBase64(file: File): Promise<string> {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -213,10 +279,20 @@ export class NuevaInspeccionComponent implements OnInit {
         });
     }
 
+    /**
+     * Convierte todos los archivos seleccionados en un arreglo de cadenas base64.
+     *
+     * @returns `Promise<string[]>` con los contenidos base64 de `this.images`.
+     */
     filesToBase64(): Promise<string[]> {
         return Promise.all(this.images.map((file) => this.fileToBase64(file)));
     }
 
+    /**
+     * Navega al detalle de la inspección creada (si existe `inspectionId`).
+     *
+     * @returns `Promise<void>` que concluye tras el intento de navegación.
+     */
     async navigateToInspectionDetails() {
         if (!this.inspectionId) {
             return;
@@ -227,12 +303,23 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     // Función de validación
+    /**
+     * Valida el formulario completo ejecutando las validaciones por campo.
+     *
+     * @returns `boolean` `true` si el formulario es válido; `false` en caso contrario.
+     */
     isFormaValid(): boolean {
         this.onFormChange();
         return !(this.imageError ?? this.patientError ?? this.eyeError ?? this.diseaseError ?? this.modelError);
     }
 
     // Funciones de interacción con la interfaz
+    /**
+     * Construye el tooltip del paciente seleccionado (texto multilínea).
+     *
+     * @param patient `PatientResponseModel` - Paciente del cual se arma el resumen.
+     * @returns `string` Tooltip con nombre, edad, género, ocupación y dirección.
+     */
     getTooltip(patient: PatientResponseModel): string {
         const labels = this.translateLang.getToolTips();
 
@@ -245,13 +332,25 @@ export class NuevaInspeccionComponent implements OnInit {
             ${labels.postalCode}: ${patient.postalCode}
         `;
     }
-
+    
+    /**
+     * Maneja la selección de un archivo de imagen desde `p-fileupload`.
+     *
+     * @param event `any` - Evento de selección del componente de carga.
+     * @returns `void`
+     */
     onSelect(event: any) {
         const file = event.files[0];
         this.images = [];
         this.images.push(file);
     }
 
+        /**
+     * Maneja el cambio de paciente en el select y actualiza campos del formulario.
+     *
+     * @param event `any` - Evento del dropdown con `value` = paciente seleccionado.
+     * @returns `void`
+     */
     onPatientSelect(event: any) {
         this.patientId = event.value.patientId;
         this.firstName = event.value.firstName;
@@ -269,26 +368,56 @@ export class NuevaInspeccionComponent implements OnInit {
         this.onPatientChange();
     }
 
+    /**
+     * Ejecuta validación del paciente seleccionado y almacena el mensaje (si aplica).
+     *
+     * @returns `void`
+     */
     onPatientChange() {
         this.patientError = this.validator.validatePatientSelected(this.selectedPatient);
     }
 
+    /**
+     * Ejecuta validación de imagen seleccionada y almacena el mensaje (si aplica).
+     *
+     * @returns `void`
+     */
     onImageChange() {
         this.imageError = this.validator.validateImageSelected(this.images);
     }
 
+    /**
+     * Ejecuta validación del ojo seleccionado (usa validador genérico por etiqueta).
+     *
+     * @returns `void`
+     */
     onEyeChange() {
         this.eyeError = this.validator.validateSelected(this.selectedEye?.label);
     }
 
+    /**
+     * Ejecuta validación de enfermedad seleccionada y almacena el mensaje (si aplica).
+     *
+     * @returns `void`
+     */
     onDiseaseChange() {
         this.diseaseError = this.validator.validateDiseaseSelected(this.selectedDisease?.value);
     }
 
+    /**
+     * Ejecuta validación del modelo seleccionado y almacena el mensaje (si aplica).
+     *
+     * @returns `void`
+     */
     onModelChange() {
         this.modelError = this.validator.validateModelSelected(this.selectedModel);
     }
 
+    /**
+     * Dispara todas las validaciones del formulario para actualizar el estado de errores.
+     *
+     * @returns `void`
+     */
     onFormChange() {
         this.onPatientChange();
         this.onImageChange();
@@ -297,11 +426,22 @@ export class NuevaInspeccionComponent implements OnInit {
         this.onModelChange();
     }
 
+    /**
+     * Limpia los archivos del uploader y el arreglo `images`.
+     *
+     * @param clearCallback `Function` - Callback provisto por `p-fileupload` para limpiar lista.
+     * @returns `void`
+     */
     clearFiles(clearCallback: Function): void {
         clearCallback();
         this.images = [];
     }
 
+     /**
+     * Limpia campos del formulario tras una creación exitosa o reinicio del flujo.
+     *
+     * @returns `void`
+     */
     clearFields() {
         this.patientId = undefined;
         this.firstName = '';
