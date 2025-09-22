@@ -1,3 +1,21 @@
+<!--
+    Plantilla del componente Ver Detalle de Inspección (capa: presentation/components)
+
+    @description
+    Vista de detalle que muestra:
+    - Datos generales de la inspección (fecha/hora, ojo, afección, modelo, doctor y resultado).
+    - Probabilidades devueltas por el modelo de IA (barras de progreso).
+    - Carrusel con imágenes asociadas a la inspección.
+    - Datos del paciente.
+    - Notas adicionales y un histórico de inspecciones del mismo paciente.
+    - Acciones para cancelar y exportar a PDF.
+
+    Notas:
+    - i18n con @ngx-translate.
+    - PrimeNG: p-toast, p-skeleton, p-button, p-progress-bar, p-galleria, p-image, p-table.
+    - Estados de carga controlados por `isLoading`; el contenido muestra skeletons hasta que llegan los datos.
+-->
+
 <p-toast/>
 
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -11,26 +29,31 @@
                     <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
                     <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.inspectionDate | date: dateFormat }} {{ inspection?.inspectionTime }}</div>
                 </div>
+                <!-- Fecha y hora -->
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'labels.eye' | translate }}:</div>
                     <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
                     <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.eyeOption?.label }}</div>
                 </div>
+                <!-- Ojo -->
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'labels.disease' | translate }}:</div>
                     <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
                     <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.diseaseOption?.label }}</div>
                 </div>
+                <!-- Afección -->
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'labels.model' | translate }}:</div>
                     <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
                     <div *ngIf="!isLoading" class="font-bold col-span-2">{{ inspection?.model }}</div>
                 </div>
+                <!-- Modelo -->
                 <div class="grid grid-cols-3 my-6">
                     <div class="col-span-1">{{ 'doctor.singular' | translate }}:</div>
                     <p-skeleton *ngIf="isLoading" class="col-span-2" height="1.5rem" />
                     <div *ngIf="!isLoading" class="font-bold col-span-2">{{ doctor }}</div>
                 </div>
+                 <!-- Doctor -->
                 <div class="flex justify-end items-center gap-4">
                     <div class="font-semibold text-xl">{{ 'labels.result' | translate }}:</div>
                     <p-skeleton *ngIf="isLoading" width="6rem" height="2rem" />
