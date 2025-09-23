@@ -121,7 +121,6 @@ export class NuevaInspeccionComponent implements OnInit {
 
     private readonly destroyRef = inject(DestroyRef);
 
-    
     /**
      * Constructor del componente.
      *
@@ -149,7 +148,7 @@ export class NuevaInspeccionComponent implements OnInit {
         this.validator = new NewInspectionValidator(new SendMessage(this.messageService), this.translateService, this.primeng);
         this.doctor = this.local.getUsername();
     }
-    
+
     /**
      * Hook de inicialización del componente.
      *
@@ -176,7 +175,7 @@ export class NuevaInspeccionComponent implements OnInit {
      * @returns `void`
      */
     private readonly loadTranslate = () => {
-         // Construye opciones de ojo y enfermedad a partir de catálogos + i18n
+        // Construye opciones de ojo y enfermedad a partir de catálogos + i18n
         this.eyes = this.translateLang.getOptionsByType(TypeList.eye);
         this.diseaseOptions = this.translateLang.buildDiseaseOptions(this.allDiseases, false);
         // Traduce la etiqueta del resultado actual (si existe)
@@ -246,15 +245,13 @@ export class NuevaInspeccionComponent implements OnInit {
         // Caso exitoso: persistimos id, pintamos resultado y notificamos
         if (resultCreateInspection._tag === 'Right') {
             this.inspectionId = resultCreateInspection.right.inspectionId;
-            this.result = resultCreateInspection.right.result
+            this.result = resultCreateInspection.right.result;
             this.colorResult = colorByResult(this.result);
             this.validator.showMessage({ key: 'createInspection', type: 'success' });
-            this.clearFields();
         }
 
         this.state = State.success;
     }
-
 
     // Conversión de file a base64
     /**
@@ -268,7 +265,7 @@ export class NuevaInspeccionComponent implements OnInit {
             const reader = new FileReader();
             reader.onerror = () => {
                 // reader.error puede ser null, aseguramos un Error válido
-                reject(new Error(reader.error?.message || 'Error al leer el archivo'));
+                reject(new Error(reader.error?.message ?? 'Error al leer el archivo'));
             };
             reader.onload = () => {
                 // reader.result == "data:<mime>;base64,AAAA..."
@@ -332,7 +329,7 @@ export class NuevaInspeccionComponent implements OnInit {
             ${labels.postalCode}: ${patient.postalCode}
         `;
     }
-    
+
     /**
      * Maneja la selección de un archivo de imagen desde `p-fileupload`.
      *
@@ -345,7 +342,7 @@ export class NuevaInspeccionComponent implements OnInit {
         this.images.push(file);
     }
 
-        /**
+    /**
      * Maneja el cambio de paciente en el select y actualiza campos del formulario.
      *
      * @param event `any` - Evento del dropdown con `value` = paciente seleccionado.
@@ -437,12 +434,13 @@ export class NuevaInspeccionComponent implements OnInit {
         this.images = [];
     }
 
-     /**
-     * Limpia campos del formulario tras una creación exitosa o reinicio del flujo.
+    /**
+     * Limpiar campos del formulario tras una creación exitosa o reinicio del flujo.
      *
      * @returns `void`
      */
     clearFields() {
+        /*
         this.patientId = undefined;
         this.firstName = '';
         this.lastFatherName = '';
@@ -456,12 +454,27 @@ export class NuevaInspeccionComponent implements OnInit {
         this.occupation = '';
         this.birthDate = '';
         this.statePatient = '';
+         */
+
+        this.images = [];
+        this.imageError = undefined;
 
         this.selectedEye = undefined;
-        this.selectedDisease = undefined;
-        this.selectedModel = undefined;
         this.eyeError = undefined;
+
+        this.selectedDisease = undefined;
         this.diseaseError = undefined;
+
+        this.selectedModel = undefined;
         this.modelError = undefined;
+
+        this.notes = '';
+
+        this.state = State.initial;
+
+        this.resultOption = undefined;
+        this.result = '';
+
+        this.inspectionId = undefined;
     }
 }
