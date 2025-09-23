@@ -54,7 +54,7 @@ import { DoctorRequestModel } from '../../data/models/doctor.request.model';
  * Integra validaciones, traducciones y confirmaciones.
  */
 export class DoctorComponent implements OnInit {
-    @ViewChild('filter') filter!: ElementRef;
+
     /** Referencia al input de búsqueda global de la tabla. */
     @ViewChild('filter') filter!: ElementRef;
 
