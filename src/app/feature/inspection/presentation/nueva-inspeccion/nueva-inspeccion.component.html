@@ -199,9 +199,10 @@
             >{{ imageError }}</small>
             <div class="h-full mt-4">
                 <p-fileupload
-                    name="demo[]"
+                    name="name[]"
                     (onSelect)="onSelect($event)"
                     [multiple]="false"
+                    [files]="images"
                     accept="image/*"
                     maxFileSize="4194304"
                     chooseLabel="{{ 'buttons.choose'| translate }}"
@@ -221,7 +222,7 @@
                     </ng-template>
 
                     <!-- Plantilla de los botones -->
-                    <ng-template #header let-files let-chooseCallback="chooseCallback" let-clearCallback="clearCallback" let-uploadCallback="uploadCallback">
+                    <ng-template #header let-files let-chooseCallback="chooseCallback" let-clearCallback="clearCallback">
                         <div class="flex flex-wrap gap-2">
                             <p-button
                                 (onClick)="chooseCallback()"
@@ -356,13 +357,21 @@
     </div>
 </div>
 
-<div class="flex flex-wrap justify-end gap-6 mt-6">
+<div class="flex flex-wrap justify-end gap-2 mt-6">
     <p-button
         severity="danger"
-        label="{{ 'buttons.cancel'| translate }}"
+        outlined="true"
+        icon="pi pi-times"
+    ></p-button>
+    <p-button
+        (onClick)="clearFields()"
+        outlined="true"
+        severity="info"
+        icon="pi pi-trash"
     ></p-button>
     <p-button
         (onClick)="callCreateInspection()"
+        [loading]="this.state === State.loading"
         label="{{ 'buttons.inspect'| translate }}"
     ></p-button>
 </div>
