@@ -259,9 +259,6 @@
         <div class="card">
             <div class="flex justify-between">
                 <div class="font-semibold text-xl mb-4">{{ 'titles.inspectionData'| translate }}</div>
-                <a *ngIf="inspectionId" (click)="navigateToInspectionDetails()" class="text-primary" style="text-decoration: underline;">
-                    {{ 'links.viewDetail'| translate }}
-                </a>
             </div>
             <div class="col-span-1 gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
@@ -326,15 +323,20 @@
             <div class="col-span-2 gap-6">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <div class="flex flex-col grow basis-0 gap-2">
-                        <div *ngIf="state === State.loading" class="flex justify-end items-center gap-4 w-full">
-                            <p-skeleton width="10rem" height="3rem"></p-skeleton>
+                        <div *ngIf="state === State.loading" class="flex justify-end items-center gap-2 w-full">
+                            <p-skeleton width="12rem" height="3rem"></p-skeleton>
                         </div>
-                        <div *ngIf="state === State.success" class="flex justify-end items-center gap-4 w-full">
-                            <div class="font-semibold text-xl">{{ 'labels.result'| translate }}:</div>
+                        <div *ngIf="state === State.success" class="flex justify-end items-center gap-2 w-full">
                             <p-button
-                                [label]="result"
+                                [label]="resultOption?.label"
                                 [disabled]="true"
                                 [style]="{ opacity: '3', backgroundColor: colorResult, 'border-color': colorResult }"
+                            ></p-button>
+                            <p-button
+                                label="{{ 'links.viewDetail'| translate }}"
+                                [style]="{ 'border-color': colorResult, 'color': colorResult }"
+                                outlined="true"
+                                (onClick)="navigateToInspectionDetails()"
                             ></p-button>
                         </div>
                     </div>
@@ -361,6 +363,7 @@
     <p-button
         severity="danger"
         outlined="true"
+        (onClick)="cancel()"
         icon="pi pi-times"
     ></p-button>
     <p-button
