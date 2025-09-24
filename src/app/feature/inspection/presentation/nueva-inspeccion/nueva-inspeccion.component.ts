@@ -78,7 +78,7 @@ export class NuevaInspeccionComponent implements OnInit {
     selectedModel?: AiModelModel;
 
     /* Campos de la inspección */
-    inspectionId?: number;
+    inspectionId?: number = 2;
 
     /* Campos del paciente */
     patientId?: number;
@@ -102,7 +102,6 @@ export class NuevaInspeccionComponent implements OnInit {
 
     /* Variables del resultado de la inspección */
     state = State.initial;
-    result = '';
     resultOption?: OptionLabel;
     colorResult = '';
 
@@ -180,7 +179,7 @@ export class NuevaInspeccionComponent implements OnInit {
         this.diseaseOptions = this.translateLang.buildDiseaseOptions(this.allDiseases, false);
         // Traduce la etiqueta del resultado actual (si existe)
         this.resultOption = this.translateLang.translateByOptionLabel({
-            value: this.result,
+            value: this.resultOption?.value,
             type: TypeList.result
         });
         this.cdr.markForCheck();
@@ -245,8 +244,12 @@ export class NuevaInspeccionComponent implements OnInit {
         // Caso exitoso: persistimos id, pintamos resultado y notificamos
         if (resultCreateInspection._tag === 'Right') {
             this.inspectionId = resultCreateInspection.right.inspectionId;
-            this.result = resultCreateInspection.right.result;
-            this.colorResult = colorByResult(this.result);
+            const result = resultCreateInspection.right.result;
+            this.resultOption = this.translateLang.translateByOptionLabel({
+                type: TypeList.result,
+                value: result
+            });
+            this.colorResult = colorByResult(result);
             this.validator.showMessage({ key: 'createInspection', type: 'success' });
         }
 
@@ -440,7 +443,8 @@ export class NuevaInspeccionComponent implements OnInit {
      * @returns `void`
      */
     clearFields() {
-        /*
+
+        this.selectedPatient = undefined;
         this.patientId = undefined;
         this.firstName = '';
         this.lastFatherName = '';
@@ -454,7 +458,6 @@ export class NuevaInspeccionComponent implements OnInit {
         this.occupation = '';
         this.birthDate = '';
         this.statePatient = '';
-         */
 
         this.images = [];
         this.imageError = undefined;
@@ -473,8 +476,12 @@ export class NuevaInspeccionComponent implements OnInit {
         this.state = State.initial;
 
         this.resultOption = undefined;
-        this.result = '';
 
         this.inspectionId = undefined;
     }
+
+    async cancel() {
+        await this.router.navigate(['/insights/todas-inspecciones']);
+    }
+
 }
