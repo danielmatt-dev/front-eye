@@ -48,6 +48,9 @@ import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refr
     styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+    // Año actual
+    currentYear = new Date().getFullYear()
+
     // Conteos de detecciones
     weeklyDetections = 0; // Detecciones en la última semana
     monthlyDetections = 0; // Detecciones en el último mes
