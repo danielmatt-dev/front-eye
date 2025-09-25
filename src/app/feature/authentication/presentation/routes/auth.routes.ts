@@ -3,6 +3,7 @@ import { AccessComponent } from '../access/access.component';
 import { LoginComponent } from '../login/login.component';
 import { authRedirectGuard } from '../../../../shared/guards/redirect/auth-redirect.guard';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
+import { authPathRoutes } from '../../../../shared/routes/dict-routes';
 
 /**
  * Definición de rutas del módulo de autenticación.
@@ -18,17 +19,17 @@ import { ResetPasswordComponent } from '../reset-password/reset-password.compone
  */
 export default [
     /** Ruta para acceso denegado */
-    { path: 'access', component: AccessComponent },
+    { path: authPathRoutes.access, component: AccessComponent },
 
     /** Ruta de login con guard para redirección si ya está autenticado */
     {
-        path: 'login',
+        path: authPathRoutes.login,
         component: LoginComponent,
         canActivate: [authRedirectGuard]
     },
 
     /** Ruta para restablecimiento de contraseña */
     {
-        path: 'reset', component: ResetPasswordComponent
+        path: authPathRoutes.reset, component: ResetPasswordComponent
     }
 ] as Routes;

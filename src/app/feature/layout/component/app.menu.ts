@@ -8,6 +8,7 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { menu } from '../../../shared/utils/data';
 import { TranslateService } from '@ngx-translate/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { routes } from '../../../shared/routes/dict-routes';
 
 @Component({
     selector: 'app-menu',
@@ -54,18 +55,18 @@ export class AppMenu implements OnInit {
             this.model = [
                 {
                     items: [
-                        { label: labels.dashboard, icon: 'pi pi-fw pi-chart-bar', routerLink: ['/insights/dashboard'] },
+                        { label: labels.dashboard, icon: 'pi pi-fw pi-chart-bar', routerLink: [`/insights/${routes.dashboard}`] },
                         //{ label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
-                        { label: labels.inspections, icon: 'pi pi-list', routerLink: ['/insights/todas-inspecciones'] },
+                        { label: labels.inspections, icon: 'pi pi-list', routerLink: [`/insights/${routes.allInspections}`] },
                         {
                             label: labels.geo,
                             icon: 'pi pi-fw pi-globe',
-                            routerLink: ['/insights/datos-geograficos']
+                            routerLink: [`/insights/${routes.geographicData}`]
                         },
                         {
                             label: labels.doctors,
                             icon: 'pi pi-fw pi-user',
-                            routerLink: ['/insights/doctores']
+                            routerLink: [`/insights/${routes.doctors}`]
                         },
                         {
                             label: labels.logout,
@@ -89,19 +90,19 @@ export class AppMenu implements OnInit {
                                 {
                                     label: labels.newInspection,
                                     icon: 'pi pi-fw pi-plus-circle',
-                                    routerLink: ['/insights/nueva-inspeccion']
+                                    routerLink: [`/insights/${routes.newInspection}`]
                                 },
                                 {
                                     label: labels.allInspections,
                                     icon: 'pi pi-list',
-                                    routerLink: ['/insights/todas-inspecciones']
+                                    routerLink: [`/insights/${routes.allInspections}`]
                                 }
                             ]
                         },
                         {
                             label: labels.patients,
                             icon: 'pi pi-fw pi-user',
-                            routerLink: ['/insights/pacientes']
+                            routerLink: [`/insights/${routes.patients}`]
                         },
                         //{ label: 'Reportes', icon: 'pi pi-fw pi-folder-open', routerLink: ['/insights/reportes'] },
                         {

@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
 import { AppLayout } from './app/feature/layout/component/app.layout';
 import { NotfoundComponent } from './app/feature/layout/component/notfound/notfound.component';
+import { authPathRoutes } from './app/shared/routes/dict-routes';
 
 export const appRoutes: Routes = [
-    { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
+    { path: '', redirectTo: `/auth/${authPathRoutes.login}`, pathMatch: 'full' },
     {
         path: '',
         component: AppLayout,
