@@ -10,51 +10,51 @@ import { TodasInspeccionesComponent } from '../../feature/inspection/presentatio
 import { DoctorComponent } from '../../feature/doctor/presentation/doctor-component/doctor.component';
 import { RoleGuard } from '../guards/role/role.guard';
 import { authGuard } from '../guards/auth/auth.guard';
-import { routes } from './dict-routes';
+import { InsightsPathRoutes } from './insights-path.routes';
 
 export default [
     {
-        path: routes.dashboard,
+        path: InsightsPathRoutes.dashboard,
         component: DashboardComponent,
         data: { roles: ['ADMIN'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: routes.geographicData,
+        path: InsightsPathRoutes.geographicData,
         component: DatosGeograficosComponent,
         data: { roles: ['ADMIN'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: routes.newInspection,
+        path: InsightsPathRoutes.newInspection,
         component: NuevaInspeccionComponent,
         data: { roles: ['DOCTOR'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: routes.viewDetail,
+        path: InsightsPathRoutes.viewDetail,
         component: VerDetalleInspeccionComponent,
         data: { roles: ['ADMIN', 'DOCTOR'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: routes.allInspections,
+        path: InsightsPathRoutes.allInspections,
         component: TodasInspeccionesComponent,
         data: { roles: ['ADMIN', 'DOCTOR'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: routes.patients,
+        path: InsightsPathRoutes.patients,
         component: PacientesComponent,
         data: { roles: ['DOCTOR'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: routes.doctors,
+        path: InsightsPathRoutes.doctors,
         component: DoctorComponent,
         data: { roles: ['ADMIN'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: '**', redirectTo: '/notfound' }
+        path: '**', redirectTo: InsightsPathRoutes.notfound }
 ] as Routes;

@@ -32,7 +32,7 @@ import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refr
 import { InspectionRequestModel } from '../../data/models/inspection.request.model';
 import { AiModelModel } from '../../../aimodel/data/model/aimodel.model';
 import { DiseaseModel } from '../../../disease/data/model/disease.model';
-import { routes } from '../../../../shared/routes/dict-routes';
+import { InsightsPathRoutes } from '../../../../shared/routes/insights-path.routes';
 
 /**
  * Componente para crear una **nueva inspección**.
@@ -306,7 +306,7 @@ export class NuevaInspeccionComponent implements OnInit {
         }
 
         const id = this.inspectionId;
-        await this.router.navigate([`/insights/${routes.viewDetail}`], { queryParams: { id } });
+        await this.router.navigate([InsightsPathRoutes.pathViewDetail], { queryParams: { id } });
     }
 
     // Función de validación
@@ -493,7 +493,7 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     async cancel() {
-        await this.router.navigate([`/insights/${routes.allInspections}`]);
+        await this.router.navigate([InsightsPathRoutes.pathAllInspections]);
     }
 
 }
