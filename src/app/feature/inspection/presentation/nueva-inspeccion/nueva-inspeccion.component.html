@@ -32,10 +32,11 @@
                         class="w-full lg:w-80 mb-2"
                         [options]="patientOptions"
                         optionLabel="fullName"
+                        optionValue="patientId"
                         placeholder="{{ 'placeholders.patients' | translate }}"
                         [filter]="true"
                         [filterBy]="filterFields"
-                        [(ngModel)]="selectedPatient"
+                        [(ngModel)]="selectedPatientId"
                         (onChange)="onPatientSelect($event)"
                         [ngClass]="{
                             'ng-dirty': patientError,
