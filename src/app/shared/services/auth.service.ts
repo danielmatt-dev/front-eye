@@ -2,6 +2,7 @@ import { from, Subscription, timer } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from './local.storage.service';
+import { authPathRoutes } from '../routes/dict-routes';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -41,7 +42,7 @@ export class AuthService {
     }
 
     private async handleTokenExpired() {
-        await this.router.navigate(['/auth/login']);
+        await this.router.navigate([`/auth/${authPathRoutes.login}`]);
         this.local.clear()
     }
 

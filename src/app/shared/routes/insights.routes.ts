@@ -10,46 +10,47 @@ import { TodasInspeccionesComponent } from '../../feature/inspection/presentatio
 import { DoctorComponent } from '../../feature/doctor/presentation/doctor-component/doctor.component';
 import { RoleGuard } from '../guards/role/role.guard';
 import { authGuard } from '../guards/auth/auth.guard';
+import { routes } from './dict-routes';
 
 export default [
     {
-        path: 'dashboard',
+        path: routes.dashboard,
         component: DashboardComponent,
         data: { roles: ['ADMIN'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: 'datos-geograficos',
+        path: routes.geographicData,
         component: DatosGeograficosComponent,
         data: { roles: ['ADMIN'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: 'nueva-inspeccion',
+        path: routes.newInspection,
         component: NuevaInspeccionComponent,
         data: { roles: ['DOCTOR'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: 'ver-detalle',
+        path: routes.viewDetail,
         component: VerDetalleInspeccionComponent,
         data: { roles: ['ADMIN', 'DOCTOR'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: 'todas-inspecciones',
+        path: routes.allInspections,
         component: TodasInspeccionesComponent,
         data: { roles: ['ADMIN', 'DOCTOR'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: 'pacientes',
+        path: routes.patients,
         component: PacientesComponent,
         data: { roles: ['DOCTOR'] },
         canActivate: [authGuard, RoleGuard]
     },
     {
-        path: 'doctores',
+        path: routes.doctors,
         component: DoctorComponent,
         data: { roles: ['ADMIN'] },
         canActivate: [authGuard, RoleGuard]

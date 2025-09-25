@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from './local.storage.service';
+import { routes } from '../routes/dict-routes';
 
 @Injectable({ providedIn: 'root' })
 export class RoleRedirectService {
@@ -15,11 +16,11 @@ export class RoleRedirectService {
         const role = this.local.getRole()
 
         if (role === 'ADMIN') {
-            await this.router.navigate(['/insights/dashboard'])
+            await this.router.navigate([`/insights/${routes.dashboard}`])
         }
 
         if (role === 'DOCTOR') {
-            await this.router.navigate(['/insights/nueva-inspeccion'])
+            await this.router.navigate([`/insights/${routes.newInspection}`])
         }
 
     }

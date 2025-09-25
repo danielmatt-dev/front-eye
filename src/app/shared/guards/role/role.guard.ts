@@ -1,6 +1,7 @@
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '../../services/local.storage.service';
+import { authPathRoutes } from '../../routes/dict-routes';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +24,7 @@ export class RoleGuard implements CanActivate {
             return true
         }
 
-        this.router.navigate(['/auth/access']).then(() => {})
+        this.router.navigate([`/auth/${authPathRoutes.access}`]).then(() => {})
         return false
     }
 

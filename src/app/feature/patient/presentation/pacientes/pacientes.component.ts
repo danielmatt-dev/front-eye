@@ -38,6 +38,7 @@ import { TranslateLang, TypeList } from '../../../../shared/utils/functions/tran
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
 import { LocalStorageService } from '../../../../shared/services/local.storage.service';
 import { PatientRequestModel } from '../../data/models/patient.request.model';
+import { routes } from '../../../../shared/routes/dict-routes';
 
 @Component({
     standalone: true,
@@ -542,6 +543,6 @@ export class PacientesComponent implements OnInit {
     }
 
     async natigateToNewInspection(patient: PatientResponseModel) {
-        await this.router.navigate(['/insights/nueva-inspeccion'], { state: { patient } });
+        await this.router.navigate([`/insights/${routes.newInspection}`], { state: { patient } });
     }
 }
