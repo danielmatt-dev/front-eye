@@ -66,7 +66,7 @@ export class NuevaInspeccionComponent implements OnInit {
 
     /* Variables del paciente */
     allPatients: PatientResponseModel[] = [];
-    selectedPatient?: PatientResponseModel;
+    selectedPatientId?: number;
     patientOptions: any[] = [];
     birthDate?: string = '';
 
@@ -166,6 +166,12 @@ export class NuevaInspeccionComponent implements OnInit {
             ...patient,
             fullName: `${patient.firstName} ${patient.lastFathName} ${patient.lastMontName}`
         }));
+
+        const { patient } = history.state as { patient?: PatientResponseModel };
+        if (patient) {
+            this.selectedPatientId = patient.patientId;   // <-- clave
+            this.fillFormFromPatient(patient);
+        }
     }
 
     /**
@@ -334,6 +340,23 @@ export class NuevaInspeccionComponent implements OnInit {
         `;
     }
 
+    private fillFormFromPatient(p: PatientResponseModel) {
+        this.patientId = p.patientId;
+        this.firstName = p.firstName;
+        this.lastFatherName = p.lastFathName;
+        this.lastMotherName = p.lastMontName;
+        this.email = p.email;
+        this.phone = p.phone;
+        this.gender = p.gender;
+        this.age = p.age;
+        this.address = p.address;
+        this.postalCode = p.postalCode;
+        this.occupation = p.occupation;
+        this.birthDate = formatDateToDDMMYYYY(p.birthDate);
+        this.statePatient = p.state;
+        this.onPatientChange();
+    }
+
     /**
      * Maneja la selección de un archivo de imagen desde `p-fileupload`.
      *
@@ -353,20 +376,8 @@ export class NuevaInspeccionComponent implements OnInit {
      * @returns `void`
      */
     onPatientSelect(event: any) {
-        this.patientId = event.value.patientId;
-        this.firstName = event.value.firstName;
-        this.lastFatherName = event.value.lastFathName;
-        this.lastMotherName = event.value.lastMontName;
-        this.email = event.value.email;
-        this.phone = event.value.phone;
-        this.gender = event.value.gender;
-        this.age = event.value.age;
-        this.address = event.value.address;
-        this.postalCode = event.value.postalCode;
-        this.occupation = event.value.occupation;
-        this.birthDate = formatDateToDDMMYYYY(event.value.birthDate);
-        this.statePatient = event.value.state;
-        this.onPatientChange();
+        const p = this.patientOptions.find(x => x.patientId === event.value);
+        if (p) this.fillFormFromPatient(p);
     }
 
     /**
@@ -375,7 +386,7 @@ export class NuevaInspeccionComponent implements OnInit {
      * @returns `void`
      */
     onPatientChange() {
-        this.patientError = this.validator.validatePatientSelected(this.selectedPatient);
+        this.patientError = this.validator.validatePatientSelected(this.selectedPatientId);
     }
 
     /**
@@ -445,7 +456,7 @@ export class NuevaInspeccionComponent implements OnInit {
      */
     clearFields() {
 
-        this.selectedPatient = undefined;
+        this.selectedPatientId = undefined;
         this.patientId = undefined;
         this.firstName = '';
         this.lastFatherName = '';

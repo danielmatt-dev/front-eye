@@ -28,7 +28,7 @@ export class NewInspectionValidator extends ValidatorHelper {
      * @param patient `PatientResponseModel | undefined` - Paciente seleccionado en el formulario.
      * @returns `string | undefined` Mensaje de error localizado si no hay paciente; `undefined` en caso de éxito.
      */
-    validatePatientSelected(patient?: PatientResponseModel): string | undefined {
+    validatePatientSelected(patient?: number): string | undefined {
         // Si no existe el objeto paciente, construye y retorna el mensaje localizado
         if (!patient) {
             return this.getText(this.validationsKey + 'selectionPatientRequired')
@@ -52,7 +52,7 @@ export class NewInspectionValidator extends ValidatorHelper {
         // Sin errores de validación
         return undefined
     }
-    
+
     /**
      * Valida que se haya seleccionado un modelo de IA.
      *
