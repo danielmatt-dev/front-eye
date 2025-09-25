@@ -33,7 +33,7 @@ import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refr
 import { InspectionResponseModel } from '../../data/models/inspection.response.model';
 import { getRangoEdad } from '../../../../shared/utils/functions/functions';
 import { DiseaseModel } from '../../../disease/data/model/disease.model';
-import { routes } from '../../../../shared/routes/dict-routes';
+import { InsightsPathRoutes } from '../../../../shared/routes/insights-path.routes';
 
 @Component({
     standalone: true,
@@ -414,7 +414,7 @@ export class TodasInspeccionesComponent implements OnInit {
 
     /* Funciones de navegación hacia otras pantallas */
     async natigateToNewInspection() {
-        await this.router.navigate([`/insights/${routes.newInspection}`]);
+        await this.router.navigate([InsightsPathRoutes.pathNewInspection]);
     }
 
     async navigateToInspectionDetails(id?: number) {
@@ -422,7 +422,7 @@ export class TodasInspeccionesComponent implements OnInit {
             return;
         }
 
-        await this.router.navigate([`/insights/${routes.viewDetail}`], { queryParams: { id } });
+        await this.router.navigate([InsightsPathRoutes.pathViewDetail], { queryParams: { id } });
     }
 
     /*  Funciones de iteración con html */

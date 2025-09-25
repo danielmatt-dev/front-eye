@@ -1,22 +1,22 @@
 import { Routes } from '@angular/router';
 import { AppLayout } from './app/feature/layout/component/app.layout';
 import { NotfoundComponent } from './app/feature/layout/component/notfound/notfound.component';
-import { authPathRoutes } from './app/shared/routes/dict-routes';
+import { InsightsPathRoutes } from './app/shared/routes/insights-path.routes';
 
 export const appRoutes: Routes = [
-    { path: '', redirectTo: `/auth/${authPathRoutes.login}`, pathMatch: 'full' },
+    { path: '', redirectTo: InsightsPathRoutes.authLogin, pathMatch: 'full' },
     {
         path: '',
         component: AppLayout,
         children: [
-            { path: 'insights', loadChildren: () => import('./app/shared/routes/insights.routes') }
+            { path: InsightsPathRoutes.insights, loadChildren: () => import('./app/shared/routes/insights.routes') }
         ]
     },
     //{ path: 'landing', component: Landing },
-    { path: 'notfound', component: NotfoundComponent },
+    { path: InsightsPathRoutes.notfound, component: NotfoundComponent },
     {
-        path: 'auth',
+        path: InsightsPathRoutes.auth,
         loadChildren: () => import('./app/feature/authentication/presentation/routes/auth.routes')
     },
-    { path: '**', redirectTo: '/notfound' }
+    { path: '**', redirectTo: InsightsPathRoutes.notfound }
 ];

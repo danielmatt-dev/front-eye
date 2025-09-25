@@ -1,7 +1,7 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { inject } from '@angular/core';
-import { authPathRoutes } from '../../routes/dict-routes';
+import { InsightsPathRoutes } from '../../routes/insights-path.routes';
 
 export const authGuard: CanActivateFn = async (_, state) => {
 
@@ -13,8 +13,8 @@ export const authGuard: CanActivateFn = async (_, state) => {
     }
 
     // Redirige si el usuario no está autenticado
-    if (state.url !== `/auth/${authPathRoutes.login}`) {
-        await router.navigate([`/auth/${authPathRoutes.login}`]);
+    if (state.url !== InsightsPathRoutes.authLogin) {
+        await router.navigate([InsightsPathRoutes.authLogin]);
     }
 
     return false;
