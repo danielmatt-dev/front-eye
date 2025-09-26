@@ -14,11 +14,11 @@
         <!-- Contenedor para los botones alineados a la derecha -->
         <div class="flex gap-4">
             <!-- Botón para abrir modal de registro -->
-            <p-button label="{{ 'buttons.new' | translate: { item: labelDoctor } }}" (onClick)="openModal()"
+            <p-button label="{{ 'buttons.newDoctor' | translate }}" (onClick)="openModal()"
                 icon="pi pi-plus"></p-button>
 
             <!-- Botón para eliminar doctores seleccionados -->
-            <p-button label="{{ 'buttons.delete' | translate: { items: labelDoctors } }}" severity="danger"
+            <p-button label="{{ 'buttons.deleteDoctors' | translate }}" severity="danger"
                 [loading]="isDeleteLoading" [disabled]="selectedDoctors.length === 0"
                 (onClick)="deleteDoctorsConfirmation()" icon="pi pi-trash">
             </p-button>
@@ -167,7 +167,7 @@
     </p-table>
 </div>
 
-<p-dialog header="{{ 'doctor.titleModal' | translate }}" class="font-bold" [modal]="true" [(visible)]="isVisible"
+<p-dialog header="{{ 'titles.doctorData' | translate }}" class="font-bold" [modal]="true" [(visible)]="isVisible"
     [style]="{ width: '70rem', 'min-width': '30rem', 'max-width': '70rem', 'overflow-x': 'hidden', 'padding': '0.5rem' }"
     [draggable]="false" [resizable]="false" [contentStyle]="{ 'overflow': 'visible' }" (onHide)="closeModal()">
     <div class="flex flex-wrap gap-6 mb-4">

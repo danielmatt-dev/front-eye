@@ -59,10 +59,6 @@ export class TodasInspeccionesComponent implements OnInit {
     filteredInspections = this.allInspections;
     selectedInspections: InspectionResponseModel[] = [];
 
-    /* Labels */
-    labelInspection = 'inspección';
-    labelInspections = 'inspecciones';
-
     /* Providers */
     validationHelper: BaseValidatorHelper;
 
@@ -112,14 +108,6 @@ export class TodasInspeccionesComponent implements OnInit {
 
     async ngOnInit() {
         this.isDoctor = this.local.getRole() === 'DOCTOR';
-
-        this.translateService.get('inspections.singular').subscribe((res: string) => {
-            this.labelInspection = res.toLowerCase();
-        });
-
-        this.translateService.get('inspections.plural').subscribe((res: string) => {
-            this.labelInspections = res.toLowerCase();
-        });
 
         reloadOnLangChange(this.translateService, this.destroyRef, this.translatePage);
 
