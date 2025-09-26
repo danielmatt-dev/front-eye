@@ -34,7 +34,9 @@
         "additionalData": "Additional data",
         "occurrenceProbability": "Occurrence Probability (AI)",
         "completedInspections": "Completed inspections",
-        "resetPassword": "Reset password"
+        "resetPassword": "Reset password",
+        "doctorData": "Doctor data",
+        "patientData": "Patient data"
     },
     "subtitles": {
         "byPeriod": {
@@ -129,15 +131,17 @@
         "downloadPDF": "Download PDF",
         "exportExcelTable": "Export table to Excel",
         "downloadPDFTable": "Download table as PDF",
-        "new": "New {{item}}",
-        "delete": "Delete {{items}}",
+        "newDoctor": "New Doctor",
+        "deleteDoctors": "Delete Doctors",
+        "newPatient": "New Patient",
+        "deletePatients": "Delete Patients",
+        "newInspection": "New Inspection",
         "upload": "Upload",
         "choose": "Load",
         "inspect": "Inspect",
         "update": "Update",
         "validateEmail": "Validate email",
-        "resetPassword": "Reset password",
-        "newInspection": "New Inspection"
+        "resetPassword": "Reset password"
     },
     "toast": {
         "success": {
@@ -189,16 +193,13 @@
     },
     "doctor": {
         "singular": "Doctor",
-        "plural": "Doctors",
-        "titleModal": "Doctor data"
+        "plural": "Doctors"
     },
     "patient": {
         "singular": "Patient",
-        "plural": "Patients",
-        "titleModal": "Patient data"
+        "plural": "Patients"
     },
     "inspections": {
-        "singular": "Inspection",
         "plural": "Inspections"
     },
     "links": {
