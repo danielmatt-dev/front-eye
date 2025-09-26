@@ -19,16 +19,17 @@
 
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
     <div class="col-span-1 order-2 xl:col-span-2 xl:order-1">
-        <div class="card">
+        <div class="card" style="padding-bottom: 1rem">
             <div class="flex flex-col lg:flex-row lg:justify-between mb-4 gap-4">
                 <!-- Título -->
                 <div class="font-semibold text-xl">
-                    {{ 'patient.titleModal' | translate }}
+                    {{ 'titles.patientData' | translate }}
                 </div>
 
                 <!-- Select de paciente -->
                 <div class="flex flex-col w-full lg:w-auto">
                     <p-select
+                        [disabled]="isEditFields"
                         class="w-full lg:w-80 mb-2"
                         [options]="patientOptions"
                         optionLabel="fullName"
@@ -58,6 +59,7 @@
                         {{ patientError }}
                     </small>
                 </div>
+
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
@@ -65,33 +67,63 @@
                     <input
                         pInputText
                         [(ngModel)]="firstName"
-                        readonly
+                        [readOnly]="!isEditFields"
+                        (ngModelChange)="onFirstNameChange()"
+                        [ngClass]="{
+                            'ng-dirty': firstNameError,
+                            'ng-invalid': firstNameError
+                        }"
                         id="nombre"
                         type="text"
                         placeholder="{{ 'placeholders.name'| translate }}"
+                        maxlength="100"
                     />
+                    <small
+                        *ngIf="firstNameError"
+                        class="text-red-500"
+                    >{{ firstNameError }}</small>
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="paterno">{{ 'labels.fatherLastName'| translate }}</label>
                     <input
                         pInputText
-                        readonly
+                        [readOnly]="!isEditFields"
                         [(ngModel)]="lastFatherName"
+                        (ngModelChange)="onLastFatherNameChange()"
+                        [ngClass]="{
+                    'ng-dirty': lastFatherNameError,
+                    'ng-invalid': lastFatherNameError
+                }"
                         id="paterno"
                         type="text"
                         placeholder="{{ 'placeholders.fatherLastName'| translate }}"
+                        maxlength="100"
                     />
+                    <small
+                        *ngIf="lastFatherNameError"
+                        class="text-red-500"
+                    >{{ lastFatherNameError }}</small>
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="materno">{{ 'labels.motherLastName'| translate }}</label>
                     <input
                         pInputText
-                        readonly
+                        [readOnly]="!isEditFields"
                         id="materno"
                         type="text"
                         [(ngModel)]="lastMotherName"
+                        (ngModelChange)="onLastMotherNameChange()"
+                        [ngClass]="{
+                    'ng-dirty': lastMotherNameError,
+                    'ng-invalid': lastMotherNameError
+                }"
                         placeholder="{{ 'placeholders.motherLastName'| translate }}"
+                        maxlength="100"
                     />
+                    <small
+                        *ngIf="lastMotherNameError"
+                        class="text-red-500"
+                    >{{ lastMotherNameError }}</small>
                 </div>
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
@@ -99,58 +131,105 @@
                     <label for="correo">{{ 'labels.email'| translate }}</label>
                     <input
                         pInputText
-                        readonly
+                        [readOnly]="!isEditFields"
                         id="correo"
                         type="text"
                         [(ngModel)]="email"
+                        (ngModelChange)="onEmailChange()"
+                        [ngClass]="{
+                    'ng-dirty': emailError,
+                    'ng-invalid': emailError
+                }"
                         placeholder="{{ 'placeholders.email'| translate }}"
+                        maxlength="100"
                     />
+                    <small
+                        *ngIf="emailError"
+                        class="text-red-500"
+                    >{{ emailError }}</small>
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="telefono">{{ 'labels.phone'| translate }}</label>
                     <input
                         pInputText
-                        readonly
+                        [readOnly]="!isEditFields"
                         id="telefono"
                         type="text"
                         [(ngModel)]="phone"
+                        (ngModelChange)="onPhoneChange()"
+                        [ngClass]="{
+                    'ng-dirty': phoneError,
+                    'ng-invalid': phoneError
+                }"
                         placeholder="{{ 'placeholders.phone'| translate }}"
+                        maxlength="20"
                     />
+                    <small
+                        *ngIf="phoneError"
+                        class="text-red-500"
+                    >{{ phoneError }}</small>
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="ocupacion">{{ 'labels.occupation'| translate }}</label>
                     <input
                         pInputText
-                        readonly
+                        [readOnly]="!isEditFields"
                         id="ocupacion"
                         type="text"
                         [(ngModel)]="occupation"
+                        (ngModelChange)="onOccupationChange()"
+                        [ngClass]="{
+                    'ng-dirty': occupationError,
+                    'ng-invalid': occupationError
+                }"
                         placeholder="{{ 'placeholders.occupation'| translate }}"
                     />
+                    <small
+                        *ngIf="occupationError"
+                        class="text-red-500"
+                    >{{ occupationError }}</small>
                 </div>
             </div>
             <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="genero">{{ 'labels.gender'| translate }}</label>
-                    <input
-                        pInputText
-                        readonly
+                    <p-select
                         id="genero"
-                        type="text"
-                        [(ngModel)]="gender"
+                        [(ngModel)]="genderOption"
+                        optionLabel="label"
+                        [options]="genders"
+                        [ngClass]="{
+                    'ng-dirty': genderError,
+                    'ng-invalid': genderError
+                }"
+                        (ngModelChange)="onGenderChange()"
                         placeholder="{{ 'placeholders.genderInput'| translate }}"
                     />
+                    <small
+                        *ngIf="genderError"
+                        class="text-red-500"
+                    >{{ genderError }}</small>
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="nacimiento">{{ 'labels.birthDate'| translate }}</label>
-                    <input
-                        pInputText
-                        readonly
+                    <p-date-picker
                         id="nacimiento"
-                        type="text"
+                        showIcon
+                        class="w-full"
+                        [style]="{ width: '100%', opacity: 10 }"
+                        readonlyInput
                         [(ngModel)]="birthDate"
+                        (ngModelChange)="onBirtDateChange()"
+                        [ngClass]="{
+                    'ng-dirty': birthDateError,
+                    'ng-invalid': birthDateError
+                }"
                         placeholder="{{ 'placeholders.birthDate'| translate }}"
                     />
+                    <small
+                        *ngIf="birthDateError"
+                        class="text-red-500"
+                    >{{ birthDateError }}</small>
                 </div>
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="edad">{{ 'labels.age'| translate }}</label>
@@ -164,29 +243,91 @@
                     />
                 </div>
             </div>
-            <div class="flex flex-wrap gap-6">
-                <div class="flex flex-col grow basis-0 gap-2">
-                    <label for="direccion">{{ 'labels.address'| translate }}</label>
-                    <input
-                        pInputText
-                        readonly
-                        id="direccion"
-                        type="text"
-                        [(ngModel)]="address"
-                        placeholder="{{ 'placeholders.address'| translate }}"
-                    />
-                </div>
+            <div class="flex flex-wrap gap-6 mb-4">
                 <div class="flex flex-col grow basis-0 gap-2">
                     <label for="cp">{{ 'labels.postalCode'| translate }}</label>
                     <input
                         pInputText
-                        readonly
+                        [readOnly]="!isEditFields"
                         id="cp"
                         type="text"
                         [(ngModel)]="postalCode"
+                        (ngModelChange)="onPostalCodeChange()"
+                        [ngClass]="{
+                    'ng-dirty': postalCodeError,
+                    'ng-invalid': postalCodeError
+                }"
                         placeholder="{{ 'placeholders.postalCode'| translate }}"
+                        maxlength="10"
                     />
+                    <small
+                        *ngIf="postalCodeError"
+                        class="text-red-500"
+                    >{{ postalCodeError }}</small>
                 </div>
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="direccion">{{ 'labels.address'| translate }}</label>
+                    <input
+                        pInputText
+                        [readOnly]="!isEditFields"
+                        id="direccion"
+                        type="text"
+                        [(ngModel)]="address"
+                        (ngModelChange)="onAddressChange()"
+                        [ngClass]="{
+                    'ng-dirty': addressError,
+                    'ng-invalid': addressError
+                }"
+                        placeholder="{{ 'placeholders.address'| translate }}"
+                        maxlength="250"
+                    />
+                    <small
+                        *ngIf="addressError"
+                        class="text-red-500"
+                    >{{ addressError }}</small>
+                </div>
+                <div class="flex flex-col grow basis-0 gap-2">
+                    <label for="state">{{ 'labels.state'| translate }}</label>
+                    <p-select
+                        id="state"
+                        type="text"
+                        [(ngModel)]="statePatient"
+                        [options]="states"
+                        [ngClass]="{
+                    'ng-dirty': stateError,
+                    'ng-invalid': stateError
+                }"
+                        (ngModelChange)="onStateChange()"
+                        placeholder="{{ 'placeholders.state'| translate }}"
+                    />
+                    <small
+                        *ngIf="stateError"
+                        class="text-red-500"
+                    >{{ stateError }}</small>
+                </div>
+            </div>
+            <div class="flex flex-row justify-end">
+                <ng-container *ngIf="!isEditFields">
+                    <p-button
+                        label="{{ 'buttons.newPatient' | translate }}"
+                        (onClick)="editNewPatient()"
+                        icon="pi pi-plus"
+                    ></p-button>
+                </ng-container>
+                <ng-container *ngIf="isEditFields">
+                    <div class="flex flex-wrap gap-2">
+                        <p-button
+                            label="{{ 'buttons.cancel' | translate }}"
+                            (onClick)="cancelNewPatient()"
+                            severity="danger"
+                        ></p-button>
+                        <p-button
+                            label="{{ 'buttons.register' | translate }}"
+                            [loading]="isNewPatientLoading"
+                            (onClick)="callCreatePatient()"
+                        ></p-button>
+                    </div>
+                </ng-container>
             </div>
         </div>
     </div>

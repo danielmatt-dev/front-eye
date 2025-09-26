@@ -16,8 +16,8 @@ import { FormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { Skeleton } from 'primeng/skeleton';
-import { colorByResult, formatDateToDDMMYYYY } from '../../../../shared/utils/functions/functions';
-import { OptionLabel, State } from '../../../../shared/utils/data';
+import { calculateAge, colorByResult } from '../../../../shared/utils/functions/functions';
+import { OptionLabel, State, statesMexico } from '../../../../shared/utils/data';
 import { PrimeNG } from 'primeng/config';
 import { NewInspectionValidator } from './validation/new.inspection.validator';
 import { CreateInspection } from '../../domain/use_cases/createInspection';
@@ -33,6 +33,10 @@ import { InspectionRequestModel } from '../../data/models/inspection.request.mod
 import { AiModelModel } from '../../../aimodel/data/model/aimodel.model';
 import { DiseaseModel } from '../../../disease/data/model/disease.model';
 import { InsightsPathRoutes } from '../../../../shared/routes/insights-path.routes';
+import { BadRequestException } from '../../../../shared/exceptions/exceptions';
+import { CreatePatient } from '../../../patient/domain/use_cases/create-patient';
+import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
+import { PatientRequestModel } from '../../../patient/data/models/patient.request.model';
 
 /**
  * Componente para crear una **nueva inspección**.
@@ -64,11 +68,14 @@ export class NuevaInspeccionComponent implements OnInit {
 
     notes = '';
 
+    /* Catálogo de opciones */
+    genders: OptionLabel[] = [];
+    states = statesMexico;
+
     /* Variables del paciente */
     allPatients: PatientResponseModel[] = [];
     selectedPatientId?: number;
     patientOptions: any[] = [];
-    birthDate?: string = '';
 
     /* Lista de modelos y afecciones */
     diseaseOptions: OptionLabel[] = [];
@@ -82,13 +89,16 @@ export class NuevaInspeccionComponent implements OnInit {
     inspectionId?: number = 2;
 
     /* Campos del paciente */
+    isEditFields = false;
+
     patientId?: number;
     firstName = '';
     lastFatherName = '';
     lastMotherName = '';
     email = '';
+    birthDate?: Date;
     phone = '';
-    gender = '';
+    genderOption?: OptionLabel;
     age = 0;
     address = '';
     postalCode = '';
@@ -113,11 +123,26 @@ export class NuevaInspeccionComponent implements OnInit {
     modelError?: string;
     imageError?: string;
 
+    /* Campos de validación */
+    firstNameError?: string;
+    lastFatherNameError?: string;
+    lastMotherNameError?: string;
+    birthDateError?: string;
+    genderError?: string;
+    phoneError?: string;
+    emailError?: string;
+    addressError?: string;
+    postalCodeError?: string;
+    stateError?: string;
+    occupationError?: string;
+
     /* Variables de carga */
     isLoadingGetData = false;
+    isNewPatientLoading = false;
 
     /* Providers */
     validator: NewInspectionValidator;
+    validationHelper: BaseValidatorHelper;
 
     private readonly destroyRef = inject(DestroyRef);
 
@@ -132,6 +157,7 @@ export class NuevaInspeccionComponent implements OnInit {
      * @param messageService `MessageService` - Notificaciones (toasts).
      * @param getAllData `GetNewInspectionData` - Caso de uso para precargar catálogos.
      * @param createInspection `CreateInspection` - Caso de uso para crear la inspección.
+     * @param createPatient `CreatePatient` - Caso de uso para crear un paciente.
      * @param local `LocalStorageService` - Obtención de datos de sesión (usuario/doctor).
      */
     constructor(
@@ -143,9 +169,11 @@ export class NuevaInspeccionComponent implements OnInit {
         private readonly messageService: MessageService,
         private readonly getAllData: GetNewInspectionData,
         private readonly createInspection: CreateInspection,
+        private readonly createPatient: CreatePatient,
         private readonly local: LocalStorageService
     ) {
         this.validator = new NewInspectionValidator(new SendMessage(this.messageService), this.translateService, this.primeng);
+        this.validationHelper = new BaseValidatorHelper(new SendMessage(this.messageService), this.translateService, this.primeng);
         this.doctor = this.local.getUsername();
     }
 
@@ -169,7 +197,7 @@ export class NuevaInspeccionComponent implements OnInit {
 
         const { patient } = history.state as { patient?: PatientResponseModel };
         if (patient) {
-            this.selectedPatientId = patient.patientId;   // <-- clave
+            this.selectedPatientId = patient.patientId; // <-- clave
             this.fillFormFromPatient(patient);
         }
     }
@@ -181,14 +209,37 @@ export class NuevaInspeccionComponent implements OnInit {
      * @returns `void`
      */
     private readonly loadTranslate = () => {
+
+        this.allPatients = this.allPatients.map((p) => {
+            const genderOption = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: p.gender });
+            p.genderOption = genderOption
+            p.gender = genderOption.value
+            return p
+        })
+
         // Construye opciones de ojo y enfermedad a partir de catálogos + i18n
         this.eyes = this.translateLang.getOptionsByType(TypeList.eye);
         this.diseaseOptions = this.translateLang.buildDiseaseOptions(this.allDiseases, false);
+        this.genders = this.translateLang.getOptionsByType(TypeList.gender);
         // Traduce la etiqueta del resultado actual (si existe)
         this.resultOption = this.translateLang.translateByOptionLabel({
             value: this.resultOption?.value,
             type: TypeList.result
         });
+        this.selectedEye = this.translateLang.translateByOptionLabel({
+            value: this.selectedEye?.value,
+            type: TypeList.eye
+        });
+        this.selectedDisease = this.translateLang.translateByOptionLabel({
+            value: this.selectedDisease?.value,
+            type: TypeList.disease
+        });
+        if (this.genderOption) {
+            this.genderOption = this.translateLang.translateByOptionLabel({
+                value: this.genderOption?.value,
+                type: TypeList.gender
+            });
+        }
         this.cdr.markForCheck();
     };
 
@@ -246,6 +297,7 @@ export class NuevaInspeccionComponent implements OnInit {
         // Manejo de error de backend / red
         if (resultCreateInspection._tag === 'Left') {
             this.validator.getToastException(resultCreateInspection.left);
+            this.state = State.initial;
         }
 
         // Caso exitoso: persistimos id, pintamos resultado y notificamos
@@ -258,9 +310,72 @@ export class NuevaInspeccionComponent implements OnInit {
             });
             this.colorResult = colorByResult(result);
             this.validator.showMessage({ key: 'createInspection', type: 'success' });
+            this.state = State.success;
         }
 
-        this.state = State.success;
+    }
+
+    async callCreatePatient() {
+
+        if (!this.isFormValid()) {
+            this.validationHelper.showMessage({ key: 'invalidForm' });
+            return;
+        }
+
+        const patient = new PatientRequestModel({
+            firstName: this.firstName,
+            lastFathName: this.lastFatherName,
+            lastMontName: this.lastMotherName,
+            email: this.email,
+            phone: this.phone,
+            birthDate: this.birthDate,
+            gender: this.genderOption?.value,
+            occupation: this.occupation,
+            address: this.address,
+            state: this.statePatient,
+            postalCode: this.postalCode
+        });
+
+        this.isNewPatientLoading = true;
+        const resultCreatePatient = await this.createPatient.call(patient);
+        this.isNewPatientLoading = false;
+
+        if (resultCreatePatient._tag === 'Left') {
+
+            if (resultCreatePatient.left instanceof BadRequestException) {
+                this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered')
+                return
+            }
+
+            this.validationHelper.getToastException(resultCreatePatient.left);
+            return;
+        }
+
+        if (resultCreatePatient._tag === 'Right') {
+            const success = resultCreatePatient.right;
+            const genderOption = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: success.gender });
+            success.genderOption = genderOption;
+            success.gender = genderOption.value;
+            this.validationHelper.sendToastMessageSuccess('createPatient', `${success.firstName} ${success.lastFathName}`);
+            this.allPatients.push(success);
+            this.patientOptions = this.allPatients.map((patient) => ({
+                ...patient,
+                fullName: `${patient.firstName} ${patient.lastFathName} ${patient.lastMontName}`
+            }));
+            this.isEditFields = false;
+            this.onPatientSelect({ value: success.patientId })
+        }
+
+    }
+
+    editNewPatient() {
+        this.isEditFields = true;
+        this.clearFieldsPatient();
+    }
+
+    cancelNewPatient() {
+        this.isEditFields = false;
+        this.clearFieldsPatient();
     }
 
     // Conversión de file a base64
@@ -341,18 +456,22 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     private fillFormFromPatient(p: PatientResponseModel) {
+        this.selectedPatientId = p.patientId;
         this.patientId = p.patientId;
         this.firstName = p.firstName;
         this.lastFatherName = p.lastFathName;
         this.lastMotherName = p.lastMontName;
         this.email = p.email;
         this.phone = p.phone;
-        this.gender = p.gender;
+        this.genderOption = this.translateLang.translateByOptionLabel({
+            value: p.genderOption?.value,
+            type: TypeList.gender
+        });
         this.age = p.age;
         this.address = p.address;
         this.postalCode = p.postalCode;
         this.occupation = p.occupation;
-        this.birthDate = formatDateToDDMMYYYY(p.birthDate);
+        this.birthDate = p.birthDate;
         this.statePatient = p.state;
         this.onPatientChange();
     }
@@ -376,7 +495,7 @@ export class NuevaInspeccionComponent implements OnInit {
      * @returns `void`
      */
     onPatientSelect(event: any) {
-        const p = this.patientOptions.find(x => x.patientId === event.value);
+        const p = this.patientOptions.find((x) => x.patientId === event.value);
         if (p) this.fillFormFromPatient(p);
     }
 
@@ -425,6 +544,53 @@ export class NuevaInspeccionComponent implements OnInit {
         this.modelError = this.validator.validateModelSelected(this.selectedModel);
     }
 
+    onFirstNameChange() {
+        this.firstNameError = this.validationHelper.validateName(this.firstName);
+    }
+
+    onLastFatherNameChange() {
+        this.lastFatherNameError = this.validationHelper.validateName(this.lastFatherName);
+    }
+
+    onLastMotherNameChange() {
+        this.lastMotherNameError = this.validationHelper.validateName(this.lastMotherName);
+    }
+
+    onGenderChange() {
+        this.genderError = this.validationHelper.validateSelected(this.genderOption?.value);
+    }
+
+    onEmailChange() {
+        this.emailError = this.validationHelper.validateEmail(this.email);
+    }
+
+    onPhoneChange() {
+        this.phoneError = this.validationHelper.validateFieldNumber(this.phone, 20);
+    }
+
+    onBirtDateChange() {
+        this.birthDateError = this.validationHelper.validateBirthDate(this.birthDate);
+        if (!this.birthDateError && this.birthDate) {
+            this.age = calculateAge(this.birthDate);
+        }
+    }
+
+    onOccupationChange() {
+        this.occupationError = this.validationHelper.validateField(this.occupation);
+    }
+
+    onAddressChange() {
+        this.addressError = this.validationHelper.validateField(this.address);
+    }
+
+    onPostalCodeChange() {
+        this.postalCodeError = this.validationHelper.validateFieldNumber(this.postalCode, 10);
+    }
+
+    onStateChange() {
+        this.stateError = this.validationHelper.validateSelected(this.statePatient);
+    }
+
     /**
      * Dispara todas las validaciones del formulario para actualizar el estado de errores.
      *
@@ -436,6 +602,38 @@ export class NuevaInspeccionComponent implements OnInit {
         this.onEyeChange();
         this.onDiseaseChange();
         this.onModelChange();
+    }
+
+    onFormPatientChange() {
+        this.onFirstNameChange();
+        this.onLastFatherNameChange();
+        this.onLastMotherNameChange();
+        this.onPhoneChange();
+        this.onBirtDateChange();
+        this.onEmailChange();
+        this.onGenderChange();
+        this.onOccupationChange();
+        this.onAddressChange();
+        this.onPostalCodeChange();
+        this.onStateChange();
+    }
+
+    /* Funciones de validación del formulario del Patient */
+    isFormValid(): boolean {
+        this.onFormPatientChange();
+        return !(
+            this.firstNameError ??
+            this.lastFatherNameError ??
+            this.lastMotherNameError ??
+            this.occupationError ??
+            this.birthDateError ??
+            this.emailError ??
+            this.phoneError ??
+            this.genderError ??
+            this.addressError ??
+            this.postalCodeError ??
+            this.stateError
+        );
     }
 
     /**
@@ -455,21 +653,7 @@ export class NuevaInspeccionComponent implements OnInit {
      * @returns `void`
      */
     clearFields() {
-
-        this.selectedPatientId = undefined;
-        this.patientId = undefined;
-        this.firstName = '';
-        this.lastFatherName = '';
-        this.lastMotherName = '';
-        this.email = '';
-        this.phone = '';
-        this.gender = '';
-        this.age = 0;
-        this.address = '';
-        this.postalCode = '';
-        this.occupation = '';
-        this.birthDate = '';
-        this.statePatient = '';
+        this.clearFieldsPatient()
 
         this.images = [];
         this.imageError = undefined;
@@ -492,8 +676,36 @@ export class NuevaInspeccionComponent implements OnInit {
         this.inspectionId = undefined;
     }
 
+    clearFieldsPatient() {
+        this.selectedPatientId = undefined;
+        this.patientId = undefined;
+        this.firstName = '';
+        this.lastFatherName = '';
+        this.lastMotherName = '';
+        this.email = '';
+        this.phone = '';
+        this.genderOption = undefined;
+        this.age = 0;
+        this.address = '';
+        this.postalCode = '';
+        this.occupation = '';
+        this.birthDate = undefined;
+        this.statePatient = '';
+
+        this.firstNameError = undefined;
+        this.lastFatherNameError = undefined;
+        this.lastMotherNameError = undefined;
+        this.emailError = undefined;
+        this.phoneError = undefined;
+        this.occupationError = undefined;
+        this.genderError = undefined;
+        this.birthDateError = undefined;
+        this.addressError = undefined;
+        this.postalCodeError = undefined;
+        this.stateError = undefined;
+    }
+
     async cancel() {
         await this.router.navigate([InsightsPathRoutes.pathAllInspections]);
     }
-
 }
