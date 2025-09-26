@@ -158,12 +158,6 @@ export class DoctorComponent implements OnInit {
     /** DestroyRef para gestionar subscripciones en cambios de idioma. */
     private readonly destroyRef = inject(DestroyRef);
 
-    /* --------------------------------- Labels ---------------------------------- */
-    /** Label singular traducido (e.g., "doctor"). */
-    labelDoctor = 'doctor';
-    /** Label plural traducido (e.g., "doctores"). */
-    labelDoctors = 'doctores';
-
     /**
    * Constructor.
    *
@@ -211,14 +205,6 @@ export class DoctorComponent implements OnInit {
  * - Carga doctores y clínicas.
  */
     async ngOnInit() {
-        this.translateService.get('doctor.singular').subscribe((res: string) => {
-            this.labelDoctor = res.toLowerCase();
-        });
-
-        this.translateService.get('doctor.plural').subscribe((res: string) => {
-            this.labelDoctors = res.toLowerCase();
-        });
-
         reloadOnLangChange(this.translateService, this.destroyRef, this.loadGenders);
 
         await this.loadDoctors()

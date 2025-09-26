@@ -34,7 +34,9 @@
         "additionalData": "Datos adicionales",
         "occurrenceProbability": "Probabilidad de Ocurrencia (IA)",
         "completedInspections": "Inspecciones realizadas",
-        "resetPassword": "Restablecer contraseña"
+        "resetPassword": "Restablecer contraseña",
+        "doctorData": "Datos del doctor",
+        "patientData": "Datos del paciente"
     },
     "subtitles": {
         "byPeriod": {
@@ -129,15 +131,17 @@
         "downloadPDF": "Descargar en PDF",
         "exportExcelTable": "Exportar tabla a Excel",
         "downloadPDFTable": "Descargar tabla en PDF",
-        "new": "Nuevo {{item}}",
-        "delete": "Eliminar {{items}}",
+        "newDoctor": "Nuevo Doctor",
+        "deleteDoctors": "Eliminar Doctores",
+        "newPatient": "Nuevo Paciente",
+        "deletePatients": "Eliminar Pacientes",
+        "newInspection": "Nueva Inspección",
         "upload": "Subir",
         "choose": "Cargar",
         "inspect": "Inspeccionar",
         "update": "Actualizar",
         "validateEmail": "Validar correo",
-        "resetPassword": "Reestablecer contraseña",
-        "newInspection": "Nueva Inspección"
+        "resetPassword": "Restablecer contraseña"
     },
     "toast": {
         "success": {
@@ -189,16 +193,13 @@
     },
     "doctor": {
         "singular": "Doctor",
-        "plural": "Doctores",
-        "titleModal": "Datos del doctor"
+        "plural": "Doctores"
     },
     "patient": {
         "singular": "Paciente",
-        "plural": "Pacientes",
-        "titleModal": "Datos del paciente"
+        "plural": "Pacientes"
     },
     "inspections": {
-        "singular": "Inspección",
         "plural": "Inspecciones"
     },
     "links": {

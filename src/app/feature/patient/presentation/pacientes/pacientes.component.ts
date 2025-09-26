@@ -62,10 +62,6 @@ export class PacientesComponent implements OnInit {
     isUpdate = false;
     visible = false;
 
-    /* Labels */
-    labelPatient = 'paciente';
-    labelPatients = 'pacientes';
-
     /* Variables para opciones de consulta */
     selectedPeriod: OptionLabel | undefined;
     selectedDates: Date[] = [];
@@ -137,14 +133,6 @@ export class PacientesComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.translateService.get('patient.singular').subscribe((res: string) => {
-            this.labelPatient = res.toLowerCase();
-        });
-
-        this.translateService.get('patient.plural').subscribe((res: string) => {
-            this.labelPatients = res.toLowerCase();
-        });
-
         reloadOnLangChange(this.translateService, this.destroyRef, this.loadGenders)
 
         await this.callGetAllPatients();

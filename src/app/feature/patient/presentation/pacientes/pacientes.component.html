@@ -17,13 +17,13 @@
         <!-- Contenedor para los botones alineados a la derecha -->
         <div class="flex gap-2">
             <p-button
-                label="{{ 'buttons.new' | translate: { item: labelPatient } }}"
+                label="{{ 'buttons.newPatient' | translate }}"
                 (onClick)="openModal()"
                 icon="pi pi-plus"
             ></p-button>
 
             <p-button
-                label="{{ 'buttons.delete' | translate: { items: labelPatients } }}"
+                label="{{ 'buttons.deletePatients' | translate }}"
                 severity="danger"
                 [loading]="isDeleteLoading"
                 [disabled]="selectedPatients.length === 0"
@@ -224,7 +224,7 @@
 </div>
 
 <p-dialog
-    header="{{ 'patient.titleModal' | translate }}"
+    header="{{ 'titles.patientData' | translate }}"
     class="font-bold"
     [modal]="true"
     [(visible)]="visible"
@@ -368,6 +368,7 @@
                     'ng-dirty': genderError,
                     'ng-invalid': genderError
                 }"
+                (ngModelChange)="onGenderChange()"
                 placeholder="{{ 'placeholders.gender' | translate }}"
             ></p-select>
             <small
