@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
+    AiModelNotFoundException,
     BadCredencialsException,
     BadRequestException,
-    ForbiddenException, InternalServerException, NetworkException,
+    ForbiddenException, GeoDataNotFoundException, InternalServerException, NetworkException,
     ResourceNotFoundException, TimeoutException
 } from '../exceptions/exceptions';
 import { catchError, firstValueFrom, Observable, of } from 'rxjs';
@@ -24,6 +25,11 @@ export class ApiService {
     }
 
     private mapException(error: HttpErrorResponse): Error {
+        switch (error.error.field_error) {
+            case 'AiModel': return new AiModelNotFoundException(error.message);
+            case 'GeoData': return new GeoDataNotFoundException(error.message);
+        }
+
         switch (error.status) {
             case 0: return new NetworkException(error.message);
             case 400: return new BadRequestException(error.message);

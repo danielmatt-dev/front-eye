@@ -3,8 +3,9 @@ import { LocaleTextProvider } from '../locale.text.provider';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimeNG } from 'primeng/config';
 import {
+    AiModelNotFoundException,
     BadCredencialsException,
-    BadRequestException, ForbiddenException,
+    BadRequestException, ForbiddenException, GeoDataNotFoundException,
     InternalServerException, NetworkException,
     ResourceNotFoundException, TimeoutException, TokenNotFoundException
 } from '../exceptions/exceptions';
@@ -65,6 +66,16 @@ export abstract class ValidatorHelper {
 
         if (ex instanceof BadCredencialsException) {
             key = 'badCredentials'
+        }
+
+        if (ex instanceof AiModelNotFoundException) {
+            type = 'warn'
+            key = 'aiModelNotFound'
+        }
+
+        if (ex instanceof GeoDataNotFoundException) {
+            type = 'warn'
+            key = 'geoDataNotFound'
         }
 
         if (ex instanceof ResourceNotFoundException) {
