@@ -32,7 +32,7 @@ import { OptionLabel, statesMexico } from '../../../../shared/utils/data';
 import { GenerateReportImpl } from '../../../report/domain/factory/impl/generate.report.impl';
 import { PatientReportPdf } from '../../../report/domain/template-method/pdf/impl/patient.report.pdf';
 import { PatientReportExcel } from '../../../report/domain/template-method/excel/impl/patient.report.excel';
-import { BadRequestException } from '../../../../shared/exceptions/exceptions';
+import { BadRequestException, GeoDataNotFoundException } from '../../../../shared/exceptions/exceptions';
 import { SendMessage } from '../../../../shared/toast/send.message';
 import { TranslateLang, TypeList } from '../../../../shared/utils/functions/translate-lang';
 import { reloadOnLangChange } from '../../../../shared/utils/functions/i18n-refresh';
@@ -185,6 +185,10 @@ export class PacientesComponent implements OnInit {
         this.isCreateLoading = false;
 
         if (resultCreatePatient._tag === 'Left') {
+
+            if (resultCreatePatient.left instanceof GeoDataNotFoundException) {
+                this.postalCodeError = this.validationHelper.getText('exceptions.messages.postalCodeInvalid');
+            }
 
             if (resultCreatePatient.left instanceof BadRequestException) {
                 this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered')

@@ -262,6 +262,8 @@
             "network": "Network failure",
             "badCredentials": "Incorrect credentials.",
             "resourceNotFound": "Resource not found",
+            "aiModelNotFound": "AI Model Not Found",
+            "geoDataNotFound": "Geographic Data Not Found",
             "badRequest": "Invalid request.",
             "internalServer": "An internal server error occurred.",
             "timeout": "The request timed out.",
@@ -275,6 +277,8 @@
             "network": "Could not connect to the server. Please try again later.",
             "badCredentials": "Check your username and password.",
             "resourceNotFound": "The requested resource was not found.",
+            "aiModelNotFound": "The requested AI model was not found.",
+            "geoDataNotFound": "No geographic data was found for the specified postal code.",
             "badRequest": "Please review the data and try again.",
             "internalServer": "Please try again later.",
             "timeout": "Please try again later.",
@@ -282,7 +286,9 @@
             "unknown": "An unexpected error occurred. Please try again.",
             "login": "Please sign in again to continue",
             "emailAlredyRegistered": "The email is already registered",
-            "emailNotRegistered": "Make sure the entered email is correct or that you have a registered account"
+            "emailNotRegistered": "Make sure the entered email is correct or that you have a registered account",
+            "postalCodeInvalid": "Please enter a different postal code.",
+            "aiModelInvalid": "Please select a different model."
         }
     },
     "confirmations": {
