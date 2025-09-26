@@ -33,7 +33,11 @@ import { InspectionRequestModel } from '../../data/models/inspection.request.mod
 import { AiModelModel } from '../../../aimodel/data/model/aimodel.model';
 import { DiseaseModel } from '../../../disease/data/model/disease.model';
 import { InsightsPathRoutes } from '../../../../shared/routes/insights-path.routes';
-import { BadRequestException } from '../../../../shared/exceptions/exceptions';
+import {
+    AiModelNotFoundException,
+    BadRequestException,
+    GeoDataNotFoundException
+} from '../../../../shared/exceptions/exceptions';
 import { CreatePatient } from '../../../patient/domain/use_cases/create-patient';
 import { BaseValidatorHelper } from '../../../doctor/presentation/doctor-component/validation/baseValidatorHelper';
 import { PatientRequestModel } from '../../../patient/data/models/patient.request.model';
@@ -296,6 +300,11 @@ export class NuevaInspeccionComponent implements OnInit {
 
         // Manejo de error de backend / red
         if (resultCreateInspection._tag === 'Left') {
+
+            if (resultCreateInspection.left instanceof AiModelNotFoundException) {
+                this.modelError = this.validationHelper.getText('exceptions.messages.aiModelInvalid');
+            }
+
             this.validator.getToastException(resultCreateInspection.left);
             this.state = State.initial;
         }
@@ -345,6 +354,10 @@ export class NuevaInspeccionComponent implements OnInit {
             if (resultCreatePatient.left instanceof BadRequestException) {
                 this.emailError = this.validationHelper.getText('exceptions.messages.emailAlredyRegistered')
                 return
+            }
+
+            if (resultCreatePatient.left instanceof GeoDataNotFoundException) {
+                this.postalCodeError = this.validationHelper.getText('exceptions.messages.postalCodeInvalid');
             }
 
             this.validationHelper.getToastException(resultCreatePatient.left);
