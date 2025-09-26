@@ -262,6 +262,8 @@
             "network": "Fallo de red",
             "badCredentials": "Credenciales incorrectas.",
             "resourceNotFound": "Recurso no encontrado",
+            "aiModelNotFound": "Modelo de IA no encontrado",
+            "geoDataNotFound": "Datos geográficos no encontrados",
             "badRequest": "Solicitud no válida.",
             "internalServer": "Se produjo un error interno en el servidor.",
             "timeout": "Se agotó el tiempo de espera de la solicitud.",
@@ -275,6 +277,8 @@
             "network": "No se pudo conectar con el servidor. Por favor intenta más tarde.",
             "badCredentials": "Verifica tu usuario y contraseña.",
             "resourceNotFound": "No se encontró el recurso solicitado.",
+            "aiModelNotFound": "No se encontró el modelo de inteligencia artificial solicitado.",
+            "geoDataNotFound": "No se encontraron datos geográficos para el código postal especificado.",
             "badRequest": "Por favor revisa los datos e inténtalo de nuevo.",
             "internalServer": "Por favor vuelve a intentarlo más tarde.",
             "timeout": "Inténtalo de nuevo más tarde.",
@@ -282,7 +286,9 @@
             "unknown": "Ha ocurrido un error inesperado. Por favor inténtalo de nuevo.",
             "login": "Por favor, vuelve a iniciar sesión para continuar",
             "emailAlredyRegistered": "El correo electrónico ya está registrado",
-            "emailNotRegistered": "Asegúrese de que el correo ingresado sea correcto o que tenga una cuenta registrada"
+            "emailNotRegistered": "Asegúrese de que el correo ingresado sea correcto o que tenga una cuenta registrada",
+            "postalCodeInvalid": "Ingrese un código postal diferente.",
+            "aiModelInvalid": "Por favor seleccione un modelo diferente."
         }
     },
     "confirmations": {
