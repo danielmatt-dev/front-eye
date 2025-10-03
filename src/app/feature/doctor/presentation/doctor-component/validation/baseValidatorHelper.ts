@@ -56,6 +56,7 @@ export class BaseValidatorHelper extends ValidatorHelper {
  */
     validateName(firstName: string): string | undefined {
 
+        firstName = firstName.trim()
         const message = this.validateField(firstName)
         if (message) {
             return message
@@ -82,6 +83,7 @@ export class BaseValidatorHelper extends ValidatorHelper {
    * @returns `undefined` si es válido o un mensaje de error en caso contrario.
    */
     validateFieldNumber(postalCode: string, maxLength: number): string | undefined {
+        postalCode = postalCode.trim()
         const message = this.validateField(postalCode, maxLength)
         if (message) {
             return message
@@ -106,6 +108,7 @@ export class BaseValidatorHelper extends ValidatorHelper {
    * @returns `undefined` si es válido o un mensaje de error en caso contrario.
    */
     validateEmail(email: string) {
+        email = email.trim()
         const message = this.validateField(email)
         if (message) {
             return message
@@ -131,7 +134,9 @@ export class BaseValidatorHelper extends ValidatorHelper {
    */
     validatePassword(password?: string) {
 
-        if (!password || password.trim() === '') {
+        password = password?.trim()
+
+        if (!password || password === '') {
             return this.getText(this.validationsKey + 'required')
         }
 
@@ -162,6 +167,9 @@ export class BaseValidatorHelper extends ValidatorHelper {
    * @returns `undefined` si coinciden o un mensaje de error si no.
    */
     validateConfirmPassword(confirmPassword?: string, password?: string) {
+
+        confirmPassword = confirmPassword?.trim()
+        password = password?.trim()
 
         const message = this.validateField(confirmPassword)
         if (message) {

@@ -225,7 +225,7 @@
     <div class="flex flex-wrap gap-6 mb-4">
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="nacimiento">{{ 'labels.birthDate' | translate }}</label>
-            <p-date-picker id="nacimiento" showIcon="true" class="w-full" [(ngModel)]="birthDate"
+            <p-date-picker id="nacimiento" showIcon="true" class="w-full" [(ngModel)]="birthDate" [maxDate]="today"
                 (ngModelChange)="onBirtDateChange()" [ngClass]="{
                     'ng-dirty': birthDateError,
                     'ng-invalid': birthDateError

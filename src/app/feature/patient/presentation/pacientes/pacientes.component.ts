@@ -109,6 +109,7 @@ export class PacientesComponent implements OnInit {
 
     // Fecha y hora formato
     dateFormat = 'dd/MM/yyyy'
+    today: Date = new Date()
 
     private readonly destroyRef = inject(DestroyRef);
 
@@ -294,17 +295,17 @@ export class PacientesComponent implements OnInit {
         }
 
         return new PatientRequestModel({
-            firstName: this.firstName,
-            lastFathName: this.lastFatherName,
-            lastMontName: this.lastMotherName,
-            email: this.email,
-            phone: this.phone,
+            firstName: this.firstName.trim(),
+            lastFathName: this.lastFatherName.trim(),
+            lastMontName: this.lastMotherName.trim(),
+            email: this.email.trim(),
+            phone: this.phone.trim(),
             birthDate: this.birthDate,
-            gender: this.gender,
-            occupation: this.occupation,
-            address: this.address,
-            state: this.state,
-            postalCode: this.postalCode
+            gender: this.gender.trim(),
+            occupation: this.occupation.trim(),
+            address: this.address.trim(),
+            state: this.state.trim(),
+            postalCode: this.postalCode.trim()
         });
     }
 

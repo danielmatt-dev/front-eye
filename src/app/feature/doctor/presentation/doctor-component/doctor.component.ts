@@ -146,6 +146,7 @@ export class DoctorComponent implements OnInit {
 
     // Fecha y hora formato
     dateFormat = 'dd/MM/yyyy';
+    today: Date = new Date()
 
     /* --------------------------------- Helpers --------------------------------- */
 
@@ -390,15 +391,15 @@ export class DoctorComponent implements OnInit {
 
         return new DoctorRequestModel({
             clinicId: this.clinicSelected?.clinicId,
-            firstName: this.firstName,
-            lastFathName: this.lastFatherName,
-            lastMontName: this.lastMotherName,
-            email: this.email,
+            firstName: this.firstName.trim(),
+            lastFathName: this.lastFatherName.trim(),
+            lastMontName: this.lastMotherName.trim(),
+            email: this.email.trim(),
             birthDate: this.birthDate,
-            gender: this.gender,
-            address: this.address,
-            state: this.state,
-            postalCode: this.postalCode
+            gender: this.gender?.trim(),
+            address: this.address.trim(),
+            state: this.state?.trim(),
+            postalCode: this.postalCode.trim()
         });
     }
 

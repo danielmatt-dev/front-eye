@@ -292,9 +292,9 @@ export class NuevaInspeccionComponent implements OnInit {
                 patientId: this.patientId,
                 diseaseId: this.selectedDisease?.value,
                 modelId: this.selectedModel?.aiModelId,
-                image: images[0],
+                image: images[0].trim(),
                 eye: this.selectedEye?.value,
-                notes: this.notes
+                notes: this.notes.trim()
             })
         );
 
@@ -332,17 +332,17 @@ export class NuevaInspeccionComponent implements OnInit {
         }
 
         const patient = new PatientRequestModel({
-            firstName: this.firstName,
-            lastFathName: this.lastFatherName,
-            lastMontName: this.lastMotherName,
-            email: this.email,
-            phone: this.phone,
+            firstName: this.firstName.trim(),
+            lastFathName: this.lastFatherName.trim(),
+            lastMontName: this.lastMotherName.trim(),
+            email: this.email.trim(),
+            phone: this.phone.trim(),
             birthDate: this.birthDate,
             gender: this.genderOption?.value,
-            occupation: this.occupation,
-            address: this.address,
-            state: this.statePatient,
-            postalCode: this.postalCode
+            occupation: this.occupation.trim(),
+            address: this.address.trim(),
+            state: this.statePatient.trim(),
+            postalCode: this.postalCode.trim()
         });
 
         this.isNewPatientLoading = true;

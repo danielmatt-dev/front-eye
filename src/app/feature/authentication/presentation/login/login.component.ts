@@ -23,7 +23,7 @@ import { UserModel } from '../../data/models/user.model';
  *
  * @description
  * Muestra el formulario de login con validación de campos y conexión
- * al caso de uso {@link LoginUser}.  
+ * al caso de uso {@link LoginUser}.
  * Incluye:
  * - Validación de email y contraseña mediante {@link BaseValidatorHelper}.
  * - Mensajes de error y notificaciones con PrimeNG `MessageService`.
@@ -80,7 +80,7 @@ export class LoginComponent {
   * Ejecuta el proceso de login del usuario.
   *
   * @description
-  * Valida el formulario, invoca al caso de uso {@link LoginUser}, 
+  * Valida el formulario, invoca al caso de uso {@link LoginUser},
   * maneja errores y redirige al usuario si la autenticación es exitosa.
   */
     // Llamada a casos de uso
@@ -94,8 +94,8 @@ export class LoginComponent {
         this.isLoading = true;
         const resultLoginUser = await this.login.call(
             new UserModel({
-                email: this.email,
-                password: this.password
+                email: this.email.trim(),
+                password: this.password.trim()
             })
         );
         this.isLoading = false;

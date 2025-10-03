@@ -125,7 +125,7 @@ export class ResetPasswordComponent {
             return;
         }
 
-        const resultValidateEmail = await this.validateEmail.call(this.email);
+        const resultValidateEmail = await this.validateEmail.call(this.email.trim());
 
         if (resultValidateEmail._tag === 'Left') {
             if (resultValidateEmail.left instanceof ResourceNotFoundException) {
@@ -154,7 +154,7 @@ export class ResetPasswordComponent {
             return;
         }
 
-        const user = new UserModel({ email: this.email, password: this.password });
+        const user = new UserModel({ email: this.email.trim(), password: this.password.trim() });
 
         const resultResetPassword = await this.resetPassword.call(new ResetPasswordParams(user, this.token));
 

@@ -114,7 +114,9 @@ export abstract class ValidatorHelper {
 
     validateField(value?: string, maxLength: number = 100): string | undefined {
 
-        if (!value || value.trim().length === 0) {
+        value = value?.trim()
+
+        if (!value || value.length === 0) {
             return this.getText(this.validationsKey + 'required')
         }
 
