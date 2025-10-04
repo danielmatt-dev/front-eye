@@ -78,23 +78,23 @@ export class BaseValidatorHelper extends ValidatorHelper {
     /**
    * Valida un campo numérico (por ejemplo, código postal).
    *
-   * @param postalCode Valor del código postal.
+   * @param fieldNumber Valor del código postal.
    * @param maxLength Longitud máxima permitida.
    * @returns `undefined` si es válido o un mensaje de error en caso contrario.
    */
-    validateFieldNumber(postalCode: string, maxLength: number): string | undefined {
-        postalCode = postalCode.trim()
-        const message = this.validateField(postalCode, maxLength)
+    validateFieldNumber(fieldNumber: string, maxLength: number): string | undefined {
+        fieldNumber = fieldNumber.trim()
+        const message = this.validateField(fieldNumber, maxLength)
         if (message) {
             return message
         }
 
-        const invalidChar = /[^A-Za-zÀ-ÿ ]/.test(postalCode);
+        const invalidChar = /[^A-Za-zÀ-ÿ ]/.test(fieldNumber);
         if (!invalidChar) {
             return this.getText(this.validationsKey + 'noSpecialChars');
         }
 
-        if (!/^\d+$/.test(postalCode)) {
+        if (!/^\d+$/.test(fieldNumber)) {
             return this.getText(this.validationsKey + 'onlyNumbers');
         }
 

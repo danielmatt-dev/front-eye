@@ -54,6 +54,13 @@ export class DoctorResponseModel {
     email: string = ''
 
     /**
+     * Teléfono del doctor.
+     *
+     * @example "1234567890"
+     */
+    phone: string = ''
+
+    /**
    * Fecha de nacimiento del doctor.
    *
    * @example new Date("1985-07-15")

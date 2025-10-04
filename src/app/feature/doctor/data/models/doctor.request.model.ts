@@ -92,6 +92,13 @@ export class DoctorRequestModel {
     email: string = ''
 
     /**
+     * Teléfono del doctor.
+     *
+     * @example "1234567890"
+     */
+    phone: string = ''
+
+    /**
    * Constructor que permite inicializar el modelo
    * con un objeto parcial de sus propiedades.
    *

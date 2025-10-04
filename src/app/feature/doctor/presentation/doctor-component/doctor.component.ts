@@ -124,7 +124,7 @@ export class DoctorComponent implements OnInit {
     email = '';
     /** Dirección. */
     address = '';
-    /** Estado (valor). */
+    /** Estado de México. */
     state?: string = undefined;
     /** Código postal. */
     postalCode = '';
@@ -138,7 +138,7 @@ export class DoctorComponent implements OnInit {
     lastMotherNameError?: string;
     birthDateError?: string;
     genderError?: string;
-    //phoneError?: string
+    phoneError?: string
     emailError?: string;
     addressError?: string;
     postalCodeError?: string;
@@ -275,6 +275,8 @@ export class DoctorComponent implements OnInit {
             return;
         }
 
+        console.log(doctor)
+
         this.isCreateLoading = true;
         const resultCreateDoctor = await this.createDoctor.call(doctor);
         this.isCreateLoading = false;
@@ -395,6 +397,7 @@ export class DoctorComponent implements OnInit {
             lastFathName: this.lastFatherName.trim(),
             lastMontName: this.lastMotherName.trim(),
             email: this.email.trim(),
+            phone: this.phone.trim(),
             birthDate: this.birthDate,
             gender: this.gender?.trim(),
             address: this.address.trim(),
@@ -416,7 +419,7 @@ export class DoctorComponent implements OnInit {
         this.lastMotherName = doctor.lastMontName;
         this.birthDate = doctor.birthDate;
         this.gender = this.translateLang.translateByOptionLabel({ type: TypeList.gender, value: doctor.gender }).value;
-        //this.phone = doctor.phone
+        this.phone = doctor.phone
         this.email = doctor.email;
         this.address = doctor.address;
         this.state = doctor.state;
@@ -499,7 +502,7 @@ export class DoctorComponent implements OnInit {
     /** Retorna `true` si el formulario es válido. */
     isFormValid(): boolean {
         this.onFormChange();
-        return !(this.firstNameError ?? this.lastFatherNameError ?? this.lastMotherNameError ?? this.clinicError ?? this.birthDateError ?? this.emailError ?? this.genderError ?? this.addressError ?? this.postalCodeError ?? this.stateError);
+        return !(this.firstNameError ?? this.lastFatherNameError ?? this.lastMotherNameError ?? this.clinicError ?? this.birthDateError ?? this.emailError ?? this.phoneError ?? this.genderError ?? this.addressError ?? this.postalCodeError ?? this.stateError);
     }
 
     /** Revalida todos los campos del formulario. */
@@ -510,6 +513,7 @@ export class DoctorComponent implements OnInit {
         this.onClinicChange();
         this.onBirtDateChange();
         this.onEmailChange();
+        this.onPhoneChange();
         this.onGenderChange();
         this.onAddressChange();
         this.onPostalCodeChange();
@@ -544,6 +548,11 @@ export class DoctorComponent implements OnInit {
     /** Valida email. */
     onEmailChange() {
         this.emailError = this.validationHelper.validateEmail(this.email);
+    }
+
+    /** Valida el núm. de teléfono. */
+    onPhoneChange() {
+        this.phoneError = this.validationHelper.validateFieldNumber(this.phone, 20);
     }
 
     /** Valida fecha de nacimiento. */
@@ -599,7 +608,7 @@ export class DoctorComponent implements OnInit {
         this.lastFatherNameError = undefined;
         this.lastMotherNameError = undefined;
         this.emailError = undefined;
-        //this.phoneError = '';
+        this.phoneError = undefined;
         this.genderError = undefined;
         this.birthDateError = undefined;
         this.addressError = undefined;

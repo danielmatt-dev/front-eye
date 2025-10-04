@@ -33,6 +33,7 @@
             'lastFathName',
             'lastMontName',
             'email',
+            'phone',
             'birthDate',
             'age',
             'gender',
@@ -218,8 +219,11 @@
         </div>
         <div class="flex flex-col grow basis-0 gap-2">
             <label for="telefono">{{ 'labels.phone' | translate }}</label>
-            <input pInputText id="telefono" [(ngModel)]="phone" type="text"
-                placeholder="{{ 'placeholders.phone' | translate }}" maxlength="10" />
+            <input pInputText id="telefono" [(ngModel)]="phone" (ngModelChange)="onPhoneChange()" [ngClass]="{
+                    'ng-dirty': phoneError,
+                    'ng-invalid': phoneError
+                }" type="text" placeholder="{{ 'placeholders.phone' | translate }}" maxlength="20" />
+            <small *ngIf="phoneError" class="text-red-500">{{ phoneError }}</small>
         </div>
     </div>
     <div class="flex flex-wrap gap-6 mb-4">
