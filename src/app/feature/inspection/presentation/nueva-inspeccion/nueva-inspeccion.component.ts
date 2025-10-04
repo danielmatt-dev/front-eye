@@ -125,6 +125,7 @@ export class NuevaInspeccionComponent implements OnInit {
     eyeError?: string;
     diseaseError?: string;
     modelError?: string;
+    isModelError = false;
     imageError?: string;
 
     /* Campos de validación */
@@ -244,6 +245,15 @@ export class NuevaInspeccionComponent implements OnInit {
                 type: TypeList.gender
             });
         }
+
+        if (!this.isErrorFields()) {
+            this.onFormChange()
+        }
+
+        if (this.isModelError) {
+            this.modelError = this.validationHelper.getText('exceptions.messages.aiModelInvalid');
+        }
+
         this.cdr.markForCheck();
     };
 
@@ -303,6 +313,7 @@ export class NuevaInspeccionComponent implements OnInit {
 
             if (resultCreateInspection.left instanceof AiModelNotFoundException) {
                 this.modelError = this.validationHelper.getText('exceptions.messages.aiModelInvalid');
+                this.isModelError = true;
             }
 
             this.validator.getToastException(resultCreateInspection.left);
@@ -445,6 +456,10 @@ export class NuevaInspeccionComponent implements OnInit {
      */
     isFormaValid(): boolean {
         this.onFormChange();
+        return this.isErrorFields()
+    }
+
+    isErrorFields(): boolean {
         return !(this.imageError ?? this.patientError ?? this.eyeError ?? this.diseaseError ?? this.modelError);
     }
 
@@ -652,11 +667,9 @@ export class NuevaInspeccionComponent implements OnInit {
     /**
      * Limpia los archivos del uploader y el arreglo `images`.
      *
-     * @param clearCallback `Function` - Callback provisto por `p-fileupload` para limpiar lista.
      * @returns `void`
      */
-    clearFiles(clearCallback: Function): void {
-        clearCallback();
+    clearFiles() {
         this.images = [];
     }
 
