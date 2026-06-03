@@ -145,6 +145,9 @@ export class NuevaInspeccionComponent implements OnInit {
     isLoadingGetData = false;
     isNewPatientLoading = false;
 
+    isSubmitting = false;
+
+
     /* Providers */
     validator: NewInspectionValidator;
     validationHelper: BaseValidatorHelper;
@@ -290,6 +293,10 @@ export class NuevaInspeccionComponent implements OnInit {
             this.validator.showMessage({ key: 'invalidForm' });
             return;
         }
+        //Boton 
+        if (this.isSubmitting) return;
+        this.isSubmitting = true;
+
         // Conversión de archivos a base64 (solo se envía el primero)
         const images = await this.filesToBase64();
 
@@ -318,6 +325,8 @@ export class NuevaInspeccionComponent implements OnInit {
 
             this.validator.getToastException(resultCreateInspection.left);
             this.state = State.initial;
+            this.isSubmitting = false; // ← reactiva si hay error
+
         }
 
         // Caso exitoso: persistimos id, pintamos resultado y notificamos

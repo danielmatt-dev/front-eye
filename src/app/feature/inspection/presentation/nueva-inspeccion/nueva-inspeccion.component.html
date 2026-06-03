@@ -520,6 +520,7 @@
     <p-button
         (onClick)="callCreateInspection()"
         [loading]="this.state === State.loading"
+        [disabled]="isSubmitting"
         label="{{ 'buttons.inspect'| translate }}"
     ></p-button>
 </div>
