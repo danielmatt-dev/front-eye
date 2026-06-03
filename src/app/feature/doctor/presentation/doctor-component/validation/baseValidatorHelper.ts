@@ -184,17 +184,30 @@ export class BaseValidatorHelper extends ValidatorHelper {
     }
 
     /**
-   * Valida que la fecha de nacimiento no esté vacía.
-   *
-   * @param date Fecha de nacimiento.
-   * @returns `undefined` si es válida o un mensaje de error si está vacía.
-   */
+     * Valida que la fecha de nacimiento no esté vacía y que el usuario sea mayor de edad.
+     *
+     * @param date Fecha de nacimiento.
+     * @returns `undefined` si es válida o un mensaje de error en caso contrario.
+     */
     validateBirthDate(date?: Date) {
         if (!date) {
-            return this.getText(this.validationsKey + 'required')
+            return this.getText(this.validationsKey + 'required');
         }
 
-        return undefined
+        const today = new Date();
+        const birthDate = new Date(date);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        if (age < 18) {
+            return this.getText(this.validationsKey + 'birthDateAdult');
+        }
+
+        return undefined;
     }
 
 }
