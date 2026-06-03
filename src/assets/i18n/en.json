@@ -326,7 +326,8 @@
         "passwordLowercase": "Must include at least one lowercase letter",
         "passwordUppercase": "Must include at least one uppercase letter",
         "passwordDigit": "Must include at least one number",
-        "passwordsNotMatch": "Passwords do not match. Please make sure they are the same"
+        "passwordsNotMatch": "Passwords do not match. Please make sure they are the same",
+        "phoneLength": "Must be exactly 10 digits"
     },
     "accessDenied": {
         "title": "Access denied",

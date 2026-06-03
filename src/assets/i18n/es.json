@@ -326,7 +326,8 @@
         "passwordLowercase": "Debe incluir al menos una letra minúscula",
         "passwordUppercase": "Debe incluir al menos una letra mayúscula",
         "passwordDigit": "Debe incluir al menos un número",
-        "passwordsNotMatch": "Las contraseñas no coinciden. Por favor, verifica que sean iguales"
+        "passwordsNotMatch": "Las contraseñas no coinciden. Por favor, verifica que sean iguales",
+        "phoneLength": "Debe tener exactamente 10 dígitos"
     },
     "accessDenied": {
         "title": "Acceso denegado",

@@ -552,7 +552,7 @@ export class DoctorComponent implements OnInit {
 
     /** Valida el núm. de teléfono. */
     onPhoneChange() {
-        this.phoneError = this.validationHelper.validateFieldNumber(this.phone, 20);
+        this.phoneError = this.validationHelper.validatePhone(this.phone);
     }
 
     /** Valida fecha de nacimiento. */

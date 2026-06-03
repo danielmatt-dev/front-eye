@@ -445,7 +445,7 @@ export class PacientesComponent implements OnInit {
     }
 
     onPhoneChange() {
-        this.phoneError = this.validationHelper.validateFieldNumber(this.phone, 20);
+        this.phoneError = this.validationHelper.validatePhone(this.phone);
     }
 
     onBirtDateChange() {

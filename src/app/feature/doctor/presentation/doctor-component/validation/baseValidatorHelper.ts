@@ -102,6 +102,31 @@ export class BaseValidatorHelper extends ValidatorHelper {
     }
 
     /**
+ * Valida que el teléfono tenga exactamente 10 dígitos.
+ *
+ * @param phone Número de teléfono a validar.
+ * @returns `undefined` si es válido o un mensaje de error en caso contrario.
+ */
+validatePhone(phone: string): string | undefined {
+    phone = phone.trim();
+
+    const message = this.validateField(phone);
+    if (message) {
+        return message;
+    }
+
+    if (!/^\d+$/.test(phone)) {
+        return this.getText(this.validationsKey + 'onlyNumbers');
+    }
+
+    if (phone.length !== 10) {
+        return this.getText(this.validationsKey + 'phoneLength');
+    }
+
+    return undefined;
+}
+
+    /**
    * Valida el formato de un correo electrónico.
    *
    * @param email Correo a validar.
