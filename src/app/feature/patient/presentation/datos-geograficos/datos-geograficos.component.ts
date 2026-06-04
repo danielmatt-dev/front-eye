@@ -51,6 +51,8 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     filteredPatientsCoordinates = this.allPatientsCoordinates;
     displayedPatients = this.filteredPatientsCoordinates;
 
+    private filterDebounceTimer: any;
+
     /* Opciones de filtrado en el mapa */
     filters = {
         label: 'Filtros',
@@ -325,7 +327,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             const filtro = this.leafFilters[idx]?.label;
             if (filtro) {
                 this.selectedFilters.push(filtro);
-                this.applyFilters();
+                this.applyFiltersWithDebounce();  // ← con debounce
             }
         });
 
@@ -334,7 +336,7 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
             const filtro = this.leafFilters[idx]?.label;
             if (filtro) {
                 this.selectedFilters = this.selectedFilters.filter((f) => f !== filtro);
-                this.applyFilters();
+                this.applyFiltersWithDebounce();  // ← con debounce
             }
         });
     }
@@ -343,6 +345,19 @@ export class DatosGeograficosComponent implements AfterViewInit, OnInit {
     private applyFilters(): void {
         this.displayedPatients = this.filteredPatientsCoordinates.filter((p) => this.matchesDisease(p) && this.matchesAge(p) && this.matchesGender(p) && this.matchesResult(p));
         this.updateMarkersOnMap();
+    }
+    
+    /**
+     * Aplica los filtros con un debounce de 300ms para evitar
+     * múltiples redibujos del mapa al seleccionar filtros rápidamente.
+     */
+    private applyFiltersWithDebounce(): void {
+        if (this.filterDebounceTimer) {
+            clearTimeout(this.filterDebounceTimer);
+        }
+        this.filterDebounceTimer = setTimeout(() => {
+            this.applyFilters();
+        }, 300);
     }
 
     private matchesDisease(p: PatientWithInspectionsModel): boolean {
