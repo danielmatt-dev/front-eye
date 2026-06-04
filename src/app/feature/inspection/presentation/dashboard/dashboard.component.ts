@@ -108,6 +108,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     /* Providers */
     validator: ValidatorHelper;
 
+    private refreshInterval: any;
+
+
     private readonly destroyRef = inject(DestroyRef);
 
     /**
@@ -153,7 +156,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         // 4) Configurar comportamiento responsivo (vista móvil vs escritorio)
         this.checkScreenSize();
         window.addEventListener('resize', this.checkScreenSize.bind(this));
+
+        // 5) Auto-refresh cada 30 segundos
+        this.refreshInterval = setInterval(async () => {
+            await this.callGetAllInspections();
+            this.calculateDetectionStatistics();
+            this.initCharts();
+            this.cdr.markForCheck();
+        }, 30000);
     }
+
 
     /**
      * Hook de destrucción del componente.
@@ -162,6 +174,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         window.removeEventListener('resize', this.checkScreenSize.bind(this));
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+        }
     }
 
     /**
