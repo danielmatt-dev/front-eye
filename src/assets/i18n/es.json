@@ -141,7 +141,8 @@
         "inspect": "Inspeccionar",
         "update": "Actualizar",
         "validateEmail": "Validar correo",
-        "resetPassword": "Restablecer contraseña"
+        "resetPassword": "Restablecer contraseña",
+        "logout": "Cerrar sesión"
     },
     "toast": {
         "success": {

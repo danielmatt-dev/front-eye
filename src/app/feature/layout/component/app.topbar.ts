@@ -7,13 +7,15 @@ import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LocalStorageService } from '../../../shared/services/local.storage.service';
-import { take } from 'rxjs';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, TranslatePipe],
-    template: ` <div class="layout-topbar">
+    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, TranslatePipe, OverlayPanelModule],
+    template: `
+    <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
                 <i class="pi pi-bars"></i>
@@ -27,7 +29,6 @@ import { take } from 'rxjs';
                             }
                         </style>
                     </defs>
-                    <!-- Se eliminó el rectángulo de fondo para no mostrar color de fondo -->
                     <path
                         class="cls-1"
                         d="m1000,374.22c-345.61,0-625.78,280.17-625.78,625.78s280.17,625.78,625.78,625.78,625.78-280.17,625.78-625.78-280.17-625.78-625.78-625.78Zm413.4,754.27c-3.39,128.1-106.31,232.19-234.31,236.98-3.12.12-6.22.17-9.32.17-41.35,0-82.18-10.58-118.08-30.59-2.27-1.27-4.74-1.87-7.2-1.87-4.43,0-8.78,1.99-11.67,5.69-10.59,13.56-21.2,27.11-31.81,40.68-10.61-13.56-21.22-27.12-31.81-40.68-2.89-3.7-7.24-5.69-11.67-5.69-2.45,0-4.93.61-7.2,1.87-35.9,20.01-76.73,30.59-118.08,30.59-3.09,0-6.2-.06-9.32-.17-128-4.79-230.92-108.88-234.31-236.98-1.52-57.4,17.12-113.03,52.67-157.84,20.53,8.18,41.12,14.34,61.28,20.11-34.75,34.42-54.86,81.69-54.86,131.15,0,38.34,18.51,83.97,48.32,119.09,35.84,42.22,84.1,65.47,135.91,65.47h.33c73.62-.13,139.6-46.68,168.69-112.92,29.1,66.25,95.12,112.81,168.78,112.92,52.09,0,100.37-23.25,136.22-65.48,29.81-35.12,48.33-80.74,48.33-119.08,0-49.46-20.11-96.72-54.86-131.15,20.16-5.77,40.75-11.93,61.28-20.11,35.56,44.8,54.19,100.44,52.67,157.84Zm-691.68-6.58c0-39.28,20.49-73.78,51.37-93.39,19.95-12.67,45.5-11.97,65.08,1.29,6.64,4.5,13.3,9.43,19.97,14.87,25.44,20.76,47.63,45.99,66.24,75.33,12.46,19.65,12.35,45.04-.78,64.25-19.9,29.12-53.37,48.23-91.31,48.23-61.05,0-110.55-49.51-110.55-110.58Zm355.96-1.9c18.61-29.34,40.79-54.57,66.24-75.33,6.68-5.44,13.33-10.38,19.97-14.87,19.57-13.26,45.12-13.96,65.08-1.29,30.87,19.61,51.37,54.11,51.37,93.39,0,61.08-49.51,110.58-110.55,110.58-37.94,0-71.41-19.11-91.31-48.23-13.13-19.22-13.25-44.6-.78-64.25Zm331.55-267.82c-79.56,95.2-190.7,55.29-302.71,146.62-56.9,46.4-88.39,101.67-105.49,138.37-17.1-36.69-48.59-91.97-105.49-138.37-111.53-90.94-221.52-51.34-302.71-146.62-46.09-54.08-65.87-129.8-44.46-149.19,26.36-23.87,90.76,59.76,211.17,68.49,108.02,7.83,123.17-54.63,241.84-54.42,118.83.21,134.32,62.89,241.14,54.42,118.86-9.43,181.44-93.52,208.4-69.94,22,19.24,4.03,95.94-41.69,150.65Z"
@@ -39,33 +40,13 @@ import { take } from 'rxjs';
 
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
-
                 <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
                     <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
                 </button>
-
                 <button type="button" class="layout-topbar-action" (click)="toggleLanguage()">
                     {{ isLanguageEs() ? 'ES' : 'EN' }}
                 </button>
-
-                <!-- Botón para cambiar el tema y estilo de la aplicación
-                <div class="relative">
-                    <button
-                        class="layout-topbar-action layout-topbar-action-highlight"
-                        pStyleClass="@next"
-                        enterFromClass="hidden"
-                        enterActiveClass="animate-scalein"
-                        leaveToClass="hidden"
-                        leaveActiveClass="animate-fadeout"
-                        [hideOnOutsideClick]="true"
-                    >
-                        <i class="pi pi-palette"></i>
-                    </button>
-                    <app-configurator />
-                </div>
-                -->
                 <app-configurator />
-
             </div>
 
             <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
@@ -74,10 +55,57 @@ import { take } from 'rxjs';
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
+
+                    <!-- Botón de perfil con panel desplegable -->
+                    <button
+                        type="button"
+                        class="layout-topbar-action"
+                        pStyleClass="@next"
+                        enterFromClass="hidden"
+                        enterActiveClass="animate-scalein"
+                        leaveToClass="hidden"
+                        leaveActiveClass="animate-fadeout"
+                        [hideOnOutsideClick]="true">
                         <i class="pi pi-user"></i>
-                        <span>Profile</span>
+                        <span>{{ username }}</span>
                     </button>
+
+                    <!-- Panel de información del usuario -->
+                    <div class="hidden absolute right-0 top-[4rem] z-50">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 min-w-[220px]">
+
+                            <!-- Avatar e info -->
+                            <div class="flex items-center gap-3 mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                                     [style.backgroundColor]="'var(--primary-color)'">
+                                    <i class="pi pi-user text-white text-lg"></i>
+                                </div>
+                                <div class="flex flex-col overflow-hidden">
+                                    <span class="text-sm font-semibold text-gray-800 dark:text-white truncate">
+                                        {{ username }}
+                                    </span>
+                                    <span class="text-xs px-2 py-0.5 rounded-full mt-1 w-fit"
+                                          [ngClass]="{
+                                            'bg-purple-100 text-purple-700': role === 'ADMIN',
+                                            'bg-teal-100 text-teal-700': role === 'DOCTOR'
+                                          }">
+                                        {{ role }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Botón cerrar sesión -->
+                            <button
+                                type="button"
+                                (click)="logout()"
+                                class="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                                <i class="pi pi-sign-out"></i>
+                                <span>{{ 'buttons.logout' | translate }}</span>
+                            </button>
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -85,11 +113,17 @@ import { take } from 'rxjs';
 })
 export class AppTopbar {
     items!: MenuItem[];
+    username: string = '';
+    role: string = '';
 
     constructor(
         public layoutService: LayoutService,
         private readonly translateService: TranslateService,
-        public readonly local: LocalStorageService) {}
+        private readonly router: Router,
+        public readonly local: LocalStorageService) {
+            this.username = this.local.getUsername();
+            this.role = this.local.getRole() ?? '';
+        }
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
@@ -105,4 +139,8 @@ export class AppTopbar {
         return this.local.getLang() === 'es'
     }
 
+    logout() {
+        this.local.clear();
+        this.router.navigate(['/auth/login']);
+    }
 }
