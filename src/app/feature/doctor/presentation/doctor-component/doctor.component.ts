@@ -567,7 +567,7 @@ export class DoctorComponent implements OnInit {
 
     /** Valida código postal (numérico, longitud). */
     onPostalCodeChange() {
-        this.postalCodeError = this.validationHelper.validateFieldNumber(this.postalCode, 10);
+        this.postalCodeError = this.validationHelper.validatePostalCode(this.postalCode);
     }
 
     /** Valida estado. */

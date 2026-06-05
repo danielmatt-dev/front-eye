@@ -197,4 +197,28 @@ export class BaseValidatorHelper extends ValidatorHelper {
         return undefined
     }
 
+    /**
+ * Valida que el código postal tenga exactamente 5 dígitos.
+ *
+ * @param postalCode Código postal a validar.
+ * @returns `undefined` si es válido o un mensaje de error en caso contrario.
+ */
+    validatePostalCode(postalCode: string): string | undefined {
+        postalCode = postalCode.trim();
+
+        const message = this.validateField(postalCode);
+        if (message) {
+            return message;
+        }
+
+        if (!/^\d+$/.test(postalCode)) {
+            return this.getText(this.validationsKey + 'onlyNumbers');
+        }
+
+        if (postalCode.length !== 5) {
+            return this.getText(this.validationsKey + 'postalCodeLength');
+        }
+
+        return undefined;
+    }
 }

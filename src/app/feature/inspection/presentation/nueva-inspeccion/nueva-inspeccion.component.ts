@@ -612,7 +612,7 @@ export class NuevaInspeccionComponent implements OnInit {
     }
 
     onPostalCodeChange() {
-        this.postalCodeError = this.validationHelper.validateFieldNumber(this.postalCode, 10);
+       this.postalCodeError = this.validationHelper.validatePostalCode(this.postalCode);
     }
 
     onStateChange() {
